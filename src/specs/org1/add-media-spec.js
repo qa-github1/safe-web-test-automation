@@ -18,7 +18,7 @@ describe('Add Media', function () {
         ui.app.open_newly_created_case_via_direct_link();
         ui.caseView.select_tab(C.tabs.media)
             .click_button(C.buttons.add)
-            .verify_element_is_visible('Drag And Drop your files here')
+            .verify_element_is_visible('Drag And Drop your files here.....')
             .upload_file_and_verify_toast_msg('image.png')
             .reload_page()
             .select_tab(C.tabs.media)

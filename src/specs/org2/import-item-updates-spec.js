@@ -47,7 +47,7 @@ describe('Import Item Updates', function () {
         });
     });
 
-    it.only('2. Import update for item status (Check Out transaction)', function () {
+    it('2. Import update for item status (Check Out transaction)', function () {
         ui.app.log_title(this);
         let fileName = 'ItemUpdatesImport_CheckOut_' + S.domain;
 
@@ -173,7 +173,7 @@ describe('Import Item Updates', function () {
         });
     });
 
-    it('5. Import update for item status (Undispose transaction)', function () {
+    it.only('5. Import update for item status (Undispose transaction)', function () {
         ui.app.log_title(this);
         let fileName = 'ItemUpdatesImport_Undispose_' + S.domain;
 
@@ -183,7 +183,7 @@ describe('Import Item Updates', function () {
         D.getEditedItemData(S.selectedEnvironment.oldActiveCase)
         api.cases.add_new_case();
 
-        // set 'true' as parameter in the next line when the issue in the following card gets fixed : '[Importer] ‘Error updating items in Elastic Search’ when performing ‘CheckIn/Undispose’ transaction'
+        // set 'true' as parameter in the next line when the issue in the card #15096 gets fixed
         api.items.add_new_item(false);
         api.transactions.dispose_item();
 
@@ -193,7 +193,7 @@ describe('Import Item Updates', function () {
         D.newItem.status = 'Disposed';
         D.editedItem.status = 'Checked In';
         let CoC_newItemEntry = S.chainOfCustody.SAFE.newItemEntry;
-        let CoC_disposal = S.chainOfCustody.SAFE.disposal(D.editedItem);
+        let CoC_disposal = S.chainOfCustody.SAFE.disposal(D.newItem);
         let CoC_undispose = S.chainOfCustody.SAFE.checkin(D.editedItem);
 
         cy.getLocalStorage("newItem").then(newItem => {
@@ -205,7 +205,7 @@ describe('Import Item Updates', function () {
                 .verify_toast_message([
                     C.toastMsgs.importComplete,
                     1 + C.toastMsgs.recordsImported]);
-            let allEditedFields = C.itemFields.allEditableFieldsArray.concat(['Case', 'Status', 'Storage Location'])
+            let allEditedFields = C.itemFields.allEditableFieldsArray.concat(['Status', 'Storage Location'])
             ui.itemView.open_newly_created_item_via_direct_link()
                 .verify_edited_and_not_edited_values_on_Item_View_form(allEditedFields, D.editedItem, D.newItem, true, true)
                 .click_Edit()
@@ -217,9 +217,8 @@ describe('Import Item Updates', function () {
                     CoC_newItemEntry
                 ])
                 .open_last_history_record()
-                // uncomment the lines below when bug gets fixed in card #14769 /5
-                // .verify_all_values_on_history(D.editedItem, D.newItem, false)
-               // .verify_red_highlighted_history_records(allEditedFields)
+                .verify_all_values_on_history(D.editedItem, D.newItem, false)
+               .verify_red_highlighted_history_records(allEditedFields)
         });
     });
 

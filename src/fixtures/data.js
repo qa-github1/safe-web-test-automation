@@ -202,6 +202,8 @@ D.getNewItemData = function (specificCaseObject, locationObject, newPerson) {
         actualDisposedDate: '',
         disposedDate: '',
         disposalMethod: '',
+        disposedByName: '',
+        disposalNotes: '',
         transactionNotes: 'Item entered into system.',
         checkoutDate: '',
         checkoutReason: '',
