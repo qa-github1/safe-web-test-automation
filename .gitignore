@@ -1,0 +1,10 @@
+.idea/*
+image-comparison/*
+logs/*
+node_modules/*
+report/*
+screenshots/*
+src/.DS_Store
+.DS_Store
+cypress/logs/*
+src/fixtures/files/*.xlsx
