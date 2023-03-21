@@ -72,4 +72,3 @@ jobs:
         with:
           # custom message to send to slack
           args: '{\"channel\":\"${{ secrets.SLACK_PR_CHANNEL_ID }}\",\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"*Automated test report* https://qa-github1.github.io/safe1/  \"}}]}'
-
