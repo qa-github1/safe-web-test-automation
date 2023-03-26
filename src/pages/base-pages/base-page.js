@@ -1,5 +1,3 @@
-import E from "../../fixtures/files/excel-data";
-
 let S = require('../../fixtures/settings');
 let D = require('../../fixtures/data');
 let C = require('../../fixtures/constants');
@@ -260,6 +258,12 @@ export default class BasePage {
         return this;
     };
 
+    verify_text_is_present_on_the_grid(text) {
+        this.wait_until_spinner_disappears()
+        this.verify_text(dataGrid, text)
+        return this;
+    };
+
     verify_text_is_NOT_present_on_main_container(text) {
         this.toastMessage().should('not.exist');
         mainContainer().should('not.contain', text);
@@ -393,7 +397,7 @@ export default class BasePage {
 
     type_if_value_provided(element, value, typeaheadElement, aliasOfEndpointToBeAwaited) {
         if (value) {
-          //  element().type(' ').clear()
+            //  element().type(' ').clear()
             this.clearAndEnterValue(element, value)
 
             if (aliasOfEndpointToBeAwaited) {
@@ -872,6 +876,30 @@ export default class BasePage {
         return this;
     };
 
+    verify_content_of_PDF_file() {
+        cy.readFile('src/fixtures/files/PDF_file.pdf', 'binary').then((pdfData) => {
+            cy.task('verify_PDF_content', {data: pdfData, pageNumber: 3}).then(textContent => {
+
+                cy.log(JSON.stringify(textContent))
+                const array = textContent.items;
+
+                const names = array.filter(obj => obj.str !== '')
+                    .map(obj => obj.str);
+
+                const concatenatedNames = names.join(', ');
+
+                console.log(concatenatedNames);
+
+                cy.wrap(JSON.stringify(textContent))
+             //   cy.wrap(JSON.stringify(concatenatedNames))
+                    .should('contain', 'sapien');
+              //   cy.wrap(textContent.items).each((item) => {
+              //       cy.wrap(JSON.stringify(item)).should('contain', 'Lorem');
+              //   });
+            });
+        });
+    }
+
     open_url_and_wait_all_GET_requests_to_finish(urlToOpen, partOfRequestUrl) {
         cy.server();
         this.define_API_request_to_be_mocked('GET', partOfRequestUrl)
@@ -912,7 +940,7 @@ export default class BasePage {
                 // //cy.log('Intercepted response is ' + JSON.stringify(interception))
                 let responseStatus = interception.status || interception.response.statusCode
                 expect(responseStatus).to.equal(status);
-                if (propertyToSaveToLocalStorage){
+                if (propertyToSaveToLocalStorage) {
                     cy.setLocalStorage(propertyToSaveToLocalStorage, JSON.stringify(interception.response.body));
                     if (S.selectedEnvironment[propertyToSaveToLocalStorage]) {
                         S.selectedEnvironment[propertyToSaveToLocalStorage] = Object.assign(S.selectedEnvironment[propertyToSaveToLocalStorage], interception.response.body);
@@ -1311,7 +1339,7 @@ export default class BasePage {
     };
 
     verify_content_of_first_table_row_by_provided_column_title_and_value(columnTitle, cellContent, headerCellTag = 'th') {
-       let self = this
+        let self = this
         if (Array.isArray(cellContent)) {
             resultsTableHeader().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
                 tableStriped().find('td').eq(i).invoke('text').then(function (textFound) {
@@ -1404,7 +1432,7 @@ export default class BasePage {
     };
 
     wait_all_GET_requests() {
-     //   cy.wait('@all_GET_Requests')
+        //   cy.wait('@all_GET_Requests')
         return this;
     };
 
@@ -1661,7 +1689,7 @@ export default class BasePage {
         this.turnOnToggleAndReturnParentElement(label)
             .find('input').first()
             .clear()
-        //    .type(value)
+            //    .type(value)
             .invoke('val', value).trigger('input')
             .type('{enter}')
     }

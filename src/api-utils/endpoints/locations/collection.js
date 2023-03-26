@@ -92,12 +92,12 @@ exports.move_location = function (locationSuffix, newParentLocationSuffix) {
                         loc.parentId = JSON.parse(parentLoc).id;
                         log = `Moving location (${loc.name}) via API to the new parent location (${JSON.parse(parentLoc).name})`
                     }
+                    generic_request.PUT(
+                        '/api/locations/' + loc.id,
+                        loc,
+                        log
+                    )
                 }
-                generic_request.PUT(
-                    '/api/locations/' + loc.id,
-                    loc,
-                    log
-                )
             })
         })
     })

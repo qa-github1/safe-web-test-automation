@@ -9,8 +9,8 @@ import BasePage from "./base-pages/base-page";
 let
     nameInput = e => cy.get('[placeholder="Name"]'),
     typeDropdown = e => cy.get('[ng-model="workflow.selectedType"]'),
-    usersInput = e => cy.get('input[placeholder="Users..."]'),
-    userTypeahead = e => cy.get('[ng-repeat="user in $select.items"]'),
+    usersOrGroupsInput = e => cy.get('input[placeholder="Users or groups..."]'),
+    userTypeahead = e => cy.get('[ng-repeat="item in $group.items"]'),
     matchingCriteriaField = e => cy.get('[ng-model="workflow.selectedRecordSelectionFilterField"]'),
     matchingCriteriaCustomField = e => cy.get('[ng-model="workflowRecordSelectionTypeahead"]'),
     matchingCriteriaOperator = e => cy.get('[ng-model="workflow.selectedRecordSelectionFilterOperation"]'),
@@ -45,16 +45,22 @@ export default class WorkflowsPage extends BasePage {
         return this;
     }
 
-    select_users(userEmail) {
-        usersInput().type(userEmail);
+    select_user_or_group(userEmailOrGroupName) {
+        this.define_API_request_to_be_awaited('GET', 'multiselecttypeahead')
+        usersOrGroupsInput().type(userEmailOrGroupName);
+        this.wait_response_from_API_call('multiselecttypeahead')
+        userTypeahead().should('have.length', 1)
         userTypeahead().click();
         return this;
     }
 
-    set_up_workflow(name, type, userEmail, trigger, whichRecords, fieldEdited = null, officeName = null) {
+    set_up_workflow(name, type, userOrGroup, actions, trigger, whichRecords, fieldEdited = null, officeName = null) {
         this.enter_name(name);
         this.select_type(type);
-        this.select_users(userEmail);
+        this.select_user_or_group(userOrGroup);
+        actions.forEach(action =>{
+            cy.findByText(action).prev().click();
+        })
         cy.findByText(trigger).prev().click();
 
         if (fieldEdited) {
@@ -66,7 +72,10 @@ export default class WorkflowsPage extends BasePage {
             }
         }
 
-        cy.findByText(whichRecords).prev().click();
+        if(whichRecords){
+            cy.findByText('Add Filter Criteira').prev().click();
+            cy.findByText(whichRecords).prev().click();
+        }
 
         if (officeName) {
             filterByOfficeCheckbox().click();
@@ -104,14 +113,14 @@ export default class WorkflowsPage extends BasePage {
         return this;
     }
 
-    verify_email_content_(account, workflowTemplate, dataObject, fieldEdited) {
+    verify_email_content_(emailAccount, workflowTemplate, dataObject, fieldEdited) {
 
         if (dataObject.recoveredById) {
 
             cy.getLocalStorage("newItem").then(newlyAddedItem => {
                 let updatedItemObject = Object.assign(JSON.parse(newlyAddedItem), dataObject);
 
-                this.verify_email_content(account, workflowTemplate.subject, workflowTemplate.content(updatedItemObject, fieldEdited));
+                this.verify_email_content(emailAccount, workflowTemplate.subject, workflowTemplate.content(updatedItemObject, fieldEdited));
             });
 
         } else if (dataObject.offenseType) {
@@ -119,7 +128,7 @@ export default class WorkflowsPage extends BasePage {
             cy.getLocalStorage("newCase").then(newlyAddedCase => {
                 let updatedCaseObject = Object.assign(JSON.parse(newlyAddedCase), dataObject);
 
-                this.verify_email_content(account, workflowTemplate.subject, workflowTemplate.content(updatedCaseObject, fieldEdited));
+                this.verify_email_content(emailAccount, workflowTemplate.subject, workflowTemplate.content(updatedCaseObject, fieldEdited));
             });
         }
         return this;

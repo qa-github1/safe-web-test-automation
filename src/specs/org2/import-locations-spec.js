@@ -17,9 +17,9 @@ describe('Import Locations', function () {
     after(function () {
         api.auth.get_tokens(user);
         api.locations.get_and_save_any_location_data_to_local_storage('root')
-        api.locations.update_location('parent', 'root')
-        api.locations.update_location('child1', 'root')
-        api.locations.update_location('child2', 'root')
+        api.locations.move_location('parent', 'root')
+        api.locations.move_location('child1', 'root')
+        api.locations.move_location('child2', 'root')
  })
 
     it('1 Import Locations with all fields', function () {

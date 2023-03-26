@@ -252,7 +252,7 @@ export default class Menu extends BasePage {
         this.verify_Error_toast_message_is_NOT_visible();
     }
 
-    click_Log_Out(officeName) {
+    click_Log_Out() {
         logOut().scrollIntoView();
         logOut().should('be.visible');
         logOut().click();

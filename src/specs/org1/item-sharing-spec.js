@@ -23,12 +23,11 @@ before(function () {
     api.users.update_current_user_settings(powerUser.id, C.currentDateTimeFormat)
 });
 
-describe('Add Item', function () {
+describe('Item Sharing', function () {
 
     context('1. Org Admin', function () {
 
-        it.only('1.1 All fields enabled ' +
-            '-- "Item Belongs To Shows All People" turned ON in Org Settings -- multiple people not linked to Primary Case are selected in "Item Belongs to" field ', function () {
+        it.only('1.1 ', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
             D.getNewItemData(D.newCase);
