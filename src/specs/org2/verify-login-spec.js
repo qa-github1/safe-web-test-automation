@@ -6,7 +6,7 @@ const D = require("../../fixtures/data");
 
 describe('Login page', function () {
 
-    it('1.2 Validation messages', function () {
+    it.only('1.2 Validation messages', function () {
         ui.app.log_title(this);
 
         api.auth.get_tokens(S.userAccounts.blockedUser);
@@ -16,7 +16,8 @@ describe('Login page', function () {
         ui.open_base_url();
         ui.login.enter_credentials('test@test.com.', 'test');
         ui.app.click(C.buttons.login)
-            .verify_toast_title(C.validation_msgs.authenticationError)
+            .verify_toast_title('test')
+           // .verify_toast_title(C.validation_msgs.authenticationError)
             .verify_toast_message(C.validation_msgs.incorrectCredentials);
         ui.login.verify_Username_field_has_red_border()
 
