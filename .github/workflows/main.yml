@@ -48,6 +48,7 @@ jobs:
         uses: peaceiris/actions-gh-pages@v2
         with:
           keepFiles: true
+          publish_dir: ./test1
           destination_dir: test1
         env:
           PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -98,6 +99,7 @@ jobs:
         uses: peaceiris/actions-gh-pages@v2
         with:
           keepFiles: true
+          publish_dir: ./test2
           destination_dir: test2
         env:
           PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
