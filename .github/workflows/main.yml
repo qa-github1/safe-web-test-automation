@@ -88,10 +88,12 @@ jobs:
     if: always()
     needs: [ cypress-run1, cypress-run2 ]
     steps:
-  
+
       - name: Deploy report to Github Pages
         if: always()
         uses: peaceiris/actions-gh-pages@v2
+        with:
+          keep_files: true
         env:
           PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PUBLISH_BRANCH: gh-pages
