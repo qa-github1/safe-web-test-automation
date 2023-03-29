@@ -97,7 +97,7 @@ jobs:
     name: Notify on Slack
     runs-on: ubuntu-latest
     if: always()
-    needs: [ cypress-run ]
+    needs: [ cypress-run1, cypress-run2 ]
 
     steps:
       - uses: abinoda/slack-action@master
