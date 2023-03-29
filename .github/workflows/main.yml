@@ -34,6 +34,15 @@ jobs:
           ref: gh-pages
           path: gh-pages
 
+      - name: Allure Report action from marketplace
+        uses: simple-elf/allure-report-action@master
+        if: always()
+        with:
+          allure_results: report/allure-results
+          allure_history: allure-history
+          subfolder: test1
+          keep_reports: 2
+
 
   cypress-run2:
     runs-on: ubuntu-latest
@@ -64,20 +73,22 @@ jobs:
           ref: gh-pages
           path: gh-pages
 
-  deployReport:
-    name: Deploy Report
-    runs-on: ubuntu-latest
-    if: always()
-    needs: [ cypress-run1, cypress-run2 ]
-    steps:
       - name: Allure Report action from marketplace
         uses: simple-elf/allure-report-action@master
         if: always()
         with:
           allure_results: report/allure-results
           allure_history: allure-history
+          subfolder: test2
           keep_reports: 2
 
+  deployReport:
+    name: Deploy Report
+    runs-on: ubuntu-latest
+    if: always()
+    needs: [ cypress-run1, cypress-run2 ]
+    steps:
+  
       - name: Deploy report to Github Pages
         if: always()
         uses: peaceiris/actions-gh-pages@v2
