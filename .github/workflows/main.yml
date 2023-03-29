@@ -34,6 +34,42 @@ jobs:
           ref: gh-pages
           path: gh-pages
 
+
+  cypress-run2:
+    runs-on: ubuntu-latest
+    timeout-minutes: 250
+    container:
+      image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
+      options: --user 1001
+
+    strategy:
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          node-version: 16
+
+      - name: Install dependencies
+        run: npm i
+
+      - name: Run tests
+        run: npm run tests-org2
+
+      - name: Get Allure history
+        uses: actions/checkout@v2
+        if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+  deployReport:
+    name: Deploy Report
+    runs-on: ubuntu-latest
+    if: always()
+    needs: [ cypress-run1, cypress-run2 ]
+    steps:
       - name: Allure Report action from marketplace
         uses: simple-elf/allure-report-action@master
         if: always()
@@ -49,5 +85,3 @@ jobs:
           PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PUBLISH_BRANCH: gh-pages
           PUBLISH_DIR: allure-history
-
-
