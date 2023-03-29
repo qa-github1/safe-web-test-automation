@@ -1,9 +1,9 @@
 name: Cypress Tests
 
 on:
-  # runs tests every day at 4am
-#schedule:
-  #- cron: '0 4 * * *'
+    # runs tests every day at 4am
+    #schedule:
+     #- cron: '0 4 * * *'
    [ push ]
 
 permissions: write-all
@@ -107,3 +107,6 @@ jobs:
       - uses: abinoda/slack-action@master
         env:
           SLACK_BOT_TOKEN: ${{secrets.SLACK_BOT_TOKEN }}
+        with:
+          # custom message to send to slack
+          args: '{\"channel\":\"${{ secrets.SLACK_PR_CHANNEL_ID }}\",\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"*Automated test report* https://qa-github1.github.io/safe-web-test-automation/  \"}}]}'
