@@ -25,6 +25,22 @@ jobs:
       - name: Run tests
         run: npm run tests-org1
 
+      - name: Archive test report
+        uses: actions/upload-artifact@v3
+        with:
+          name: Allure-Report-${{ github.run_id }}-${{ github.run_attempt }}
+          path: report/allure-results/**/*
+          retention-days: 30
+
+      - name: Rename report
+        if: always()
+        run: |
+          ls
+          pwd
+          cd report
+          cd allure-results
+          ls
+
       - uses: actions/checkout@v2
       - name: copy
         if: always()
@@ -65,29 +81,13 @@ jobs:
       - name: Run tests
         run: npm run tests-org2
 
-      - uses: actions/checkout@v2
-      - name: copy
-        if: always()
+      - name: Host Report on GH pages
+        uses: crazy-max/ghaction-github-pages@v3
+        with:
+          target_branch: gh-pages
+          build_dir: report/allure-results
         env:
-          SRC_FOLDER_PATH: 'report/allure-results'
-          TARGET_BRANCH: 'gh-pages'
-        run: |
-          files=$(find $SRC_FOLDER_PATH -type f) # get the file list
-          git config --global user.name 'GitHub Action'
-          git config --global user.email 'action@github.com'
-          git config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
-          git remote update
-          git fetch --all --prune                         # fetch branches
-          git status
-          git checkout $TARGET_BRANCH       # checkout to your branch
-          git status
-          git checkout ${GITHUB_REF##*/} -- $files # copy files from the source branch
-          git ls
-          git status
-          git add report/*
-          git diff-index --quiet HEAD ||  git commit -am "deploy files"  # commit to the repository (ignore if no modification)
-          git push origin $TARGET_BRANCH # push to remote branch
-
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   report:
     runs-on: ubuntu-latest
