@@ -28,7 +28,7 @@ jobs:
       - name: Generate Allure Report
         if: always()
         run: |
-          $GITHUB_WORKSPACE/node_modules/allure-commandline/dist/bin/allure generate  report/allure-results -o report/test
+          node_modules/allure-commandline/dist/bin/allure generate  report/allure-results -o report/test
 
       - name: Deploy to GitHub Pages
         uses: crazy-max/ghaction-github-pages@v3
