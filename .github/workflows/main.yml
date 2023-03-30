@@ -40,6 +40,7 @@ jobs:
           git fetch --all --prune                         # fetch branches
           git checkout $TARGET_BRANCH       # checkout to your branch
           git checkout ${GITHUB_REF##*/} -- $files # copy files from the source branch
+          git ls
           git status
           git add -f -A
           git diff-index --quiet HEAD ||  git commit -am "deploy files"  # commit to the repository (ignore if no modification)
@@ -81,6 +82,7 @@ jobs:
           git checkout $TARGET_BRANCH       # checkout to your branch
           git status
           git checkout ${GITHUB_REF##*/} -- $files # copy files from the source branch
+          git ls
           git status
           git add -f -A
           git diff-index --quiet HEAD ||  git commit -am "deploy files"  # commit to the repository (ignore if no modification)
