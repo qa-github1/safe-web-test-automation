@@ -35,13 +35,22 @@ jobs:
         run: |
           node_modules/allure-commandline/dist/bin/allure generate  report/allure-results -o report/test
 
-      - name: Deploy to GitHub Pages
+      - name: Host Report on GH pages
+        if: always()
         uses: crazy-max/ghaction-github-pages@v3
         with:
           target_branch: gh-pages
-          build_dir: dist/weather-app
+          build_dir: report/test
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy report to Github Pages newman directory
+        if: always()
+        uses: peaceiris/actions-gh-pages@v2
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PUBLISH_BRANCH: gh-pages
+          PUBLISH_DIR: report/test
 
 
 
