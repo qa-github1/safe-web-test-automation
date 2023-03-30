@@ -25,12 +25,19 @@ jobs:
       - name: Run tests
         run: npm run tests-org1
 
-      - name: Install Allure
+      - name: Generate Allure Report
         if: always()
         run: |
-          npm install allure-commandline --save-dev
-          allure generate report/allure-results --clean -o allure-report
+          $GITHUB_WORKSPACE/node_modules/allure-commandline/dist/bin/allure generate  report/allure-results -o report/test
 
-      
+      - name: Deploy to GitHub Pages
+        uses: crazy-max/ghaction-github-pages@v3
+        with:
+          target_branch: gh-pages
+          build_dir: dist/weather-app
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
 
 
