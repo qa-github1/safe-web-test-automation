@@ -42,7 +42,7 @@ jobs:
           git checkout ${GITHUB_REF##*/} -- $files # copy files from the source branch
           git ls
           git status
-          git add -f -A
+          git add report/*
           git diff-index --quiet HEAD ||  git commit -am "deploy files"  # commit to the repository (ignore if no modification)
           git push origin $TARGET_BRANCH # push to remote branch
 
@@ -84,7 +84,7 @@ jobs:
           git checkout ${GITHUB_REF##*/} -- $files # copy files from the source branch
           git ls
           git status
-          git add -f -A
+          git add report/*
           git diff-index --quiet HEAD ||  git commit -am "deploy files"  # commit to the repository (ignore if no modification)
           git push origin $TARGET_BRANCH # push to remote branch
 
