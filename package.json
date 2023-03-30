@@ -29,6 +29,7 @@
   "devDependencies": {
     "@shelex/cypress-allure-plugin": "^2.34.0",
     "@testing-library/cypress": "8.0.3",
+    "allure-commandline": "^2.21.0",
     "cypress": "9.6.1",
     "cypress-intellij-reporter": "0.0.5",
     "cypress-localstorage-commands": "^2.2.1",
