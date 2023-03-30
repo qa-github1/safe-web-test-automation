@@ -25,42 +25,15 @@ jobs:
       - name: Run tests
         run: npm run tests-org1
 
-      - name: Archive test report
-        uses: actions/upload-artifact@v3
+      - name: Deploy report to Github Pages newman directory
+        uses: peaceiris/actions-gh-pages@v2
         with:
-          name: Allure-Report-${{ github.run_id }}-${{ github.run_attempt }}
-          path: report/allure-results/**/*
-          retention-days: 30
-
-      - name: Rename report
-        if: always()
-        run: |
-          ls
-          pwd
-          cd report
-          cd allure-results
-          ls
-
-      - uses: actions/checkout@v2
-      - name: copy
-        if: always()
+          keepFiles: true
+          destination_dir: allure-results
         env:
-          SRC_FOLDER_PATH: 'report/allure-results'
-          TARGET_BRANCH: 'gh-pages'
-        run: |
-          files=$(find $SRC_FOLDER_PATH -type f) # get the file list
-          git config --global user.name 'GitHub Action'
-          git config --global user.email 'action@github.com'
-          git config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
-          git remote update
-          git fetch --all --prune                         # fetch branches
-          git checkout $TARGET_BRANCH       # checkout to your branch
-          git checkout main -- $files # copy files from the source branch
-          git ls
-          git status
-          git add report/* -A
-          git diff-index --quiet HEAD ||  git commit -am "deploy files"  # commit to the repository (ignore if no modification)
-          git push origin $TARGET_BRANCH # push to remote branch
+          PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PUBLISH_BRANCH: gh-pages
+          PUBLISH_DIR: report/allure-results
 
   cypress-run2:
     runs-on: ubuntu-latest
@@ -81,14 +54,16 @@ jobs:
       - name: Run tests
         run: npm run tests-org2
 
-      - name: Host Report on GH pages
-        if: always()
-        uses: crazy-max/ghaction-github-pages@v3
+      - name: Deploy report to Github Pages newman directory
+        uses: peaceiris/actions-gh-pages@v2
         with:
-          target_branch: gh-pages
-          build_dir: report/allure-results
+          keepFiles: true
+          destination_dir: allure-results
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PUBLISH_BRANCH: gh-pages
+          PUBLISH_DIR: report/allure-results
+
 
   report:
     runs-on: ubuntu-latest
@@ -127,6 +102,9 @@ jobs:
 
       - name: Deploy report to Github Pages newman directory
         uses: peaceiris/actions-gh-pages@v2
+        with:
+          keepFiles: true
+          destination_dir: test1
         env:
           PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PUBLISH_BRANCH: gh-pages
