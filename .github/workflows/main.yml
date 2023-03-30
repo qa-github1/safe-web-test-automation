@@ -86,6 +86,7 @@ jobs:
   report:
     runs-on: ubuntu-latest
     timeout-minutes: 250
+    needs: [ cypress-run1, cypress-run2 ]
     container:
       image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
       options: --user 1001
