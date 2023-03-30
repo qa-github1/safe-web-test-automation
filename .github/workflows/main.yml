@@ -41,6 +41,7 @@ jobs:
         with:
           target_branch: gh-pages
           build_dir: report/test
+          keep_history: true
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -79,6 +80,7 @@ jobs:
         with:
           target_branch: gh-pages
           build_dir: report/test
+          keep_history: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
