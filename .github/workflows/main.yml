@@ -18,8 +18,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-        with:
-          node-version: 16
 
       - name: Install dependencies
         run: npm i
@@ -28,6 +26,7 @@ jobs:
         run: npm run tests-org1
 
       - name: Install Allure
+        if: always()
         run: |
           npm install allure-commandline --save-dev
           allure generate report/allure-results --clean -o allure-report
