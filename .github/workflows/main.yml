@@ -93,6 +93,7 @@ jobs:
       - name: Generate Allure Report
         if: always()
         run: |
+          npm i allure-commandline --save-dev
           node_modules/allure-commandline/dist/bin/allure generate  allure-results -o report
 
       - name: Deploy report to Github Pages directory
