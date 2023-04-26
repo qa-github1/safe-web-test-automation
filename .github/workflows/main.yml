@@ -94,7 +94,6 @@ jobs:
         run: |
           node_modules/allure-commandline/dist/bin/allure generate  allure-results -o report
 
-
       - name: Deploy report to Github Pages directory
         uses: peaceiris/actions-gh-pages@v2
         with:
