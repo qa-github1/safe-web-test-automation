@@ -89,6 +89,7 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+
       - name: Generate Allure Report
         if: always()
         run: |
