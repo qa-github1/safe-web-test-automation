@@ -30,7 +30,6 @@ jobs:
         uses: peaceiris/actions-gh-pages@v2
         with:
           keepFiles: true
-          destination_dir: allure-results
         env:
           PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PUBLISH_BRANCH: gh-pages
@@ -60,7 +59,6 @@ jobs:
         uses: peaceiris/actions-gh-pages@v2
         with:
           keepFiles: true
-          destination_dir: allure-results
         env:
           PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PUBLISH_BRANCH: gh-pages
@@ -94,18 +92,17 @@ jobs:
       - name: Generate Allure Report
         if: always()
         run: |
-          node_modules/allure-commandline/dist/bin/allure generate  report/allure-results -o report/test
+          node_modules/allure-commandline/dist/bin/allure generate  report/allure-results -o report
 
 
       - name: Deploy report to Github Pages directory
         uses: peaceiris/actions-gh-pages@v2
         with:
           keepFiles: true
-          destination_dir: test1
         env:
           PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PUBLISH_BRANCH: gh-pages
-          PUBLISH_DIR: report/test
+          PUBLISH_DIR: report
 
 
 
