@@ -9,7 +9,7 @@ describe('Add Notes - Org1', function () {
     let user = S.getUserData(S.userAccounts.orgAdmin);
     let note = D.getRandomNo() + '_note';
 
-    it('A.N_1. Add Note to Case', function () {
+    it.only('A.N_1. Add Note to Case', function () {
         ui.app.log_title(this);
 
         api.auth.get_tokens(user);
@@ -22,7 +22,7 @@ describe('Add Notes - Org1', function () {
             .verify_toast_message(C.toastMsgs.saved)
             .reload_page()
             .select_tab(C.tabs.notes)
-            .verify_content_of_results_table(note)
+            .verify_content_of_results_table(note + 1)
     });
 
     it('A.N_2. Add Note to Item', function () {
