@@ -82,19 +82,18 @@ jobs:
           ref: gh-pages
 
       - name: Install dependencies
-        run: npm i
+        run: |
+          npm init --yes
+          npm i allure-commandline --save-dev
 
       - uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '17'
 
-
       - name: Generate Allure Report
         if: always()
         run: |
-          npm init --yes
-          npm i allure-commandline --save-dev
           node_modules/allure-commandline/dist/bin/allure generate  allure-results -o report
 
       - name: Deploy report to Github Pages directory
