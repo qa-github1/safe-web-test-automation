@@ -59,6 +59,7 @@ D.getNewCaseData = function (caseNumber, autoDispoOff = false) {
         caseOfficerGroupIds: [],
         caseOfficer: S.userAccounts.orgAdmin.email,
         caseOfficers: [S.userAccounts.orgAdmin.name],
+        caseOfficers_importFormat: 'user-' + S.userAccounts.orgAdmin.guid,
         caseOfficers_names: [S.userAccounts.orgAdmin.name],
         caseOfficerEmail: S.userAccounts.orgAdmin.name,
         caseOfficerName: S.userAccounts.orgAdmin.name,
@@ -117,13 +118,19 @@ D.getEditedCaseData = function (caseNumber, autoDispoOff = false) {
         offenseType: S.selectedEnvironment.offenseType2.name,
         formData: [],
         tags: ['cold_case'],
+        tagsForApi: [{tagModelId: -1, name: 'cold_case', color: "#4b749b"}],
         tagsOnHistory: ['cold_case'],
         reviewDateNotes: 'reviewNotes_EDITED_' + caseNumber,
         checkInProgress: false,
         createdDate: S.currentDate,
+        caseOfficerIds: [S.userAccounts.powerUser.id],
+        caseOfficerGroupIds: [S.selectedEnvironment.readOnly_userGroup.id],
         caseOfficerId: S.userAccounts.powerUser.id,
         caseOfficer: S.userAccounts.powerUser.email,
         caseOfficers: [S.userAccounts.powerUser.name],
+        caseOfficers_importFormat: 'user-' + S.userAccounts.powerUser.guid,
+        caseOfficers_userGuid: S.userAccounts.powerUser.guid,
+        caseOfficers_userGroupId: S.selectedEnvironment.readOnly_userGroup.id,
         caseOfficerName: S.userAccounts.powerUser.name,
         caseOfficerFName: S.userAccounts.powerUser.firstName,
         caseOfficerLName: S.userAccounts.powerUser.lastName,
@@ -243,7 +250,7 @@ D.getMovedItemData = function (newLocation) {
         moveNotes: 'Note for Moved Item',
     }
     D.editedItem = Object.assign({}, D.editedItem, moveData);
-   // D.newItem = Object.assign({}, D.newItem, moveData);
+    // D.newItem = Object.assign({}, D.newItem, moveData);
 };
 
 D.getCheckedInItemData = function (location) {
@@ -329,6 +336,7 @@ D.getEditedItemData = function (specificCaseObject, locationObject, newPerson) {
         cases: [],
         tags: ['eligible for disposal'],
         tagsOnHistory: ['eligible for disposal'],
+        tagsForApi: [{tagModelId: -1, name: 'eligible for disposal', color: "#4b749b"}],
         make: 'make_edited' + randomNo,
         model: 'model_edited' + randomNo,
         serialNumber: 'serialNo_edited' + randomNo,
@@ -562,6 +570,7 @@ D.getUserData = function (officeId) {
 D.getNewTaskData = function (user, userGroup, createdBy = S.userAccounts.orgAdmin) {
 
     D.newTask = {
+        type: 'Legacy',
         status: 'Open',
         title: 'title_' + helper.setNewRandomString(),
         message: 'message_' + helper.setNewRandomString(),
@@ -593,20 +602,26 @@ D.getCustomFormData = function () {
         custom_textarea: "custom Textarea",
         custom_checkbox: true,
         custom_checkboxListOption: 'Option 1',
+        custom_checkboxListOption_apiFormat: {"1": true},
         custom_radiobuttonListOption: 'Option 2',
+        custom_radiobuttonListOption_apiFormat: 2,
         custom_selectListOption: 'Option 3',
+        custom_selectListOption_apiFormat: 3,
         custom_dropdownTypeaheadOption: 'test1',
+        custom_dropdownTypeaheadOption_apiFormat: 1,
         custom_date: helper.setDateAndTime(C.currentDateTimeFormat.editMode),
-        custom_dateEditMode: helper.setDateAndTime(C.currentDateTimeFormat.editMode),
+        custom_dateISOFormat: helper.setIsoDateAndTime(),
         custom_user_email: S.userAccounts.orgAdmin.email,
         custom_user_or_group_names: [S.userAccounts.orgAdmin.name],
         custom_userId: S.userAccounts.orgAdmin.id,
         custom_userGuid: S.userAccounts.orgAdmin.guid,
         custom_person: S.selectedEnvironment.person.name,
         custom_personGuid: S.selectedEnvironment.person.guid,
+        custom_personId: S.selectedEnvironment.person.id
     }
 
     D.newCase = Object.assign(D.newCase, D.newCustomFormData)
+    D.newItem = Object.assign(D.newItem, D.newCustomFormData)
 }
 
 D.defaultCustomFormData = {
@@ -639,11 +654,23 @@ D.editedCustomFormData = {
     custom_textarea: "edited custom Textarea",
     custom_checkbox: false,
     custom_checkboxListOption: 'Option 2',
+    custom_checkboxListOption_apiFormat: {"2": true},
     custom_radiobuttonListOption: 'Option 3',
+    custom_radiobuttonListOption_apiFormat: 3,
     custom_selectListOption: 'Option 1',
+    custom_selectListOption_apiFormat: 1,
     custom_dropdownTypeaheadOption: 'test2',
+    custom_dropdownTypeaheadOption_apiFormat: 2,
     custom_date: helper.setDateAndTime(C.currentDateTimeFormat, 2028, 6, 3, 15, 25),
+    custom_dateISOFormat: helper.setIsoDateAndTime(2028, 6, 3, 15, 25),
     custom_dateEditMode: helper.setDateAndTime(C.currentDateTimeFormat.editMode, 2028, 6, 3, 15, 25),
+    custom_user_email: S.userAccounts.powerUser.email,
+    custom_user_or_group_names: [S.userAccounts.powerUser.name],
+    custom_userId: S.userAccounts.powerUser.id,
+    custom_userGuid: S.userAccounts.powerUser.guid,
+    custom_person: S.selectedEnvironment.person_2.name,
+    custom_personGuid: S.selectedEnvironment.person_2.guid,
+    custom_personId: S.selectedEnvironment.person_2.id
 }
 
 D.removeValuesForDisabledCaseFields = function (enabledFields) {
@@ -820,6 +847,8 @@ D.generateNewDataSet = function (setNullForDisabledFields = false, autoDispoOff 
     S.getCurrentDate();
     api.cases.get_most_recent_case();
     api.cases.get_old_case_data(S.selectedEnvironment.oldClosedCase.id);
+
+    //  D.getCustomFormData()
 
     D.getNewCaseData(null, autoDispoOff);
     D.getEditedCaseData(null, autoDispoOff);

@@ -27,12 +27,14 @@ exports.add_new_item = function (toNewCase = true, locationSuffix = null, proper
 
 exports.add_custom_form_data_to_existing_item = function (itemObject) {
     cy.getLocalStorage("newItem").then(newItem => {
-        let existingItem = Object.assign(JSON.parse(newItem), itemObject);
+        let itemData = Object.assign(JSON.parse(newItem), itemObject);
+        itemData.tags = itemObject.tagsForApi
+        itemData.barcodes = JSON.parse(newItem).barcodes
 
         generic_request.PUT(
-            '/api/items/' + existingItem.id,
-            body.generate_PUT_request_payload_for_editing_existing_item(existingItem, true),
-            'Adding custom form to the existing item via API with ID_______' + existingItem.id
+            '/api/items/' + itemData.id,
+            body.generate_PUT_request_payload_for_editing_existing_item(itemData, true),
+            'Adding custom form to the existing item via API with ID_______' + itemData.id
         );
     });
     return this;
@@ -49,16 +51,19 @@ exports.add_item_to_case = function (existingCaseId) {
     });
 };
 
-exports.edit_newly_added_item = function (removeCustomFormData = false) {
-    cy.getLocalStorage("newItem").then(newItem => {
-        let existingItem = Object.assign(JSON.parse(newItem), D.editedItem);
-        let editCustomFormData = !removeCustomFormData;
+exports.edit_newly_added_item = function (withCustomFormData = true) {
+    cy.getLocalStorage("newCase").then(newCase => {
+        cy.getLocalStorage("newItem").then(newItem => {
+            D.editedItem = D.getEditedItemData(JSON.parse(newCase))
+            let itemObject = Object.assign(JSON.parse(newItem), D.editedItem);
+            itemObject.tags = D.editedItem.tagsForApi
 
-        generic_request.PUT(
-            '/api/items/' + existingItem.id,
-            body.generate_PUT_request_payload_for_editing_existing_item(existingItem, editCustomFormData),
-            'Editing existing item via API with ID_______' + existingItem.id
-        );
+            generic_request.PUT(
+                '/api/items/' + itemObject.id,
+                body.generate_PUT_request_payload_for_editing_existing_item(itemObject, withCustomFormData),
+                'Editing existing item via API with ID_______' + itemObject.id
+            );
+        });
     });
     return this;
 };
@@ -73,7 +78,7 @@ exports.get_item_history = function (item) {
         }).then(response => {
             let seqOrgItemHistoryId = JSON.stringify(response.body.data[0].seqOrgItemHistoryId);
             cy.setLocalStorage("seqOrgItemHistoryId", seqOrgItemHistoryId);
-           //cy.log("Item History ID: " + seqOrgItemHistoryId);
+            //cy.log("Item History ID: " + seqOrgItemHistoryId);
         });
     });
 };

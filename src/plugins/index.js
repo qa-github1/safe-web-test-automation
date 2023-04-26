@@ -18,6 +18,7 @@ const imaps = require('imap-simple');
 //const puppeteer = require('puppeteer');
 const allureWriter = require('@shelex/cypress-allure-plugin/writer');
 const Xvfb = require('xvfb');
+const pdfjsLib = require("pdfjs-dist");
 
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
@@ -98,12 +99,11 @@ module.exports = (on, config) => {
     on('task', {
 
         log(text) {
-                if (text.color){
-                    console.log(`\x1b[${Log.fg[text.color]};${Log.bg[text.bgColor]};1m`, text.message);
-                }
-                else{
-                    console.log( text);
-                }
+            if (text.color) {
+                console.log(`\x1b[${Log.fg[text.color]};${Log.bg[text.bgColor]};1m`, text.message);
+            } else {
+                console.log(text);
+            }
 
             console.log("\x1b[0m")
             return null
@@ -172,6 +172,33 @@ module.exports = (on, config) => {
             return new Promise((resolve, reject) => {
                 excel.generate_file(filename, dataObject);
                 return resolve(true)
+            });
+        },
+
+        verify_PDF_content(args) {
+            return pdfjsLib.getDocument({data: args.data}).promise.then((pdf) => {
+                // PDF loaded successfully
+
+                return pdf.getPage(args.pageNumber).then((page) => {
+                    // Page loaded successfully
+
+                    return page.getTextContent().then((textContent) => {
+                        // Text content extracted successfully
+                        return textContent
+
+                    }, (error) => {
+                        console.log(error)
+                        // Error extracting text content
+                    });
+
+                }, (error) => {
+                    console.log(error)
+                    // Error loading page
+                });
+
+            }, (error) => {
+                console.log(error)
+                // Error loading PDF
             });
         },
 

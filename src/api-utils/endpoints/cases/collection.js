@@ -16,28 +16,29 @@ exports.add_new_case = function (caseNumber, caseObject) {
     return this;
 };
 
-exports.add_custom_form_data_to_existing_case = function (caseObject) {
+// exports.add_custom_form_data_to_existing_case = function (caseObject) {
+//     cy.getLocalStorage("newCase").then(newCase => {
+//         let existingCase = Object.assign(JSON.parse(newCase), caseObject);
+//
+//         generic_request.PUT(
+//             '/api/cases/' + existingCase.id,
+//             body.generate_PUT_request_payload_for_editing_existing_case(existingCase, true),
+//             'Adding custom form to the existing case via API with ID_______' + existingCase.id
+//         );
+//     });
+//     return this;
+// };
+
+exports.edit_newly_added_case = function (withCustomFormData = true ) {
     cy.getLocalStorage("newCase").then(newCase => {
-        let existingCase = Object.assign(JSON.parse(newCase), caseObject);
+        let caseObject = Object.assign(JSON.parse(newCase), D.editedCase);
+        caseObject.tags = D.editedCase.tagsForApi
+        caseObject.closedDate = D.editedCase.closedDateIsoFormat
 
         generic_request.PUT(
-            '/api/cases/' + existingCase.id,
-            body.generate_PUT_request_payload_for_editing_existing_case(existingCase, true),
-            'Adding custom form to the existing case via API with ID_______' + existingCase.id
-        );
-    });
-    return this;
-};
-
-exports.edit_newly_added_case = function (removeCustomFormData = false) {
-    cy.getLocalStorage("newCase").then(newCase => {
-        let existingCase = Object.assign(JSON.parse(newCase), D.editedCase);
-        let editCustomFormData = !removeCustomFormData;
-
-        generic_request.PUT(
-            '/api/cases/' + existingCase.id,
-            body.generate_PUT_request_payload_for_editing_existing_case(existingCase, editCustomFormData),
-            'Editing existing case via API with ID_______' + existingCase.id
+            '/api/cases/' + caseObject.id,
+            body.generate_PUT_request_payload_for_editing_existing_case(caseObject, withCustomFormData),
+            'Editing existing case via API with ID_______' + caseObject.id
         );
     });
     return this;

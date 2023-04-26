@@ -11,11 +11,11 @@ let
     typeDropdown = e => cy.get('[ng-model="workflow.selectedType"]'),
     usersOrGroupsInput = e => cy.get('input[placeholder="Users or groups..."]'),
     userTypeahead = e => cy.get('[ng-repeat="item in $group.items"]'),
-    matchingCriteriaField = e => cy.get('[ng-model="workflow.selectedRecordSelectionFilterField"]'),
+    matchingCriteriaField = e => cy.get('[ng-model="filter.selectedRecordSelectionFilterField"]'),
     matchingCriteriaCustomField = e => cy.get('[ng-model="workflowRecordSelectionTypeahead"]'),
-    matchingCriteriaOperator = e => cy.get('[ng-model="workflow.selectedRecordSelectionFilterOperation"]'),
-    matchingCriteriaValueDropdown = e => cy.get('[ng-model="workflow.recordSelectionFilterEnumValue"]'),
-    matchingCriteriaInputField = e => cy.get('[ng-model="workflow.recordSelectionFilterValue"]'),
+    matchingCriteriaOperator = e => cy.get('[ng-model="filter.selectedRecordSelectionFilterOperation"]'),
+    matchingCriteriaDropdownValue = e => cy.get('[ng-model="filter.recordSelectionFilterEnumValue"]'),
+    matchingCriteriaInputFieldValue = e => cy.get('[ng-model="filter.recordSelectionFilterValue"]'),
     fieldEditedDropdown = e => cy.get('[ng-model="workflow.selectedExecutionEditedField"]'),
     filterByOfficeCheckbox = e => cy.get('[ng-model="workflow.filterByOffice"]'),
     officeTextbox = e => cy.get('input[placeholder="Select an office..."]'),
@@ -92,9 +92,9 @@ export default class WorkflowsPage extends BasePage {
         matchingCriteriaOperator().select(operator);
 
         if (isInputField) {
-            matchingCriteriaInputField().type(value);
+            matchingCriteriaInputFieldValue().type(value);
         } else {
-            matchingCriteriaValueDropdown().select(value);
+            matchingCriteriaDropdownValue().select(value);
         }
         return this;
     }
@@ -105,22 +105,22 @@ export default class WorkflowsPage extends BasePage {
         matchingCriteriaOperator().select(operator);
 
         if (isInputField) {
-            matchingCriteriaInputField().type(value);
+            matchingCriteriaInputFieldValue().type(value);
         } else {
-            matchingCriteriaValueDropdown().select(value);
+            matchingCriteriaDropdownValue().select(value);
         }
 
         return this;
     }
 
-    verify_email_content_(emailAccount, workflowTemplate, dataObject, fieldEdited) {
+    verify_email_content_(emailAccount, workflowTemplate, dataObject, fieldEdited, numberOfExpectedEmails = 1, markSeen = true) {
 
-        if (dataObject.recoveredById) {
+        if (dataObject.location) {
 
             cy.getLocalStorage("newItem").then(newlyAddedItem => {
                 let updatedItemObject = Object.assign(JSON.parse(newlyAddedItem), dataObject);
 
-                this.verify_email_content(emailAccount, workflowTemplate.subject, workflowTemplate.content(updatedItemObject, fieldEdited));
+                this.verify_email_content(emailAccount, workflowTemplate.subject, workflowTemplate.content(updatedItemObject, fieldEdited), numberOfExpectedEmails, markSeen);
             });
 
         } else if (dataObject.offenseType) {
@@ -128,7 +128,7 @@ export default class WorkflowsPage extends BasePage {
             cy.getLocalStorage("newCase").then(newlyAddedCase => {
                 let updatedCaseObject = Object.assign(JSON.parse(newlyAddedCase), dataObject);
 
-                this.verify_email_content(emailAccount, workflowTemplate.subject, workflowTemplate.content(updatedCaseObject, fieldEdited));
+                this.verify_email_content(emailAccount, workflowTemplate.subject, workflowTemplate.content(updatedCaseObject, fieldEdited), numberOfExpectedEmails, markSeen);
             });
         }
         return this;

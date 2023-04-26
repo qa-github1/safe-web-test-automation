@@ -196,7 +196,7 @@ C = {
         ],
         active: "Active",
         caseNumber: "Case Number",
-        caseOfficer: "Case Officer",
+        caseOfficers: "Case Officer(s)",
         createdDate: "Created Date",
         creator: "Creator",
         tags: "Tags",
@@ -209,19 +209,19 @@ C = {
         office: "Office",
     },
     caseCustomFields: {
-        cypressCaseForm_Textbox: "Cypress Case Form > Textbox",
-        cypressCaseForm_Email: "Cypress Case Form > Email",
-        cypressCaseForm_Number: "Cypress Case Form > Number",
-        cypressCaseForm_Password: "Cypress Case Form > Password",
-        cypressCaseForm_Textarea: "Cypress Case Form > Textarea",
-        cypressCaseForm_Checkbox: "Cypress Case Form > Checkbox",
-        cypressCaseForm_RadiobuttonList: "Cypress Case Form > Radiobutton List",
-        cypressCaseForm_CheckboxList: "Cypress Case Form > Checkbox List",
-        cypressCaseForm_SelectList: "Cypress Case Form > Select List",
-        cypressCaseForm_Date: "Cypress Case Form > Date",
+        cypressCaseForm_Textbox: "Optional fields - Cypress Cases Form > Textbox",
+        cypressCaseForm_Email: "Optional fields - Cypress Cases Form > Email",
+        cypressCaseForm_Number: "Optional fields - Cypress Cases Form > Number",
+        cypressCaseForm_Password: "Optional fields - Cypress Cases Form > Password",
+        cypressCaseForm_Textarea: "Optional fields - Cypress Cases Form > Textarea",
+        cypressCaseForm_Checkbox: "Optional fields - Cypress Cases Form > Checkbox",
+        cypressCaseForm_RadiobuttonList: "Optional fields - Cypress Cases Form > Radiobutton List",
+        cypressCaseForm_CheckboxList: "Optional fields - Cypress Cases Form > Checkbox List",
+        cypressCaseForm_SelectList: "Optional fields - Cypress Cases Form > Select List",
+        cypressCaseForm_Date: "Optional fields - Cypress Cases Form > Date",
     },
     itemCustomFields: {
-        cypressItemForm_Textbox: "Cypress Item Form > Textbox",
+        cypressItemForm_Textbox: "Optional fields - Cypress Items Form > Textbox",
         cypressItemForm_Email: "Cypress Item Form > Email",
         cypressItemForm_Number: "Cypress Item Form > Number",
         cypressItemForm_Password: "Cypress Item Form > Password",
@@ -460,15 +460,15 @@ C = {
             taskCreated: {
                 subject: 'Notice: Task notification',
                 content1: (taskObject) =>
-                    // `has been created by ${taskObject.createdBy}. <a href=\\"https://pentest.trackerproducts.com/#/view-task/483284\\">Click here to view the Task</a><br /><br /><b>Title:</b> ${taskObject.title}<br/><b>Message:</b> ${taskObject.message}<br/><b>Status:</b> New<br/><b>Due Date:</b> ${taskObject.dueDate}`,
-                    `Click here to view the Task</a><br /><br /><b>Title:</b> ${taskObject.title}<br/><b>Message:</b> ${taskObject.message}<br/><b>Status:</b> New<br/><b>Due Date:</b> ${taskObject.dueDate}`,
+                     [`Task ${taskObject.taskNumber} has been created by ${taskObject.createdBy}`,
+                     `Click here to view the Task</a><br /><br /><b>Task Type:</b> Legacy<br/><b>Title:</b> ${taskObject.title}<br/><b>Message:</b> ${taskObject.message}<br/><b>Status:</b> New<br/><b>Due Date:</b> ${taskObject.dueDate}`],
                 content2: (assignedTo) =>
                     `Assigned to:</b> ${assignedTo}<br/>`
             },
             taskCreated_noDetails: {
                 subject: 'Notice: Task notification',
                 content1: (taskObject) =>
-                   `has been created by ${taskObject.createdBy}. <a href=\\"https://`,
+                    `has been created by ${taskObject.createdBy}. <a href=\\"https://`,
                 content2: () =>
                     `Click here to view the Task</a>`
             },
@@ -492,45 +492,47 @@ C = {
             matchingCriteriaCustomField: 'Matching Criteria Custom Field',
             filterByOffice: 'Filter by office',
         },
-        itemCreated: {
-            subject: 'Item Created',
-            content: (itemObject) =>
-                `<h1>Item Created</h1>A new item with barcode <b>${itemObject.barcode}</b> has been added into your system by <b>${itemObject.submittedByName} (${itemObject.submittedById})</b>.<br><br><b>Primary Case:</b> ${itemObject.caseNumber}<br><b>Item Number:</b> ${itemObject.sequentialCaseId}<br><b>Item Location:</b> ${itemObject.location}<br><b>Item Description:</b> ${itemObject.description}`
-        },
-        itemEdited: {
-            subject: 'Item Edited',
-            content: (itemObject) =>
-                `<h1>Item Edited</h1>Item with barcode <b>${itemObject.barcode}</b> edited by user <b>${itemObject.submittedByName} (${itemObject.submittedById})</b>.<br><br><b>Primary Case:</b> ${itemObject.caseNumber}<br><b>Item Number:</b> ${itemObject.sequentialCaseId}<br><b>Item Location:</b> ${itemObject.location}<br><b>Item Description:</b> ${itemObject.description}`
-        },
-        itemFieldEdited: {
-            subject: 'Item Field Edited',
-            content: (itemObject, fieldEdited) =>
-                `Item with barcode ${itemObject.barcode} edited field ${fieldEdited} by user ${itemObject.submittedByName} (${itemObject.submittedById})</b>.<br><br><b>Primary Case:</b> ${itemObject.caseNumber}<br><b>Item Number:</b> ${itemObject.sequentialCaseId}<br><b>Item Location:</b> ${itemObject.location}<br><b>Item Description:</b> ${itemObject.description}`
-        },
-        itemCustomFieldEdited: {
-            subject: 'Item Custom Field Edited',
-            content: (itemObject, fieldEdited) =>
-                `Item with barcode ${itemObject.barcode} edited custom field ${fieldEdited} by user ${itemObject.submittedByName} (${itemObject.submittedById})</b>.<br><br><b>Primary Case:</b> ${itemObject.caseNumber}<br><b>Item Number:</b> ${itemObject.sequentialCaseId}<br><b>Item Location:</b> ${itemObject.location}<br><b>Item Description:</b> ${itemObject.description}`
-        },
-        caseCreated: {
-            subject: 'Case Created',
-            content: (caseObject) =>
-                `Case created with number ${caseObject.caseNumber} by user ${caseObject.submittedByName} (${caseObject.submittedById})`
-        },
-        caseEdited: {
-            subject: 'Case Edited',
-            content: (caseObject) =>
-                `Case with number ${caseObject.caseNumber} edited by user ${caseObject.submittedByName} (${caseObject.submittedById})`
-        },
-        caseFieldEdited: {
-            subject: 'Case Field Edited',
-            content: (caseObject, fieldEdited) =>
-                `Case with number ${caseObject.caseNumber} edited field ${fieldEdited} by user ${caseObject.submittedByName} (${caseObject.submittedById})`
-        },
-        caseCustomFieldEdited: {
-            subject: 'Case Custom Field Edited',
-            content: (caseObject, fieldEdited) =>
-                `Case with number ${caseObject.caseNumber} edited custom field ${fieldEdited} by user ${caseObject.submittedByName} (${caseObject.submittedById})`
+        emailTemplates: {
+            itemCreated: {
+                subject: 'Item(s) Created',
+                content: (itemObject) =>
+                    `<h1>Item Created</h1>A new item with barcode <b>${itemObject.barcode}</b> has been added into your system by <b>${itemObject.submittedByName} (${itemObject.submittedById})</b>.<ul style='margin-left: 2em'><li><b>Primary Case:</b> ${itemObject.caseNumber}</li><li><b>Item Number:</b> ${itemObject.sequentialCaseId}</li><li><b>Item Location:</b> ${itemObject.location}</li><li><b>Item Description:</b> ${itemObject.description}</li></ul><br/> <pre><h3>User: ${itemObject.submittedByName} (${itemObject.submittedById})</h3></pre>`
+            },
+            itemEdited: {
+                subject: 'Item(s) Edited',
+                content: (itemObject) =>
+                    `<h1>Item(s) Edited</h1> <ul><li>Barcode <b>${itemObject.barcode}</b>.</li></ul> <ul style='margin-left: 2em'><li><b>Primary Case:</b> ${itemObject.caseNumber}</li><li><b>Item Number:</b> ${itemObject.sequentialCaseId}</li><li><b>Item Location:</b> ${itemObject.location}</li><li><b>Item Description:</b> ${itemObject.description}</li></ul><br/> <pre><h3>User: ${itemObject.submittedByName} (${itemObject.submittedById})</h3></pre>`
+            },
+            itemFieldEdited: {
+                subject: 'Item Field Edited',
+                content: (itemObject, fieldEdited) =>
+                    `"<h1>Field <u>${fieldEdited}</u> Edited for Item(s): </h1> <ul><li>Barcode <b>${itemObject.barcode}</b>.</li></ul> <ul style='margin-left: 2em'><li><b>Primary Case:</b> ${itemObject.caseNumber}</li><li><b>Item Number:</b> ${itemObject.sequentialCaseId}</li><li><b>Item Location:</b> ${itemObject.location}</li><li><b>Item Description:</b> ${itemObject.description}</li></ul><br/> <pre><h3>User: ${itemObject.submittedByName} (${itemObject.submittedById})</h3></pre>"`
+            },
+            itemCustomFieldEdited: {
+                subject: 'Item Custom Field Edited',
+                content: (itemObject, fieldEdited) =>
+                    `<h1>Custom field <u>${fieldEdited}</u> edited for item(s): </h1> <ul><li>Barcode <b>${itemObject.barcode}</b>.</li></ul> <ul style='margin-left: 2em'><li><b>Primary Case:</b> ${itemObject.caseNumber}</li><li><b>Item Number:</b> ${itemObject.sequentialCaseId}</li><li><b>Item Location:</b> ${itemObject.location}</li><li><b>Item Description:</b> ${itemObject.description}</li></ul><br/> <pre><h3>User: ${itemObject.submittedByName} (${itemObject.submittedById})</h3></pre>`
+            },
+            caseCreated: {
+                subject: 'Case Created',
+                content: (caseObject) =>
+                    `Case created with number ${caseObject.caseNumber} by user ${caseObject.submittedByName} (${caseObject.submittedById})`
+            },
+            caseEdited: {
+                subject: 'Case Edited',
+                content: (caseObject) =>
+                    `<h1>Case(s) Edited</h1><li>Case Number <b>${caseObject.caseNumber}</b>.</li><br/> <pre><h3>User: ${caseObject.submittedByName} (${caseObject.submittedById})</h3></pre>`
+            },
+            caseFieldEdited: {
+                subject: 'Case Field Edited',
+                content: (caseObject, fieldEdited) =>
+                    `"<h1>Field <u>${fieldEdited}</u> Edited for Case(s)</h1><li>Case Number <b>${caseObject.caseNumber}</b>.</li><br/> <pre><h3>User: ${caseObject.submittedByName} (${caseObject.submittedById})</h3></pre>"`
+            },
+            caseCustomFieldEdited: {
+                subject: 'Case Custom Field Edited',
+                content: (caseObject, fieldEdited) =>
+                    `"<h1>Custom field <u>${fieldEdited}</u> Edited for Case(s): </h1><li>Case Number <b>${caseObject.caseNumber}</b>.</li><br/> <pre><h3>User: ${caseObject.submittedByName} (${caseObject.submittedById})</h3></pre>"`
+            },
         },
         actionToPerform: {
             email: 'Email',

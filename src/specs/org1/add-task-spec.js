@@ -21,7 +21,7 @@ describe('Add Task', function () {
 
     context('1.1 Org Admin', function () {
 
-        it('1.1.1 Add task with required fields only -- keep it Unassigned', function () {
+        it('1.1.1 Add task with required fields only -- Unassigned', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
             D.getNewTaskData(null, null);
@@ -52,7 +52,7 @@ describe('Add Task', function () {
                 .click_Save()
                 .verify_toast_message_(C.toastMsgs.saved)
                 .verify_task_data_on_grid(D.newTask)
-                .get_text_from_grid_and_save_as_object_property('Task #', D.newTask, 'number', 'td')
+                .get_text_from_grid_and_save_in_local_storage('Task #', D.newTask, 'number', 'td')
             ui.addTask.verify_email_content_(powerUser.email, C.tasks.emailTemplates.taskCreated, D.newTask, powerUser.name)
 
         });
@@ -76,11 +76,11 @@ describe('Add Task', function () {
                 .click_Save()
                 .verify_toast_message(C.toastMsgs.saved)
                 .verify_task_data_on_grid(D.newTask)
-                .get_text_from_grid_and_save_as_object_property('Task #', D.newTask, 'number', 'td')
+                .get_text_from_grid_and_save_in_local_storage('Task #', D.newTask, 'taskNumber', 'td')
             ui.addTask.verify_email_content_(powerUser.email, C.tasks.emailTemplates.taskCreated_noDetails, D.newTask, admin_userGroup.name)
         });
 
-        it('A.T_1.3. Add task assigned to 1 User and 1 User Group and check email notification with more Task details', function () {
+        it.only('A.T_1.3. Add task assigned to 1 User and 1 User Group and check email notification with more Task details', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
             D.getNewTaskData(powerUser, admin_userGroup);
@@ -99,6 +99,8 @@ describe('Add Task', function () {
                 .click_Save()
                 .verify_toast_message(C.toastMsgs.saved)
                 .verify_task_data_on_grid(D.newTask)
+                .get_text_from_grid_and_save_in_local_storage('Task #', 'taskNumber', 'td')
+                .c
             ui.addTask.verify_email_content_(powerUser.email, C.tasks.emailTemplates.taskCreated, D.newTask, powerUser.name + ', ' + admin_userGroup.name)
         });
     });

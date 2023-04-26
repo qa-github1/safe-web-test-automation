@@ -3,6 +3,7 @@ import BasePage from "../base-pages/base-page";
 
 //************************************ ELEMENTS ***************************************//
 let
+    taskType = e => cy.get('[ng-model="newTask.taskType"]'),
     titleInput = e => cy.get('[name="taskTitle"]'),
     messageInput = e => cy.get('[name="taskMessage"]'),
     dueDateInput = e => cy.get('[name="DUEDate"]').find('input'),
@@ -28,8 +29,9 @@ export default class AddTaskPage extends BasePage {
     }
 
     populate_all_fields(taskObject, dueDate) {
-        titleInput().type(taskObject.title);
-        messageInput().type(taskObject.message);
+        taskType().select(taskObject.type);
+        this.clearAndEnterValue(titleInput, taskObject.title)
+        this.clearAndEnterValue(messageInput, taskObject.message)
         if (taskObject.userEmail) this.enter_user(taskObject.userEmail)
         if (taskObject.userGroupName) this.enter_user_group(taskObject.userGroupName)
         // if(!dueDate){
@@ -82,13 +84,15 @@ export default class AddTaskPage extends BasePage {
         return this;
     }
 
-    verify_email_content_(recipient, emailTemplate, taskObject, assignedTo) {
-        this.verify_email_content
-        (recipient, emailTemplate.subject, emailTemplate.content1(taskObject), 1, false)
+    verify_email_content_(recipient, emailTemplate, taskObject, assignedTo, numberOfExpectedEmails = 1, markSeen = true) {
+        cy.getLocalStorage("taskNumber").then(number => {
+            taskObject.taskNumber = '#' + number
+            this.verify_email_content
+            (recipient, emailTemplate.subject, emailTemplate.content1(taskObject), numberOfExpectedEmails, markSeen)
 
-        this.verify_email_content
-        (recipient, emailTemplate.subject, emailTemplate.content2(assignedTo))
-        return this;
+            this.verify_email_content
+            (recipient, emailTemplate.subject, emailTemplate.content2(assignedTo), numberOfExpectedEmails, markSeen)
+        })
     };
 }
 

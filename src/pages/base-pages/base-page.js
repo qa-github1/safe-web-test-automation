@@ -1025,8 +1025,8 @@ export default class BasePage {
         self.fetch_emails(markSeen).then(function (emails) {
             D.unreadEmails = emails
 
-            //cy.log('EMAIL TEMPLATE ' + content)
-            //cy.log('EMAIL received ' + JSON.stringify(emails))
+            cy.log('EMAIL TEMPLATE ' + content)
+            cy.log('EMAIL received ' + JSON.stringify(emails))
             if (emails[numberOfExpectedEmails - 1]) {
                 self.verify_content_of_email_for_specific_recipient(recipient, subject, content, shouldSaveLinkToLocalStorage)
             } else {
@@ -1851,13 +1851,22 @@ export default class BasePage {
             object[propertyName] = text
         });
     }
+    //
+    // get_text_from_grid_and_save_in_local_storage(columnTitle, object, propertyName, headerCellTag = 'th') {
+    //     resultsTableHeader().contains(headerCellTag, columnTitle).invoke('index').then((i) => {
+    //         firstRowInResultsTable().find('td').eq(i).invoke('text').then(function (text) {
+    //             return object[propertyName] = text
+    //         });
+    //     })
+    // }
 
-    get_text_from_grid_and_save_as_object_property(columnTitle, object, propertyName, headerCellTag = 'th') {
+    get_text_from_grid_and_save_in_local_storage(columnTitle, propertyName, headerCellTag = 'th') {
         resultsTableHeader().contains(headerCellTag, columnTitle).invoke('index').then((i) => {
             firstRowInResultsTable().find('td').eq(i).invoke('text').then(function (text) {
-                return object[propertyName] = text
+                cy.setLocalStorage(propertyName, text);
             });
         })
+        return this
     }
 
     get_text_after_the_character_and_save_to_local_storage(element, character, propertyToSave) {

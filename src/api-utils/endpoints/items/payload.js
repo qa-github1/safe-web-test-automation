@@ -38,31 +38,35 @@ exports.generate_POST_request_payload_for_creating_new_item = function (specific
     return body;
 };
 
-exports.generate_PUT_request_payload_for_editing_existing_item = function (existingItem, addCustomFormData) {
+exports.generate_PUT_request_payload_for_editing_existing_item = function (itemObject, addCustomFormData) {
 
     let formData = addCustomFormData ?
         [{
             data: `{
-            "${S.selectedEnvironment.caseCustomForm.checkboxListId}":{"1":true},
-            "${S.selectedEnvironment.itemCustomForm.radioButtonListId}":"2",
-            "${S.selectedEnvironment.itemCustomForm.selectListId}":"3",
-            "${S.selectedEnvironment.itemCustomForm.number}":${existingItem.custom_number},
-            "${S.selectedEnvironment.itemCustomForm.password}":"${existingItem.custom_password}",
-            "${S.selectedEnvironment.itemCustomForm.textbox}":"${existingItem.custom_textbox}",
-            "${S.selectedEnvironment.itemCustomForm.email}":"${existingItem.custom_email}",
-            "${S.selectedEnvironment.itemCustomForm.textarea}":"${existingItem.custom_textarea}",
-            "${S.selectedEnvironment.itemCustomForm.checkbox}":${existingItem.custom_checkbox},
-            "${S.selectedEnvironment.itemCustomForm.date}":"${existingItem.custom_date}"}`,
+            "${S.selectedEnvironment.itemCustomForm.checkboxListId}":${JSON.stringify(itemObject.custom_checkboxListOption_apiFormat)},
+            "${S.selectedEnvironment.itemCustomForm.radioButtonListId}":"${itemObject.custom_radiobuttonListOption_apiFormat}",
+            "${S.selectedEnvironment.itemCustomForm.selectListId}":"${itemObject.custom_selectListOption_apiFormat}",
+            "${S.selectedEnvironment.itemCustomForm.number}":${itemObject.custom_number},
+            "${S.selectedEnvironment.itemCustomForm.password}":"${itemObject.custom_password}",
+            "${S.selectedEnvironment.itemCustomForm.textbox}":"${itemObject.custom_textbox}",
+            "${S.selectedEnvironment.itemCustomForm.email}":"${itemObject.custom_email}",
+            "${S.selectedEnvironment.itemCustomForm.textarea}":"${itemObject.custom_textarea}",
+            "${S.selectedEnvironment.itemCustomForm.user}":"user-${itemObject.custom_userId}",
+            "${S.selectedEnvironment.itemCustomForm.person}":${itemObject.custom_personId},
+            "${S.selectedEnvironment.itemCustomForm.dropdownTypeahead}":${itemObject.custom_dropdownTypeaheadOption_apiFormat},
+            "${S.selectedEnvironment.itemCustomForm.checkbox}":"${itemObject.custom_checkbox}",
+            "${S.selectedEnvironment.itemCustomForm.date}":"${itemObject.custom_dateISOFormat}"}`,
             dateFields: [S.selectedEnvironment.itemCustomForm.date],
-            entityId: existingItem.id.toString(),
+            entityId: itemObject.id.toString(),
             formId: S.selectedEnvironment.itemCustomForm.id,
             formName: S.selectedEnvironment.itemCustomForm.name
         }] : [];
 
-    existingItem.formData = formData;
+    itemObject.formData = formData;
 
     let body = {};
-    Object.assign(body, existingItem);
+    Object.assign(body, itemObject);
+    body.primaryCaseId
 
    //cy.log('REQUEST BODY IS ' + JSON.stringify(body));
 

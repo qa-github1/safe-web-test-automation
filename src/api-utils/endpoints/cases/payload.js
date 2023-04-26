@@ -28,43 +28,44 @@ exports.generate_POST_request_payload_for_creating_new_case = function (caseNumb
     return body;
 }
 
-exports.generate_PUT_request_payload_for_editing_existing_case = function (existingCase, addCustomFormData) {
+exports.generate_PUT_request_payload_for_editing_existing_case = function (caseObject, addCustomFormData) {
 
     let formData = addCustomFormData ?
         [{
             data: `{
-            "${S.selectedEnvironment.caseCustomForm.checkboxListId}":{"1":true},
-            "${S.selectedEnvironment.caseCustomForm.radioButtonListId}":"2",
-            "${S.selectedEnvironment.caseCustomForm.selectListId}":"3",
-            "${S.selectedEnvironment.caseCustomForm.number}":${existingCase.custom_number},
-            "${S.selectedEnvironment.caseCustomForm.password}":"${existingCase.custom_password}",
-            "${S.selectedEnvironment.caseCustomForm.textbox}":"${existingCase.custom_textbox}",
-            "${S.selectedEnvironment.caseCustomForm.email}":"${existingCase.custom_email}",
-            "${S.selectedEnvironment.caseCustomForm.textarea}":"${existingCase.custom_textarea}",
-            "${S.selectedEnvironment.caseCustomForm.checkbox}":${existingCase.custom_checkbox},
-            "${S.selectedEnvironment.caseCustomForm.date}":"${existingCase.custom_date}"}`,
+            "${S.selectedEnvironment.caseCustomForm.checkboxListId}":${JSON.stringify(caseObject.custom_checkboxListOption_apiFormat)},
+            "${S.selectedEnvironment.caseCustomForm.radioButtonListId}":"${caseObject.custom_radiobuttonListOption_apiFormat}",
+            "${S.selectedEnvironment.caseCustomForm.selectListId}":"${caseObject.custom_selectListOption_apiFormat}",
+            "${S.selectedEnvironment.caseCustomForm.number}":${caseObject.custom_number},
+            "${S.selectedEnvironment.caseCustomForm.password}":"${caseObject.custom_password}",
+            "${S.selectedEnvironment.caseCustomForm.textbox}":"${caseObject.custom_textbox}",
+            "${S.selectedEnvironment.caseCustomForm.email}":"${caseObject.custom_email}",
+            "${S.selectedEnvironment.caseCustomForm.textarea}":"${caseObject.custom_textarea}",
+            "${S.selectedEnvironment.caseCustomForm.user}":"user-${caseObject.custom_userId}",
+            "${S.selectedEnvironment.caseCustomForm.person}":${caseObject.custom_personId},
+            "${S.selectedEnvironment.caseCustomForm.dropdownTypeahead}":${caseObject.custom_dropdownTypeaheadOption_apiFormat},
+            "${S.selectedEnvironment.caseCustomForm.checkbox}":"${caseObject.custom_checkbox}",
+            "${S.selectedEnvironment.caseCustomForm.date}":"${caseObject.custom_dateISOFormat}"}`,
             dateFields: [S.selectedEnvironment.caseCustomForm.date],
-            entityId: existingCase.id.toString(),
+            entityId: caseObject.id.toString(),
             formId: S.selectedEnvironment.caseCustomForm.id,
             formName: S.selectedEnvironment.caseCustomForm.name
         }] : [];
 
-
-   //cy.log('FORM DATA IS ' + JSON.stringify(formData))
-    existingCase.createdDate = existingCase.createdDateIsoFormat || undefined
-    existingCase.offenseDate = existingCase.offenseDateIsoFormat
-    existingCase.followUpDate = existingCase.reviewDateIsoFormat
-    existingCase.reviewDate = existingCase.reviewDateIsoFormat
-
-    existingCase.formData = formData;
+    caseObject.formData = formData;
 
     let body = {};
-    Object.assign(body, existingCase);
+   // cy.log('FORM DATA IS ' + JSON.stringify(formData))
+    caseObject.createdDate = caseObject.createdDateIsoFormat || undefined
+    caseObject.offenseDate = caseObject.offenseDateIsoFormat
+    caseObject.followUpDate = caseObject.reviewDateIsoFormat
+    caseObject.reviewDate = caseObject.reviewDateIsoFormat
 
-   //cy.log('REQUEST BODY IS ' + JSON.stringify(body));
-
+    Object.assign(body, caseObject);
+   cy.log('REQUEST BODY IS ' + JSON.stringify(body));
     return body;
 };
+
 
 exports.generate_POST_request_payload_for_CLP = function (CLP_permissionGroup, user, userGroup, office_permissionGroup, isRestricted = true) {
 

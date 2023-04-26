@@ -97,7 +97,7 @@ E.generateDataFor_CASES_Importer = function (arrayOfDataObjects, customFormName,
             caseObject.active,
             caseObject.caseNumber,
             caseObject.userGuid,
-            caseObject.userGuid,
+            caseObject.caseOfficers_importFormat,
             caseObject.officeGuid,
             caseObject.offenseType,
             caseObject.offenseDescription,
@@ -113,7 +113,7 @@ E.generateDataFor_CASES_Importer = function (arrayOfDataObjects, customFormName,
             caseObject.active,
             caseObject.caseNumber,
             caseObject.userGuid,
-            caseObject.userGuid,
+            caseObject.caseOfficers_importFormat,
             caseObject.officeGuid,
             caseObject.offenseType,
             caseObject.createdDate
@@ -253,28 +253,28 @@ E.generateDataFor_ITEMS_Importer = function (arrayOfDataObjects, customFormName)
         }
 
         if (itemObject.status === 'Checked Out') {
-            allFieldsHeaders.push( "CheckOutReason")
-            minimumFieldsHeaders.push( "CheckOutReason")
+            allFieldsHeaders.push("CheckOutReason")
+            minimumFieldsHeaders.push("CheckOutReason")
             E.itemImportDataWithAllFields[i + 1].push(itemObject.checkoutReason)
             E.itemImportDataWithMinimumFields[i + 1].push(itemObject.checkoutReason)
 
-            allFieldsHeaders.push( "CheckedOutById")
-            minimumFieldsHeaders.push( "CheckedOutById")
+            allFieldsHeaders.push("CheckedOutById")
+            minimumFieldsHeaders.push("CheckedOutById")
             E.itemImportDataWithAllFields[i + 1].push(itemObject.checkedOutBy_guid)
             E.itemImportDataWithMinimumFields[i + 1].push(itemObject.checkedOutBy_guid)
 
-            allFieldsHeaders.push( "CheckedOutToId")
-            minimumFieldsHeaders.push( "CheckedOutToId")
+            allFieldsHeaders.push("CheckedOutToId")
+            minimumFieldsHeaders.push("CheckedOutToId")
             E.itemImportDataWithAllFields[i + 1].push(itemObject.checkedOutTo_guid)
             E.itemImportDataWithMinimumFields[i + 1].push(itemObject.checkedOutTo_guid)
 
-            allFieldsHeaders.push( "CheckedOutDate")
-            minimumFieldsHeaders.push( "CheckedOutDate")
+            allFieldsHeaders.push("CheckedOutDate")
+            minimumFieldsHeaders.push("CheckedOutDate")
             E.itemImportDataWithAllFields[i + 1].push(itemObject.checkoutDate)
             E.itemImportDataWithMinimumFields[i + 1].push(itemObject.checkoutDate)
 
-            allFieldsHeaders.push( "ExpectedReturnDate")
-            minimumFieldsHeaders.push( "ExpectedReturnDate")
+            allFieldsHeaders.push("ExpectedReturnDate")
+            minimumFieldsHeaders.push("ExpectedReturnDate")
             E.itemImportDataWithAllFields[i + 1].push(itemObject.expectedReturnDate)
             E.itemImportDataWithMinimumFields[i + 1].push(itemObject.expectedReturnDate)
 
@@ -291,8 +291,7 @@ E.generateDataFor_ITEMS_Importer = function (arrayOfDataObjects, customFormName)
             if (itemObject.movedBy_name) {
                 E.itemImportDataWithAllFields[i + 1].push(itemObject.moveNotes)
                 E.itemImportDataWithMinimumFields[i + 1].push(itemObject.moveNotes)
-            }
-            else{
+            } else {
                 E.itemImportDataWithAllFields[i + 1].push(itemObject.checkInNotes)
                 E.itemImportDataWithMinimumFields[i + 1].push(itemObject.checkInNotes)
             }
@@ -599,7 +598,7 @@ E.generateDataFor_USERS_Importer = function (arrayOfDataObjects) {
     for (let i = 0; i < arrayOfDataObjects.length; i++) {
 
         let userObject = arrayOfDataObjects[i]
-        userObject.email =  'imported_' + userObject.email + '_' + i
+        userObject.email = 'imported_' + i + '_' + userObject.email
         let supervisor = userObject.supervisors ? userObject.supervisors[0] : ''
 
         E.userImportDataWithAllFields[i + 1] = [

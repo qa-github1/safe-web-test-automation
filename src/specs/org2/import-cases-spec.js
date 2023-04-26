@@ -17,14 +17,19 @@ describe('Import Cases', function () {
         D.generateNewDataSet();
     });
 
-    it('I.C_1 Case with all fields', function () {
+    it('I.C_1 Case with all fields -- user and user group in Case Officer(s) field', function () {
         ui.app.log_title(this);
         let fileName = 'CaseImport_allFields_' + S.domain;
         api.auth.get_tokens(user);
 
         D.getNewCaseData();
         D.getNewItemData(D.newCase);
+        D.newCase.caseOfficers_importFormat =
+            'user-' + S.userAccounts.orgAdmin.guid + ',' +
+            'group-' + S.selectedEnvironment.admin_userGroup.id
+        D.newCase.caseOfficers = [S.userAccounts.orgAdmin.name, S.selectedEnvironment.admin_userGroup.name]
         E.generateDataFor_CASES_Importer([D.newCase]);
+
         ui.app.generate_excel_file(fileName, E.caseImportDataWithAllFields);
         api.org_settings.enable_all_Case_fields();
         api.org_settings.enable_all_Item_fields();

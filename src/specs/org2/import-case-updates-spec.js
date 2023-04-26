@@ -15,7 +15,7 @@ describe('Import Case Updates', function () {
         api.auto_disposition.edit(true);
     });
 
-    it('I.C.U_1. Import Case Updates - all fields', function () {
+    it('I.C.U_1. Import Case Updates - all fields -- user and user group in Case Officer(s) field', function () {
         ui.app.log_title(this);
         let fileName = 'CaseUpdatesImport_allFields_' + S.domain;
 
@@ -25,13 +25,16 @@ describe('Import Case Updates', function () {
 
          D.generateNewDataSet();
         D.editedCase.caseNumber = D.newCase.caseNumber;
+        D.editedCase.caseOfficers_importFormat =
+            'user-' + S.userAccounts.powerUser.guid + ',' +
+            'group-' + S.selectedEnvironment.readOnly_userGroup.id
+        D.editedCase.caseOfficers = [S.userAccounts.powerUser.name, S.selectedEnvironment.readOnly_userGroup.name]
         D.editedCase.status = 'Closed'
         D.editedCase.active = false
-
         E.generateDataFor_CASES_Importer([D.editedCase], null, true);
 
         api.cases.add_new_case();
-        cy.generate_excel_file(fileName, E.caseImportDataWithAllFields);
+        ui.app.generate_excel_file(fileName, E.caseImportDataWithAllFields);
 
         ui.menu.click_Tools__Data_Import();
         ui.importer.upload_then_Map_and_Submit_file_for_update_importing(fileName, C.importTypes.cases, 'CaseNumber')
