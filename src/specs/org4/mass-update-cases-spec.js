@@ -77,7 +77,7 @@ describe('Mass Update Cases', function () {
                 .verify_edited_and_not_edited_values_on_Case_Edit_form(allFieldsLabels, D.editedCase, D.newCase)
         });
 
-        it('1.1 all fields turned on and edited, "overwrite existing values" turned ON', function () {
+        it('1.2 all fields turned on and edited, "overwrite existing values" turned ON', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(user);
             D.generateNewDataSet();

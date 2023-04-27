@@ -27,6 +27,8 @@ let
     highlightedOptionOnTypeahead = e => cy.get('.ui-select-highlight').last(),
     caseOfficersOverwrite = e => cy.get('[ng-model="toggle.caseOfficersOverwrite"]'),
     tagsOverwrite = e => cy.get('[ng-model="toggle.tagsOverwrite"]'),
+    tagsTypeaheadList = e => cy.get('[repeat="tagModel in allTagModels | filter: $select.search"]'),
+    orgTagIconOnTagsTypeaheadList = e => tagsTypeaheadList().find('[ng-if="model.tagUsedBy==1"]'),
     linkByText = linkText => cy.get('link').contains(linkText),
     linkWrappedInElement = (linkText, parentElementTag) => cy.contains(linkText).parent(parentElementTag),
     parentLinkByInnerText = innerText => cy.get('link').contains(innerText).parent('a'),
@@ -43,7 +45,7 @@ let
     pageSizesUnderMenuCustomization = e => cy.get('[ng-if="optionsToggle.isOpen"]'),
     elementOnGridContainer = elementTitle => cy.get('.bs-grid').contains(elementTitle),
     parentContainerFoundByInnerLabel = (innerLabel, parentElementTag = 'div') => cy.contains(innerLabel).parent(parentElementTag),
-    parentContainerFoundByInnerLabelOnModal = (innerLabel, parentElementTag = 'div') => modal().contains(innerLabel).parents(parentElementTag),
+    parentContainerFoundByInnerLabelOnModal = (innerLabel, parentElementTag = 'div') => modal().contains(innerLabel).parent(parentElementTag),
     navTabs = e => cy.get('.nav-tabs'),
     specificTab = tabTitle => navTabs().children().contains(tabTitle).parent('li'),
     historyTab = e => cy.get('[translate="GENERAL.HISTORY"]').parent('tab-heading').parent('a').parent('li'),
@@ -891,11 +893,11 @@ export default class BasePage {
                 console.log(concatenatedNames);
 
                 cy.wrap(JSON.stringify(textContent))
-             //   cy.wrap(JSON.stringify(concatenatedNames))
+                    //   cy.wrap(JSON.stringify(concatenatedNames))
                     .should('contain', 'sapien');
-              //   cy.wrap(textContent.items).each((item) => {
-              //       cy.wrap(JSON.stringify(item)).should('contain', 'Lorem');
-              //   });
+                //   cy.wrap(textContent.items).each((item) => {
+                //       cy.wrap(JSON.stringify(item)).should('contain', 'Lorem');
+                //   });
             });
         });
     }
@@ -1694,6 +1696,16 @@ export default class BasePage {
             .type('{enter}')
     }
 
+    turnOnToggleEnterValueAndWaitApiRequestToFinish(label, value, partOfApiRequest) {
+        this.define_API_request_to_be_awaited('GET', partOfApiRequest)
+        this.turnOnToggleAndReturnParentElement(label)
+            .find('input').first()
+            .clear()
+            .invoke('val', value).trigger('input')
+        this.wait_response_from_API_call(partOfApiRequest)
+        orgTagIconOnTagsTypeaheadList().click()
+    }
+
     findElementByLabelAndSelectDropdownOption(label, value) {
         parentContainerFoundByInnerLabelOnModal(label, '.form-group')
             .find('select').first()
@@ -1749,6 +1761,9 @@ export default class BasePage {
 
             if (['Offense Type', ''].some(v => label === v)) {
                 this.turnOnToggleAndSelectDropdownOption(label, value)
+
+            } else if (['Tags'].some(v => label === v)) {
+                this.turnOnToggleEnterValueAndWaitApiRequestToFinish(label, value, 'tagTypeahead')
 
             } else if (['Status'].some(v => label === v)) {
                 this.turnOnToggleAndReturnParentElement(label)
@@ -1851,6 +1866,7 @@ export default class BasePage {
             object[propertyName] = text
         });
     }
+
     //
     // get_text_from_grid_and_save_in_local_storage(columnTitle, object, propertyName, headerCellTag = 'th') {
     //     resultsTableHeader().contains(headerCellTag, columnTitle).invoke('index').then((i) => {
