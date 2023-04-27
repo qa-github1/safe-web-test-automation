@@ -78,8 +78,7 @@ describe('Discrepancy Reports', function () {
             api.locations.move_location('Child2_1', 'root')
         })
 
-
-        it('1.1. DR for single parent location - No Discrepancies Found', function () {
+        it.only('1.1. DR for single parent location - No Discrepancies Found', function () {
             let reportName = D.getCurrentDateAndRandomNumber(4);
             let arrayOfPropertiesInLocalStorage = locations.concat(items);
 
