@@ -22,7 +22,7 @@ describe('Add Notes', function () {
             .verify_toast_message(C.toastMsgs.saved)
             .reload_page()
             .select_tab(C.tabs.notes)
-            .verify_content_of_results_table(note + 1)
+            .verify_content_of_results_table(note)
     });
 
     it('A.N_2. Add Note to Item', function () {

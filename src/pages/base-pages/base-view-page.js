@@ -243,7 +243,7 @@ export default class BaseViewPage extends BasePage {
                 [textareaOnCustomForm, dataObject.custom_textarea],
                 //   [dropdownTypeaheadOnCustomForm, dataObject.custom_dropdownTypeaheadOption],
                 [personOnCustomForm, dataObject.custom_person],
-                [dateOnCustomForm, dataObject.custom_date],
+                [dateOnCustomForm, dataObject.custom_dateEditMode],
             ]);
 
         //using this instead of the commented row above until the issue with shared form gets fixed ----> #14625 ⁃ 'Dropdown Typeahead' on the Shared custom form has options available only in the originating Org

@@ -1445,7 +1445,7 @@ S.PENTEST_2 = {
         fullName: 'Cypress Person_2',
         id: 6606996,
         get organizationId() {
-            return S.PENTEST_1.orgSettings.id
+            return S.PENTEST_2.orgSettings.id
         },
         userId: null,
         guid: '8fbb5deb-86ef-4e7e-b427-5eae07c65b33',
