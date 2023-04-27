@@ -39,7 +39,7 @@ function getEnvironmentConfig(config) {
     configJson["env"] = environmentData;
     configJson["baseUrl"] = environmentData["baseUrl"];
     configJson["orgNum"] = config["env"]["orgNum"];
-    configJson["env"]["allureResultsPath"] = "report/allure-results";
+    configJson["env"]["allureResultsPath"] = "report/allure-results-" + config["env"]["orgNum"];
     configJson["env"]["allure"] = true;
 
     console.log('CONFIG PARAMETERS: ' + JSON.stringify(configJson))

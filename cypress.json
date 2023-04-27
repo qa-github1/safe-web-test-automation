@@ -17,7 +17,6 @@
   "watchForFileChanges": false,
   "video": false,
   "env" : {
-    "allureResultsPath": "report/allure-results",
     "allure": true,
     "CYPRESS_VERIFY_TIMEOUT": 60000
   },

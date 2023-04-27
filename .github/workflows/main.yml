@@ -64,64 +64,6 @@ jobs:
           PUBLISH_BRANCH: gh-pages
           PUBLISH_DIR: report
 
-  cypress-org3:
-    runs-on: ubuntu-latest
-    timeout-minutes: 250
-    container:
-      image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
-      options: --user 1001
-
-    strategy:
-      fail-fast: false
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Install dependencies
-        run: npm i
-
-      - name: Run tests
-        run: npm run tests-org3
-
-      - name: Deploy report to Github Pages directory
-        if: always()
-        uses: peaceiris/actions-gh-pages@v2
-        with:
-          keepFiles: true
-        env:
-          PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PUBLISH_BRANCH: gh-pages
-          PUBLISH_DIR: report
-
-  cypress-org4:
-    runs-on: ubuntu-latest
-    timeout-minutes: 250
-    container:
-      image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
-      options: --user 1001
-
-    strategy:
-      fail-fast: false
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Install dependencies
-        run: npm i
-
-      - name: Run tests
-        run: npm run tests-org4
-
-      - name: Deploy report to Github Pages directory
-        if: always()
-        uses: peaceiris/actions-gh-pages@v2
-        with:
-          keepFiles: true
-        env:
-          PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PUBLISH_BRANCH: gh-pages
-          PUBLISH_DIR: report
-
   report:
     runs-on: ubuntu-latest
     timeout-minutes: 250
@@ -143,6 +85,11 @@ jobs:
         run: |
           npm init --yes
           npm i allure-commandline --save-dev
+
+      - name: Merge allure-results-{org#} folders
+        run: |
+          rsync -a report/allure-results-1/ report/allure-results/
+          rsync -a report/allure-results-2/ report/allure-results/
 
       - uses: actions/setup-java@v3
         with:
