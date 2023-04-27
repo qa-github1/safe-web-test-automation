@@ -6,9 +6,69 @@ permissions: write-all
 
 jobs:
 
-  report:
-    runs-on: ubuntu-22.04
+  cypress-org1:
+    runs-on: ubuntu-latest
     timeout-minutes: 250
+    container:
+      image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
+      options: --user 1001
+
+    strategy:
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: npm i
+
+      - name: Run tests
+        run: npm run tests-org1
+
+      - name: Deploy report to Github Pages directory
+        if: always()
+        uses: peaceiris/actions-gh-pages@v2
+        with:
+          keepFiles: true
+        env:
+          PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PUBLISH_BRANCH: gh-pages
+          PUBLISH_DIR: report
+
+  cypress-org2:
+    runs-on: ubuntu-latest
+    timeout-minutes: 250
+    container:
+      image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
+      options: --user 1001
+
+    strategy:
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: npm i
+
+      - name: Run tests
+        run: npm run tests-org2
+
+      - name: Deploy report to Github Pages directory
+        if: always()
+        uses: peaceiris/actions-gh-pages@v2
+        with:
+          keepFiles: true
+        env:
+          PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PUBLISH_BRANCH: gh-pages
+          PUBLISH_DIR: report
+
+
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 250
+    needs: [ cypress-org1, cypress-org2]
     if: always()
     container:
       image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
@@ -52,6 +112,3 @@ jobs:
           PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PUBLISH_BRANCH: gh-pages
           PUBLISH_DIR: report
-
-
-
