@@ -29,9 +29,10 @@ jobs:
 
       - name: Merge allure-results-{org#} folders
         run: |
-          sudo apt-get install -y rsync
-          rsync -a allure-results-1/ allure-results/
-          rsync -a allure-results-2/ allure-results/
+          cp -rl allure-results-1/ allure-results/
+          cp -rl allure-results-2/ allure-results/
+          rm -r allure-results-1
+          rm -r allure-results-2
 
       - uses: actions/setup-java@v3
         with:
