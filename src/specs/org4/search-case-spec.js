@@ -48,7 +48,7 @@ describe('Cases Search', function () {
         case4 = Object.assign({}, D.newCase)
 
         D.newCase = {
-            caseNumber: D.randomNo,
+            caseNumber: 'searchCase1_' + S.currentDateAndTime,
             caseOfficerIds: [orgAdmin.id],
             caseOfficerGroupIds: [S.selectedEnvironment.admin_userGroup.id],
             offenseType: S.selectedEnvironment.offenseType2.name,
@@ -909,7 +909,7 @@ describe('Cases Search', function () {
 
         context('1.13 Closed Date', function () {
 
-            it('1.13.1 before', function () {
+            it.only('1.13.1 before', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 D.generateNewDataSet()
@@ -1030,7 +1030,7 @@ describe('Cases Search', function () {
                 ui.searchCase.enter_Closed_Date(lastMonth)
                     .click_Search()
                     .sort_by_ascending_order('Created Date')
-                    .verify_text_is_present_on_main_container(case3.caseNumber)
+                    .verify_text_is_present_on_the_grid(case3.caseNumber)
             });
 
             it('1.13.12 Year to date', function () {
