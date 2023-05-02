@@ -80,6 +80,10 @@ Cypress.Commands.add('generate_excel_file', (filename, dataObject) => {
     });
 });
 
+Cypress.Commands.add('verify_PDF_content', (filename, dataObject) => {
+    return cy.task('verify_PDF_content', {});
+});
+
 Cypress.Commands.add('compare_image_with_the_baseline', (fileName) => {
     cy.wait(3000);
     return cy.task('compare_images', {

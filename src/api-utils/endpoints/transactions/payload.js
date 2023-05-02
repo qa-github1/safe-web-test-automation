@@ -9,7 +9,7 @@ exports.generate_POST_request_payload_for_CheckOut = function (newItem, newPerso
         transaction: {
             takenById: person.id,
             reasonId: S.selectedEnvironment.checkoutReason.id,
-            notes: D.randomNo,
+            notes: 'Note for Checked Out Item',
             items: [newItem],
             expectedReturnDate: null
         },

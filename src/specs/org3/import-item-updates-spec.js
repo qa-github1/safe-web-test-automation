@@ -113,7 +113,7 @@ describe('Import Item Updates', function () {
                 .verify_toast_message([
                     C.toastMsgs.importComplete,
                     1 + C.toastMsgs.recordsImported]);
-            let allEditedFields = C.itemFields.allEditableFieldsArray.concat(['Case','Storage Location'])
+            let allEditedFields = C.itemFields.allEditableFieldsArray.concat(['Case', 'Storage Location'])
             ui.itemView.open_newly_created_item_via_direct_link()
                 .verify_edited_and_not_edited_values_on_Item_View_form(allEditedFields, D.editedItem, D.newItem, true, true)
                 .click_Edit()
@@ -218,11 +218,11 @@ describe('Import Item Updates', function () {
                 ])
                 .open_last_history_record()
                 .verify_all_values_on_history(D.editedItem, D.newItem, false)
-               .verify_red_highlighted_history_records(allEditedFields)
+                .verify_red_highlighted_history_records(allEditedFields)
         });
     });
 
-    it('6. Import update for item status (CheckIn transaction)', function () {
+    it.only('6. Import update for item status (CheckIn transaction)', function () {
         ui.app.log_title(this);
         let fileName = 'ItemUpdatesImport_CheckIn_' + S.domain;
 
@@ -230,6 +230,7 @@ describe('Import Item Updates', function () {
         api.org_settings.enable_all_Item_fields();
         D.generateNewDataSet();
         D.getEditedItemData(S.selectedEnvironment.oldActiveCase)
+        D.getCheckedInItemData(S.selectedEnvironment.locations[0])
         api.cases.add_new_case();
 
         // set 'true' as a first parameter in the next line when the issue in the following card gets fixed : '[Importer] ‘Error updating items in Elastic Search’ when performing ‘CheckIn/Undispose’ transaction'
@@ -251,20 +252,25 @@ describe('Import Item Updates', function () {
             ui.importer.upload_then_Map_and_Submit_file_for_Item_Updates_import(fileName).verify_toast_message([
                 C.toastMsgs.importComplete,
                 1 + C.toastMsgs.recordsImported]);
-            let allEditedFields = C.itemFields.allEditableFieldsArray.concat(['Case', 'Status', 'Storage Location'])
+             let allEditedFields = C.itemFields.allEditableFieldsArray.concat(['Case', 'Status', 'Storage Location'])
             ui.itemView.open_newly_created_item_via_direct_link()
                 .verify_edited_and_not_edited_values_on_Item_View_form(allEditedFields, D.editedItem, D.newItem, true, true)
                 .click_Edit()
                 .verify_edited_and_not_edited_values_on_Item_Edit_form(allEditedFields, D.editedItem, D.newItem, true, true)
+
+            D.getCheckedOutItemData()
+            let CoC_checkout = S.chainOfCustody.SAFE.checkout(D.editedItem)
+            ui.itemView
                 .select_tab(C.tabs.chainOfCustody)
                 .verify_content_of_sequential_rows_in_results_table([
-                    CoC_checkin,
-                    CoC_newItemEntry
-                ])
+                CoC_checkin,
+                CoC_checkout,
+                CoC_newItemEntry
+            ])
                 .open_last_history_record()
-            // uncomment the lines below when bug gets fixed in card #14769 /5
-            // .verify_all_values_on_history(D.editedItem, D.newItem, false)
-            // .verify_red_highlighted_history_records(allEditedFields)
+                //  uncomment the lines below when bug gets fixed in card #14769 /5
+                .verify_all_values_on_history(D.editedItem, D.newItem, false)
+                .verify_red_highlighted_history_records(allEditedFields)
         });
     });
 

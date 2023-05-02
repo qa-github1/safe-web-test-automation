@@ -8,3 +8,4 @@ src/.DS_Store
 .DS_Store
 cypress/logs/*
 src/fixtures/files/*.xlsx
+main--1.yml
