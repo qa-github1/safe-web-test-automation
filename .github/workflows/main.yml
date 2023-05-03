@@ -166,7 +166,8 @@ jobs:
         run: |
           npm init --yes
           npm i allure-commandline --save-dev
-          cp -rl ./ allure-results/
+          mkdir allure-results
+          mv ./* ./allure-results
 
       - uses: actions/setup-java@v3
         with:
