@@ -167,10 +167,16 @@ jobs:
           npm init --yes
           npm i allure-commandline --save-dev
           mkdir ./allure-results
-          [ -f *json ] && mv *json ./allure-results \
-          [ -f *png ] && mv *png ./allure-results \
-          [ -f *xml ] && mv *xml ./allure-results \
+          1/allure-results/*json ./allure-results \
+          2/allure-results/*json ./allure-results \
+          3/allure-results/*json ./allure-results \
+          4/allure-results/*json ./allure-results \
         
+          [ -f *png ] && 1/allure-results/*json ./allure-results \
+          [ -f *png ] && 2/allure-results/*json ./allure-results \
+          [ -f *png ] && 3/allure-results/*json ./allure-results \
+          [ -f *png ] && 4/allure-results/*json ./allure-results \
+
       - uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
