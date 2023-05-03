@@ -136,10 +136,10 @@ jobs:
 
       - name: Merge allure-results-3 folders
         run: |
-          cp -rl allure-results-1/ allure-resultss/
-          cp -rl allure-results-2/ allure-resultss/
-          cp -rl allure-results-3/ allure-resultss/
-          cp -rl allure-results-4/ allure-resultss/
+          cp -rl allure-results-1/ allure-results/
+          cp -rl allure-results-2/ allure-results/
+          cp -rl allure-results-3/ allure-results/
+          cp -rl allure-results-4/ allure-results/
 
       - name: Deploy report to Github Pages directory
         uses: peaceiris/actions-gh-pages@v2
@@ -166,6 +166,7 @@ jobs:
         run: |
           npm init --yes
           npm i allure-commandline --save-dev
+          cp -rl ./ allure-results/
 
       - uses: actions/setup-java@v3
         with:
@@ -175,7 +176,7 @@ jobs:
       - name: Generate Allure Report
         if: always()
         run: |
-          node_modules/allure-commandline/dist/bin/allure generate  allure-resultss -o report
+          node_modules/allure-commandline/dist/bin/allure generate  allure-results -o report
 
       - name: Deploy report to Github Pages directory
         uses: peaceiris/actions-gh-pages@v2
