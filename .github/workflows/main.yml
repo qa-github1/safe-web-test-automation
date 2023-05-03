@@ -31,7 +31,7 @@ jobs:
           keepFiles: true
         env:
           PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PUBLISH_BRANCH: gh-pages
+          PUBLISH_BRANCH: temp-reports
           PUBLISH_DIR: report
 
   cypress-org2:
@@ -60,7 +60,7 @@ jobs:
           keepFiles: true
         env:
           PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PUBLISH_BRANCH: gh-pages
+          PUBLISH_BRANCH: temp-reports
           PUBLISH_DIR: report
 
   cypress-org3:
@@ -89,7 +89,7 @@ jobs:
           keepFiles: true
         env:
           PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PUBLISH_BRANCH: gh-pages
+          PUBLISH_BRANCH: temp-reports
           PUBLISH_DIR: report
 
   cypress-org4:
@@ -118,7 +118,7 @@ jobs:
           keepFiles: true
         env:
           PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PUBLISH_BRANCH: gh-pages
+          PUBLISH_BRANCH: temp-reports
           PUBLISH_DIR: report
 
   report:
@@ -136,7 +136,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: gh-pages
+          ref: temp-reports
 
       - name: Install dependencies
         run: |
