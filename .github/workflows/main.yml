@@ -144,12 +144,20 @@ jobs:
           npm init --yes
           npm i allure-commandline --save-dev
 
-      - name: Merge allure-results-{org#} folders
+      - name: Merge allure-results-1 folders
         run: |
-      
-          cp -rl allure-results-2/ allure-results/
           cp -rl allure-results-1/ allure-results/
+
+      - name: Merge allure-results-2 folders
+        run: |
+          cp -rl allure-results-2/ allure-results/
+
+      - name: Merge allure-results-3 folders
+        run: |
           cp -rl allure-results-3/ allure-results/
+
+      - name: Merge allure-results-4 folders
+        run: |
           cp -rl allure-results-4/ allure-results/
 
       - uses: actions/setup-java@v3
