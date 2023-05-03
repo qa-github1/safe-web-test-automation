@@ -167,10 +167,10 @@ jobs:
           npm init --yes
           npm i allure-commandline --save-dev
           mkdir ./allure-results
-          find . -name "*.json" -exec mv "{}" ./allure-results \;
-          find . -name "*.png" -exec mv "{}" ./allure-results \;
-          find . -name "*.xml" -exec mv "{}" ./allure-results \;
-  
+          [ -f *json ] && mv *json ./allure-results \
+          [ -f *png ] && mv *png ./allure-results \
+          [ -f *xml ] && mv *xml ./allure-results \
+        
       - uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
