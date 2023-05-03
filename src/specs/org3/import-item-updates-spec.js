@@ -252,7 +252,7 @@ describe('Import Item Updates', function () {
             ui.importer.upload_then_Map_and_Submit_file_for_Item_Updates_import(fileName).verify_toast_message([
                 C.toastMsgs.importComplete,
                 1 + C.toastMsgs.recordsImported]);
-             let allEditedFields = C.itemFields.allEditableFieldsArray.concat(['Case', 'Status', 'Storage Location'])
+            let allEditedFields = C.itemFields.allEditableFieldsArray.concat(['Case', 'Status', 'Storage Location'])
             ui.itemView.open_newly_created_item_via_direct_link()
                 .verify_edited_and_not_edited_values_on_Item_View_form(allEditedFields, D.editedItem, D.newItem, true, true)
                 .click_Edit()
@@ -263,11 +263,12 @@ describe('Import Item Updates', function () {
             ui.itemView
                 .select_tab(C.tabs.chainOfCustody)
                 .verify_content_of_sequential_rows_in_results_table([
-                CoC_checkin,
-                CoC_checkout,
-                CoC_newItemEntry
-            ])
-                .open_last_history_record()
+                    CoC_checkin,
+                    CoC_checkout,
+                    CoC_newItemEntry
+                ])
+            D.getCheckedInItemData(S.selectedEnvironment.locations[0], 'newItem')
+            ui.itemView.open_last_history_record()
                 //  uncomment the lines below when bug gets fixed in card #14769 /5
                 .verify_all_values_on_history(D.editedItem, D.newItem, false)
                 .verify_red_highlighted_history_records(allEditedFields)

@@ -98,7 +98,7 @@ describe('Import Items', function () {
         api.org_settings.enable_all_Item_fields();
 
         D.getNewItemData(D.newCase);
-        D.getCheckedOutItemData('newItem')
+        D.getCheckedOutItemData(true)
         D.newItem.checkedOutNotes = 'Imported Checked Out item';
         let CoC_checkout_ItemEntry = S.chainOfCustody.SAFE.checkout(D.newItem);
 

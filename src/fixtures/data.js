@@ -255,6 +255,7 @@ D.getMovedItemData = function (newLocation) {
 
 D.getCheckedInItemData = function (location) {
     let checkInData = {
+        status: 'Checked In',
         location: location.name,
         locationGuid: location.guid,
         checkInDate: helper.setDate(C.currentDateTimeFormat.dateOnly),
@@ -262,10 +263,9 @@ D.getCheckedInItemData = function (location) {
         checkInNotes: 'Note for Checked In Item',
     }
     D.editedItem = Object.assign({}, D.editedItem, checkInData);
-    D.newItem = Object.assign({}, D.newItem, checkInData);
 };
 
-D.getCheckedOutItemData = function (newOrEditedItem = 'editedItem') {
+D.getCheckedOutItemData = function (itemAddedInCheckedOutStatus =  false) {
     let checkOutData = {
         status: 'Checked Out',
         location: '',
@@ -283,11 +283,10 @@ D.getCheckedOutItemData = function (newOrEditedItem = 'editedItem') {
         expectedReturnDate: helper.tomorrowsDate(C.currentDateTimeFormat.dateOnly)
     }
 
-    if (newOrEditedItem === 'editedItem') {
-        D.editedItem = Object.assign({}, D.editedItem, checkOutData);
-    } else {
+    if (itemAddedInCheckedOutStatus) {
         D.newItem = Object.assign({}, D.newItem, checkOutData);
     }
+    D.editedItem = Object.assign({}, D.editedItem, checkOutData);
 };
 
 D.setDateOnlyValues = function (dateOrDateTimeFormat) {
