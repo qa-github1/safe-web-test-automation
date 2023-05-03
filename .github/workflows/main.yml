@@ -147,17 +147,10 @@ jobs:
       - name: Merge allure-results-{org#} folders
         run: |
           cp -rl allure-results-1/ allure-results/
-          rm -r allure-results-1
-          
           cp -rl allure-results-2/ allure-results/
-          rm -r allure-results-2
-          
           cp -rl allure-results-3/ allure-results/
-          rm -r allure-results-3
-          
           cp -rl allure-results-4/ allure-results/
-          rm -r allure-results-4
-
+          
       - uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
