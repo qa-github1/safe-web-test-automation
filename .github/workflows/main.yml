@@ -124,33 +124,24 @@ jobs:
   report:
     runs-on: ubuntu-latest
     timeout-minutes: 250
-    needs: [ cypress-org1, cypress-org2, cypress-org3, cypress-org4 ]
+    needs: [ cypress-org1, cypress-org2, cypress-org3, cypress-org4]
     if: always()
+    container:
+      image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
+      options: --user 1001
 
     strategy:
       fail-fast: false
 
     steps:
-      - name: Sleep for 1 minute
-        run: sleep 60s
-        shell: bash
-
       - uses: actions/checkout@v2
         with:
-          ref: temp-reports
+          ref: gh-pages
 
       - name: Install dependencies
         run: |
           npm init --yes
           npm i allure-commandline --save-dev
-
-      - name: Merge allure-results-{org#} folders
-        run: |
-          cp -rl allure-results-1/ allure-results/
-          cp -rl allure-results-2/ allure-results/
-          cp -rl allure-results-3/ allure-results/
-          cp -rl allure-results-4/ allure-results/
-          
       - uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
@@ -160,11 +151,10 @@ jobs:
         if: always()
         run: |
           node_modules/allure-commandline/dist/bin/allure generate  allure-results -o report
-
       - name: Deploy report to Github Pages directory
         uses: peaceiris/actions-gh-pages@v2
         with:
-          keepFiles: true
+          keepFiles: false
         env:
           PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PUBLISH_BRANCH: gh-pages
