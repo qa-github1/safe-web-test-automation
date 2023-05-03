@@ -162,7 +162,6 @@ jobs:
           PUBLISH_BRANCH: gh-pages
           PUBLISH_DIR: allure-resultss
 
-
   report-final:
     runs-on: ubuntu-latest
     timeout-minutes: 250
