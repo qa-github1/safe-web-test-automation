@@ -151,8 +151,6 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Generate Allure Report
-        if: always()
       - name: Deploy report to Github Pages directory
         uses: peaceiris/actions-gh-pages@v2
         with:
