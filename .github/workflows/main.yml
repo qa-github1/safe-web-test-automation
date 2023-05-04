@@ -107,7 +107,7 @@ jobs:
   merge-and-deploy-final-report:
     runs-on: ubuntu-latest
     timeout-minutes: 250
-    needs: [report]
+    needs: [store-results-to-temp-reports]
     if: always()
     strategy:
       fail-fast: false
