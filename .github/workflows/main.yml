@@ -70,8 +70,6 @@ jobs:
           mkdir reports
           mv 1/ reports
           mv 2/ reports
-          mv 3/ reports
-          mv 4/ reports
       - name: Deploy report to Github Pages directory
         uses: peaceiris/actions-gh-pages@v2
         with:
