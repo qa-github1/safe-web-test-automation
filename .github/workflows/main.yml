@@ -6,6 +6,31 @@ permissions: write-all
 
 jobs:
 
+  clear-previous-reports:
+    runs-on: ubuntu-latest
+    timeout-minutes: 250
+    if: always()
+    strategy:
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: gh-pages
+      - name: remove previous reports
+        run: |
+          mkdir emptyFolder
+          rm -rf report
+          rm -rf 1
+          rm -rf 2
+      - name: Deploy blank report folder temp reports branch
+        uses: peaceiris/actions-gh-pages@v2
+        with:
+          keepFiles: false
+        env:
+          PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PUBLISH_BRANCH: gh-pages
+          PUBLISH_DIR: emptyFolder
+
   cypress-org1:
     runs-on: ubuntu-latest
     timeout-minutes: 250
@@ -27,7 +52,7 @@ jobs:
           keepFiles: true
         env:
           PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PUBLISH_BRANCH: temp-reports
+          PUBLISH_BRANCH: gh-pages
           PUBLISH_DIR: report
 
   cypress-org2:
@@ -51,63 +76,13 @@ jobs:
           keepFiles: true
         env:
           PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PUBLISH_BRANCH: temp-reports
-          PUBLISH_DIR: report
-
-  store-results-to-temp-reports:
-    runs-on: ubuntu-latest
-    timeout-minutes: 250
-    needs: [ cypress-org1, cypress-org2]
-    if: always()
-    strategy:
-      fail-fast: false
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          ref: temp-reports
-      - name: Move allure results for different Orgs to one directory
-        run: |
-          mkdir reports
-          mv 1/ reports
-          mv 2/ reports
-      - name: Deploy allure results to Github Pages directory
-        uses: peaceiris/actions-gh-pages@v2
-        with:
-          keepFiles: false
-        env:
-          PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PUBLISH_BRANCH: gh-pages
-          PUBLISH_DIR: reports
-
-  clear-previous-reports:
-    runs-on: ubuntu-latest
-    timeout-minutes: 250
-    needs: [store-results-to-temp-reports]
-    if: always()
-    strategy:
-      fail-fast: false
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          ref: temp-reports
-      - name: remove previous reports
-        run: |
-          mkdir reports
-          rm -rf 1
-          rm -rf 2
-      - name: Deploy blank report folder temp reports branch
-        uses: peaceiris/actions-gh-pages@v2
-        with:
-          keepFiles: false
-        env:
-          PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PUBLISH_BRANCH: temp-reports
-          PUBLISH_DIR: reports
+          PUBLISH_DIR: report
 
   merge-and-deploy-final-report:
     runs-on: ubuntu-latest
     timeout-minutes: 250
-    needs: [store-results-to-temp-reports]
+    needs: [cypress-org1, cypress-org2]
     if: always()
     strategy:
       fail-fast: false
