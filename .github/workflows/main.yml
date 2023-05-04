@@ -24,7 +24,7 @@ jobs:
         if: always()
         uses: peaceiris/actions-gh-pages@v2
         with:
-          keepFiles: false
+          keepFiles: true
         env:
           PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PUBLISH_BRANCH: temp-reports
@@ -48,7 +48,7 @@ jobs:
         if: always()
         uses: peaceiris/actions-gh-pages@v2
         with:
-          keepFiles: false
+          keepFiles: true
         env:
           PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PUBLISH_BRANCH: temp-reports
