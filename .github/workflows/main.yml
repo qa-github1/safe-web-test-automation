@@ -82,7 +82,7 @@ jobs:
   clear-previous-reports:
     runs-on: ubuntu-latest
     timeout-minutes: 250
-    needs: [ cypress-org1, cypress-org2 ]
+    needs: [store-results-to-temp-reports]
     if: always()
     strategy:
       fail-fast: false
