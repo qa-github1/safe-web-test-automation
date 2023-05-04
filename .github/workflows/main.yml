@@ -100,7 +100,7 @@ jobs:
           PUBLISH_BRANCH: gh-pages
           PUBLISH_DIR: report
 
-  cypress-org3:
+  cypress-org4:
     runs-on: ubuntu-latest
     timeout-minutes: 250
     container:
@@ -127,7 +127,7 @@ jobs:
   merge-and-deploy-final-report:
     runs-on: ubuntu-latest
     timeout-minutes: 250
-    needs: [cypress-org1, cypress-org2]
+    needs: [cypress-org1, cypress-org2, cypress-org3, cypress-org4]
     if: always()
     strategy:
       fail-fast: false
