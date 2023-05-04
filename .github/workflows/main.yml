@@ -57,7 +57,7 @@ jobs:
   report:
     runs-on: ubuntu-latest
     timeout-minutes: 250
-    needs: [ cypress-org1, cypress-org2, cypress-org3, cypress-org4]
+    needs: [ cypress-org1, cypress-org2]
     if: always()
     strategy:
       fail-fast: false
