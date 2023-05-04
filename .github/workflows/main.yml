@@ -93,8 +93,8 @@ jobs:
       - name: remove previous reports
         run: |
           mkdir reports
-          rmdir 1
-          rmdir 2
+          rm -rf 1
+          rm -rf 2
       - name: Deploy blank report folder temp reports branch
         uses: peaceiris/actions-gh-pages@v2
         with:
