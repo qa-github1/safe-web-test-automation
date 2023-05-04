@@ -27,7 +27,7 @@ describe('Item Transactions & Actions', function () {
             'Manage Cases']
 
         const disabledActions = [
-            'Check Item In',
+            'Check Item Out',
             'Move Item',
             'Undispose Item',
         ]
