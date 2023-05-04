@@ -113,7 +113,7 @@ jobs:
       - name: Install dependencies
         run: npm i
       - name: Run tests
-        run: npm run tests-org3
+        run: npm run tests-org4
       - name: Deploy report to temp-reports branch
         if: always()
         uses: peaceiris/actions-gh-pages@v2
