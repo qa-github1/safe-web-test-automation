@@ -79,30 +79,30 @@ jobs:
           PUBLISH_BRANCH: gh-pages
           PUBLISH_DIR: reports
 
-    clear previous reports from temp-reports branch:
-      runs-on: ubuntu-latest
-      timeout-minutes: 250
-      needs: [ cypress-org1, cypress-org2]
-      if: always()
-      strategy:
-        fail-fast: false
-      steps:
-        - uses: actions/checkout@v2
-          with:
-            ref: temp-reports
-        - name: Merge allure-results-3 folders
-          run: |
-            mkdir reports
-            rmdir 1
-            rmdir 2
-        - name: Deploy report to Github Pages directory
-          uses: peaceiris/actions-gh-pages@v2
-          with:
-            keepFiles: false
-          env:
-            PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            PUBLISH_BRANCH: temp-reports
-            PUBLISH_DIR: reports
+  clear previous reports from temp-reports branch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 250
+    needs: [ cypress-org1, cypress-org2 ]
+    if: always()
+    strategy:
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: temp-reports
+      - name: Merge allure-results-3 folders
+        run: |
+          mkdir reports
+          rmdir 1
+          rmdir 2
+      - name: Deploy report to Github Pages directory
+        uses: peaceiris/actions-gh-pages@v2
+        with:
+          keepFiles: false
+        env:
+          PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PUBLISH_BRANCH: temp-reports
+          PUBLISH_DIR: reports
 
   merge and deploy final report:
     runs-on: ubuntu-latest
