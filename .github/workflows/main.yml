@@ -97,7 +97,7 @@ jobs:
           mkdir allure-results
           mv 1/allure-results-1/* allure-results
           mv 2/allure-results-2/* allure-results 
-      
+
       - uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
