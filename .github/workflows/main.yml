@@ -54,7 +54,7 @@ jobs:
           PUBLISH_BRANCH: temp-reports
           PUBLISH_DIR: report
 
-  store results to temp-reports:
+  store results to temp reports:
     runs-on: ubuntu-latest
     timeout-minutes: 250
     needs: [ cypress-org1, cypress-org2]
@@ -65,12 +65,12 @@ jobs:
       - uses: actions/checkout@v2
         with:
           ref: temp-reports
-      - name: Merge allure-results-3 folders
+      - name: Move allure results for different Orgs to one directory
         run: |
           mkdir reports
           mv 1/ reports
           mv 2/ reports
-      - name: Deploy report to Github Pages directory
+      - name: Deploy allure results to Github Pages directory
         uses: peaceiris/actions-gh-pages@v2
         with:
           keepFiles: false
@@ -79,7 +79,7 @@ jobs:
           PUBLISH_BRANCH: gh-pages
           PUBLISH_DIR: reports
 
-  clear previous reports from temp-reports:
+  clear previous reports from temp reports:
     runs-on: ubuntu-latest
     timeout-minutes: 250
     needs: [ cypress-org1, cypress-org2 ]
@@ -90,12 +90,12 @@ jobs:
       - uses: actions/checkout@v2
         with:
           ref: temp-reports
-      - name: Merge allure-results-3 folders
+      - name: remove previous reports
         run: |
           mkdir reports
           rmdir 1
           rmdir 2
-      - name: Deploy report to Github Pages directory
+      - name: Deploy blank report folder temp reports branch
         uses: peaceiris/actions-gh-pages@v2
         with:
           keepFiles: false
