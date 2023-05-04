@@ -102,10 +102,10 @@ jobs:
           mv 3/allure-results/*json ./allure-results \
           mv 4/allure-results/*json ./allure-results \
         
-          [ -f *png ] && mv 1/allure-results/*json ./allure-results \
-          [ -f *png ] && mv 2/allure-results/*json ./allure-results \
-          [ -f *png ] && mv 3/allure-results/*json ./allure-results \
-          [ -f *png ] && mv 4/allure-results/*json ./allure-results \
+          [[ -f *png ]] && mv 1/allure-results/*png ./allure-results \
+          [[ -f *png ]] && mv 2/allure-results/*png ./allure-results \
+          [[ -f *png ]] && mv 3/allure-results/*png ./allure-results \
+          [[ -f *png ]] && mv 4/allure-results/*png ./allure-results \
 
       - uses: actions/setup-java@v3
         with:
