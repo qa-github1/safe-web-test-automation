@@ -95,12 +95,12 @@ jobs:
           npm init --yes
           npm i allure-commandline --save-dev
           mkdir allure-results
-          mv 1/allure-results-1/*json allure-results \
-          mv 2/allure-results-2/*json allure-results \
+          mv 1/allure-results-1/*json allure-results
+          mv 2/allure-results-2/*json allure-results 
         
         
-          [[ -f 1/allure-results-1/*png ]] && mv  1/allure-results-1/*png allure-results \
-          [[ -f 2/allure-results-2/*png ]] && mv  2/allure-results-2/*png allure-results \
+          [[ -f 1/allure-results-1/*png ]] && mv  1/allure-results-1/*png allure-results
+          [[ -f 2/allure-results-2/*png ]] && mv  2/allure-results-2/*png allure-results
 
       - uses: actions/setup-java@v3
         with:
