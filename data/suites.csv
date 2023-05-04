@@ -1,7 +1,0 @@
-"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
-"passed","Thu May 04 09:31:35 UTC 2023","Thu May 04 09:32:01 UTC 2023","26454","","Item Transactions & Actions","","","","2. Verify Transfer transaction and enabled/disabled actions for Checked Out item",""
-"passed","Thu May 04 09:32:02 UTC 2023","Thu May 04 09:32:21 UTC 2023","19320","","Item Transactions & Actions","","","","3. Verify Check Item In transaction and enabled/disabled actions for Checked In item",""
-"failed","Thu May 04 09:31:17 UTC 2023","Thu May 04 09:32:21 UTC 2023","63363","","Add Media","","","","A.M_2. Add Media to Item",""
-"passed","Thu May 04 09:32:36 UTC 2023","Thu May 04 09:32:54 UTC 2023","17728","","Item Transactions & Actions","","","","5. Verify Undispose transaction and enabled/disabled actions for Checked In item",""
-"passed","Thu May 04 09:31:10 UTC 2023","Thu May 04 09:31:35 UTC 2023","24185","","Item Transactions & Actions","","","","1. Verify Check Out transaction and enabled/disabled actions for Checked Out item",""
-"passed","Thu May 04 09:32:21 UTC 2023","Thu May 04 09:32:36 UTC 2023","14914","","Item Transactions & Actions","","","","4. Verify Dispose transaction and enabled/disabled actions for Disposed item",""
