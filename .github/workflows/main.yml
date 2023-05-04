@@ -99,8 +99,8 @@ jobs:
           mv allure-results-2/*json allure-results \
         
         
-          [[ -f *png ]] && mv  allure-results-1/*png allure-results \
-          [[ -f *png ]] && mv  allure-results-2/*png allure-results \
+          [[ -f allure-results-1/*png ]] && mv  allure-results-1/*png allure-results \
+          [[ -f allure-results-2/*png ]] && mv  allure-results-2/*png allure-results \
 
       - uses: actions/setup-java@v3
         with:
