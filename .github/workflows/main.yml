@@ -161,3 +161,14 @@ jobs:
           PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PUBLISH_BRANCH: gh-pages
           PUBLISH_DIR: report
+
+  slack-notification:
+    name: Notify on Slack
+    runs-on: ubuntu-latest
+    if: always()
+    needs: [cypress-org1, cypress-org2, cypress-org3, cypress-org4 ]
+
+    steps:
+      - uses: abinoda/slack-action@master
+        env:
+          SLACK_BOT_TOKEN: ${{secrets.SLACK_BOT_TOKEN }}
