@@ -1,8 +1,0 @@
-"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
-"passed","Fri May 05 07:51:38 UTC 2023","Fri May 05 07:51:53 UTC 2023","15005","","Edit Person","","","","3. Edit and verify reduced number of values on Person View page - Business Name",""
-"failed","Fri May 05 07:50:23 UTC 2023","Fri May 05 07:51:23 UTC 2023","59488","","Edit Person","","","","1. Edit and verify all values on Person View page",""
-"passed","Fri May 05 07:49:57 UTC 2023","Fri May 05 07:50:21 UTC 2023","23821","","Add Media","","","","A.M_2. Add Media to Item",""
-"passed","Fri May 05 07:51:54 UTC 2023","Fri May 05 07:51:59 UTC 2023","5198","","Edit Person","","","","4. Add a Person with disabled fields & check if those are shown up on Person Edit page after enabling all of the rest of the fields and editing Business Name / First Name / Last Name",""
-"passed","Fri May 05 07:51:23 UTC 2023","Fri May 05 07:51:38 UTC 2023","15460","","Edit Person","","","","2. Edit and verify reduced number of values on Person View page - First & Last Name",""
-"passed","Fri May 05 07:50:09 UTC 2023","Fri May 05 07:50:56 UTC 2023","46277","","Import Items","","","","5. Item with custom fields",""
-"failed","Fri May 05 07:49:59 UTC 2023","Fri May 05 07:50:08 UTC 2023","9763","Workflows","1. Case Workflows - all case fields enabled in Org Settings","","","","1.1 Email & Task - when Case created - all records - 1 user as email recipient",""
