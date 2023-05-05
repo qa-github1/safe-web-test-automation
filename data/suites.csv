@@ -1,7 +1,0 @@
-"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
-"passed","Thu May 04 12:13:45 UTC 2023","Thu May 04 12:14:24 UTC 2023","38825","","Add Media","","","","A.M_2. Add Media to Item",""
-"passed","Thu May 04 12:14:00 UTC 2023","Thu May 04 12:14:15 UTC 2023","15535","","Item Transactions & Actions","","","","1. Verify Check Out transaction and enabled/disabled actions for Checked Out item",""
-"passed","Thu May 04 12:13:54 UTC 2023","Thu May 04 12:14:40 UTC 2023","46125","Mass Update Cases","1. all fields enabled in Org Settings","","","","1.1 all fields turned on and edited, ""overwrite existing values"" turned OFF",""
-"failed","Thu May 04 12:14:41 UTC 2023","Thu May 04 12:15:52 UTC 2023","71339","Mass Update Cases","1. all fields enabled in Org Settings","","","","1.2 all fields turned on and edited, ""overwrite existing values"" turned ON",""
-"passed","Thu May 04 12:15:53 UTC 2023","Thu May 04 12:16:37 UTC 2023","44896","Mass Update Cases","1. all fields enabled in Org Settings","","","","1.3 all fields turned on but value is edited on required fields only",""
-"failed","Thu May 04 12:14:22 UTC 2023","Thu May 04 12:16:31 UTC 2023","128387","","Import Item Updates","","","","6. Import update for item status (CheckIn transaction)",""
