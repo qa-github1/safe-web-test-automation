@@ -909,7 +909,7 @@ describe('Cases Search', function () {
 
         context('1.13 Closed Date', function () {
 
-            it.only('1.13.1 before', function () {
+            it('1.13.1 before', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 D.generateNewDataSet()
