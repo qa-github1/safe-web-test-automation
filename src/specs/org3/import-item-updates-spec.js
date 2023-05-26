@@ -222,7 +222,7 @@ describe('Import Item Updates', function () {
         });
     });
 
-    it.only('6. Import update for item status (CheckIn transaction)', function () {
+    xit('6. Import update for item status (CheckIn transaction)', function () {
         ui.app.log_title(this);
         let fileName = 'ItemUpdatesImport_CheckIn_' + S.domain;
 

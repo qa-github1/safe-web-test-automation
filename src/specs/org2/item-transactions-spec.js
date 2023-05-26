@@ -16,7 +16,7 @@ describe('Item Transactions & Actions', function () {
         api.org_settings.enable_all_Person_fields()
     });
 
-    it.only('1. Verify Check Out transaction and enabled/disabled actions for Checked Out item', function () {
+    it('1. Verify Check Out transaction and enabled/disabled actions for Checked Out item', function () {
         ui.app.log_title(this);
         const enabledActions = [
             'Check Item In',

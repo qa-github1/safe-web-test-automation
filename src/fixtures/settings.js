@@ -1170,8 +1170,8 @@ S.PENTEST_1 = {
             name: "CypressLocation1"
         },
         {
-            id: 476104,
-            guid: '5733d8fe-4a5c-47b9-bae8-6748d26566c8',
+            id: 510384,
+            guid: '7a706961-0771-42da-9d49-a72dffc9c3f2',
             name: "CypressLocation2"
         }
     ],
