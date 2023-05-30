@@ -90,13 +90,16 @@ describe('Cases Search', function () {
         case3.caseNumber = 'searchCase_X.X.11_' + S.currentDateAndTime
         case3.createdDate = case3.offenseDate = case3.reviewDate = case3.closedDate =
             (currentMonth > 1) ?
-                (helper.getSpecificDateInSpecificFormat('mm/dd/yyyy', (currentMonth - 1) + '/1/' + currentYear) + ' 10 am') :
-                (helper.getSpecificDateInSpecificFormat('mm/dd/yyyy', '12' + '/1/' + (currentYear - 1)) + ' 10 am')
+                (helper.getSpecificDateInSpecificFormat('mm/dd/yyyy', (currentMonth - 1) + '/1/' + currentYear)):
+                    //+ ' 10 am') :
+                (helper.getSpecificDateInSpecificFormat('mm/dd/yyyy', '12' + '/1/' + (currentYear - 1)))
+                    //+ ' 10 am')
 
         //last year
         case4.caseNumber = 'searchCase_X.X.13_' + S.currentDateAndTime
         case4.createdDate = case4.offenseDate = case4.reviewDate = case4.closedDate
-            = helper.getSpecificDateInSpecificFormat('mm/dd/yyyy', '1/1/' + (currentYear - 1)) + ' 10 am'
+            = helper.getSpecificDateInSpecificFormat('mm/dd/yyyy', '1/1/' + (currentYear - 1))
+            //+ ' 10 am'
 
         E.generateDataFor_CASES_Importer([case2, case3, case4], 3);
         cy.generate_excel_file('Cases_forTestingSearchParameters', E.caseImportDataWithAllFields);
@@ -972,9 +975,9 @@ describe('Cases Search', function () {
 
             it('1.13.6 older than X', function () {
                 ui.app.log_title(this);
-                let caseNo = S.selectedEnvironment.oldClosedCase.caseNumber;
+                let caseNo = case4.caseNumber;
                 let date1 = helper.getCurrentDateInSpecificFormat('mm/dd/yyyy')
-                let date2 = S.selectedEnvironment.oldClosedCase.closedDate;
+                let date2 = case4.closedDate;
                 let numberOfDaysSinceClosedDate = helper.getNumberOfDaysBetween2Dates(date1, date2)
 
                 api.auth.get_tokens(orgAdmin);

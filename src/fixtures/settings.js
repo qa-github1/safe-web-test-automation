@@ -287,17 +287,17 @@ S.QA_1 = {
     oldClosedCase: {
         id: 202566,
         caseNumber: 'TestCase1',
-        createdDate: '01/10/22',
-        offenseDate: '01/03/23',
-        reviewDate: '04/20/23',
-        closedDate: '01/11/23',
+        createdDate: '01/10/2022',
+        offenseDate: '01/03/2023',
+        reviewDate: '04/20/2023',
+        closedDate: '01/11/2023',
     },
     oldActiveCase: {
         id: 202569,
         caseNumber: 'AutomatedTest-Active Case',
-        createdDate: '01/10/23',
-        offenseDate: '01/02/23',
-        reviewDate: '04/20/23'
+        createdDate: '01/10/2023',
+        offenseDate: '01/02/2023',
+        reviewDate: '04/20/2023'
     },
     recentCase: {
         id: 76,
@@ -1188,18 +1188,19 @@ S.PENTEST_1 = {
     oldClosedCase: {
         id: 7199043,
         caseNumber: 'TestCase1',
-        createdDate: '04/27/22',
-        offenseDate: '04/27/22',
-        reviewDate: '10/27/22',
-        closedDate: '10/27/22',
+        createdDate: '04/27/2022',
+        offenseDate: '04/27/2022',
+        reviewDate: '10/27/2022',
+        closedDate: '10/27/2022',
     },
     oldActiveCase: {
         id: 7733747,
         caseNumber: 'AutomatedTest-Active Case',
-        createdDate: '05/17/09',
-        offenseDate: '05/15/09',
-        reviewDate: '01/18/23'
+        createdDate: '05/17/2009',
+        offenseDate: '05/15/2009',
+        reviewDate: '01/18/2023'
     },
+    otherTaskTemplateId: 3605,
     recentCase: {
         id: 5446732,
         caseNumber: 'TestCase1'
@@ -1412,17 +1413,17 @@ S.PENTEST_2 = {
     oldClosedCase: {
         id: 7736934,
         caseNumber: 'TestCase1',
-        createdDate: '10/26/22',
-        offenseDate: '10/26/22',
-        reviewDate: '10/27/22',
-        closedDate: '10/27/22',
+        createdDate: '10/26/2022',
+        offenseDate: '10/26/2022',
+        reviewDate: '10/27/2022',
+        closedDate: '10/27/2022',
     },
     oldActiveCase: {
         id: 7742549,
         caseNumber: 'AutomatedTest-Active Case',
-        createdDate: '12/17/22',
-        offenseDate: '12/13/22',
-        reviewDate: '12/22/22'
+        createdDate: '12/17/2022',
+        offenseDate: '12/13/2022',
+        reviewDate: '12/2022/2022'
     },
     recentCase: {
         id: 5446732,
@@ -1650,17 +1651,17 @@ S.PENTEST_3 = {
     oldClosedCase: {
         id: 7743098,
         caseNumber: 'TestCase1',
-        createdDate: '12/28/22',
-        offenseDate: '12/21/22',
-        reviewDate: '12/30/22',
-        closedDate: '12/29/22',
+        createdDate: '12/28/2022',
+        offenseDate: '12/21/2022',
+        reviewDate: '12/30/2022',
+        closedDate: '12/29/2022',
     },
     oldActiveCase: {
         id: 7743099,
         caseNumber: 'AutomatedTest-Active Case',
-        createdDate: '12/28/22',
-        offenseDate: '12/20/22',
-        reviewDate: '01/03/23'
+        createdDate: '12/28/2022',
+        offenseDate: '12/20/2022',
+        reviewDate: '01/03/2023'
     },
     recentCase: {
         id: 7743099,
@@ -1884,17 +1885,17 @@ S.PENTEST_4 = {
     oldClosedCase: {
         id: 7744300,
         caseNumber: 'TestCase1',
-        createdDate: '01/05/23',
-        offenseDate: '12/21/22',
-        reviewDate: '12/30/22',
-        closedDate: '01/24/23',
+        createdDate: '01/05/2023',
+        offenseDate: '12/21/2022',
+        reviewDate: '12/30/2022',
+        closedDate: '01/24/2023',
     },
     oldActiveCase: {
         id: 7744372,
         caseNumber: 'AutomatedTest-Active Case',
-        createdDate: '01/05/23',
-        offenseDate: '12/20/22',
-        reviewDate: '01/03/23'
+        createdDate: '01/05/2023',
+        offenseDate: '12/20/2022',
+        reviewDate: '01/03/2023'
     },
     // recentCase: {
     //     id: 7744372,
