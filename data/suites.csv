@@ -1,5 +1,0 @@
-"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
-"passed","Tue May 30 13:24:11 UTC 2023","Tue May 30 13:25:09 UTC 2023","58562","Cases Search","1 Org Admin","1.4 Case Officer(s) > 1.4.1 equals (or)","","","1.4.1.2 UserGroupA saved in Case Officer(s) field ---> UserGroupA, UserGroupB and UserB selected in Search criteria",""
-"passed","Tue May 30 13:25:42 UTC 2023","Tue May 30 13:25:58 UTC 2023","15628","Cases Search","1 Org Admin","1.4 Case Officer(s) > 1.4.1 equals (or)","","","1.4.1.4 UserA saved in Case Officer(s) field ---> UserGroupA selected in Search criteria",""
-"passed","Tue May 30 13:25:10 UTC 2023","Tue May 30 13:25:41 UTC 2023","30788","Cases Search","1 Org Admin","1.4 Case Officer(s) > 1.4.1 equals (or)","","","1.4.1.3 UserGroupA and UserA saved in Case Officer(s) field ---> UserA selected in Search criteria",""
-"passed","Tue May 30 13:22:25 UTC 2023","Tue May 30 13:24:09 UTC 2023","104296","Cases Search","1 Org Admin","1.4 Case Officer(s) > 1.4.1 equals (or)","","","1.4.1.1 UserA saved in Case Officer(s) field ---> UserA and UserB selected in Search criteria",""
