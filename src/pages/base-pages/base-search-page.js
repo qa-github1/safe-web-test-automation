@@ -16,7 +16,7 @@ let searchCriteriaBasedOnFieldLabel = fieldLabel => cy.contains(fieldLabel).pare
     dropdownField = fieldLabel => cy.contains(fieldLabel).parent('div').find('select').eq(1),
     inputField = fieldLabel => cy.contains(fieldLabel).parent('div').find('input').eq(0),
     textareaField = fieldLabel => cy.contains(fieldLabel).parent('div').find('textarea').eq(0),
-    typeaheadOption = fieldLabel => cy.contains(fieldLabel).parent('div').find('ul').find('li').first(),
+    typeaheadOption = fieldLabel => cy.contains(fieldLabel).parent('div').find('ul').find('li').eq(0),
     resultsItemsCount = e => cy.get('[translate="BSGRID.DISPLAY_STATS_ROWS"]'),
     tableColumn_header = columnTitle => cy.get('thead').contains(columnTitle),
     tableColumn_header_arrowUp = columnTitle => cy.get('thead').contains(columnTitle).parent().find('.order'),
@@ -71,7 +71,7 @@ export default class BaseSearchPage extends BasePage {
         searchCriteriaBasedOnFieldLabel(fieldLabel).select(searchCriteria);
         typeaheadInputField(fieldLabel).type(value);
         this.wait_response_from_API_call('typeahead')
-        this.pause(0.3)
+        this.pause(1)
         typeaheadOption(fieldLabel).click();
         return this;
     };

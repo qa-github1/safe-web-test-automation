@@ -138,8 +138,10 @@ exports.set_Next_Case_Number = function (nextCaseNumber) {
 };
 
 exports.set_Case_Level_Permissions_on_Org_Settings = function (useCLP) {
-    people.add_new_person(D.setNewRandomNo());
-    items.add_new_item(false);
+    if (useCLP){
+        people.add_new_person(D.setNewRandomNo());
+        items.add_new_item(false);
+    }
     exports.update_org_settings(useCLP);
     return this;
 };

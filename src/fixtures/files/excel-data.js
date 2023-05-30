@@ -57,7 +57,8 @@ E.generateDataFor_CASES_Importer = function (arrayOfDataObjects, customFormName,
         "Tags",
         "createdDate",
         "ReviewDate",
-        "ReviewDateNotes"
+        "ReviewDateNotes",
+        "ClosedDate",
     ]
     let minimumFieldsHeaders = [
         "Active",
@@ -91,6 +92,7 @@ E.generateDataFor_CASES_Importer = function (arrayOfDataObjects, customFormName,
         if (!importingCaseUpdates) caseObject.caseNumber = 'imported_' + caseObject.caseNumber + '_' + i
         let tags = caseObject.tags ? caseObject.tags[0] : ''
         let reviewDate = caseObject.reviewDate || ''
+        let closedDate = caseObject.closedDate || ''
         let reviewDateNotes = caseObject.reviewDateNotes || ''
 
         E.caseImportDataWithAllFields[i + 1] = [
@@ -107,6 +109,7 @@ E.generateDataFor_CASES_Importer = function (arrayOfDataObjects, customFormName,
             caseObject.createdDate,
             reviewDate,
             reviewDateNotes,
+            closedDate
         ]
 
         E.caseImportDataWithMinimumFields[i + 1] = [
