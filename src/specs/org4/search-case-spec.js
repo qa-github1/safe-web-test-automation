@@ -327,7 +327,7 @@ describe('Cases Search', function () {
 
         context('1.4 Case Officer(s)', function () {
 
-            context.only('1.4.1 equals (or)', function () {
+            context('1.4.1 equals (or)', function () {
 
                 it('1.4.1.1 UserA saved in Case Officer(s) field ---> UserA and UserB selected in Search criteria', function () {
                     ui.app.log_title(this);
