@@ -9,15 +9,19 @@ let user = S.userAccounts.orgAdmin;
 
 describe('Import People', function () {
 
-    it('1. Import and verify Person with all fields', function () {
+    it.only('1. Import and verify People with all fields ' +
+        '- 1 person linked to 1 case, other person linked to 2 cases', function () {
         ui.app.log_title(this);
         let fileName = 'PeopleImport_allFields_'+ S.domain;
         api.auth.get_tokens(user);
 
         D.generateNewDataSet()
-        D.getNewPersonData(D.newCase);
+        let person1 = D.getNewPersonData(D.newCase);
+        let person2 = D.getNewPersonData(D.newCase);
+        let record3_person2LinkedToCase1 = D.getNewPersonData(D.newCase);
+        let record3_person2LinkedToCase2 = D.getNewPersonData(S.selectedEnvironment.oldActiveCase);
         Object.assign(D.newPerson, D.newPersonAddress)
-        E.generateDataFor_PEOPLE_Importer([D.newPerson]);
+        E.generateDataFor_PEOPLE_Importer([person1, person2]);
         api.cases.add_new_case();
 
         cy.generate_excel_file(fileName, E.peopleImportDataWithAllFields);
@@ -27,19 +31,39 @@ describe('Import People', function () {
         ui.importer.upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.people)
             .verify_toast_message([
                 C.toastMsgs.importComplete,
-                1 + C.toastMsgs.recordsImported]);
+                2 + C.toastMsgs.recordsImported]);
 
         ui.menu.click_Search__People();
-        ui.searchPeople.enter_Business_Name(D.newPerson.businessName)
+        ui.searchPeople.enter_Business_Name(person1.businessName)
             .click_button(C.buttons.search)
-            .click_link(D.newPerson.firstName, ui.searchPeople.firstRowInResultsTable());
+            .click_link(person1.firstName, ui.searchPeople.firstRowInResultsTable());
         ui.personView.verify_Person_View_page_is_open()
             .click_button(C.buttons.edit)
-            .verify_values_on_Edit_form(D.newPerson)
+            .verify_values_on_Edit_form(person1)
             .open_last_history_record()
-            .verify_all_values_on_history(D.newPerson)
+            .verify_all_values_on_history(person1)
             .click_button_on_modal(C.buttons.cancel)
             .verify_title_on_active_tab(1)
+            .select_tab(C.tabs.casesInvolved)
+            .verify_title_on_active_tab(1)
+            .verify_content_of_first_row_in_results_table_on_active_tab(D.newCase.caseNumber)
+
+        ui.menu.reload_page()
+            .click_Search__People();
+        ui.searchPeople.enter_Business_Name(person2.businessName)
+            .click_button(C.buttons.search)
+            .click_link(person2.firstName, ui.searchPeople.firstRowInResultsTable());
+        ui.personView.verify_Person_View_page_is_open()
+            .click_button(C.buttons.edit)
+            .verify_values_on_Edit_form(person2)
+            .open_last_history_record()
+            .verify_all_values_on_history(person2)
+            .click_button_on_modal(C.buttons.cancel)
+            .verify_title_on_active_tab(2)
+            .select_tab(C.tabs.casesInvolved)
+            .verify_title_on_active_tab(2)
+            .verify_content_of_first_row_in_results_table_on_active_tab(D.newCase.caseNumber)
+            .verify_content_of_first_row_in_results_table_on_active_tab(S.selectedEnvironment.oldActiveCase)
     });
 
     it('2. Import and verify Person with minimum fields', function () {

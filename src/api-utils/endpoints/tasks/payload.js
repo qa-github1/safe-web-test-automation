@@ -15,3 +15,38 @@ exports.generate_POST_request_payload_for_creating_new_task = function (taskTitl
     };
     return body;
 };
+
+exports.generate_POST_request_payload_for_creating_new_task_template = function (taskTemplate) {
+
+    let body = {
+        "taskTypeId": S.selectedEnvironment.taskTemplate.taskTypeId.errorCorrection,
+        "taskSubTypeId": S.selectedEnvironment.taskTemplate.taskSubTypeId.packagingAndLabeling,
+        "title": taskTemplate.title,
+        "message": taskTemplate.message,
+        "dueDays": taskTemplate.dueDateDays,
+        "taskActions": [
+            {
+                "id": S.selectedEnvironment.taskTemplate.taskActionId.packageMustBeSealed,
+                "name": "Package Must be Sealed",
+                "organizationId": S.selectedEnvironment.orgSettings.id,
+                "route": "taskActions",
+                "reqParams": null,
+                "restangularized": true,
+                "fromServer": true,
+                "parentResource": null,
+                "restangularCollection": false
+            },
+            {
+                "id": S.selectedEnvironment.taskTemplate.taskActionId.mustBeRenderedSafe,
+                "name": "Must be Rendered Safe",
+                "organizationId": S.selectedEnvironment.orgSettings.id,
+                "route": "taskActions",
+                "reqParams": null,
+                "restangularized": true,
+                "fromServer": true,
+                "parentResource": null,
+                "restangularCollection": false
+            }]
+    }
+    return body;
+};

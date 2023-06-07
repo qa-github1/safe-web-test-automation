@@ -6,7 +6,7 @@ let
     taskType = e => cy.get('[ng-model="newTask.taskType"]'),
     titleInput = e => cy.get('[name="taskTitle"]'),
     messageInput = e => cy.get('[name="taskMessage"]'),
-    dueDateInput = e => cy.get('[name="DUEDate"]').find('input'),
+    dueDateInput = e => cy.get('[name="DUEDate"]').find('input').first(),
     usersAndGroupsInput = e => cy.contains('Users and groups').parent('div').find('input'),
     saveButton = e => cy.findAllByText('Save').last()
 
@@ -17,29 +17,42 @@ export default class AddTaskPage extends BasePage {
 
 //************************************ ACTIONS ***************************************//
     enter_user(email) {
+        //this.enter_and_select_value_in_typeahead_field('Users and groups', email)
         this.type_if_value_provided(usersAndGroupsInput, email)
+        this.pause(1)
         this.click_highlighted_option_on_typeahead(email);
         return this;
     }
 
     enter_user_group(groupName) {
+        //  this.enter_and_select_value_in_typeahead_field('Users and groups', groupName)
         this.type_if_value_provided(usersAndGroupsInput, groupName)
+        this.pause(1)
         this.click_highlighted_option_on_typeahead(groupName);
         return this;
     }
 
-    populate_all_fields(taskObject, dueDate) {
-        taskType().select(taskObject.type);
-        this.clearAndEnterValue(titleInput, taskObject.title)
-        this.clearAndEnterValue(messageInput, taskObject.message)
+    populate_all_fields(taskObject, keepDefaultDueDate = true, keepTemplateValues = true, templateObject) {
+
+        this.select_dropdown_option('Task Type', taskObject.type)
+        if (taskObject.subtype) this.select_dropdown_option('Sub Type', taskObject.subtype)
+
+        this.verify_value_in_textarea_field('Title', templateObject.title)
+        this.verify_value_in_textarea_field('Message', templateObject.message)
+
+        if (!keepTemplateValues) {
+            this.clearAndEnterValue(titleInput, taskObject.title)
+                .clearAndEnterValue(messageInput, taskObject.message)
+        }
+
+        if (!keepDefaultDueDate) {
+            dueDateInput().clear().type(taskObject.dueDate).then(function (value) {
+                taskObject.dueDate = value
+            });
+        }
+
         if (taskObject.userEmail) this.enter_user(taskObject.userEmail)
         if (taskObject.userGroupName) this.enter_user_group(taskObject.userGroupName)
-        // if(!dueDate){
-        //     dueDateInput().type().then(function (value) {
-        //        //cy.log('DUE DATE IS ' + value)
-        //         taskObject.dueDate = value
-        //     });
-        // }
         this.define_API_request_to_be_awaited('POST', 'api/tasks', 'addTask', 'newTask')
         return this;
     }
@@ -66,11 +79,14 @@ export default class AddTaskPage extends BasePage {
     verify_task_data_on_grid(taskObject) {
 
         S.getCurrentDate();
-        this.verify_content_of_specific_cell_in_first_table_row_('State', taskObject.status)
+        this.verify_content_of_specific_cell_in_first_table_row_('Task Type', taskObject.type)
+        this.verify_content_of_specific_cell_in_first_table_row_('Sub Type', taskObject.subtype)
+        this.verify_content_of_specific_cell_in_first_table_row_('Status', taskObject.status)
         this.verify_content_of_specific_cell_in_first_table_row_('Creation Date', S.currentDate)
         this.verify_content_of_specific_cell_in_first_table_row_('Last Action', S.currentDate)
         this.verify_content_of_specific_cell_in_first_table_row_('Title', taskObject.title)
         this.verify_content_of_specific_cell_in_first_table_row_('Created by', taskObject.createdBy)
+        this.verify_content_of_specific_cell_in_first_table_row_('Due Date', taskObject.dueDate)
 
         if (taskObject.userName || taskObject.userGroupName) {
             if (taskObject.userName) {
@@ -86,9 +102,16 @@ export default class AddTaskPage extends BasePage {
 
     verify_email_content_(recipient, emailTemplate, taskObject, assignedTo, numberOfExpectedEmails = 1, markSeen = true) {
         cy.getLocalStorage("taskNumber").then(number => {
+
             taskObject.taskNumber = '#' + number
-            this.verify_email_content
-            (recipient, emailTemplate.subject, emailTemplate.content1(taskObject), numberOfExpectedEmails, markSeen)
+
+            if (taskObject.subtype && emailTemplate.content1_withSubtype) {
+                this.verify_email_content
+                (recipient, emailTemplate.subject, emailTemplate.content1_withSubtype(taskObject), numberOfExpectedEmails, false)
+            } else {
+                this.verify_email_content
+                (recipient, emailTemplate.subject, emailTemplate.content1(taskObject), numberOfExpectedEmails, false)
+            }
 
             this.verify_email_content
             (recipient, emailTemplate.subject, emailTemplate.content2(assignedTo), numberOfExpectedEmails, markSeen)

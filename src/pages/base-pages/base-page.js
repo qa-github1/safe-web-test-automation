@@ -11,6 +11,7 @@ let
     okButton = e => cy.findAllByText('Ok').last(),
     saveButton = e => cy.get('[button-text="\'GENERAL.BUTTON_SAVE\'"]').contains('Save'),
     editButton = e => cy.get('[translate="GENERAL.EDIT"]').contains('Edit'),
+    deleteButton = e => cy.get('[translate="GENERAL.DELETE"]').parent('li'),
     uploadFileInput = e => cy.get('input[type=file]'),
     addItem = e => cy.get('[translate="CASES.LIST.BUTTON_ADD_ITEM"]'),
     active_tab = e => cy.get('[class="tab-pane ng-scope active"]'),
@@ -155,8 +156,12 @@ let
     systemService = e => cy.get('[ng-repeat="systemService in systemServices"]'),
     systemServiceName = e => cy.get('[ng-repeat="systemService in systemServices"] .ng-binding'),
     systemServiceStatus = e => cy.get('[ng-repeat="systemService in systemServices"] span'),
-    inputField = e => cy.get(`label[for="${e}"]`).siblings().find('input').eq(0),
-    searchBar_history = e => cy.get('[ng-model="options.searchFilter"]')
+    searchBar_history = e => cy.get('[ng-model="options.searchFilter"]'),
+    typeaheadInputField = fieldLabel => cy.contains(fieldLabel).parent().find('input').first(),
+    dropdownField = fieldLabel => cy.findByLabelText(fieldLabel).parent().find('select').eq(0),
+    inputField = fieldLabel => cy.findByLabelText(fieldLabel).parent().find('input').eq(0),
+    textareaField = fieldLabel => cy.contains('span', fieldLabel).parent('label').parent('div').find('textarea').eq(0),
+    typeaheadOption = fieldLabel => cy.contains(fieldLabel).parent().find('ul').find('li').eq(0)
 
 let dashboardGetRequests = [
     '/api/users/currentuser?groups=true',
@@ -222,6 +227,47 @@ export default class BasePage {
 
 //************************************ ACTIONS ***************************************//
 
+
+    select_dropdown_option(fieldLabel, option) {
+        dropdownField(fieldLabel).select(option)
+        return this;
+    };
+
+    enter_and_select_value_in_typeahead_field(fieldLabel, value) {
+        typeaheadInputField(fieldLabel).type(value);
+        this.pause(0.3)
+        typeaheadOption(fieldLabel).click();
+        return this;
+    };
+
+    enter_value_to_textarea_field(fieldLabel, value) {
+        textareaField(fieldLabel).type(value)
+        textareaField(fieldLabel).should('have.value', value);
+        return this;
+    };
+
+    enter_value_to_input_field(fieldLabel, value, clearExistingValue) {
+        if (clearExistingValue) inputField(fieldLabel).clear()
+        inputField(fieldLabel).type(value)
+        inputField(fieldLabel).should('have.value', value);
+        return this;
+    };
+
+    verify_value_in_input_field(fieldLabel, value) {
+        inputField(fieldLabel).should('have.value', value);
+        return this;
+    };
+
+    verify_value_in_textarea_field(fieldLabel, value) {
+        textareaField(fieldLabel).should('have.value', value);
+        return this;
+    };
+
+    verify_selected_option_on_dropdown(fieldLabel, selectedOptionLabel) {
+        dropdownField(fieldLabel).should('have.value', selectedOptionLabel);
+        return this;
+    };
+
     getCurrentDate() {
         return helper.currentDate;
     };
@@ -229,12 +275,6 @@ export default class BasePage {
     find_field_by_exactly_matching_text(parentContainer, text) {
         const regex = new RegExp(`^${text}$`);
         return parentContainer().contains(regex)
-    };
-
-    enter_value_to_input_field(label, value, clearExistingValue) {
-        if (clearExistingValue) inputFieldFoundByLabel(label).clear()
-        inputFieldFoundByLabel(label).type(value)
-        return this;
     };
 
     search_history(value) {
@@ -257,6 +297,11 @@ export default class BasePage {
     verify_text_is_present_on_main_container(text) {
         this.toastMessage().should('not.exist');
         this.verify_text(mainContainer, text)
+        return this;
+    };
+
+    verify_url_contains_some_value(partOfUrl) {
+        cy.url().should('include', partOfUrl)
         return this;
     };
 
@@ -815,6 +860,11 @@ export default class BasePage {
         editButton().should('be.enabled');
         editButton().click();
         saveButton().should('be.visible');
+        return this;
+    };
+
+    click_Delete() {
+        deleteButton().click();
         return this;
     };
 
@@ -1387,7 +1437,6 @@ export default class BasePage {
         })
         return this;
     };
-
 
     select_checkbox_on_first_table_row_on_active_tab() {
         checkboxOnFirstRowInResultsTableOnActiveTab().click();
@@ -1989,6 +2038,7 @@ export default class BasePage {
     clearAndEnterValue(element, value) {
         element().clear()
         this.enterValue(element, value)
+        return this
     }
 
     verify_system_services_page_names(fields) {

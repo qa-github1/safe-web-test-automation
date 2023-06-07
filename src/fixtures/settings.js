@@ -1200,7 +1200,22 @@ S.PENTEST_1 = {
         offenseDate: '05/15/2009',
         reviewDate: '01/18/2023'
     },
-    otherTaskTemplateId: 3605,
+    taskTemplate: {
+        taskTypeId: {
+            errorCorrection: 1106,
+
+        },
+        taskSubTypeId: {
+            packagingAndLabeling: 2902,
+
+        },
+        taskActionId: {
+            packageMustBeSealed: 1667,
+            mustBeRenderedSafe: 533,
+
+        },
+        otherTaskTemplateId: 3605,
+    },
     recentCase: {
         id: 5446732,
         caseNumber: 'TestCase1'
@@ -1425,6 +1440,7 @@ S.PENTEST_2 = {
         offenseDate: '12/13/2022',
         reviewDate: '12/2022/2022'
     },
+    otherTaskTemplateId: 3605,
     recentCase: {
         id: 5446732,
         caseNumber: 'TestCase1'
@@ -1663,6 +1679,7 @@ S.PENTEST_3 = {
         offenseDate: '12/20/2022',
         reviewDate: '01/03/2023'
     },
+    otherTaskTemplateId: 3605,
     recentCase: {
         id: 7743099,
         caseNumber: 'AutomatedTest-Active Case'
@@ -1884,19 +1901,20 @@ S.PENTEST_4 = {
     // // },
     oldClosedCase: {
         id: 7744300,
-        caseNumber: 'TestCase1',
+        caseNumber: 'AutomatedTest-Closed Case',
         createdDate: '01/05/2023',
         offenseDate: '12/21/2022',
         reviewDate: '12/30/2022',
-        closedDate: '01/24/2023',
+        closedDate: '05/02/2023',
     },
     oldActiveCase: {
         id: 7744372,
         caseNumber: 'AutomatedTest-Active Case',
         createdDate: '01/05/2023',
         offenseDate: '12/20/2022',
-        reviewDate: '01/03/2023'
+        reviewDate: '11/15/2025'
     },
+    otherTaskTemplateId: 3383,
     // recentCase: {
     //     id: 7744372,
     //     caseNumber: 'AutomatedTest-Active Case'

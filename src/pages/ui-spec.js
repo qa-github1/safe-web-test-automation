@@ -2,6 +2,7 @@ import "cypress-localstorage-commands";
 
 import BasePage from "./base-pages/base-page";
 import Menu from "./menu";
+import Modal from "./base-pages/modal";
 import SearchCase from "./search-pages/search-case-page";
 import SearchItem from "./search-pages/search-item-page";
 import SearchCheckIns from "./search-pages/search-checkIns-page";
@@ -34,6 +35,7 @@ import StorageLocationsPage from "./locations-page";
 const S = require('../fixtures/settings');
 const basePage = new BasePage();
 const menu = new Menu();
+const modal = new Modal();
 const login = new LoginPage();
 const searchCase = new SearchCase();
 const searchItem = new SearchItem();
@@ -65,6 +67,7 @@ module.exports = {
     open_base_url: e => cy.visit(S.base_url),
     app: basePage,
     menu: menu,
+    modal: modal,
     login: login,
     searchCase: searchCase,
     searchItem: searchItem,

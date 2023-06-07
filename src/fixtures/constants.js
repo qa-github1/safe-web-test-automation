@@ -461,7 +461,10 @@ C = {
                 subject: 'Notice: Task notification',
                 content1: (taskObject) =>
                      [`Task ${taskObject.taskNumber} has been created by ${taskObject.createdBy}`,
-                     `Click here to view the Task</a><br /><br /><b>Task Type:</b> Legacy<br/><b>Title:</b> ${taskObject.title}<br/><b>Message:</b> ${taskObject.message}<br/><b>Status:</b> New<br/><b>Due Date:</b> ${taskObject.dueDate}`],
+                     `Click here to view the Task</a><br /><br /><b>Task Type:</b> : ${taskObject.type}<br/><b>Title:</b> ${taskObject.title}<br/><b>Message:</b> ${taskObject.message}<br/><b>Status:</b> New<br/><b>Due Date:</b> ${taskObject.dueDate_inEmail}`],
+                content1_withSubtype: (taskObject) =>
+                     [`Task ${taskObject.taskNumber} has been created by ${taskObject.createdBy}`,
+                     `Click here to view the Task</a><br /><br /><b>Task Type:</b> : ${taskObject.type}: ${taskObject.subtype}<br/><b>Title:</b> ${taskObject.title}<br/><b>Message:</b> ${taskObject.message}<br/><b>Status:</b> New<br/><b>Due Date:</b> ${taskObject.dueDate_inEmail}`],
                 content2: (assignedTo) =>
                     `Assigned to:</b> ${assignedTo}<br/>`
             },

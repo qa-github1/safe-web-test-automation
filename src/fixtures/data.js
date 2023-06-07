@@ -265,7 +265,7 @@ D.getCheckedInItemData = function (location) {
     D.editedItem = Object.assign({}, D.editedItem, checkInData);
 };
 
-D.getCheckedOutItemData = function (itemAddedInCheckedOutStatus =  false) {
+D.getCheckedOutItemData = function (itemAddedInCheckedOutStatus = false) {
     let checkOutData = {
         status: 'Checked Out',
         location: '',
@@ -568,18 +568,34 @@ D.getUserData = function (officeId) {
     D.getEditedUserData()
 }
 
-D.getNewTaskData = function (user, userGroup, createdBy = S.userAccounts.orgAdmin) {
+D.getNewTaskTemplateData = function () {
+
+    D.newTaskTemplate = {
+        type: 'Error Correction',
+        subtype: 'Packaging and Labeling',
+        title: D.randomNo + '_title',
+        message: D.randomNo + '_message',
+        taskActions: ['Must be Rendered Safe', 'Package Must be Sealed'],
+        dueDateDays: 5
+    }
+
+    return D.newTaskTemplate;
+};
+
+D.getNewTaskData = function (user_assignee, userGroup_assignee, createdBy = S.userAccounts.orgAdmin, dueDate_daysAfterToday = 14) {
 
     D.newTask = {
-        type: 'Legacy',
+        type: 'Other',
+        subtype: '',
         status: 'Open',
         title: 'title_' + helper.setNewRandomString(),
         message: 'message_' + helper.setNewRandomString(),
-        userEmail: user ? user.email : null,
-        userName: user ? user.name : null,
-        userGroupName: userGroup ? userGroup.name : null,
+        userEmail: user_assignee ? user_assignee.email : null,
+        userName: user_assignee ? user_assignee.name : null,
+        userGroupName: userGroup_assignee ? userGroup_assignee.name : null,
         createdBy: createdBy ? createdBy.name : null,
-        dueDate: helper.getDateAfterXDaysInSpecificFormat(C.currentDateTimeFormat.fullYearMask, 14)
+        dueDate: helper.getDateAfterXDaysInSpecificFormat(C.currentDateTimeFormat.mask, dueDate_daysAfterToday),
+        dueDate_inEmail: helper.getDateAfterXDaysInSpecificFormat(C.currentDateTimeFormat.dateOnly.fullYearMask, dueDate_daysAfterToday)
     }
 
     return D.newTask;

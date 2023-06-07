@@ -129,6 +129,7 @@ DF.dateTimeFormats = {
             mask: 'mm/dd/yy hh:MM TT',
         },
         dateOnly: {
+            fullYearMask: 'm/d/yyyy',
             mask: 'mm/dd/yy',
             editMode : {
                 mask: 'mm/dd/yy',

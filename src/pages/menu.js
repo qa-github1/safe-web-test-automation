@@ -28,7 +28,8 @@ let
     tasks = e => sideMenu().find('[translate="NAV.TASKS"]'),
     exportedSearches = e => sideMenu().find('[translate="NAV.EXPORTED_SEARCHES"]'),
     scan = e => sideMenu().find('[tooltip="Scan"]'),
-    tasksList = e => sideMenu().find('.fa-tasks'),
+    tasksList = e => sideMenu().find('.badge'),
+    taskSettings = e => sideMenu().find('[translate="NAV.TSK_SETTINGS"]'),
     massImportButton = e => cy.get('[translate="ITEMS.SCAN.MASS_IMPORT_LIST"]'),
     tools = e => cy.get('[translate="NAV.TOOLS"]'),
     storageLocations = e => cy.get('[translate="NAV.LOCATIONS"]'),
@@ -182,6 +183,19 @@ export default class Menu extends BasePage {
         tasksList().click();
         this.verify_text_is_present_on_main_container(C.labels.tasksPage.title);
         this.verify_Error_toast_message_is_NOT_visible()
+        return this;
+    };
+
+    click_Task_Settings () {
+        taskSettings().click();
+        this.verify_url_contains_some_value('tasks/settings');
+        return this;
+    };
+
+    click_Settings__Task_Settings () {
+        settings().click()
+        taskSettings().click();
+        this.verify_url_contains_some_value('tasks/settings');
         return this;
     };
 
