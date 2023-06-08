@@ -45,5 +45,8 @@
     "pngjs": "^5.0.0",
     "xlsx": "^0.18.5",
     "xvfb": "^0.4.0"
+  },
+  "dependencies": {
+    "@octokit/rest": "^19.0.11"
   }
 }

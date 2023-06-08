@@ -40,4 +40,5 @@ jobs:
         env:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          npm i
           node .github/actions-scripts/configureGitHubPages.mjs
