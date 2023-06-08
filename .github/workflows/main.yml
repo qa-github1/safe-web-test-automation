@@ -36,8 +36,6 @@ jobs:
       fail-fast: false
     steps:
       - uses: actions/checkout@v2
-        with:
-          ref: gh-pages
       - name: Run script
         env:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
