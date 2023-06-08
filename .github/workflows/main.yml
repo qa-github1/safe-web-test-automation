@@ -31,6 +31,7 @@ jobs:
   merge-and-deploy-final-report:
     runs-on: ubuntu-latest
     timeout-minutes: 250
+    permissions: write-all
     env:
       TOKEN: ${{ secrets.GITHUB_TOKEN }}
     if: always()
