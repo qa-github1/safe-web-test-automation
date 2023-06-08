@@ -33,7 +33,7 @@ jobs:
     timeout-minutes: 250
     permissions: write-all
     env:
-      TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      TOKEN: ${{ secrets.MY_TOKEN }}
     if: always()
     strategy:
       fail-fast: false

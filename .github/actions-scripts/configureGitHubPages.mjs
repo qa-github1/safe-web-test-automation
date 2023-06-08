@@ -1,7 +1,7 @@
 import {Octokit} from "@octokit/rest";
 
 const octokit = new Octokit({
-    auth: process.env.MY_TOKEN,
+    auth: process.env.TOKEN,
 });
 
 
