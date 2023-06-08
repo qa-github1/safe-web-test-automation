@@ -1,13 +1,13 @@
 import {Octokit} from "@octokit/rest";
 
-const octokit = new Octokit({
-    auth: process.env.TOKEN,
-});
-
-
 // const octokit = new Octokit({
-//     auth: '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'
-// })
+//     auth: process.env.TOKEN,
+// });
+
+
+const octokit = new Octokit({
+    auth: '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'
+})
 
 
 //const owner = 'qa-github1'
