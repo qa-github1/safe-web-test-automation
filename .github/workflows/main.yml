@@ -6,9 +6,34 @@ permissions: write-all
 
 jobs:
 
-  clear-previous-reports:
+  cypress-org1:
     runs-on: ubuntu-latest
     timeout-minutes: 250
+    container:
+      image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
+      options: --user 1001
+    strategy:
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: npm i
+      - name: Run tests
+        run: npm run tests-org1
+      - name: Deploy report to temp-reports branch
+        if: always()
+        uses: peaceiris/actions-gh-pages@v2
+        with:
+          keepFiles: true
+        env:
+          PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PUBLISH_BRANCH: gh-pages
+          PUBLISH_DIR: report
+
+  merge-and-deploy-final-report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 250
+    needs: [cypress-org1]
     if: always()
     strategy:
       fail-fast: false
@@ -16,32 +41,47 @@ jobs:
       - uses: actions/checkout@v2
         with:
           ref: gh-pages
-      - name: remove previous reports
+      - name: Install dependencies
         run: |
-          mkdir emptyFolder
-      - name: Deploy blank report folder temp reports branch
-        uses: peaceiris/actions-gh-pages@v2
-        with:
-          keepFiles: false
-        env:
-          PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PUBLISH_BRANCH: gh-pages
-          PUBLISH_DIR: emptyFolder
+          npm init --yes
+          npm i allure-commandline --save-dev
+          mkdir allure-results
+          mv allure-results-1/* allure-results 
 
-  merge-and-deploy-final-report:
-    runs-on: ubuntu-latest
-    timeout-minutes: 250
-    permissions: write-all
-    env:
-      TOKEN: ${{ secrets.MY_ORG_SECRET }}
-    if: always()
-    strategy:
-      fail-fast: false
-    steps:
-      - uses: actions/checkout@v2
-      - name: Run script
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - name: Generate Allure Report
+        if: always()
+        run: node_modules/allure-commandline/dist/bin/allure generate  allure-results -o report
+
+      - name: Deploy to external repository
+        uses: https://github.com/Safe-QA/repo_6_8_2023__12_53@main
         env:
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          npm i
-          node .github/actions-scripts/configureGitHubPages.mjs
+          # 🏗️ <internal repository>, run GitHub Action.
+          # 🎁 <external repository>, receiving Artifacts.
+          #
+          # Way 1: using Personal Access Token
+          # @see https://cpina.github.io/push-to-another-repository-docs/setup-using-personal-access-token.html#setup-personal-access-token
+          # 1.1 Generate Personal Access Token: <external repository>/<Avatar>/Settings/Developer settings/Personal access tokens/Generate new token
+          #     Select `No expiration` and Check `✅️ repo    Full control of private repositories`, Generate and then Copy the Token
+          # 1.2 Then make the token available to the GitHub Action: <internal repository>/Settings/Secrets/Actions/New repository secret
+          #     Name: EXTERNAL_REPOSITORY_PERSONAL_ACCESS_TOKEN, Value Paste the Token
+          API_TOKEN_GITHUB: ${{ secrets.EXTERNAL_REPOSITORY_PERSONAL_ACCESS_TOKEN }}
+          # Way 2: using SSH deploy keys
+          # @see https://cpina.github.io/push-to-another-repository-docs/setup-using-ssh-deploy-keys.html#setup-ssh-deploy-keys
+          # 2.1 Generate an SSH key in terminal (Leave the passphrase empty)
+          # 2.2 Add public key in the external repository: <external repository>/Settings/Deploy keys/Add deploy key
+          #     Name: DEPLOY_PUBLIC_KEY, Value Paste the public key. Enable "✅️ Allow write access"
+          # 2.3 Add private key in the source repository: <external repository>/Settings/Secrets/Actions/New repository secret
+          #     Name: DEPLOY_PRIVATE_KEY, Value Paste the private key.
+          # SSH_DEPLOY_KEY: ${{ secrets.DEPLOY_PRIVATE_KEY }}
+
+        with:
+          # GitHub Action output files
+          source-directory: public/
+          destination-github-username: 'Safe-QA'
+          destination-repository-name: 'repo_6_8_2023__12_53'
+          user-email: 'qa+github1@trackerproducts.com'
+          target-branch: "main"
