@@ -42,4 +42,4 @@ jobs:
         env:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          node .github/actions-scripts/configureGitHubActions.js
+          node .github/actions-scripts/configureGitHubPages.js
