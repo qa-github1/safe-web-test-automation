@@ -15,6 +15,12 @@ jobs:
     strategy:
       fail-fast: false
     steps:
+
+      - name: Set current date as env variable
+        run: echo "NOW=$(date +'%Y-%mmm')" >> $GITHUB_ENV
+      - name: Echo current date
+        run: echo $NOW
+        
       - uses: actions/checkout@v2
       - name: Install dependencies
         run: npm i
