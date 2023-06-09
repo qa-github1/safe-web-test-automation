@@ -60,7 +60,7 @@ jobs:
         run: node_modules/allure-commandline/dist/bin/allure generate  allure-results -o report
 
       - name: Set current date as env variable
-        run: echo "NOW=$(date +'_%B_%d')" >> $NOW
+        run: echo "NOW=$(date +'_%B_%d')" >> $NOWW
       - name: Echo current date
         run: echo $NOW
 
