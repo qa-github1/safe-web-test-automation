@@ -57,6 +57,11 @@ jobs:
         if: always()
         run: node_modules/allure-commandline/dist/bin/allure generate  allure-results -o report
 
+      - name: Set current date as env variable
+        run: echo "NOW=$(date +'_%B_%d')" >> $GITHUB_ENV
+      - name: Echo current date
+        run: echo $NOW
+
       - name: Deploy to external repository
         uses: cpina/github-action-push-to-another-repository@main
         env:
@@ -70,6 +75,7 @@ jobs:
           # 1.2 Then make the token available to the GitHub Action: <internal repository>/Settings/Secrets/Actions/New repository secret
           #     Name: EXTERNAL_REPOSITORY_PERSONAL_ACCESS_TOKEN, Value Paste the Token
           API_TOKEN_GITHUB: ${{ secrets.EXTERNAL_REPOSITORY_PERSONAL_ACCESS_TOKEN }}
+          NOW: $(date +'_%B_%d')
           # Way 2: using SSH deploy keys
           # @see https://cpina.github.io/push-to-another-repository-docs/setup-using-ssh-deploy-keys.html#setup-ssh-deploy-keys
           # 2.1 Generate an SSH key in terminal (Leave the passphrase empty)
