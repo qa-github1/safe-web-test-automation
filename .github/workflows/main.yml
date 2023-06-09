@@ -80,7 +80,7 @@ jobs:
 
         with:
           # GitHub Action output files
-          source-directory: public/
+          source-directory: report
           destination-github-username: 'Safe-QA'
           destination-repository-name: 'repo_6_8_2023__12_53'
           user-email: 'qa+github1@trackerproducts.com'
