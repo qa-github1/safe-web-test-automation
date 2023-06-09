@@ -53,7 +53,7 @@ jobs:
 
       - name: Set up environment variable
         id: set_date
-        run: echo "NOW=$(date +'%B_%d')" >> $GITHUB_ENV
+        run: echo "NOW=$(date +'_%B_%d')" >> $GITHUB_ENV
 
       - uses: actions/setup-java@v3
         with:
