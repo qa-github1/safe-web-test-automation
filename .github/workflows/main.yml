@@ -16,11 +16,6 @@ jobs:
       fail-fast: false
     steps:
 
-      - name: Set current date as env variable
-        run: echo "NOW=$(date +'%Y-%mmm')" >> $GITHUB_ENV
-      - name: Echo current date
-        run: echo $NOW
-        
       - uses: actions/checkout@v2
       - name: Install dependencies
         run: npm i
@@ -63,7 +58,7 @@ jobs:
         run: node_modules/allure-commandline/dist/bin/allure generate  allure-results -o report
 
       - name: Set current date as env variable
-        run: echo "NOW=$(date +'%Y-%mmm')" >> $GITHUB_ENV
+        run: echo "NOW=$(date +'_%B_%d')" >> $GITHUB_ENV
       - name: Echo current date
         run: echo $NOW
 
@@ -93,6 +88,6 @@ jobs:
           # GitHub Action output files
           source-directory: report
           destination-github-username: 'Safe-QA'
-          destination-repository-name: 'repo_6_8_2023__12_53'
+          destination-repository-name: 'report' + $NOW
           user-email: 'qa+github1@trackerproducts.com'
           target-branch: "main"
