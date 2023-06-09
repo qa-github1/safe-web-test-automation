@@ -33,7 +33,6 @@ jobs:
   merge-and-deploy-final-report:
     runs-on: ubuntu-latest
     timeout-minutes: 250
-    needs: [cypress-org1]
     if: always()
     strategy:
       fail-fast: false
