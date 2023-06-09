@@ -54,7 +54,7 @@ jobs:
 
       - name: Set up environment variable
         id: set_date
-        run: echo "NOW=$(date +'_%B_%d')" >> $GITHUB_ENV
+        run: echo "NOW=$(date +'%B_%d')" >> $GITHUB_ENV
 
       - uses: actions/setup-java@v3
         with:
@@ -91,6 +91,6 @@ jobs:
           # GitHub Action output files
           source-directory: report
           destination-github-username: 'Safe-QA'
-          destination-repository-name: 'report-${{ env.NOW }}'
+          destination-repository-name: 'report_${{ env.NOW }}'
           user-email: 'qa+github1@trackerproducts.com'
           target-branch: "main"
