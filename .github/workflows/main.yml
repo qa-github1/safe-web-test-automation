@@ -63,11 +63,6 @@ jobs:
         if: always()
         run: node_modules/allure-commandline/dist/bin/allure generate  allure-results -o report
 
-      - name: Set current date as env variable
-        run: echo "NOW=$(date +'_%B_%d')" >> $GITHUB_NOWW
-      - name: Echo current date
-        run: echo $NOW
-
       - name: Deploy to external repository
         uses: cpina/github-action-push-to-another-repository@main
         env:
