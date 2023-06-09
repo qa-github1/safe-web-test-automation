@@ -89,6 +89,6 @@ jobs:
           # GitHub Action output files
           source-directory: report
           destination-github-username: 'Safe-QA'
-          destination-repository-name: 'report' + $(date +'_%B_%d')
+          destination-repository-name: 'report' + ${NOW}
           user-email: 'qa+github1@trackerproducts.com'
           target-branch: "main"
