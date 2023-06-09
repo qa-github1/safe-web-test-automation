@@ -88,6 +88,6 @@ jobs:
           # GitHub Action output files
           source-directory: report
           destination-github-username: 'Safe-QA'
-          destination-repository-name: 'report' + $NOW
+          destination-repository-name:  ${{ secrets.EXTERNAL_REPOSITORY_PERSONAL_ACCESS_TOKEN }}
           user-email: 'qa+github1@trackerproducts.com'
           target-branch: "main"
