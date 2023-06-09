@@ -86,8 +86,8 @@ jobs:
 
         with:
           # GitHub Action output files
-          source-directory: report 
+          source-directory: report
           destination-github-username: 'Safe-QA'
-          destination-repository-name: 'report' + ${{ secrets.NOW }}
+          destination-repository-name: 'report'
           user-email: 'qa+github1@trackerproducts.com'
           target-branch: "main"
