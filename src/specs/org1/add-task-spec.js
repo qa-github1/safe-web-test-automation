@@ -26,47 +26,53 @@ describe('Add Task', function () {
             'Add task template for type + subtype' +
             '-- and add task with required fields only - Unassigned' +
             '--keep template content  -- verify values on grid' +
-            '--delete task template', function () {
-            ui.app.clear_gmail_inbox(S.gmailAccount);
-            ui.app.log_title(this);
-            api.auth.get_tokens(orgAdmin);
-            D.getNewTaskTemplateData()
+            '--search for task on the grid' +
+            '--delete task template',
+            function () {
+                ui.app.clear_gmail_inbox(S.gmailAccount);
+                ui.app.log_title(this);
+                api.auth.get_tokens(orgAdmin);
+                D.getNewTaskTemplateData()
 
-            api.tasks.delete_all_task_templates();
-            // add task template
-            ui.menu.click_Settings__Task_Settings()
-                .click('Task Templates')
-                .click_button_on_active_tab('Add')
-            ui.modal
-                .select_dropdown_option('Task Type', D.newTaskTemplate.type)
-                .select_dropdown_option('Sub Type', D.newTaskTemplate.subtype)
-                .enter_value_in_multi_select_typeahead_field('Task Actions', D.newTaskTemplate.taskActions)
-                .enter_value_to_textarea_field('Title', D.newTaskTemplate.title)
-                .enter_value_to_textarea_field('Message', D.newTaskTemplate.message)
-                .enter_value_to_input_field('Due Date', D.newTaskTemplate.dueDateDays, true)
-                .click_button('Ok')
-                .verify_toast_message('Saved')
+                api.tasks.delete_all_task_templates();
+                // add task template
+                ui.menu.click_Settings__Task_Settings()
+                    .click('Task Templates')
+                    .click_button_on_active_tab('Add')
+                ui.modal
+                    .select_dropdown_option('Task Type', D.newTaskTemplate.type)
+                    .select_dropdown_option('Sub Type', D.newTaskTemplate.subtype)
+                    .enter_value_in_multi_select_typeahead_field('Task Actions', D.newTaskTemplate.taskActions)
+                    .enter_value_to_textarea_field('Title', D.newTaskTemplate.title)
+                    .enter_value_to_textarea_field('Message', D.newTaskTemplate.message)
+                    .enter_value_to_input_field('Due Date', D.newTaskTemplate.dueDateDays, true)
+                    .click_button('Ok')
+                    .verify_toast_message('Saved')
 
-            // add task -- keep template content
-            D.getNewTaskData(null, null, D.newTaskTemplate.dueDateDays);
-            D.newTask = Object.assign({}, D.newTaskTemplate)
+                // add task -- keep template content
+                D.getNewTaskData(null, null, D.newTaskTemplate.dueDateDays);
+                D.newTask = Object.assign({}, D.newTaskTemplate)
 
-            ui.menu.click_Tasks();
-            ui.addTask.click_button(C.buttons.addTask)
-                .populate_all_fields(D.newTask, true, true, D.newTaskTemplate)
-                .click_Save()
-                .verify_toast_message(C.toastMsgs.saved)
-                .verify_task_data_on_grid(D.newTask, orgAdmin)
+                ui.menu.click_Tasks();
+                ui.addTask.click_button(C.buttons.addTask)
+                    .populate_all_fields(D.newTask, true, true, D.newTaskTemplate)
+                    .click_Save()
+                    .verify_toast_message(C.toastMsgs.saved)
+                    .verify_task_data_on_grid(D.newTask, orgAdmin)
 
-            // delete task template
-            ui.menu.click_Task_Settings()
-                .click('Task Templates')
-                .click(D.newTaskTemplate.subtype)
-                .click_Actions()
-                .click_Delete()
-                .click('Yes')
-                .verify_toast_message('Deleted')
-        });
+                ui.taskView.search_for_the_task(orgAdmin.firstName)
+                    .sort_by_descending_order('Creation Date')
+
+
+                // delete task template
+                ui.menu.click_Task_Settings()
+                    .click('Task Templates')
+                    .click(D.newTaskTemplate.subtype)
+                    .click_Actions()
+                    .click_Delete()
+                    .click('Yes')
+                    .verify_toast_message('Deleted')
+            });
 
         it('1.1.2.' +
             'Add task template for type only (include title, message and due date)' +
