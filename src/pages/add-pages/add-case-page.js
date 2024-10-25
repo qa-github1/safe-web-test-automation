@@ -9,7 +9,7 @@ let
     active_form = e => cy.get('.form-horizontal').not('.ng-hide'),
     caseNumberInput_autoAssigned = e => cy.get('[placeholder="Case Number Auto Assigned"]'),
     requiredAsterisk = e => cy.get('[translate="ERRORS.REQUIRED_SIMPLE"]'),
-    offenseType = e => cy.get('[name="offenseType"]').eq(0),
+    offenseType = e => cy.get('[ng-model="case.offenseTypeId"]').eq(0),
     caseOfficerInput = e => cy.get('[label="\'CASE_OFFICERS\'"]').find('input'),
     caseOfficerTypeahead = e => cy.get('[ng-repeat="item in $group.items"]').first(),
     offenseLocationInput = e => cy.findByPlaceholderText(C.placeholders.addCase.offenseLocation),

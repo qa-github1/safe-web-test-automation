@@ -9,7 +9,7 @@ import BasePage from "./base-pages/base-page";
 let
     nameInput = e => cy.get('[placeholder="Name"]'),
     typeDropdown = e => cy.get('[ng-model="workflow.selectedType"]'),
-    usersOrGroupsInput = e => cy.get('input[placeholder="Users or groups..."]'),
+    usersOrGroupsInput = e => cy.get('input[placeholder="Start typing to search for users/groups"]'),
     userTypeahead = e => cy.get('[ng-repeat="item in $group.items"]'),
     matchingCriteriaField = e => cy.get('[ng-model="filter.selectedRecordSelectionFilterField"]'),
     matchingCriteriaCustomField = e => cy.get('[ng-model="workflowRecordSelectionTypeahead"]'),

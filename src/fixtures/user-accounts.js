@@ -27,18 +27,6 @@ exports.getTestAccounts = function (environment, orgNum = 1) {
             id: environment.users.orgAdmin.id,
             guid: environment.users.orgAdmin.guid
         },
-        orgAdmin2: {
-            title: exports.userRoles.orgAdmin,
-            email: `qa+orgadmin1_2@trackerproducts.com`,
-            password: 'Qwerty123!',
-            name: 'Cypress OrgAdmin2',
-            firstName: 'Cypress',
-            lastName: 'OrgAdmin',
-            officeId: environment.office_1.id,
-            organizationId: environment.orgSettings.id,
-            id: 40934,
-            guid: environment.users.orgAdmin.guid
-        },
         org2Admin: {
             title: exports.userRoles.orgAdmin,
             email: `qa+orgadmin${orgNum}@trackerproducts.com`,

@@ -36,6 +36,12 @@
       "apiUrl": "https://pentestapi.trackerproducts.com",
       "domain": "PENTEST",
       "runPreconditionForSpecificEnv": true
+    },
+    "dev": {
+      "baseUrl": "https://dev.trackerproducts.com",
+      "apiUrl": "https://devapi.trackerproducts.com",
+      "domain": "DEV",
+      "runPreconditionForSpecificEnv": true
     }
   },
   "retries": 0,

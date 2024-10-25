@@ -189,7 +189,8 @@ export default class UserAdminPage extends BasePage {
     };
 
     complete_verification_and_set_password_for_new_user_account(userObject) {
-        this.verify_email_content_(userObject.email, C.users.emailTemplates.welcomeToSafe, userObject, ' ')
+        this
+            .verify_email_content_(userObject.email, C.users.emailTemplates.welcomeToSafe, userObject, ' ')
             .open_verification_link_from_email()
             .set_password(D.newUser.password)
             .scroll_and_click(C.buttons.setPassword)

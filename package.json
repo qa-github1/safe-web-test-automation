@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "openRunnerQA": "./node_modules/.bin/cypress open --env environment=qa,orgNum=1 ",
-    "openRunnerPentest-org1": "cypress open --env environment=pentest,orgNum=1",
+    "openRunnerDev-org1": "cypress open --env environment=dev,orgNum=1",
+    "openRunnerDev-org2": "cypress open --env environment=dev,orgNum=2",
+    "openRunnerDev-org3": "cypress open --env environment=dev,orgNum=3",
+    "openRunnerDev-org4": "cypress open --env environment=dev,orgNum=4",
+    "openRunnerPentest-org1": "cypress open --env environment=pentest,orgNum=2",
     "openRunnerPentest-org2": "cypress open --env environment=pentest,orgNum=2",
     "openRunnerPentest-org3": "cypress open --env environment=pentest,orgNum=3",
     "openRunnerPentest-org4": "cypress open --env environment=pentest,orgNum=4",

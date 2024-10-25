@@ -4,10 +4,10 @@ const C = require('../../../fixtures/constants');
 const S = require('../../../fixtures/settings');
 const DF = require('../../../support/date-time-formatting');
 
-exports.add_new_user = function (propertyToSave = 'newUser') {
+exports.add_new_user = function (propertyToSave = 'newUser', dataObject) {
     generic_request.POST(
         '/api/users',
-        body.generate_POST_request_payload_for_Add_User(),
+        body.generate_POST_request_payload_for_Add_User(dataObject),
         'Adding new user via API with ID_______',
         propertyToSave,
     );
