@@ -467,45 +467,45 @@ S.DEV_1 = {
 S.DEV_2 = {
     newUser: {},
     orgSettings: {
-        id: 555,
-        name: 'Web Test Automtion #2',
-        license: '/XKvU4HQo2Nupg5mO6mqE3F9Yzdw/IN13DomjvcyC1yA=',
-        guid: 'a8e131e6-3d36-eb11-aa49-062d5b58f56e',
+        id: 558,
+        name: 'Web Test Automation #2',
+        license: 'XKvU4HQo2Nupg5mO6mqE3HdHkb0/lmt/9L4A3BRYVmA=',
+        guid: 'cc0d2fd8-a18b-ef11-834d-0254a7906fb1',
         cals: 10
     },
     office_1: {
-        id: 1117,
-        guid: '951fef8c-4630-ed11-832b-021f02b7478f',
-        name: "Cypress Office 1",
+        id: 11082,
+        guid: 'cc0d2fd8-a18b-ef11-834d-0254a7906fb1',
+        name: "Default Office",
         orgAndOfficeName: "Web Test Automtion #2 - Cypress Office 1"
     },
     office_2: {
-        id: 137,
-        name: "Web Test Automtion #2 - Cypress Office 2"
+        id: 11091,
+        name: "Cypress Office 2"
     },
     org2: {
         office_1: {
-            id: 1054,
-            guid: 'a9e131e6-3d36-eb11-aa49-062d5b58f56e',
-            name: "Cypress Office 1",
-            orgAndOfficeName: "Web Test Automation - Cypress Office 1"
+            id: 11082,
+            guid: 'cc0d2fd8-a18b-ef11-834d-0254a7906fb1',
+            name: "Default Office",
+            orgAndOfficeName: "Web Test Automation #2 - Cypress Office 1"
         },
-        id: 546,
-        orgName: "Web Test Automation",
-        officeId: 1054,
-        officeName: "Cypress Office 1",
-        orgAndOfficeName: "Web Test Automation - Cypress Office 1"
+        id: 558,
+        orgName: "Web Test Automation #2",
+        officeId: 11082,
+        officeName: "Default Office",
+        orgAndOfficeName: "Web Test Automation #2 - Cypress Office 1"
     },
     users: {
-        systemAdminId: 40357,
-        orgAdminId: 43276,
+        systemAdminId: 40423,
+        orgAdminId: 63328,
         systemAdmin: {
-            id: 40357,
-            guid: '0cfa7c01-2f2e-ea11-aa3a-062d5b58f56e'
+            id: 40423,
+            guid: 'd9e4cd09-eb9b-ed11-833a-0254a7906fb1'
         },
         orgAdmin: {
-            id: 43276,
-            guid: 'a87ad8b6-0855-ed11-832b-021f02b7478f'
+            id: 63328,
+            guid: 'eb306a6b-2295-ef11-8350-0254a7906fb1'
         },
         org2Admin: {
             id: 40727,
@@ -514,8 +514,8 @@ S.DEV_2 = {
             officeId: 1054
         },
         powerUser: {
-            id: 43277,
-            guid: 'a9e64052-0d55-ed11-832b-021f02b7478f'
+            id: 63329,
+            guid: '29a5a1f6-2295-ef11-8350-0254a7906fb1'
         },
         clpUser: {
             id: 43529,
@@ -579,7 +579,7 @@ S.DEV_2 = {
         id: 105156,
     },
     oldClosedCase: {
-        id: 7736934,
+        id: 7663448,
         caseNumber: 'TestCase1',
         createdDate: '10/26/2022',
         offenseDate: '10/26/2022',
@@ -654,16 +654,16 @@ S.DEV_2 = {
     },
     regularUser_permissionGroup: {
         name: 'Cypress - Regular User',
-        id: 4445,
-        startingIndexForViewPermissions: 65585,
+        id: 2128,
+        startingIndexForViewPermissions: 62806,
         get startingIndexForCreatePermissions() {
             return S.DEV_2.regularUser_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.DEV_2.regularUser_permissionGroup.startingIndexForViewPermissions + 44
+            return S.DEV_2.regularUser_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.DEV_2.regularUser_permissionGroup.startingIndexForViewPermissions + 65
+            return S.DEV_2.regularUser_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     readOnly_permissionGroup: {
