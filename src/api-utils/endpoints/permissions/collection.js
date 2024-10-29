@@ -43,20 +43,22 @@ function getPermissionId(group, entity, accessType) {
     }
 
 
-    // ITEMS - View
-    if (entity === C.perissionMatrixEntity.cases && accessType === C.permissionMatrixAccessType.viewIfOwner) {
-        id = group.startingIndexForViewPermissions + 1
-    }
-
     // AUTO DISPO - View
     if (entity === C.perissionMatrixEntity.autoDispo && accessType === C.permissionMatrixAccessType.viewAll) {
         id = group.startingIndexForViewPermissions + 15
     }
+
+    // AUTO DISPO - Create
     if (entity === C.perissionMatrixEntity.autoDispo && accessType === C.permissionMatrixAccessType.create) {
         id = group.startingIndexForCreatePermissions + 14
     }
+    if (entity === C.perissionMatrixEntity.autoDispo && accessType === C.permissionMatrixAccessType.setDispoAction) {
+        id = group.startingIndexForCreatePermissions + 15
+    }
+
+    // AUTO DISPO - Update
     if (entity === C.perissionMatrixEntity.autoDispo && accessType === C.permissionMatrixAccessType.updateAll) {
-        id = group.startingIndexForUpdatePermissions + 13
+        id = group.startingIndexForUpdatePermissions + 14
     }
 
     return id
@@ -72,7 +74,7 @@ exports.set_specific_permission_for_an_existing_Permission_group = function (gro
         "Permissions updated via API")
 };
 
-exports.set_CRUD_permissions_for_specific_entity_on_existing_Permission_group = function (group, entity, viewAll, viewIfOwner, create, updateAll, updateIfOwner, delete_) {
+exports.set_CRUD_permissions_for_specific_entity_on_existing_Permission_group = function (group, entity, viewAll, viewIfOwner, create, updateAll, updateIfOwner, setDispoAction, delete_, deleteIfOwner, ) {
 
     let viewAllPermissionId = getPermissionId(group, entity, C.permissionMatrixAccessType.viewAll)
     let viewIfOwnerPermissionId = getPermissionId(group, entity, C.permissionMatrixAccessType.viewIfOwner)

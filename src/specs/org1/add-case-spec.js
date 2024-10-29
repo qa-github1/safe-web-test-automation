@@ -27,9 +27,11 @@ describe('Add Case', function () {
 
         before(function () {
             api.auth.get_tokens(orgAdmin);
-            api.auto_disposition.edit(true);
-            api.org_settings.set_Org_Level_Case_Number_formatting(false, false, false)
-            api.users.update_current_user_settings(orgAdmin.id, C.currentDateTimeFormat)
+            // api.auto_disposition.edit(true);
+            // api.org_settings.set_Org_Level_Case_Number_formatting(false, false, false)
+            // api.users.update_current_user_settings(orgAdmin.id, C.currentDateTimeFormat)
+            api.permissions.update_ALL_permissions_for_an_existing_Permission_group(permissionGroup_regularUser, true, true, true, true)
+
             api.auth.get_tokens(powerUser);
             api.users.update_current_user_settings(powerUser.id, C.currentDateTimeFormat)
         });
@@ -128,12 +130,11 @@ describe('Add Case', function () {
             ui.caseView.verify_active_tab(C.tabs.notes);
         });
 
-        it.only('1.7 Power User can add case and view/enter/update Review Date/Notes when having AutoDispo permissions', function () {
+        it('1.7 Power User can add case and view/enter/update Review Date/Notes when having AutoDispo permissions', function () {
             ui.app.log_title(this);
 
             api.auth.get_tokens(orgAdmin);
             api.permissions.assign_office_based_permissions_to_user(powerUser.id, office_1.id, permissionGroup_regularUser.id);
-            api.permissions.update_ALL_permissions_for_an_existing_Permission_group(permissionGroup_regularUser, true, true, true, true)
             api.permissions.set_CRUD_permissions_for_specific_entity_on_existing_Permission_group(permissionGroup_regularUser, C.perissionMatrixEntity.autoDispo, false, null, false, false, null)
             D.getNewCaseData();
             D.newCase.reviewDate = null

@@ -215,14 +215,14 @@ exports.generate_POST_request_payload_for_bulk_saving_VIEW_PERMISSIONS = functio
     return body;
 };
 
-exports.generate_PUT_request_payload_for_setting_specific_permission = function (group, permissionId, entity, accessType, shouldEnable) {
+exports.generate_PUT_request_payload_for_setting_specific_permission = function (group, permissionId, modelTypeId, accessType, shouldEnable) {
 
     let body = {
         "id": permissionId,
         "entityId": S.selectedEnvironment.orgSettings.id,
         "groupId": group.id,
         "accessTypeId": accessType,
-        "modelTypeId": entity,
+        "modelTypeId": modelTypeId,
         "grant": shouldEnable,
     }
 
@@ -240,7 +240,6 @@ exports.generate_POST_request_payload_for_bulk_saving_CREATE_PERMISSIONS = funct
             "accessTypeId": 4, // create
             "modelTypeId": 4,
             "grant": shouldEnable,
-
         },
 
         // Items --> modelTypeId = 5
@@ -251,7 +250,6 @@ exports.generate_POST_request_payload_for_bulk_saving_CREATE_PERMISSIONS = funct
             "accessTypeId": 4,
             "modelTypeId": 5,
             "grant": shouldEnable,
-
         },
 
         // Media --> modelTypeId = 7
@@ -271,7 +269,7 @@ exports.generate_POST_request_payload_for_bulk_saving_CREATE_PERMISSIONS = funct
             "groupId": group.id,
             "accessTypeId": 4,
             "modelTypeId": 44,
-            "grant": shouldEnable
+            "grant": shouldEnable,
         },
 
         // Notes --> modelTypeId = 27
@@ -281,7 +279,7 @@ exports.generate_POST_request_payload_for_bulk_saving_CREATE_PERMISSIONS = funct
             "groupId": group.id,
             "accessTypeId": 4,
             "modelTypeId": 27,
-            "grant": shouldEnable
+            "grant": shouldEnable,
         },
 
         // People --> modelTypeId = 11
@@ -291,7 +289,7 @@ exports.generate_POST_request_payload_for_bulk_saving_CREATE_PERMISSIONS = funct
             "groupId": group.id,
             "accessTypeId": 4,
             "modelTypeId": 11,
-            "grant": shouldEnable
+            "grant": shouldEnable,
         },
 
         // CheckIns --> modelTypeId = 16
@@ -301,7 +299,7 @@ exports.generate_POST_request_payload_for_bulk_saving_CREATE_PERMISSIONS = funct
             "groupId": group.id,
             "accessTypeId": 4,
             "modelTypeId": 16,
-            "grant": shouldEnable
+            "grant": shouldEnable,
         },
 
         // CheckOuts --> modelTypeId = 17
@@ -311,7 +309,7 @@ exports.generate_POST_request_payload_for_bulk_saving_CREATE_PERMISSIONS = funct
             "groupId": group.id,
             "accessTypeId": 4,
             "modelTypeId": 17,
-            "grant": shouldEnable
+            "grant": shouldEnable,
         },
 
         // Disposals --> modelTypeId = 19
@@ -321,7 +319,7 @@ exports.generate_POST_request_payload_for_bulk_saving_CREATE_PERMISSIONS = funct
             "groupId": group.id,
             "accessTypeId": 4,
             "modelTypeId": 19,
-            "grant": shouldEnable
+            "grant": shouldEnable,
         },
 
         // Moves --> modelTypeId = 20
@@ -331,7 +329,7 @@ exports.generate_POST_request_payload_for_bulk_saving_CREATE_PERMISSIONS = funct
             "groupId": group.id,
             "accessTypeId": 4,
             "modelTypeId": 20,
-            "grant": shouldEnable
+            "grant": shouldEnable,
         },
 
         // Transfers --> modelTypeId = 18
@@ -341,7 +339,7 @@ exports.generate_POST_request_payload_for_bulk_saving_CREATE_PERMISSIONS = funct
             "groupId": group.id,
             "accessTypeId": 4,
             "modelTypeId": 18,
-            "grant": shouldEnable
+            "grant": shouldEnable,
         },
 
         // Tasks --> modelTypeId = 14
@@ -384,9 +382,18 @@ exports.generate_POST_request_payload_for_bulk_saving_CREATE_PERMISSIONS = funct
             "grant": shouldEnable,
         },
 
-        // Discrepancy Reports --> modelTypeId = 34
         {
             "id": group.startingIndexForCreatePermissions + 15,
+            "entityId": S.selectedEnvironment.orgSettings.id,
+            "groupId": group.id,
+            "accessTypeId": 16, // setDispoAction
+            "modelTypeId": 32,
+            "grant": shouldEnable,
+        },
+
+        // Discrepancy Reports --> modelTypeId = 34
+        {
+            "id": group.startingIndexForCreatePermissions + 16,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
             "accessTypeId": 4,
@@ -396,7 +403,7 @@ exports.generate_POST_request_payload_for_bulk_saving_CREATE_PERMISSIONS = funct
 
         // Random Audits --> modelTypeId = 45
         {
-            "id": group.startingIndexForCreatePermissions + 16,
+            "id": group.startingIndexForCreatePermissions + 17,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
             "accessTypeId": 4,
@@ -406,7 +413,7 @@ exports.generate_POST_request_payload_for_bulk_saving_CREATE_PERMISSIONS = funct
 
         // Imports --> modelTypeId = 35
         {
-            "id": group.startingIndexForCreatePermissions + 17,
+            "id": group.startingIndexForCreatePermissions + 18,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
             "accessTypeId": 4,
@@ -416,7 +423,7 @@ exports.generate_POST_request_payload_for_bulk_saving_CREATE_PERMISSIONS = funct
 
         // Tags --> modelTypeId = 8
         {
-            "id": group.startingIndexForCreatePermissions + 18,
+            "id": group.startingIndexForCreatePermissions + 19,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
             "accessTypeId": 11, // create ORG tags
@@ -424,7 +431,7 @@ exports.generate_POST_request_payload_for_bulk_saving_CREATE_PERMISSIONS = funct
             "grant": shouldEnable,
         },
         {
-            "id": group.startingIndexForCreatePermissions + 19,
+            "id": group.startingIndexForCreatePermissions + 20,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
             "accessTypeId": 12, // create GROUP tags
@@ -432,7 +439,7 @@ exports.generate_POST_request_payload_for_bulk_saving_CREATE_PERMISSIONS = funct
             "grant": shouldEnable,
         },
         {
-            "id": group.startingIndexForCreatePermissions + 20,
+            "id": group.startingIndexForCreatePermissions + 21,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
             "accessTypeId": 13, // create PERSONAL tags
@@ -442,7 +449,7 @@ exports.generate_POST_request_payload_for_bulk_saving_CREATE_PERMISSIONS = funct
 
         // Tag Groups --> modelTypeId = 43
         {
-            "id": group.startingIndexForCreatePermissions + 21,
+            "id": group.startingIndexForCreatePermissions + 22,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
             "accessTypeId": 4,
@@ -474,9 +481,18 @@ exports.generate_POST_request_payload_for_bulk_saving_UPDATE_PERMISSIONS = funct
             "grant": !shouldEnable,
         },
 
-        // Items --> modelTypeId = 5
         {
             "id": group.startingIndexForUpdatePermissions + 2,
+            "entityId": S.selectedEnvironment.orgSettings.id,
+            "groupId": group.id,
+            "accessTypeId": 17,  // update Case Officers field
+            "modelTypeId": 4,
+            "grant": false,
+        },
+
+        // Items --> modelTypeId = 5
+        {
+            "id": group.startingIndexForUpdatePermissions + 3,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
             "accessTypeId": 3,
@@ -484,7 +500,7 @@ exports.generate_POST_request_payload_for_bulk_saving_UPDATE_PERMISSIONS = funct
             "grant": shouldEnable,
         },
         {
-            "id": group.startingIndexForUpdatePermissions + 3,
+            "id": group.startingIndexForUpdatePermissions + 4,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
             "accessTypeId": 14,
@@ -494,7 +510,7 @@ exports.generate_POST_request_payload_for_bulk_saving_UPDATE_PERMISSIONS = funct
 
         // Media --> modelTypeId = 7
         {
-            "id": group.startingIndexForUpdatePermissions + 4,
+            "id": group.startingIndexForUpdatePermissions + 5,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
             "accessTypeId": 3,
@@ -502,7 +518,7 @@ exports.generate_POST_request_payload_for_bulk_saving_UPDATE_PERMISSIONS = funct
             "grant": shouldEnable,
         },
         {
-            "id": group.startingIndexForUpdatePermissions + 5,
+            "id": group.startingIndexForUpdatePermissions + 6,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
             "accessTypeId": 14,
@@ -512,7 +528,7 @@ exports.generate_POST_request_payload_for_bulk_saving_UPDATE_PERMISSIONS = funct
 
         // Share Media --> modelTypeId = 44
         {
-            "id": group.startingIndexForUpdatePermissions + 6,
+            "id": group.startingIndexForUpdatePermissions + 7,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
             "accessTypeId": 3,
@@ -522,7 +538,7 @@ exports.generate_POST_request_payload_for_bulk_saving_UPDATE_PERMISSIONS = funct
 
         // Notes --> modelTypeId = 27
         {
-            "id": group.startingIndexForUpdatePermissions + 7,
+            "id": group.startingIndexForUpdatePermissions + 8,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
             "accessTypeId": 3,
@@ -530,7 +546,7 @@ exports.generate_POST_request_payload_for_bulk_saving_UPDATE_PERMISSIONS = funct
             "grant": shouldEnable
         },
         {
-            "id": group.startingIndexForUpdatePermissions + 8,
+            "id": group.startingIndexForUpdatePermissions + 9,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
             "accessTypeId": 14,
@@ -540,7 +556,7 @@ exports.generate_POST_request_payload_for_bulk_saving_UPDATE_PERMISSIONS = funct
 
         // People --> modelTypeId = 11
         {
-            "id": group.startingIndexForUpdatePermissions + 9,
+            "id": group.startingIndexForUpdatePermissions + 10,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
             "accessTypeId": 3,
@@ -550,7 +566,7 @@ exports.generate_POST_request_payload_for_bulk_saving_UPDATE_PERMISSIONS = funct
 
         // Tasks --> modelTypeId = 14
         {
-            "id": group.startingIndexForUpdatePermissions + 10,
+            "id": group.startingIndexForUpdatePermissions + 11,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
             "accessTypeId": 3,
@@ -560,7 +576,7 @@ exports.generate_POST_request_payload_for_bulk_saving_UPDATE_PERMISSIONS = funct
 
         // User Admin --> modelTypeId = 10
         {
-            "id": group.startingIndexForUpdatePermissions + 11,
+            "id": group.startingIndexForUpdatePermissions + 12,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
             "accessTypeId": 3,
@@ -570,7 +586,7 @@ exports.generate_POST_request_payload_for_bulk_saving_UPDATE_PERMISSIONS = funct
 
         // Storage Locations --> modelTypeId = 6
         {
-            "id": group.startingIndexForUpdatePermissions + 12,
+            "id": group.startingIndexForUpdatePermissions + 13,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
             "accessTypeId": 3,
@@ -580,7 +596,7 @@ exports.generate_POST_request_payload_for_bulk_saving_UPDATE_PERMISSIONS = funct
 
         // AutoDisposition --> modelTypeId = 32
         {
-            "id": group.startingIndexForUpdatePermissions + 13,
+            "id": group.startingIndexForUpdatePermissions + 14,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
             "accessTypeId": 3,
@@ -590,7 +606,7 @@ exports.generate_POST_request_payload_for_bulk_saving_UPDATE_PERMISSIONS = funct
 
         // Discrepancy Reports --> modelTypeId = 34
         {
-            "id": group.startingIndexForUpdatePermissions + 14,
+            "id": group.startingIndexForUpdatePermissions + 15,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
             "accessTypeId": 3,
@@ -598,7 +614,7 @@ exports.generate_POST_request_payload_for_bulk_saving_UPDATE_PERMISSIONS = funct
             "grant": shouldEnable,
         },
         {
-            "id": group.startingIndexForUpdatePermissions + 15,
+            "id": group.startingIndexForUpdatePermissions + 16,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
             "accessTypeId": 14,
@@ -608,7 +624,7 @@ exports.generate_POST_request_payload_for_bulk_saving_UPDATE_PERMISSIONS = funct
 
         // Random Audits --> modelTypeId = 45
         {
-            "id": group.startingIndexForUpdatePermissions + 16,
+            "id": group.startingIndexForUpdatePermissions + 17,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
             "accessTypeId": 3,
@@ -616,17 +632,17 @@ exports.generate_POST_request_payload_for_bulk_saving_UPDATE_PERMISSIONS = funct
             "grant": shouldEnable,
         },
         {
-            "id": group.startingIndexForUpdatePermissions + 17,
+            "id": group.startingIndexForUpdatePermissions + 18,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
-            "accessTypeId": 14,
+            "accessTypeId": 14, // ifOwner
             "modelTypeId": 45,
-            "grant": shouldEnable,
+            "grant": !shouldEnable,
         },
 
         // Tags --> modelTypeId = 8
         {
-            "id": group.startingIndexForUpdatePermissions + 18,
+            "id": group.startingIndexForUpdatePermissions + 19,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
             "accessTypeId": 5, // detach org tags
@@ -634,7 +650,7 @@ exports.generate_POST_request_payload_for_bulk_saving_UPDATE_PERMISSIONS = funct
             "grant": shouldEnable,
         },
         {
-            "id": group.startingIndexForUpdatePermissions + 19,
+            "id": group.startingIndexForUpdatePermissions + 20,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
             "accessTypeId": 4, // attach org tags
@@ -644,7 +660,7 @@ exports.generate_POST_request_payload_for_bulk_saving_UPDATE_PERMISSIONS = funct
 
         // Tag Groups--> modelTypeId = 43
         {
-            "id": group.startingIndexForUpdatePermissions + 20,
+            "id": group.startingIndexForUpdatePermissions + 21,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
             "accessTypeId": 3,
@@ -657,140 +673,76 @@ exports.generate_POST_request_payload_for_bulk_saving_UPDATE_PERMISSIONS = funct
 
 exports.generate_POST_request_payload_for_bulk_saving_DELETE_PERMISSIONS = function (group, shouldEnable) {
     let body = [
+        // MEDIA
         {
-            "entity": null,
             "id": group.startingIndexForDeletePermissions,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
-            "group": null,
             "accessTypeId": 5,
-            "accessType": null,
             "modelTypeId": 7,
-            "modelType": null,
             "grant": shouldEnable,
-            "reqParams": null,
-            "restangularized": true,
-            "fromServer": true,
-            "parentResource": {
-                "route": "groups",
-                "parentResource": {
-                    "route": "organizations",
-                    "parentResource": {
-                        "route": "security",
-                        "parentResource": null
-                    }
-                },
-                "id": group.id
-            },
-            "restangularCollection": false
         },
         {
-            "entity": null,
             "id": group.startingIndexForDeletePermissions + 1,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
-            "group": null,
-            "accessTypeId": 5,
-            "accessType": null,
-            "modelTypeId": 19,
-            "modelType": null,
-            "grant": shouldEnable,
-            "reqParams": null,
-            "restangularized": true,
-            "fromServer": true,
-            "parentResource": {
-                "route": "groups",
-                "parentResource": {
-                    "route": "organizations",
-                    "parentResource": {
-                        "route": "security",
-                        "parentResource": null
-                    }
-                },
-                "id": group.id
-            },
-            "restangularCollection": false
+            "accessTypeId": 15, // delete ifOwner
+            "modelTypeId": 7,
+            "grant": !shouldEnable,
         },
+
+        // SHARE MEDIA
         {
-            "entity": null,
             "id": group.startingIndexForDeletePermissions + 2,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
-            "group": null,
             "accessTypeId": 5,
-            "accessType": null,
-            "modelTypeId": 14,
-            "modelType": null,
+            "modelTypeId": 44,
             "grant": shouldEnable,
-            "reqParams": null,
-            "restangularized": true,
-            "fromServer": true,
-            "parentResource": {
-                "route": "groups",
-                "parentResource": {
-                    "route": "organizations",
-                    "parentResource": {
-                        "route": "security",
-                        "parentResource": null
-                    }
-                },
-                "id": group.id
-            },
-            "restangularCollection": false
         },
+
+        //NOTES
         {
-            "entity": null,
             "id": group.startingIndexForDeletePermissions + 3,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
-            "group": null,
             "accessTypeId": 5,
-            "accessType": null,
-            "modelTypeId": 6,
-            "modelType": null,
+            "modelTypeId": 27,
             "grant": shouldEnable,
-            "reqParams": null,
-            "restangularized": true,
-            "fromServer": true,
-            "parentResource": {
-                "route": "groups",
-                "parentResource": {
-                    "route": "organizations",
-                    "parentResource": {
-                        "route": "security",
-                        "parentResource": null
-                    }
-                },
-                "id": group.id
-            },
-            "restangularCollection": false
         },
         {
-            "entity": null,
             "id": group.startingIndexForDeletePermissions + 4,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
-            "group": null,
+            "accessTypeId": 15, // delete ifOwner
+            "modelTypeId": 27,
+            "grant": !shouldEnable,
+        },
+
+        //
+        {
+            "id": group.startingIndexForDeletePermissions + 5,
+            "entityId": S.selectedEnvironment.orgSettings.id,
+            "groupId": group.id,
             "accessTypeId": 5,
-            "accessType": null,
-            "modelTypeId": 8,
-            "modelType": null,
+            "modelTypeId": 19,
             "grant": shouldEnable,
-            "reqParams": null,
-            "restangularized": true,
-            "fromServer": true,
-            "parentResource": {
-                "route": "groups",
-                "parentResource": {
-                    "route": "organizations",
-                    "parentResource": {
-                        "route": "security",
-                        "parentResource": null
-                    }
-                },
-                "id": group.id
-            },
-            "restangularCollection": false
+        },
+        {
+            "id": group.startingIndexForDeletePermissions + 6,
+            "entityId": S.selectedEnvironment.orgSettings.id,
+            "groupId": group.id,
+            "accessTypeId": 5,
+            "modelTypeId": 14,
+            "grant": shouldEnable,
+        },
+        {
+            "id": group.startingIndexForDeletePermissions + 7,
+            "entityId": S.selectedEnvironment.orgSettings.id,
+            "groupId": group.id,
+            "accessTypeId": 5,
+            "modelTypeId": 6,
+            "grant": shouldEnable,
         }
     ];
     return body;

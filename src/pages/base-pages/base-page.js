@@ -313,7 +313,7 @@ export default class BasePage {
 
     verify_text_is_NOT_present_on_main_container(text) {
         this.toastMessage().should('not.exist');
-        mainContainer().should('not.contain', text);
+        mainContainer().find(':visible').should('not.contain', text);
         return this;
     };
 
@@ -1639,7 +1639,7 @@ export default class BasePage {
         } else {
             this.verify_text_is_NOT_present_on_main_container('Review Date')
                 .verify_text_is_NOT_present_on_main_container('Review Date Notes')
-        }
+            }
         return this;
     };
 

@@ -727,6 +727,7 @@ C.pages = {
     }
 }
 
+//modelTypeIds
 C.perissionMatrixEntity = {
     cases: 4,
     items: 5,
@@ -743,8 +744,7 @@ C.perissionMatrixEntity = {
     tasks: 14,
     userAdmin: 10,
     storageLocation: 6,
-    //autoDispo: 32,
-    autoDispo: 36,
+    autoDispo: 32,
     discrepancyReports: 34,
     randomAudits: 45,
     imports: 35,
@@ -758,6 +758,8 @@ C.permissionMatrixAccessType = {
     create: 4,
     updateAll: 3,
     updateIfOwner: 14,
+    deleteIfOwner: 15,
+    setDispoAction: 16,
     createOrgTag: 11,
     createGroupTag: 12,
     createPersonalTag: 13,
