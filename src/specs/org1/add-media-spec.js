@@ -25,7 +25,7 @@ describe('Add Media', function () {
             .verify_content_of_results_table('image.png')
     });
 
-    it.only('A.M_2. Add Media to Item', function () {
+    it('A.M_2. Add Media to Item', function () {
         ui.app.log_title(this);
 
         api.auth.get_tokens(user);
@@ -62,7 +62,7 @@ describe('Add Media', function () {
             .verify_content_of_results_table('image.png')
     });
 
-    it('A.M_4. Add Media to Task', function () {
+    it.only('A.M_4. Add Media to Task', function () {
         ui.app.log_title(this);
 
         api.auth.get_tokens(user);

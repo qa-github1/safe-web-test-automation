@@ -202,6 +202,7 @@ C = {
         tags: "Tags",
         followUpDate: "Follow-Up Date",
         offenseDate: "Offense Date",
+        linkedCases: "Linked Cases",
         offenseDateEditMode: "Offense Date",
         offenseDescription: "Offense Description",
         offenseLocation: "Offense Location",

@@ -62,7 +62,8 @@ S.DEV = {
             offenseLocation: 29,
             offenseDescription: 30,
             tags: 31,
-            offenseDate: 34
+            offenseDate: 34,
+            linkedCases: 45
         },
         item: {
             recoveredAt: 20,
@@ -289,25 +290,25 @@ S.DEV_1 = {
     divisions: {
         div1: {
             name: 'Patrol',
-            id: 11
+            id: 54
         },
         div2: {
             name: 'Investigations',
-            id: 132
+            id: 55
         }
     },
     units: {
         unit1: {
             name: 'UnitA',
-            id: 63
+            id: 49
         },
         unit2: {
             name: 'UnitB',
-            id: 64
+            id: 50
         },
         unit3: {
             name: 'UnitC',
-            id: 85
+            id: 51
         }
     },
     forms: {
@@ -529,25 +530,25 @@ S.DEV_2 = {
     divisions: {
         div1: {
             name: 'Patrol',
-            id: 127
+            id: 54
         },
         div2: {
             name: 'Investigations',
-            id: 133
+            id: 55
         }
     },
     units: {
         unit1: {
             name: 'UnitA',
-            id: 86
+            id: 49
         },
         unit2: {
             name: 'UnitB',
-            id: 81
+            id: 50
         },
         unit3: {
             name: 'UnitC',
-            id: 87
+            id: 51
         }
     },
     forms: {
@@ -558,13 +559,13 @@ S.DEV_2 = {
     },
     locations: [
         {
-            id: 477682,
-            guid: '8c229a7e-53a7-4cd4-8dc2-87b18a86abf3',
+            id: 422234,
+            guid: 'eff01a7f-552e-4753-826d-3f85f31920ae',
             name: "CypressLocation1"
         },
         {
-            id: 477683,
-            guid: 'da3370fa-08c2-485f-a9db-acf9ac259528',
+            id: 422235,
+            guid: '0a3b258e-56a8-4fa2-bf59-da5f7a0bdd0b',
             name: "CypressLocation2"
         }
     ],
@@ -593,7 +594,23 @@ S.DEV_2 = {
         offenseDate: '12/13/2022',
         reviewDate: '12/2022/2022'
     },
-    otherTaskTemplateId: 3605,
+    taskTemplate: {
+        taskTypeId: {
+            errorCorrection: 3388,
+
+        },
+        taskSubTypeId: {
+            packagingAndLabeling: 2808,
+
+        },
+        taskActionId: {
+            packageMustBeSealed: 1690,
+            mustBeRenderedSafe: 1688,
+            sealRequiresSignatureAndDate: 1689
+
+        },
+        otherTaskTemplateId: 4526,
+    },
     recentCase: {
         id: 5446732,
         caseNumber: 'TestCase1'
@@ -602,23 +619,23 @@ S.DEV_2 = {
     person: {
         name: 'Person_1',
         fullName: 'Cypress Person_1',
-        id: 6606995,
+        id: 4953714,
         get organizationId() {
             return S.DEV_2.orgSettings.id
         },
         userId: null,
-        guid: '535530de-c2e1-40bd-ad7d-4189dbbeb6af',
+        guid: '69b0e307-1cbc-4248-9cd9-7559c8c15084',
         email: 'qa+person_1@trackerproducts.com'
     },
     person_2: {
         name: 'Person_2',
         fullName: 'Cypress Person_2',
-        id: 6606996,
+        id: 4953715,
         get organizationId() {
             return S.DEV_2.orgSettings.id
         },
         userId: null,
-        guid: '8fbb5deb-86ef-4e7e-b427-5eae07c65b33',
+        guid: '69947b04-67b5-4b0b-9aa6-e2ab965537ea',
         email: 'qa+person_2@trackerproducts.com'
     },
     get recoveredById() {

@@ -2,9 +2,10 @@ const S = require('../../../fixtures/settings.js');
 const C = require('../../../fixtures/constants.js');
 const userAccounts = require('../../../fixtures/user-accounts.js');
 
-exports.generate_POST_request_payload_for_creating_new_task = function (taskTitle, entityId) {
+exports.generate_POST_request_payload_for_creating_new_task = function (taskTemplate, taskTitle, entityId) {
 
     let body = {
+        "taskTemplate": taskTemplate,
         "title": taskTitle,
         "message": taskTitle,
         "creatorId": S.selectedUser.id,
