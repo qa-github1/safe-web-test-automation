@@ -66,6 +66,16 @@ exports.generate_request_payload_for_disabling_Case_fields = function (fieldsToE
             })
     }
 
+    if (!shouldFieldBeEnabled(fieldsToEnable, C.caseFields.linkedCases)) {
+        body.push({
+                "orgFieldId": S.selectedEnvironment.fieldIds.case.linkedCases,
+                "entityType": 0,
+                "name": "GENERAL.LINKED_CASES",
+                "recordType": 1
+            },
+            )
+    }
+
     return body;
 }
 

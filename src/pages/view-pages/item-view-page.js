@@ -4,6 +4,7 @@ const S = require('../../fixtures/settings');
 const helper = require('../../support/e2e-helper');
 import BaseViewPage from "../base-pages/base-view-page";
 
+
 //************************************ ELEMENTS ***************************************//
 
 let
@@ -32,7 +33,8 @@ let
     recoveredByInput = e => cy.get('[for="recoveredBy"]').next().find('[ng-model="person.text"]'),
     storageLocationInput = e => cy.get('[ng-model="itemEdit.locationId"]'),
     categoryDropdown = e => cy.get('[ng-model="itemEdit.categoryId"]'),
-    categoryDropdown_selectedOption = e => cy.get('[ng-model="itemEdit.categoryId"]').find('[selected="selected"]'),
+    //categoryDropdown_selectedOption = e => cy.get('[ng-model="itemEdit.categoryId"]').find('[selected="selected"]'),
+    categoryDropdown_selectedOption = (itemObject) => cy.get('[class="ng-binding ng-scope"]').contains(itemObject),
     custodyReasonDropdown = e => cy.get('[ng-model="itemEdit.custodyReasonId"]'),
     custodyReasonDropdown_selectedOption = e => cy.get('[ng-model="itemEdit.custodyReasonId"]').find('[selected="selected"]'),
     serialNoInput = e => cy.get('[ng-model="itemEdit.serialNumber"]'),

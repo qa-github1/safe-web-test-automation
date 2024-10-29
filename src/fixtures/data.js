@@ -585,8 +585,9 @@ D.getNewTaskTemplateData = function () {
 D.getNewTaskData = function (user_assignee, userGroup_assignee, createdBy = S.userAccounts.orgAdmin, dueDate_daysAfterToday = 14) {
 
     D.newTask = {
-        type: 'Other',
-        subtype: '',
+        template: 'Other',
+        //type: 'Other',
+        //subtype: '',
         status: 'Open',
         title: 'title_' + helper.setNewRandomString(),
         message: 'message_' + helper.setNewRandomString(),
