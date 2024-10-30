@@ -11,11 +11,20 @@ exports.get_task_templates = function () {
     return this;
 };
 
-exports.delete_task_template = function (taskTemplateId) {
-    generic_request.DELETE(
-        '/api/taskTemplates/' + taskTemplateId,
+// exports.delete_task_template = function (taskTemplateId) {
+//     generic_request.DELETE(
+//         '/api/taskTemplates/' + taskTemplateId,
+//         [],
+//         'Deleting taskTemplate via API'
+//     );
+//     return this;
+// };
+
+exports.deactivate_task_template = function (taskTemplateId) {
+    generic_request.PUT(
+        '/api/taskTemplates/activate' + taskTemplateId,
         [],
-        'Deleting taskTemplate via API'
+        'Deactivating taskTemplate via API'
     );
     return this;
 };
@@ -27,7 +36,7 @@ exports.delete_all_task_templates = function () {
 
         allTaskTemplates.forEach(function (taskTemplate) {
             if (taskTemplate.id !== S.selectedEnvironment.taskTemplate.otherTaskTemplateId) {
-                exports.delete_task_template(taskTemplate.id)
+                exports.deactivate_task_template(taskTemplate.id)
             }
         });
 

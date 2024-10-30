@@ -187,7 +187,7 @@ describe('Add User', function () {
     });
 
     context('1.2 Power User -- all permissions in Office', function () {
-        it('1.2.1. Office Admin can create a new user account', function () {
+        it.only('1.2.1. Office Admin can create a new user account', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
             api.org_settings.update_org_settings_by_specifying_property_and_value('addUserSupervisor', true)

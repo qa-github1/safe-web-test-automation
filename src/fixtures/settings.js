@@ -477,8 +477,8 @@ S.DEV_2 = {
     office_1: {
         id: 11082,
         guid: 'cc0d2fd8-a18b-ef11-834d-0254a7906fb1',
-        name: "Default Office",
-        orgAndOfficeName: "Web Test Automtion #2 - Cypress Office 1"
+        name: "Cypress Office 1",
+        orgAndOfficeName: "Web Test Automation #2 - Cypress Office 1"
     },
     office_2: {
         id: 11091,
@@ -488,13 +488,13 @@ S.DEV_2 = {
         office_1: {
             id: 11082,
             guid: 'cc0d2fd8-a18b-ef11-834d-0254a7906fb1',
-            name: "Default Office",
+            name: "Cypress Office 1",
             orgAndOfficeName: "Web Test Automation #2 - Cypress Office 1"
         },
         id: 558,
         orgName: "Web Test Automation #2",
         officeId: 11082,
-        officeName: "Default Office",
+        officeName: "Cypress Office 1",
         orgAndOfficeName: "Web Test Automation #2 - Cypress Office 1"
     },
     users: {
@@ -643,16 +643,16 @@ S.DEV_2 = {
     },
     admin_permissionGroup: {
         name: 'Cypress - ADMIN',
-        id: 4419,
-        startingIndexForViewPermissions: 64147,
+        id: 2144,
+        startingIndexForViewPermissions: 64043,
         get startingIndexForCreatePermissions() {
             return S.DEV_2.admin_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.DEV_2.admin_permissionGroup.startingIndexForViewPermissions + 44
+            return S.DEV_2.admin_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.DEV_2.admin_permissionGroup.startingIndexForViewPermissions + 65
+            return S.DEV_2.admin_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     blocked_permissionGroup: {
@@ -703,7 +703,7 @@ S.DEV_2 = {
     },
     admin_userGroup: {
         name: 'Cypress Admin Group',
-        id: 2897
+        id: 10561
     },
     blocked_userGroup: {
         name: 'Cypress Blocked Group',

@@ -62,7 +62,7 @@ describe('Add Media', function () {
             .verify_content_of_results_table('image.png')
     });
 
-    it.only('A.M_4. Add Media to Task', function () {
+    it('A.M_4. Add Media to Task', function () {
         ui.app.log_title(this);
 
         api.auth.get_tokens(user);

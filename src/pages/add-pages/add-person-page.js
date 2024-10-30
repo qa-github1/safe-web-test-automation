@@ -5,7 +5,7 @@ import BasePage from "../base-pages/base-page";
 
 let
     caseNumberInput_enabled = e => cy.get('[typeahead="l as l.text for l in getObject($viewValue) | limitTo: 10"]'),
-    personType = e => cy.get('[ng-model="case.person.typeId"]'),
+    personType = e => cy.get('[name="personTypeId"]'),
     race = e => cy.get('[ng-options="r.id as r.name for r in races"]'),
     gender = e => cy.get('[ng-options="g.id as g.name for g in genders"]'),
     businessName = e => cy.findByPlaceholderText(C.placeholders.addPerson.businessName),

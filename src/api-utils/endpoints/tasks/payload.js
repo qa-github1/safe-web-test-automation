@@ -5,7 +5,7 @@ const userAccounts = require('../../../fixtures/user-accounts.js');
 exports.generate_POST_request_payload_for_creating_new_task = function (taskTemplate, taskTitle, entityId) {
 
     let body = {
-        "taskTemplate": taskTemplate,
+        "taskTemplateId": S.selectedEnvironment.taskTemplate.otherTaskTemplateId,
         "title": taskTitle,
         "message": taskTitle,
         "creatorId": S.selectedUser.id,
