@@ -537,6 +537,11 @@ export default class BasePage {
         return this;
     };
 
+
+
+
+
+
     enter_values_on_typeahead_fields(element_value_typeahead__stacks) {
         element_value_typeahead__stacks.forEach(function (stack) {
             if (stack[1]) {

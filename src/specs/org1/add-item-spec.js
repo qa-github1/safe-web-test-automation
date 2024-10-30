@@ -27,7 +27,7 @@ describe('Add Item', function () {
 
     context('1. Org Admin', function () {
 
-        it.only('1.1 All fields enabled ' +
+        it('1.1 All fields enabled ' +
             '-- "Item Belongs To Shows All People" turned ON in Org Settings -- multiple people not linked to Primary Case are selected in "Item Belongs to" field ', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
@@ -46,11 +46,11 @@ describe('Add Item', function () {
             ui.itemView.verify_Item_View_page_is_open(D.newItem.caseNumber)
                 .click_Edit()
                 .verify_values_on_Edit_form(D.newItem)
-           // ui.menu.click_Item();
-            //ui.addItem.verify_Case_Number_is_populated_on_enabled_input_field(D.newItem.caseNumber)
+            ui.menu.click_Item();
+            ui.addItem.verify_Case_Number_is_populated_on_enabled_input_field(D.newItem.caseNumber)
         });
 
-        it('1.2. Optional fields disabled -- redirect to View Added Item ' +
+        it.only('1.2. Optional fields disabled -- redirect to View Added Item ' +
             '-- Item Belongs To Shows All People" turned OFF in Org Settings -- multiple values selected for "Item Belongs to" and Tags', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
@@ -73,12 +73,12 @@ describe('Add Item', function () {
             ui.addItem.select_tab(C.tabs.items)
                 .click_element_on_active_tab(C.buttons.addItem)
                 .verify_Add_Item_page_is_open()
-                .populate_all_fields_on_both_forms(D.newItem, false)
-                .select_post_save_action(C.postSaveActions.viewAddedItem)
-                .click_Save(D.newItem)
-                .verify_toast_message_(oldCase)
-            ui.itemView.verify_Item_View_page_is_open(D.newItem.caseNumber)
-                .click_Edit()
+                .populate_all_fields_on_both_forms(D.newItem, false )
+                 .select_post_save_action(C.postSaveActions.viewAddedItem)
+                 .click_Save(D.newItem)
+                 .verify_toast_message_(oldCase)
+             ui.itemView.verify_Item_View_page_is_open(D.newItem.caseNumber)
+                 .click_Edit()
                 .verify_values_on_Edit_form(D.newItem)
             ui.menu.click_Item();
             ui.addItem.verify_Case_Number_is_populated_on_enabled_input_field(D.newItem.caseNumber)

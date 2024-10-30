@@ -27,9 +27,9 @@ describe('Add Case', function () {
 
         before(function () {
             api.auth.get_tokens(orgAdmin);
-            // api.auto_disposition.edit(true);
-            // api.org_settings.set_Org_Level_Case_Number_formatting(false, false, false)
-            // api.users.update_current_user_settings(orgAdmin.id, C.currentDateTimeFormat)
+            api.auto_disposition.edit(true);
+            api.org_settings.set_Org_Level_Case_Number_formatting(false, false, false)
+            api.users.update_current_user_settings(orgAdmin.id, C.currentDateTimeFormat)
             api.permissions.update_ALL_permissions_for_an_existing_Permission_group(permissionGroup_regularUser, true, true, true, true)
 
             api.auth.get_tokens(powerUser);
@@ -454,7 +454,7 @@ describe('Add Case', function () {
             api.org_settings.set_Org_Level_Case_Number_formatting(false, false, false)
         });
 
-        it('8.1 verify that required custom form is attached to the case with blank fields', function () {
+        it.only('8.1 verify that required custom form is attached to the case with blank fields', function () {
             ui.app.log_title(this);
 
             D.newCase = Object.assign(D.newCase, D.defaultCustomFormData)

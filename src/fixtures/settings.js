@@ -588,7 +588,7 @@ S.DEV_2 = {
         closedDate: '10/27/2022',
     },
     oldActiveCase: {
-        id: 7742549,
+        id: 7663616,
         caseNumber: 'AutomatedTest-Active Case',
         createdDate: '12/17/2022',
         offenseDate: '12/13/2022',
@@ -713,11 +713,11 @@ S.DEV_2 = {
         name: 'Cypress ReadOnly Group',
         id: 2898
     },
-    orgTag1: {tagModelId: 6751, name: 'sensitive information', color: "#ad2355", tagUsedBy: 1},
-    orgTag2: {tagModelId: 6752, name: 'eligible for disposal', color: "#4b9b62", tagUsedBy: 1},
-    tagA: {tagModelId: 16809, name: 'Tag_A__', color: "#4b9b62", tagUsedBy: 1},
-    tagB: {tagModelId: 16810, name: 'Tag_B__', color: "#4b9b62", tagUsedBy: 1},
-    tagC: {tagModelId: 16811, name: 'Tag_C__', color: "#4b9b62", tagUsedBy: 1},
+    orgTag1: {tagModelId: 4851, name: 'sensitive information', color: "#ad2355", tagUsedBy: 1},
+    orgTag2: {tagModelId: 4852, name: 'eligible for disposal', color: "#4b9b62", tagUsedBy: 1},
+    tagA: {tagModelId: 4855, name: 'Tag_A__', color: "#4b9b62", tagUsedBy: 1},
+    tagB: {tagModelId: 4856, name: 'Tag_B__', color: "#4b9b62", tagUsedBy: 1},
+    tagC: {tagModelId: 4857, name: 'Tag_C__', color: "#4b9b62", tagUsedBy: 1},
 };
 
 S.DEV_3 = {
