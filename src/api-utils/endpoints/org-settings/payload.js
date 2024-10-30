@@ -167,7 +167,6 @@ exports.generate_request_payload_for_setting_visible_and_required_Case_fields = 
     return body;
 }
 
-
 exports.generate_request_payload_for_setting_visible_and_required_Item_fields = function (fieldsToDisable, optionalFields) {
     let body = [];
 
