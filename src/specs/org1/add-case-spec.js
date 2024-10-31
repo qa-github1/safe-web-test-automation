@@ -129,7 +129,7 @@ describe('Add Case', function () {
             ui.caseView.verify_active_tab(C.tabs.notes);
         });
 
-        it.only('1.7 Power User can add case and view/enter/update Review Date/Notes when having AutoDispo permissions', function () {
+        it('1.7 Power User can add case and view/enter/update Review Date/Notes when having AutoDispo permissions', function () {
             ui.app.log_title(this);
 
             api.auth.get_tokens(orgAdmin);
@@ -345,6 +345,7 @@ describe('Add Case', function () {
                 .verify_Case_Number_value('22-_____')
                 .enter_Case_Number('abc', false)
                 .verify_text_is_present_on_main_container("Please enter a valid character based on guidelines below:")
+                .verify_text_is_present_on_main_container("Format examples:")
         });
 
     });
@@ -454,7 +455,7 @@ describe('Add Case', function () {
             api.org_settings.set_Org_Level_Case_Number_formatting(false, false, false)
         });
 
-        it.only('8.1 verify that required custom form is attached to the case with blank fields', function () {
+        it('8.1 verify that required custom form is attached to the case with blank fields', function () {
             ui.app.log_title(this);
 
             D.newCase = Object.assign(D.newCase, D.defaultCustomFormData)

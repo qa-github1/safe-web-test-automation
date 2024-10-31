@@ -707,11 +707,11 @@ S.DEV_2 = {
     },
     blocked_userGroup: {
         name: 'Cypress Blocked Group',
-        id: 2540
+        id: 10563
     },
     readOnly_userGroup: {
         name: 'Cypress ReadOnly Group',
-        id: 2898
+        id: 10562
     },
     orgTag1: {tagModelId: 4851, name: 'sensitive information', color: "#ad2355", tagUsedBy: 1},
     orgTag2: {tagModelId: 4852, name: 'eligible for disposal', color: "#4b9b62", tagUsedBy: 1},

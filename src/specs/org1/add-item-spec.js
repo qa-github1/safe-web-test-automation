@@ -50,7 +50,7 @@ describe('Add Item', function () {
             ui.addItem.verify_Case_Number_is_populated_on_enabled_input_field(D.newItem.caseNumber)
         });
 
-        it.only('1.2. Optional fields disabled -- redirect to View Added Item ' +
+        it('1.2. Optional fields disabled -- redirect to View Added Item ' +
             '-- Item Belongs To Shows All People" turned OFF in Org Settings -- multiple values selected for "Item Belongs to" and Tags', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
