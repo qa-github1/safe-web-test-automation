@@ -35,7 +35,7 @@ let
     categoryDropdown = e => cy.get('[ng-model="itemEdit.categoryId"]'),
     //categoryDropdown_selectedOption = e => cy.get('[ng-model="itemEdit.categoryId"]').find('[selected="selected"]'),
     //categoryDropdown_selectedOption = (category) => cy.get('[name="category"]').contains(category),
-    categoryDropdown_selectedOption = e => cy.get('[class="ng-binding ng-scope"]').contains('Alcohol'),
+    categoryDropdown_selectedOption = (selectedCategory) => cy.get('[class="ng-binding ng-scope"]').contains(selectedCategory),
     custodyReasonDropdown = e => cy.get('[ng-model="itemEdit.custodyReasonId"]'),
     custodyReasonDropdown_selectedOption = e => cy.get('[ng-model="itemEdit.custodyReasonId"]').find('[selected="selected"]'),
     serialNoInput = e => cy.get('[ng-model="itemEdit.serialNumber"]'),
@@ -100,8 +100,7 @@ export default class ItemViewPage extends BaseViewPage {
             [
                 [itemBelongsToContainer, itemObject.itemBelongsTo],
                 [this.tagsField, itemObject.tags],
-                //[categoryDropdown_selectedOption(itemObject.category), itemObject.category],
-                [categoryDropdown_selectedOption, itemObject.category],
+                [categoryDropdown_selectedOption(itemObject.category), itemObject.category],
                 [custodyReasonDropdown_selectedOption, itemObject.custodyReason],
             ]);
 

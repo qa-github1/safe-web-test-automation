@@ -311,7 +311,7 @@ describe('Add Item', function () {
 
         //setting this test just for Org#1 until the issue with shared form gets fixed ----> #14625 ⁃ 'Dropdown Typeahead' on the Shared custom form has options available only in the originating Org
         if (Cypress.env('orgNum') === 1) {
-            it('3.1 --- with required Custom Form filled out, all required fields on Form', function () {
+            it.only('3.1 --- with required Custom Form filled out, all required fields on Form', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 D.getItemDataWithReducedFields(D.newCase);

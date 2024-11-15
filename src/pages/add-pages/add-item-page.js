@@ -183,6 +183,7 @@ export default class AddItemPage extends BaseAddPage {
 
     populate_all_fields_on_both_forms(itemObject, enterCaseNumber = true, addingItemToClosedCase) {
         if (enterCaseNumber) this.enter_Case_Number_and_select_on_typeahead(itemObject.caseNumber);
+        this.pause(1)
         this.select_Category(itemObject.category)
             .click(C.buttons.next)
 
