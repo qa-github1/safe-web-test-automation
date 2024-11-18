@@ -123,6 +123,7 @@ let
     itemsCountOnSearchGrid = e => resultsTable().children('tr').first().find('[ng-click="callbackFunction(item.id)"]'),
     active_form = e => cy.get('.form-horizontal').not('.ng-hide'),
     tagsField = e => active_form().contains('Tags').parent('div'),
+    //tagsField = e => cy.contains('Tags').parent('div').find('ng-transclude'),
     tagsInput = e => active_form().contains('Tags').parent('div').find('input'),
     actionsContainer = e => cy.contains('Actions').parent('div'),
     case__ = e => cy.contains('Case').parent('div').find('ng-transclude'),
@@ -542,11 +543,6 @@ export default class BasePage {
         });
         return this;
     };
-
-
-
-
-
 
     enter_values_on_typeahead_fields(element_value_typeahead__stacks) {
         element_value_typeahead__stacks.forEach(function (stack) {

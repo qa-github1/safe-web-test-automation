@@ -21,6 +21,8 @@ let
     personTypeahead = e => cy.get('[ng-repeat="person in $select.items"]'),
     recoveredAt = e => cy.findByPlaceholderText(C.placeholders.addItem.recoveryLocation),
     itemDescription = e => cy.findByPlaceholderText(C.placeholders.addItem.itemDescription),
+    //disabledItemBelongsTo = e => cy.get('.form-horizontal').contains('Item Belongs to').parent('div').find('span').find('[ng-disabled="true"]'),
+    disabledItemBelongsTo = e => cy.get('span[ng-disabled="true"]'),
     itemBelongsTo = e => cy.get('.form-horizontal').contains('Item Belongs to').parent('div').find('input'),
     serialNumber = e => cy.findByPlaceholderText(C.placeholders.addItem.itemSerialNumber),
     storageLocation = e => cy.findByPlaceholderText(C.placeholders.addItem.storageLocation),
@@ -152,7 +154,7 @@ export default class AddItemPage extends BaseAddPage {
         return this;
     }
 
-    populate_all_fields_on_second_form(itemObject, skipStorageLocation) {
+    populate_all_fields_on_second_form(itemObject, skipStorageLocation, skipItemBelongsTo) {
 
         this.type_if_values_provided(
             [
@@ -167,7 +169,6 @@ export default class AddItemPage extends BaseAddPage {
 
         this.enter_values_on_multi_select_typeahead_fields(
             [
-                [itemBelongsTo, itemObject.itemBelongsTo],
                 [this.tagsInput, itemObject.tags],
             ]);
 
@@ -175,13 +176,23 @@ export default class AddItemPage extends BaseAddPage {
             this.type_if_value_provided(storageLocation, itemObject.location, this.firstLocationOnTypeahead);
         }
 
+        if (!skipItemBelongsTo) {
+            this.enter_values_on_multi_select_typeahead_fields(
+                [
+                    [itemBelongsTo, itemObject.itemBelongsTo]
+                ]
+            );
+        }
+
+
         if (itemObject.custodyReason) custodyReason().select(itemObject.custodyReason);
 
         this.define_API_request_to_be_awaited('POST', 'api/items', 'addItem', 'newItem')
         return this;
     };
 
-    populate_all_fields_on_both_forms(itemObject, enterCaseNumber = true, addingItemToClosedCase) {
+
+    populate_all_fields_on_both_forms(itemObject, skipStorageLocation, skipItemBelongsTo, enterCaseNumber = true, addingItemToClosedCase) {
         if (enterCaseNumber) this.enter_Case_Number_and_select_on_typeahead(itemObject.caseNumber);
         this.pause(1)
         this.select_Category(itemObject.category)
@@ -191,7 +202,7 @@ export default class AddItemPage extends BaseAddPage {
             cy.contains('The Case is closed.').should('be.visible')
             this.click_button_on_sweet_alert('OK')
         }
-        this.populate_all_fields_on_second_form(itemObject);
+        this.populate_all_fields_on_second_form(itemObject, skipStorageLocation, skipItemBelongsTo );
         return this;
     };
 

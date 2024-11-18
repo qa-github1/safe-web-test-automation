@@ -713,6 +713,14 @@ S.DEV_2 = {
         name: 'Cypress ReadOnly Group',
         id: 10562
     },
+    categorylinkedToRequiredForm1: {
+        name: C.itemCategories.vehicle,
+        id: 0
+    },
+    categorylinkedToRequiredForm2: {
+        name: C.itemCategories.ammunition,
+        id: 0
+    },
     orgTag1: {tagModelId: 4851, name: 'sensitive information', color: "#ad2355", tagUsedBy: 1},
     orgTag2: {tagModelId: 4852, name: 'eligible for disposal', color: "#4b9b62", tagUsedBy: 1},
     tagA: {tagModelId: 4855, name: 'Tag_A__', color: "#4b9b62", tagUsedBy: 1},
