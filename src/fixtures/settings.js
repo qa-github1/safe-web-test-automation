@@ -2602,7 +2602,36 @@ S.PENTEST_2 = {
         offenseDate: '12/13/2022',
         reviewDate: '12/2022/2022'
     },
-    otherTaskTemplateId: 3605,
+    taskTemplate: {
+        taskTypeId: {
+            dispositionAuthorization: 2254,
+            errorCorrection: 1120,
+            itemPastExpectedReturnDate: 2821,
+            xxx: 3426
+
+        },
+        taskSubTypeId: {
+            packagingAndLabeling: 557,
+            courtesyReminder: 1699,
+            dispoAuthSubtype1: 3064,
+            dispoAuthSubtype2: 3065,
+            documentation: 1132,
+            lab: 2833,
+            other: 2266,
+            xxxsubtype: 2879
+
+        },
+        taskActionId: {
+            packageMustBeSealed: 1690,
+            mustBeRenderedSafe: 1688,
+            sealRequiresSignatureAndDate: 1689
+
+        },
+        otherTaskTemplateId: 3381,
+        dispositionAuthorization: 3511,
+        errorCorrection: 3768,
+
+    },
     recentCase: {
         id: 5446732,
         caseNumber: 'TestCase1'
@@ -2635,8 +2664,8 @@ S.PENTEST_2 = {
     },
     admin_permissionGroup: {
         name: 'Cypress - ADMIN',
-        id: 4419,
-        startingIndexForViewPermissions: 64147,
+        id: 4584,
+        startingIndexForViewPermissions: 81778,
         get startingIndexForCreatePermissions() {
             return S.PENTEST_2.admin_permissionGroup.startingIndexForViewPermissions + 22
         },

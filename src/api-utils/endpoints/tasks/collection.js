@@ -20,9 +20,18 @@ exports.get_task_templates = function () {
 //     return this;
 // };
 
+// exports.deactivate_task_template = function (taskTemplateId) {
+//     generic_request.PUT(
+//         '/api/taskTemplates/activate' + taskTemplateId,
+//         [],
+//         'Deactivating taskTemplate via API'
+//     );
+//     return this;
+// };
+
 exports.deactivate_task_template = function (taskTemplateId) {
-    generic_request.PUT(
-        '/api/taskTemplates/activate' + taskTemplateId,
+    generic_request.POST(
+        '/api/taskTemplates/activate',
         [],
         'Deactivating taskTemplate via API'
     );

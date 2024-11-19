@@ -485,6 +485,7 @@ D.getNewUserData = function (officeId) {
         middleName: 'M' + randomNo,
         lastName: 'L' + randomNo,
         fullName: 'F' + randomNo + ' ' + 'M' + randomNo + ' ' + 'L' + randomNo,
+        personnelNumber: randomNo,
         email: 'qa+' + randomNo + '@trackerproducts.com',
         emailEncoded: 'qa+' + randomNo + '@trackerproducts.&#173;com',
         mobilePhone: '+1 270-543-3333',

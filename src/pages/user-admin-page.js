@@ -20,6 +20,7 @@ let
     activeUsersRadioButton = e => cy.get('[translate="GENERAL.ACTIVE"]'),
     inactiveUsersRadioButton = e => cy.get('[translate="GENERAL.INACTIVE"]'),
     firstNameInput = e => cy.get('[ng-model="user.firstName"]'),
+    personnelNumberInput = e => cy.get('[ng-model="user.personnelNumber"]'),
     titleRankDropdown = e => cy.get('[ng-model="user.titleId"]'),
     divisionDropdown = e => cy.get('[ng-model="user.divisionId"]'),
     unitDropdown = e => cy.get('[ng-model="user.unitId"]'),
@@ -83,6 +84,7 @@ export default class UserAdminPage extends BasePage {
                     [firstNameInput, userObject.firstName],
                     [lastNameInput, userObject.lastName],
                     [emailInput, userObject.email],
+                    [personnelNumberInput, userObject.personnelNumber],
                 ]
             )
 
@@ -241,6 +243,7 @@ export default class UserAdminPage extends BasePage {
             ['Unit', userObject.unit],
             ['Title/Rank', userObject.titleRank],
             ['Supervisor', userObject.supervisors],
+
         ])
 
         // this approach is more precise (checking value in specific cell based on its title)
