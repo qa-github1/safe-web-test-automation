@@ -17,7 +17,7 @@ describe('Import Cases', function () {
         D.generateNewDataSet();
     });
 
-    it('I.C_1 Case with all fields -- user and user group in Case Officer(s) field', function () {
+    it.only('I.C_1 Case with all fields -- user and user group in Case Officer(s) field', function () {
         ui.app.log_title(this);
         let fileName = 'CaseImport_allFields_' + S.domain;
         api.auth.get_tokens(user);

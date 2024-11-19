@@ -408,10 +408,10 @@ S.DEV_1 = {
             return S.DEV_1.admin_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.DEV_1.admin_permissionGroup.startingIndexForViewPermissions + 44
+            return S.DEV_1.admin_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.DEV_1.admin_permissionGroup.startingIndexForViewPermissions + 65
+            return S.DEV_1.admin_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     regularUser_permissionGroup: {
@@ -422,10 +422,10 @@ S.DEV_1 = {
             return S.DEV_1.regularUser_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.DEV_1.regularUser_permissionGroup.startingIndexForViewPermissions + 44
+            return S.DEV_1.regularUser_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.DEV_1.regularUser_permissionGroup.startingIndexForViewPermissions + 65
+            return S.DEV_1.regularUser_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     // readOnly_permissionGroup: {
@@ -436,10 +436,10 @@ S.DEV_1 = {
     //         return S.DEV_1.readOnly_permissionGroup.startingIndexForViewPermissions + 22
     //     },
     //     get startingIndexForUpdatePermissions() {
-    //         return S.DEV_1.readOnly_permissionGroup.startingIndexForViewPermissions + 44
+    //         return S.DEV_1.readOnly_permissionGroup.startingIndexForViewPermissions + 45
     //     },
     //     get startingIndexForDeletePermissions() {
-    //         return S.DEV_1.readOnly_permissionGroup.startingIndexForViewPermissions + 65
+    //         return S.DEV_1.readOnly_permissionGroup.startingIndexForViewPermissions + 67
     //     }
     // },
     permissionGroup_noAutoDispo: {
@@ -663,10 +663,10 @@ S.DEV_2 = {
             return S.DEV_2.blocked_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.DEV_2.blocked_permissionGroup.startingIndexForViewPermissions + 44
+            return S.DEV_2.blocked_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.DEV_2.blocked_permissionGroup.startingIndexForViewPermissions + 65
+            return S.DEV_2.blocked_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     regularUser_permissionGroup: {
@@ -691,10 +691,10 @@ S.DEV_2 = {
             return S.DEV_2.readOnly_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.DEV_2.readOnly_permissionGroup.startingIndexForViewPermissions + 44
+            return S.DEV_2.readOnly_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.DEV_2.readOnly_permissionGroup.startingIndexForViewPermissions + 65
+            return S.DEV_2.readOnly_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     permissionGroup_noAutoDispo: {
@@ -888,10 +888,10 @@ S.DEV_3 = {
             return S.DEV_3.admin_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.DEV_3.admin_permissionGroup.startingIndexForViewPermissions + 44
+            return S.DEV_3.admin_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.DEV_3.admin_permissionGroup.startingIndexForViewPermissions + 65
+            return S.DEV_3.admin_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     blocked_permissionGroup: {
@@ -902,10 +902,10 @@ S.DEV_3 = {
             return S.DEV_3.blocked_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.DEV_3.blocked_permissionGroup.startingIndexForViewPermissions + 44
+            return S.DEV_3.blocked_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.DEV_3.blocked_permissionGroup.startingIndexForViewPermissions + 65
+            return S.DEV_3.blocked_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     regularUser_permissionGroup: {
@@ -916,10 +916,10 @@ S.DEV_3 = {
             return S.DEV_3.regularUser_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.DEV_3.regularUser_permissionGroup.startingIndexForViewPermissions + 44
+            return S.DEV_3.regularUser_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.DEV_3.regularUser_permissionGroup.startingIndexForViewPermissions + 65
+            return S.DEV_3.regularUser_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     // readOnly_permissionGroup: {
@@ -930,10 +930,10 @@ S.DEV_3 = {
     //         return S.DEV_3.readOnly_permissionGroup.startingIndexForViewPermissions + 22
     //     },
     //     get startingIndexForUpdatePermissions() {
-    //         return S.DEV_3.readOnly_permissionGroup.startingIndexForViewPermissions + 44
+    //         return S.DEV_3.readOnly_permissionGroup.startingIndexForViewPermissions + 45
     //     },
     //     get startingIndexForDeletePermissions() {
-    //         return S.DEV_3.readOnly_permissionGroup.startingIndexForViewPermissions + 65
+    //         return S.DEV_3.readOnly_permissionGroup.startingIndexForViewPermissions + 67
     //     }
     // },
     // permissionGroup_noAutoDispo: {
@@ -1123,10 +1123,10 @@ S.DEV_4 = {
             return S.DEV_4.admin_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.DEV_4.admin_permissionGroup.startingIndexForViewPermissions + 44
+            return S.DEV_4.admin_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.DEV_4.admin_permissionGroup.startingIndexForViewPermissions + 65
+            return S.DEV_4.admin_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     // blocked_permissionGroup: {
@@ -1137,10 +1137,10 @@ S.DEV_4 = {
     //         return S.DEV_4.blocked_permissionGroup.startingIndexForViewPermissions + 22
     //     },
     //     get startingIndexForUpdatePermissions() {
-    //         return S.DEV_4.blocked_permissionGroup.startingIndexForViewPermissions + 44
+    //         return S.DEV_4.blocked_permissionGroup.startingIndexForViewPermissions + 45
     //     },
     //     get startingIndexForDeletePermissions() {
-    //         return S.DEV_4.blocked_permissionGroup.startingIndexForViewPermissions + 65
+    //         return S.DEV_4.blocked_permissionGroup.startingIndexForViewPermissions + 67
     //     }
     // },
     regularUser_permissionGroup: {
@@ -1151,10 +1151,10 @@ S.DEV_4 = {
             return S.DEV_4.regularUser_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.DEV_4.regularUser_permissionGroup.startingIndexForViewPermissions + 44
+            return S.DEV_4.regularUser_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.DEV_4.regularUser_permissionGroup.startingIndexForViewPermissions + 65
+            return S.DEV_4.regularUser_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     readOnly_permissionGroup: {
@@ -1165,10 +1165,10 @@ S.DEV_4 = {
             return S.DEV_4.readOnly_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.DEV_4.readOnly_permissionGroup.startingIndexForViewPermissions + 44
+            return S.DEV_4.readOnly_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.DEV_4.readOnly_permissionGroup.startingIndexForViewPermissions + 65
+            return S.DEV_4.readOnly_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     // // permissionGroup_noAutoDispo: {
@@ -1566,10 +1566,10 @@ S.QA_1 = {
             return S.QA_1.admin_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.QA_1.admin_permissionGroup.startingIndexForViewPermissions + 44
+            return S.QA_1.admin_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.QA_1.admin_permissionGroup.startingIndexForViewPermissions + 65
+            return S.QA_1.admin_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     blocked_permissionGroup: {
@@ -1580,10 +1580,10 @@ S.QA_1 = {
             return S.QA_1.blocked_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.QA_1.blocked_permissionGroup.startingIndexForViewPermissions + 44
+            return S.QA_1.blocked_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.QA_1.blocked_permissionGroup.startingIndexForViewPermissions + 65
+            return S.QA_1.blocked_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     readOnly_permissionGroup: {
@@ -1594,10 +1594,10 @@ S.QA_1 = {
             return S.QA_1.readOnly_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.QA_1.readOnly_permissionGroup.startingIndexForViewPermissions + 44
+            return S.QA_1.readOnly_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.QA_1.readOnly_permissionGroup.startingIndexForViewPermissions + 65
+            return S.QA_1.readOnly_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     admin_userGroup: {
@@ -1707,10 +1707,10 @@ S.QA_2 = {
             return S.QA_2.admin_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.QA_2.admin_permissionGroup.startingIndexForViewPermissions + 44
+            return S.QA_2.admin_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.QA_2.admin_permissionGroup.startingIndexForViewPermissions + 65
+            return S.QA_2.admin_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     blocked_permissionGroup: {
@@ -1721,10 +1721,10 @@ S.QA_2 = {
             return S.QA_2.blocked_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.QA_2.blocked_permissionGroup.startingIndexForViewPermissions + 44
+            return S.QA_2.blocked_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.QA_2.blocked_permissionGroup.startingIndexForViewPermissions + 65
+            return S.QA_2.blocked_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     readOnly_permissionGroup: {
@@ -1735,10 +1735,10 @@ S.QA_2 = {
             return S.QA_2.readOnly_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.QA_2.readOnly_permissionGroup.startingIndexForViewPermissions + 44
+            return S.QA_2.readOnly_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.QA_2.readOnly_permissionGroup.startingIndexForViewPermissions + 65
+            return S.QA_2.readOnly_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     admin_userGroup: {
@@ -1848,10 +1848,10 @@ S.QA_3 = {
             return S.QA_3.admin_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.QA_3.admin_permissionGroup.startingIndexForViewPermissions + 44
+            return S.QA_3.admin_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.QA_3.admin_permissionGroup.startingIndexForViewPermissions + 65
+            return S.QA_3.admin_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     blocked_permissionGroup: {
@@ -1862,10 +1862,10 @@ S.QA_3 = {
             return S.QA_3.blocked_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.QA_3.blocked_permissionGroup.startingIndexForViewPermissions + 44
+            return S.QA_3.blocked_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.QA_3.blocked_permissionGroup.startingIndexForViewPermissions + 65
+            return S.QA_3.blocked_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     readOnly_permissionGroup: {
@@ -1876,10 +1876,10 @@ S.QA_3 = {
             return S.QA_3.readOnly_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.QA_3.readOnly_permissionGroup.startingIndexForViewPermissions + 44
+            return S.QA_3.readOnly_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.QA_3.readOnly_permissionGroup.startingIndexForViewPermissions + 65
+            return S.QA_3.readOnly_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     admin_userGroup: {
@@ -1993,10 +1993,10 @@ S.QA_4 = {
             return S.QA_4.admin_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.QA_4.admin_permissionGroup.startingIndexForViewPermissions + 44
+            return S.QA_4.admin_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.QA_4.admin_permissionGroup.startingIndexForViewPermissions + 65
+            return S.QA_4.admin_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     blocked_permissionGroup: {
@@ -2007,10 +2007,10 @@ S.QA_4 = {
             return S.QA_4.blocked_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.QA_4.blocked_permissionGroup.startingIndexForViewPermissions + 44
+            return S.QA_4.blocked_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.QA_4.blocked_permissionGroup.startingIndexForViewPermissions + 65
+            return S.QA_4.blocked_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     readOnly_permissionGroup: {
@@ -2021,10 +2021,10 @@ S.QA_4 = {
             return S.QA_4.readOnly_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.QA_4.readOnly_permissionGroup.startingIndexForViewPermissions + 44
+            return S.QA_4.readOnly_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.QA_4.readOnly_permissionGroup.startingIndexForViewPermissions + 65
+            return S.QA_4.readOnly_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     admin_userGroup: {
@@ -2062,7 +2062,8 @@ S.PENTEST = {
             offenseLocation: 29,
             offenseDescription: 30,
             tags: 31,
-            offenseDate: 34
+            offenseDate: 34,
+            linkedCases: 45
         },
         item: {
             recoveredAt: 20,
@@ -2407,10 +2408,10 @@ S.PENTEST_1 = {
             return S.PENTEST_1.admin_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.PENTEST_1.admin_permissionGroup.startingIndexForViewPermissions + 44
+            return S.PENTEST_1.admin_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.PENTEST_1.admin_permissionGroup.startingIndexForViewPermissions + 65
+            return S.PENTEST_1.admin_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     regularUser_permissionGroup: {
@@ -2421,10 +2422,10 @@ S.PENTEST_1 = {
             return S.PENTEST_1.regularUser_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.PENTEST_1.regularUser_permissionGroup.startingIndexForViewPermissions + 44
+            return S.PENTEST_1.regularUser_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.PENTEST_1.regularUser_permissionGroup.startingIndexForViewPermissions + 65
+            return S.PENTEST_1.regularUser_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     // readOnly_permissionGroup: {
@@ -2435,10 +2436,10 @@ S.PENTEST_1 = {
     //         return S.PENTEST_1.readOnly_permissionGroup.startingIndexForViewPermissions + 22
     //     },
     //     get startingIndexForUpdatePermissions() {
-    //         return S.PENTEST_1.readOnly_permissionGroup.startingIndexForViewPermissions + 44
+    //         return S.PENTEST_1.readOnly_permissionGroup.startingIndexForViewPermissions + 45
     //     },
     //     get startingIndexForDeletePermissions() {
-    //         return S.PENTEST_1.readOnly_permissionGroup.startingIndexForViewPermissions + 65
+    //         return S.PENTEST_1.readOnly_permissionGroup.startingIndexForViewPermissions + 67
     //     }
     // },
     permissionGroup_noAutoDispo: {
@@ -2632,10 +2633,10 @@ S.PENTEST_2 = {
             return S.PENTEST_2.admin_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.PENTEST_2.admin_permissionGroup.startingIndexForViewPermissions + 44
+            return S.PENTEST_2.admin_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.PENTEST_2.admin_permissionGroup.startingIndexForViewPermissions + 65
+            return S.PENTEST_2.admin_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     blocked_permissionGroup: {
@@ -2646,24 +2647,24 @@ S.PENTEST_2 = {
             return S.PENTEST_2.blocked_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.PENTEST_2.blocked_permissionGroup.startingIndexForViewPermissions + 44
+            return S.PENTEST_2.blocked_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.PENTEST_2.blocked_permissionGroup.startingIndexForViewPermissions + 65
+            return S.PENTEST_2.blocked_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     regularUser_permissionGroup: {
         name: 'Cypress - Regular User',
-        id: 4445,
-        startingIndexForViewPermissions: 65585,
+        id: 4583,
+        startingIndexForViewPermissions: 81703,
         get startingIndexForCreatePermissions() {
             return S.PENTEST_2.regularUser_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.PENTEST_2.regularUser_permissionGroup.startingIndexForViewPermissions + 44
+            return S.PENTEST_2.regularUser_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.PENTEST_2.regularUser_permissionGroup.startingIndexForViewPermissions + 65
+            return S.PENTEST_2.regularUser_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     readOnly_permissionGroup: {
@@ -2674,10 +2675,10 @@ S.PENTEST_2 = {
             return S.PENTEST_2.readOnly_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.PENTEST_2.readOnly_permissionGroup.startingIndexForViewPermissions + 44
+            return S.PENTEST_2.readOnly_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.PENTEST_2.readOnly_permissionGroup.startingIndexForViewPermissions + 65
+            return S.PENTEST_2.readOnly_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     permissionGroup_noAutoDispo: {
@@ -2871,10 +2872,10 @@ S.PENTEST_3 = {
             return S.PENTEST_3.admin_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.PENTEST_3.admin_permissionGroup.startingIndexForViewPermissions + 44
+            return S.PENTEST_3.admin_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.PENTEST_3.admin_permissionGroup.startingIndexForViewPermissions + 65
+            return S.PENTEST_3.admin_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     blocked_permissionGroup: {
@@ -2885,10 +2886,10 @@ S.PENTEST_3 = {
             return S.PENTEST_3.blocked_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.PENTEST_3.blocked_permissionGroup.startingIndexForViewPermissions + 44
+            return S.PENTEST_3.blocked_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.PENTEST_3.blocked_permissionGroup.startingIndexForViewPermissions + 65
+            return S.PENTEST_3.blocked_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     regularUser_permissionGroup: {
@@ -2899,10 +2900,10 @@ S.PENTEST_3 = {
             return S.PENTEST_3.regularUser_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.PENTEST_3.regularUser_permissionGroup.startingIndexForViewPermissions + 44
+            return S.PENTEST_3.regularUser_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.PENTEST_3.regularUser_permissionGroup.startingIndexForViewPermissions + 65
+            return S.PENTEST_3.regularUser_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     // readOnly_permissionGroup: {
@@ -2913,10 +2914,10 @@ S.PENTEST_3 = {
     //         return S.PENTEST_3.readOnly_permissionGroup.startingIndexForViewPermissions + 22
     //     },
     //     get startingIndexForUpdatePermissions() {
-    //         return S.PENTEST_3.readOnly_permissionGroup.startingIndexForViewPermissions + 44
+    //         return S.PENTEST_3.readOnly_permissionGroup.startingIndexForViewPermissions + 45
     //     },
     //     get startingIndexForDeletePermissions() {
-    //         return S.PENTEST_3.readOnly_permissionGroup.startingIndexForViewPermissions + 65
+    //         return S.PENTEST_3.readOnly_permissionGroup.startingIndexForViewPermissions + 67
     //     }
     // },
     // permissionGroup_noAutoDispo: {
@@ -3106,10 +3107,10 @@ S.PENTEST_4 = {
             return S.PENTEST_4.admin_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.PENTEST_4.admin_permissionGroup.startingIndexForViewPermissions + 44
+            return S.PENTEST_4.admin_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.PENTEST_4.admin_permissionGroup.startingIndexForViewPermissions + 65
+            return S.PENTEST_4.admin_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     // blocked_permissionGroup: {
@@ -3120,10 +3121,10 @@ S.PENTEST_4 = {
     //         return S.PENTEST_4.blocked_permissionGroup.startingIndexForViewPermissions + 22
     //     },
     //     get startingIndexForUpdatePermissions() {
-    //         return S.PENTEST_4.blocked_permissionGroup.startingIndexForViewPermissions + 44
+    //         return S.PENTEST_4.blocked_permissionGroup.startingIndexForViewPermissions + 45
     //     },
     //     get startingIndexForDeletePermissions() {
-    //         return S.PENTEST_4.blocked_permissionGroup.startingIndexForViewPermissions + 65
+    //         return S.PENTEST_4.blocked_permissionGroup.startingIndexForViewPermissions + 67
     //     }
     // },
     regularUser_permissionGroup: {
@@ -3134,10 +3135,10 @@ S.PENTEST_4 = {
             return S.PENTEST_4.regularUser_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.PENTEST_4.regularUser_permissionGroup.startingIndexForViewPermissions + 44
+            return S.PENTEST_4.regularUser_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.PENTEST_4.regularUser_permissionGroup.startingIndexForViewPermissions + 65
+            return S.PENTEST_4.regularUser_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     readOnly_permissionGroup: {
@@ -3148,10 +3149,10 @@ S.PENTEST_4 = {
             return S.PENTEST_4.readOnly_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.PENTEST_4.readOnly_permissionGroup.startingIndexForViewPermissions + 44
+            return S.PENTEST_4.readOnly_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.PENTEST_4.readOnly_permissionGroup.startingIndexForViewPermissions + 65
+            return S.PENTEST_4.readOnly_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     // // permissionGroup_noAutoDispo: {
