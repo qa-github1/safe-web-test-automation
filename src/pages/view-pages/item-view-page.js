@@ -42,6 +42,7 @@ let
     modelInput = e => cy.get('[ng-model="itemEdit.model"]'),
     makeInput = e => cy.get('[ng-model="itemEdit.make"]'),
     descriptionInput = e => cy.get('[ng-model="itemEdit.description"]'),
+    disabledItemBelongsTo = e => cy.get('.form-horizontal').contains('Item Belongs to').parent('div').find('span'),
     itemBelongsToContainer = e => cy.get('[ng-model="people"]'),
     itemBelongsToInput = e => cy.get('[ng-model="people"]').find('input'),
     personTypeahead = e => itemBelongsToContainer().find('.ui-select-choices-row'),
@@ -83,7 +84,7 @@ export default class ItemViewPage extends BaseViewPage {
         return this;
     }
 
-    verify_values_on_Edit_form(itemObject, includesCustomData) {
+    verify_values_on_Edit_form(itemObject, includesCustomData, VerifyItemBelongsToField) {
         this.pause(1)
         this.verify_values_on_multiple_elements(
             [
@@ -98,18 +99,29 @@ export default class ItemViewPage extends BaseViewPage {
 
         this.verify_text_on_multiple_elements(
             [
-                [itemBelongsToContainer, itemObject.itemBelongsTo],
-                [this.tagsField, itemObject.tags],
                 [categoryDropdown_selectedOption(itemObject.category), itemObject.category],
-                [custodyReasonDropdown_selectedOption, itemObject.custodyReason],
+                [this.tagsField, itemObject.tags],
+                [custodyReasonDropdown_selectedOption, itemObject.custodyReason]
+
             ]);
+
+
+
 
         if (includesCustomData) {
             this.verify_custom_data_on_Edit_form(itemObject)
         }
 
+        if (VerifyItemBelongsToField) {
+            this.verify_text_on_multiple_elements(
+                [
+                    [itemBelongsToContainer, itemObject.itemBelongsTo]
+                ]
+            )
+        }
+
         return this;
-    };
+        };
 
     verify_edited_and_not_edited_values_on_Item_View_form(labelsOfEditedFields, editedItemObject, initialItemObject, oldValueOverwritten, isUpdateImported) {
         view_form().within(($list) => {

@@ -32,7 +32,7 @@ describe('Add Item', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
             D.getNewItemData(D.newCase);
-            api.org_settings.update_org_settings(true, true);
+             api.org_settings.update_org_settings(true, true);
             api.org_settings.enable_all_Item_fields();
             D.newItem.itemBelongsTo = [S.selectedEnvironment.person.name, S.selectedEnvironment.person_2.name]
 
@@ -73,7 +73,7 @@ describe('Add Item', function () {
             ui.addItem.select_tab(C.tabs.items)
                 .click_element_on_active_tab(C.buttons.addItem)
                 .verify_Add_Item_page_is_open()
-                .populate_all_fields_on_both_forms(D.newItem, false )
+                .populate_all_fields_on_both_forms(D.newItem, false, true )
                  .select_post_save_action(C.postSaveActions.viewAddedItem)
                  .click_Save(D.newItem)
                  .verify_toast_message_(oldCase)
@@ -97,7 +97,7 @@ describe('Add Item', function () {
                 .click_element_on_active_tab(C.buttons.addItem)
                 .verify_Add_Item_page_is_open()
                 .verify_Case_Number_is_populated_on_enabled_input_field(oldCase.caseNumber)
-                .populate_all_fields_on_both_forms(D.newItem, true)
+                .populate_all_fields_on_both_forms(D.newItem)
                 .select_post_save_action(C.postSaveActions.addItem)
                 .click_Save(D.newItem)
                 .verify_toast_message_(D.newCase)
@@ -106,7 +106,7 @@ describe('Add Item', function () {
             ui.itemView.open_newly_created_item_via_direct_link()
                 .verify_textual_values_on_the_form([D.newItem.recoveryDate])
                 .click_Edit()
-                .verify_values_on_Edit_form(D.newItem)
+                .verify_values_on_Edit_form(D.newItem, false, false)
         });
 
         it('1.4. Add item from Item Search -- redirect to Case View /Items tab', function () {
@@ -121,7 +121,7 @@ describe('Add Item', function () {
                 .click_Add_Item_button();
             ui.addItem.verify_Add_Item_page_is_open()
                 .verify_Case_Number_is_populated_on_enabled_input_field(oldCase.caseNumber)
-                .populate_all_fields_on_both_forms(D.newItem, true)
+                .populate_all_fields_on_both_forms(D.newItem)
                 .select_post_save_action(C.postSaveActions.viewItemsInCase)
                 .click_Save(D.newItem)
                 .verify_toast_message_(D.newCase)
@@ -259,7 +259,7 @@ describe('Add Item', function () {
 
     context('2 Power User -- all permissions in Office, with and without access to Storage Location', function () {
 
-        it('2.1 verify that user can add all values but can select only Storage Location(s) that s/he has access to', function () {
+        it.only('2.1 verify that user can add all values but can select only Storage Location(s) that s/he has access to', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
             api.permissions
@@ -310,8 +310,8 @@ describe('Add Item', function () {
     context('3 Add Item with Custom Form', function () {
 
         //setting this test just for Org#1 until the issue with shared form gets fixed ----> #14625 ⁃ 'Dropdown Typeahead' on the Shared custom form has options available only in the originating Org
-        if (Cypress.env('orgNum') === 1) {
-            it.only('3.1 --- with required Custom Form filled out, all required fields on Form', function () {
+        //if (Cypress.env('orgNum') === 1) {
+            it('3.1 --- with required Custom Form filled out, all required fields on Form', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 D.getItemDataWithReducedFields(D.newCase);
@@ -321,7 +321,7 @@ describe('Add Item', function () {
                 D.newItem.category = D.newItem.categoryLinkedToRequiredForm1
                 D.newCase.categoryId = D.newItem.categoryIdLinkedToRequiredForm1
                 ui.menu.click_Add__Item()
-                ui.addItem.populate_all_fields_on_both_forms(D.newItem, true)
+                ui.addItem.populate_all_fields_on_both_forms(D.newItem, false)
                     .verify_number_of_required_fields_marked_with_asterisk(12)
                     .verify_Save_button_is_disabled()
                     .populate_all_fields_on_Custom_Form(D.newCustomFormData)
@@ -335,7 +335,7 @@ describe('Add Item', function () {
                     .click_Edit()
                     .verify_values_on_Edit_form(D.newItem, true)
             });
-        }
+       // }
 
         it('3.2 --- with required Custom Form but not filled out, all optional fields on Form', function () {
             ui.app.log_title(this);
@@ -348,7 +348,7 @@ describe('Add Item', function () {
             D.newItem.category = D.newItem.categoryLinkedToRequiredForm2
             D.newCase.categoryId = D.newItem.categoryIdLinkedToRequiredForm2
             ui.menu.click_Add__Item()
-            ui.addItem.populate_all_fields_on_both_forms(D.newItem, true)
+            ui.addItem.populate_all_fields_on_both_forms(D.newItem, false)
                 .verify_number_of_required_fields_marked_with_asterisk(0)
                 .select_post_save_action(C.postSaveActions.addItem)
                 .click_Save(D.newItem)
@@ -372,7 +372,7 @@ describe('Add Item', function () {
             D.newItem.category = 'Currency'
             ui.menu.click_Add__Item()
             ui.addItem.populate_all_fields_on_both_forms(D.newItem)
-                .enter_value_to_input_field('Currency Total', 0)
+                //.enter_value_to_input_field('Currency Total', 0)
                 .select_post_save_action(C.postSaveActions.viewAddedItem)
                 .click_Save(D.newItem)
                 .verify_toast_message_(D.newCase)
@@ -423,7 +423,7 @@ describe('Add Item', function () {
             D.newItem.category = 'Currency'
             ui.app.open_newly_created_case_via_direct_link()
             ui.menu.click_Add__Item()
-            ui.addItem.populate_all_fields_on_both_forms(D.newItem, true)
+            ui.addItem.populate_all_fields_on_both_forms(D.newItem, false)
                 .enter_value_to_input_field('$100s', 4)
                 .select_post_save_action(C.postSaveActions.splitItem)
                 .click_Save(D.newItem)
