@@ -107,7 +107,7 @@ describe('Add Person', function () {
 
     context('2. Power User -- all permissions in Office', function () {
 
-        xit('2.1. verify that user can add all values', function () {
+        it('2.1. verify that user can add all values', function () {
 
             api.auth.get_tokens(orgAdmin);
             api.permissions
@@ -136,7 +136,7 @@ describe('Add Person', function () {
     })
 
     context('3. Add Person with Custom Form', function () {
-        xit('3.1. --- with required Custom Form filled out, all required fields on Form', function () {
+        it('3.1. --- with required Custom Form filled out, all required fields on Form', function () {
             set_preconditions_for_adding_Person_with_reduced_number_of_fields(this);
             api.cases.get_most_recent_case();
             D.newPerson.personType = D.newPerson.personTypelinkedToRequiredForm1
@@ -157,7 +157,7 @@ describe('Add Person', function () {
                 .verify_values_on_Edit_form(D.newPerson, true)
         })
 
-        xit('3.2. --- with required Custom Form but not filled out, all optional fields on Form', function () {
+        it('3.2. --- with required Custom Form but not filled out, all optional fields on Form', function () {
             set_preconditions_for_adding_Person_with_reduced_number_of_fields(this);
             api.cases.get_most_recent_case();
             D.newPerson.personType = D.newPerson.personTypelinkedToRequiredForm2
