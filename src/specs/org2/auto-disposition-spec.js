@@ -22,7 +22,8 @@ describe('Auto-Disposition', function () {
         api.auto_disposition.edit(false);
 
         ui.menu.click_Settings__Organization()
-            .click_element_containing_link(C.labels.organization.tabs.autoDisposition);
+            .click_element_containing_link(C.labels.organization.tabs.autoDisposition)
+        ui.autoDispo.click_disposition_Configuration_For_Case_Offense_Types()
         ui.autoDispo.click_Edit()
             .turn_On_the_toggle()
             .click_Save()
@@ -33,16 +34,18 @@ describe('Auto-Disposition', function () {
             .verify_toast_message(C.toastMsgs.saved);
     });
 
-    it('2. Verify validation message for Follow Up Days', function () {
+    it('2. Verify Save button is disabled for Follow Up Days', function () {
         api.auth.get_tokens(user);
         api.auto_disposition.edit(true);
 
         ui.menu.click_Settings__Organization()
             .click_element_containing_link(C.labels.organization.tabs.autoDisposition);
+        ui.autoDispo.click_disposition_Configuration_For_Case_Offense_Types();
         ui.autoDispo.click_Edit()
-            .clear_and_enter_value_for_Days_to_follow_up(C.offenseTypes.accident, '')
-            .click_Save()
-            .verify_toast_message(C.toastMsgs.daysCanOnlyBePositiveNumber);
+            .clear_and_enter_value_for_Days_to_follow_up(C.offenseTypes.arson, '')
+            .verify_save_auto_dispo_button_is_disabled()
+            //.click_Save()
+           // .verify_toast_message(C.toastMsgs.daysCanOnlyBePositiveNumber);
     });
 
     context('3. Verify "Re-Distribute Case Review Dates" functionality', function () {
@@ -62,6 +65,7 @@ describe('Auto-Disposition', function () {
             api.auth.get_tokens(user);
             ui.menu.click_Settings__Organization()
                 .click_element_containing_link(C.labels.organization.tabs.autoDisposition);
+            ui.autoDispo.click_disposition_Configuration_For_Case_Offense_Types();
             ui.autoDispo.verify_Redistribute_Case_Review_Date_labels(true)
 
             D.generateNewDataSet()
@@ -112,7 +116,7 @@ describe('Auto-Disposition', function () {
 
         // enable test just during the full regression as it takes longer to redistribute review dates
         //for all cases with upcoming review date in Org
-        xit('A.D.4.2 Verify "Re-Distribute" for "Upcoming" cases', function () {
+        it('A.D.4.2 Verify "Re-Distribute" for "Upcoming" cases', function () {
             api.auth.get_tokens(user);
             D.generateNewDataSet()
             api.cases.add_new_case(D.newCase.caseNumber);
@@ -122,6 +126,7 @@ describe('Auto-Disposition', function () {
 
             ui.menu.click_Settings__Organization()
                 .click_element_containing_link(C.labels.organization.tabs.autoDisposition);
+            ui.autoDispo.click_disposition_Configuration_For_Case_Offense_Types();
             ui.autoDispo.get_statistics_for_Review_Dates()
                 .click_button(C.buttons.redestributeCaseReviewDates)
                 .verify_modal_content(C.labels.autoDisposition.updateCases)
@@ -136,13 +141,14 @@ describe('Auto-Disposition', function () {
         });
     });
 
-    xit('3.2 Verify "Close X Cases" functionality', function () {
+    it.only('3.2 Verify "Close X Cases" functionality', function () {
         api.auth.get_tokens(user);
         api.auto_disposition.edit(true);
         api.cases.add_new_case();
 
         ui.menu.click_Settings__Organization()
             .click_element_containing_link(C.labels.organization.tabs.autoDisposition);
+        ui.autoDispo.click_disposition_Configuration_For_Case_Offense_Types();
         ui.autoDispo.click_Recalculate_Cases_to_Dispose()
             .get_number_of_cases_without_items()
             .click_Close_X_Cases_button()

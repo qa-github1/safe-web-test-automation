@@ -18,7 +18,8 @@ let
     casesWithNoReviewDate = e => cy.get('[ng-bind-html="openCasesSubWarningFirstMessage"]'),
     casesWithReviewDatePastDue = e => cy.get('[ng-bind-html="openCasesSubWarningSecondMessage"]'),
     casesWithUpcomingReviewDate = e => cy.get('[ng-bind-html="openCasesSubWarningThirdMessage"]'),
-    daysToFollowUp = offenseType => cy.contains(offenseType).parent('div').find('[ng-model="setting.daysToFollowUp"]')
+    dispositionConfigurationForCaseOffenseTypes = e => cy.get('[translate="AUTO.DISPO.CONFIG_CASE_OFFENSE_TYPES"]'),
+    daysToFollowUp = offenseType => cy.contains(offenseType).parent('div').find('[ng-model="offenseType.daysToFollowUp"]')
 
 export default class AutoDispoPage extends BasePage {
 
@@ -43,9 +44,14 @@ export default class AutoDispoPage extends BasePage {
     click_Edit() {
         editButton().should('be.enabled');
         editButton().click();
-        saveButton().should('be.visible');
+        saveButton().scrollIntoView().should('be.visible');
         return this;
     };
+
+    click_disposition_Configuration_For_Case_Offense_Types() {
+        dispositionConfigurationForCaseOffenseTypes().click();
+        return this;
+    }
 
     click_Save() {
         saveButton().should('be.enabled');
