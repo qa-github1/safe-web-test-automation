@@ -258,6 +258,30 @@ exports.generate_request_payload_for_setting_visible_and_required_Item_fields = 
         )
     }
 
+    if (shouldFieldBeDisabled(fieldsToDisable, C.itemFields.publicFacingDescription)) {
+        body.push(
+            {
+                "orgFieldId": S.selectedEnvironment.fieldIds.item.publicFacingDescription,
+                "entityType": 1,
+                "name": "ITEM.PUBLIC_FACING_DESCRIPTION",
+                "recordType": 1
+            }
+        )
+    }
+
+
+
+    if (shouldFieldBeDisabled(fieldsToDisable, C.itemFields.releasedTo)) {
+        body.push(
+            {
+                "orgFieldId": S.selectedEnvironment.fieldIds.item.releasedTo,
+                "entityType": 1,
+                "name": "ITEMS.DISPOSAL.RELEASED_TO",
+                "recordType": 1
+            }
+        )
+    }
+
     if (shouldFieldBeDisabled(fieldsToDisable, C.itemFields.expectedReturnDate)) {
         body.push(
             {
@@ -335,6 +359,24 @@ exports.generate_request_payload_for_setting_visible_and_required_Item_fields = 
             "orgFieldId": S.selectedEnvironment.fieldIds.item.recoveredAt,
             "entityType": 1,
             "name": "ITEM_RECOVERED_AT",
+            "recordType": 0
+        })
+    }
+
+    if (shouldFieldBeOptional(optionalFields, C.itemFields.itemBelongsTo)) {
+        body.push({
+            "orgFieldId": S.selectedEnvironment.fieldIds.item.itemBelongsTo,
+            "entityType": 1,
+            "name": "PEOPLE.ITEM_BELONGS_TO",
+            "recordType": 0
+        })
+    }
+
+    if (shouldFieldBeOptional(optionalFields, C.itemFields.releasedTo)) {
+        body.push({
+            "orgFieldId": S.selectedEnvironment.fieldIds.item.releasedTo,
+            "entityType": 1,
+            "name": "ITEMS.DISPOSAL.RELEASED_TO",
             "recordType": 0
         })
     }

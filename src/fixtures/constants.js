@@ -65,6 +65,8 @@ C = {
             'Description',
             'Item Belongs to',
             'Custodian',
+            'Public Facing Description',
+            'Disposition Status',
             'Tags'],
         allEditableFieldsArray: [
             'Recovered At',
@@ -88,6 +90,9 @@ C = {
         custodian: 'Custodian',
         custodyReason: 'Custody Reason',
         itemBelongsTo: 'Item Belongs To',
+        releasedTo: 'Released To',
+        publicFacingDescription: 'Public Facing Description',
+        dispositionStatus: 'Disposition Status',
         description: 'Description',
         location: 'Location',
         make: 'Make',

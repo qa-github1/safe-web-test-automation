@@ -2085,8 +2085,11 @@ S.PENTEST = {
             description: 36,
             recoveryDate: 37,
             itemBelongsTo: 38,
+            releasedTo: 47,
             expectedReturnDate: 41,
             actualDisposedDate: 42,
+            publicFacingDescription: 46,
+            dispositionAuthorizationStatus: 44
         },
         person: {
             businessName: 9,
