@@ -141,7 +141,7 @@ describe('Auto-Disposition', function () {
         });
     });
 
-    it.only('3.2 Verify "Close X Cases" functionality', function () {
+    it('3.2 Verify "Close X Cases" functionality', function () {
         api.auth.get_tokens(user);
         api.auto_disposition.edit(true);
         api.cases.add_new_case();
@@ -165,13 +165,14 @@ describe('Auto-Disposition', function () {
             .verify_text_is_present_on_main_container(S.currentDate)
     });
 
-    xit('3.3 Verify "Recalculate Cases to Dispose" functionality', function () {
+    it('3.3 Verify "Recalculate Cases to Dispose" functionality', function () {
         api.auth.get_tokens(user);
         D.getNewCaseData();
         api.auto_disposition.edit(true);
 
         ui.menu.click_Settings__Organization()
             .click_element_containing_link(C.labels.organization.tabs.autoDisposition);
+        ui.autoDispo.click_disposition_Configuration_For_Case_Offense_Types();
         ui.autoDispo.click_Recalculate_Cases_to_Dispose()
             .get_number_of_cases_without_items();
         api.cases.add_new_case();
@@ -179,7 +180,7 @@ describe('Auto-Disposition', function () {
             .verify_labels_for_cases_to_dispose(1)
     });
 
-    xit('3.4 Verify "View X Cases" functionality', function () {
+    it('3.4 Verify "View X Cases" functionality', function () {
         api.auth.get_tokens(user);
         api.org_settings.enable_all_Case_fields();
         api.auto_disposition.edit(true);

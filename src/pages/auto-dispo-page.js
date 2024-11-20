@@ -128,7 +128,7 @@ export default class AutoDispoPage extends BasePage {
     };
 
     get_number_of_cases_without_items() {
-        closeCasesButton().should('contain', "Close");
+        closeCasesButton().scrollIntoView().should('contain', "Close");
         this.get_text_between_two_values_and_save_to_local_storage(
             closeCasesButton, "Close ", " Cases", "numberOfCasesWithoutItems");
         return this;
