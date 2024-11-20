@@ -34,7 +34,6 @@ let
     storageLocationInput = e => cy.get('[ng-model="itemEdit.locationId"]'),
     categoryDropdown = e => cy.get('[ng-model="itemEdit.categoryId"]'),
     //categoryDropdown_selectedOption = e => cy.get('[ng-model="itemEdit.categoryId"]').find('[selected="selected"]'),
-    //categoryDropdown_selectedOption = (category) => cy.get('[name="category"]').contains(category),
     categoryDropdown_selectedOption = (selectedCategory) => cy.get('[class="ng-binding ng-scope"]').contains(selectedCategory),
     custodyReasonDropdown = e => cy.get('[ng-model="itemEdit.custodyReasonId"]'),
     custodyReasonDropdown_selectedOption = e => cy.get('[ng-model="itemEdit.custodyReasonId"]').find('[selected="selected"]'),
@@ -223,7 +222,8 @@ export default class ItemViewPage extends BaseViewPage {
                 [descriptionInput, newItemObject.description]
             ]);
 
-        categoryDropdown().select(newItemObject.category);
+        categoryDropdown().click().contains(newItemObject.category).click()
+
         if (newItemObject.custodyReason) custodyReasonDropdown().select(newItemObject.custodyReason);
 
 

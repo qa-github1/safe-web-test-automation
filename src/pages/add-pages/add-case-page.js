@@ -111,6 +111,7 @@ export default class AddCasePage extends BaseAddPage {
     verify_Case_Number_value(caseNo) {
         active_form().should('be.visible');
         caseNumberInput_enabled().should('be.enabled');
+        cy.wait(1000)
         caseNumberInput_enabled().should('have.value', caseNo);
         return this;
     };

@@ -10,6 +10,7 @@ let
     tableBody = e => cy.get('.table-striped').find('tbody'),
     okButton = e => cy.findAllByText('Ok').last(),
     saveButton = e => cy.get('[button-text="\'GENERAL.BUTTON_SAVE\'"]').contains('Save'),
+    saveAutoDispoButton = e => cy.get('[id="saveAutoDispo"]').contains('Save'),
     editButton = e => cy.get('[translate="GENERAL.EDIT"]').contains('Edit'),
     deleteButton = e => cy.get('[translate="GENERAL.DELETE"]').parent('li'),
     uploadFileInput = e => cy.get('input[type=file]'),
@@ -887,6 +888,11 @@ export default class BasePage {
         saveButton().should('not.be.enabled');
         return this;
     };
+
+    verify_save_auto_dispo_button_is_disabled() {
+        saveAutoDispoButton().should('not.be.enabled');
+        return this;
+    }
 
     verify_Ok_button_is_disabled() {
         okButton().should('not.be.enabled');

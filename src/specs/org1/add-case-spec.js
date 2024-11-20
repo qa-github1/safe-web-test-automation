@@ -413,7 +413,7 @@ describe('Add Case', function () {
     });
 
     //setting this test just for Org#1 until the issue with shared form gets fixed ----> #14625 ⁃ 'Dropdown Typeahead' on the Shared custom form has options available only in the originating Org
-    if (Cypress.env('orgNum') === 1) {
+    //if (Cypress.env('orgNum') === 1) {
         context('7. --- with required Custom Form filled out, all required fields on Form', function () {
 
             before(function () {
@@ -443,7 +443,7 @@ describe('Add Case', function () {
                     .verify_values_on_Edit_form(D.newCase, true)
             });
         });
-    }
+   // }
 
     context('8. --- with required Custom Form but not filled out, all optional fields on Form', function () {
 

@@ -39,6 +39,7 @@ let
     reviewDateInput = e => cy.get('[ng-model="caseEdit.reviewDate"]').find('[ng-model="ngModel"]'),
     caseOfficerField = e => cy.get('#caseOfficers'),
     caseOfficerInput = e => cy.get('#caseOfficers').find('input'),
+    caseOfficerEdit = e => cy.get('[id="caseOfficersEdit"]').find('input'),
     offenseLocationTypeahead = e => cy.root().parents('html').find('.pac-item').eq(0),
     requiredElement = e => cy.get(`label[for="${e}"]`).siblings().find('[ng-message="required"]'),
     caseNumber__ = e => cy.contains('Case Number').parent('div').find('input'),

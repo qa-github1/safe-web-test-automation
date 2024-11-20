@@ -81,10 +81,10 @@ describe('Edit Item', function () {
         ]);
     });
 
-    it('3. Remove all optional values & check history records', function () {
+    it.only('3. Remove all optional values & check history records', function () {
         ui.app.log_title(this);
         api.auth.get_tokens(user);
-        api.org_settings.enable_all_Item_fields([], [C.itemFields.description, C.itemFields.recoveryDate, C.itemFields.recoveryLocation]);
+         api.org_settings.enable_all_Item_fields([], [C.itemFields.description, C.itemFields.recoveryDate, C.itemFields.recoveryLocation, C.itemFields.itemBelongsTo]);
         D.generateNewDataSet()
 
         let allEditedFieldsArray = [
