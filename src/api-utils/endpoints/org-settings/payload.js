@@ -310,6 +310,7 @@ exports.generate_request_payload_for_setting_visible_and_required_Item_fields = 
             })
     }
 
+    // Setting optional fields
     if (shouldFieldBeOptional(optionalFields, C.itemFields.description)) {
         body.push(
             {
@@ -333,6 +334,24 @@ exports.generate_request_payload_for_setting_visible_and_required_Item_fields = 
     if (shouldFieldBeOptional(optionalFields, C.itemFields.recoveryLocation)) {
         body.push({
             "orgFieldId": S.selectedEnvironment.fieldIds.item.recoveredAt,
+            "entityType": 1,
+            "name": "ITEM_RECOVERED_AT",
+            "recordType": 0
+        })
+    }
+
+    if (shouldFieldBeOptional(optionalFields, C.itemFields.itemBelongsTo)) {
+        body.push({
+            "orgFieldId": S.selectedEnvironment.fieldIds.item.itemBelongsTo,
+            "entityType": 1,
+            "name": "ITEM_RECOVERED_AT",
+            "recordType": 0
+        })
+    }
+
+    if (shouldFieldBeOptional(optionalFields, C.itemFields.releasedTo)) {
+        body.push({
+            "orgFieldId": S.selectedEnvironment.fieldIds.item.releasedTo,
             "entityType": 1,
             "name": "ITEM_RECOVERED_AT",
             "recordType": 0

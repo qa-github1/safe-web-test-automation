@@ -125,7 +125,7 @@ export default class AddItemPage extends BaseAddPage {
 
                 let orgNo = nextItemId_org || nextItemId_inOrg
                 let itemNo = nextItemId_case || nextItemId_onCase
-                if (splitItem_secondPart) itemNo = (parseInt(itemNo)-1) + splitItem_secondPart
+                if (splitItem_secondPart) itemNo = (parseInt(itemNo) - 1) + splitItem_secondPart
 
                 this.verify_toast_message(C.toastMsgs.addedNewItem(caseObject.caseNumber, orgNo, itemNo))
             });
@@ -136,7 +136,6 @@ export default class AddItemPage extends BaseAddPage {
     select_Category(option) {
         category().click();
         cy.contains(option).click();
-
         return this;
     };
 
@@ -196,13 +195,14 @@ export default class AddItemPage extends BaseAddPage {
         if (enterCaseNumber) this.enter_Case_Number_and_select_on_typeahead(itemObject.caseNumber);
         this.pause(1)
         this.select_Category(itemObject.category)
-            .click(C.buttons.next)
+        this.pause(1)
+        this.click(C.buttons.next)
 
         if (addingItemToClosedCase) {
             cy.contains('The Case is closed.').should('be.visible')
             this.click_button_on_sweet_alert('OK')
         }
-        this.populate_all_fields_on_second_form(itemObject, skipStorageLocation, skipItemBelongsTo );
+        this.populate_all_fields_on_second_form(itemObject, skipStorageLocation, skipItemBelongsTo);
         return this;
     };
 
