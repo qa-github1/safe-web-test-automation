@@ -59,7 +59,7 @@ D.getNewCaseData = function (caseNumber, autoDispoOff = false) {
         caseOfficerGroupIds: [],
         caseOfficer: S.userAccounts.orgAdmin.email,
         caseOfficers: [S.userAccounts.orgAdmin.name],
-        caseOfficers_importFormat:  S.userAccounts.orgAdmin.guid,
+        caseOfficers_importFormat: 'user-' + S.userAccounts.orgAdmin.guid,
         caseOfficers_names: [S.userAccounts.orgAdmin.name],
         caseOfficerEmail: S.userAccounts.orgAdmin.name,
         caseOfficerName: S.userAccounts.orgAdmin.name,

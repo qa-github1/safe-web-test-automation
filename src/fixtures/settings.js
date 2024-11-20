@@ -79,7 +79,6 @@ S.DEV = {
             itemBelongsTo: 38,
             expectedReturnDate: 41,
             actualDisposedDate: 42,
-            releasedTo: 47,
         },
         person: {
             businessName: 9,
@@ -477,7 +476,7 @@ S.DEV_2 = {
     },
     office_1: {
         id: 11082,
-        guid: 'cd0d2fd8-a18b-ef11-834d-0254a7906fb1',
+        guid: 'cc0d2fd8-a18b-ef11-834d-0254a7906fb1',
         name: "Cypress Office 1",
         orgAndOfficeName: "Web Test Automation #2 - Cypress Office 1"
     },

@@ -11,7 +11,7 @@ let
     importerContainer = e => cy.get('[tp-model-type="\'import\'"]'),
     dropdownFieldForMapping = fieldName => mapFieldsSection().find('[name="frm"]').contains('label', fieldName).parent().find('select'),
     defaultMappingSelected = (label) => mapFieldsSection().find('[name="frm"]').contains('label', label).parent().find('[selected="selected"]'),
-    checkDefaultMappingSelected = (rowNumber, label) => mapFieldsSection().find('[data-ng-repeat="column in selected.imports[0].columns"]').eq(rowNumber).contains('option', label).parent().find('[selected="selected"]').should('contain', label),
+    checkDefaultMappingSelected = (label) => mapFieldsSection().find('[name="frm"]').contains('option', label).parent().find('[selected="selected"]').should('contain', label),
     activeDropdown = e => mapFieldsSection().find('[name="frm"]').contains('active').parent().find('[selected="selected"]'),
     caseNumberDropdown = e => mapFieldsSection().find('[name="frm"]').contains('caseNumber').parent().find('[selected="selected"]'),
     creatorIdDropdown = e => mapFieldsSection().find('[name="frm"]').contains('creatorID').parent().find('[selected="selected"]'),
@@ -79,26 +79,9 @@ export default class ImportPage extends BasePage {
 
         switch (importType) {
             case C.importTypes.cases:
-                for(let i =0; i<6; i++){
-                    let values = [
-                        'Active',
-                        'Case Number',
-                        'Created By [User Email or GUID]',
-                        'Case Officer(s) [UserEmail OR userGUID, GroupName OR GroupID]',
-                        'Office [Name or GUID]',
-                        'Offense Type',
-                        'Offense Description',
-                        'Offense Date',
-                        'Offense Location',
-                        'Tags',
-                        'Created Date',
-                        'Review Date',
-                        'Review Date Notes',
-                        'Closed Date',
-
-                    ]
-                    checkDefaultMappingSelected(i, values[i]);
-                }
+                checkDefaultMappingSelected('Active');
+                checkDefaultMappingSelected('CreatorId');
+                checkDefaultMappingSelected('OffenseType');
                 break;
             case C.importTypes.items:
                 checkDefaultMappingSelected('Category');

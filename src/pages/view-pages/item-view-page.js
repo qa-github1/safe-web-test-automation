@@ -11,7 +11,6 @@ let
     formContainer = timeout => cy.get('.form-horizontal', timeout),
     view_form = e => cy.get('[name="frm"]'),
     edit_form = e => cy.get('[name="forms.frmEdit"]'),
-    category = e => cy.get('[ng-model="itemEdit.categoryId"]'),
     inputFieldFoundByLabelOnSpecificContainer = (container, fieldLabel) => container().contains(fieldLabel).parent('div').find('input'),
     fieldFoundByLabelOnHistoryColumn = (container, fieldLabel) => container().contains(fieldLabel).parent('div').find('ng-transclude'),
     active_tab_container = e => cy.get('[class="tab-pane ng-scope active"]'),
@@ -224,8 +223,7 @@ export default class ItemViewPage extends BaseViewPage {
                 [descriptionInput, newItemObject.description]
             ]);
 
-        category().click();
-        cy.contains(newItemObject.category).click();
+        categoryDropdown().select(newItemObject.category);
         if (newItemObject.custodyReason) custodyReasonDropdown().select(newItemObject.custodyReason);
 
 

@@ -17,7 +17,6 @@ let
     active_tab = e => cy.get('[class="tab-pane ng-scope active"]'),
     quickSearch = e => cy.get('[name="navbarSearchField"]'),
     quickSearchCaseTypeahead = e => cy.get('[ng-repeat="match in matches track by $index"]'),
-    quickSearchCaseTypeahead_FirstOption = e => cy.get('[ng-repeat="match in matches track by $index"]').eq(0),
     active_tab_title = e => cy.get('[class="ng-scope ng-isolate-scope active"]'),
     gridOptionsDropdown = e => cy.get('[ng-if="optionsToggle.isOpen"]'),
     columnVisibilityIndicatorOnOptionsDropdown = (columnName) => cy.get('[ng-if="optionsToggle.isOpen"]').contains(columnName).find('i'),
@@ -26,7 +25,7 @@ let
     modalBodySectionAboveFooter = e => cy.get('.modal-body').children('div').last(),
     sweetAlert = e => cy.get('[data-animation="pop"]'),
     typeaheadList = e => cy.get('.ui-select-choices'),
-    highlightedOptionOnTypeahead = e => cy.get('.ui-select-choices-row').last(),
+    highlightedOptionOnTypeahead = e => cy.get('.ui-select-highlight').last(),
     caseOfficersOverwrite = e => cy.get('[ng-model="toggle.caseOfficersOverwrite"]'),
     tagsOverwrite = e => cy.get('[ng-model="toggle.tagsOverwrite"]'),
     tagsTypeaheadList = e => cy.get('[repeat="tagModel in allTagModels | filter: $select.search"]'),
@@ -339,7 +338,7 @@ export default class BasePage {
         this.wait_response_from_API_call(request, 200);
 
         if (shouldFind) {
-            quickSearchCaseTypeahead_FirstOption().click();
+            quickSearchCaseTypeahead().click();
             this.wait_until_spinner_disappears();
         } else {
             this.verify_element_has_class(quickSearch, 'ng-invalid-empty-data-error')
