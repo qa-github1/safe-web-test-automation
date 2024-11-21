@@ -25,9 +25,10 @@ describe('Import Cases', function () {
         D.getNewCaseData();
         D.getNewItemData(D.newCase);
         D.newCase.caseOfficers_importFormat =
-            'user-' + S.userAccounts.orgAdmin.guid + ',' +
-            'group-' + S.selectedEnvironment.admin_userGroup.id
+            S.userAccounts.orgAdmin.email + ';' +
+            S.selectedEnvironment.admin_userGroup.name
         D.newCase.caseOfficers = [S.userAccounts.orgAdmin.name, S.selectedEnvironment.admin_userGroup.name]
+
         E.generateDataFor_CASES_Importer([D.newCase]);
 
         ui.app.generate_excel_file(fileName, E.caseImportDataWithAllFields);

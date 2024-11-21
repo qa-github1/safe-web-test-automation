@@ -105,8 +105,6 @@ export default class ItemViewPage extends BaseViewPage {
             ]);
 
 
-
-
         if (includesCustomData) {
             this.verify_custom_data_on_Edit_form(itemObject)
         }

@@ -104,6 +104,7 @@ C = {
         primaryCaseOfficer: 'Primary Case Officer',
         recoveredBy: 'Recovered By',
         recoveryDate: 'Recovery Date',
+        releasedTo: 'Released To',
         recoveryDateEditMode: 'Recovery Date',
         recoveryLocation: 'Recovery Location',
         sequentialCaseNumber: 'Sequential Case Number',

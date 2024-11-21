@@ -270,7 +270,6 @@ exports.generate_request_payload_for_setting_visible_and_required_Item_fields = 
     }
 
 
-
     if (shouldFieldBeDisabled(fieldsToDisable, C.itemFields.releasedTo)) {
         body.push(
             {
@@ -334,6 +333,7 @@ exports.generate_request_payload_for_setting_visible_and_required_Item_fields = 
             })
     }
 
+    // Setting optional fields
     if (shouldFieldBeOptional(optionalFields, C.itemFields.description)) {
         body.push(
             {
@@ -367,7 +367,6 @@ exports.generate_request_payload_for_setting_visible_and_required_Item_fields = 
         body.push({
             "orgFieldId": S.selectedEnvironment.fieldIds.item.itemBelongsTo,
             "entityType": 1,
-            "name": "PEOPLE.ITEM_BELONGS_TO",
             "recordType": 0
         })
     }
@@ -376,7 +375,6 @@ exports.generate_request_payload_for_setting_visible_and_required_Item_fields = 
         body.push({
             "orgFieldId": S.selectedEnvironment.fieldIds.item.releasedTo,
             "entityType": 1,
-            "name": "ITEMS.DISPOSAL.RELEASED_TO",
             "recordType": 0
         })
     }

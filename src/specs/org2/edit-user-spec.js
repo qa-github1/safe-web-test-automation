@@ -31,7 +31,7 @@ describe('Edit User', function () {
                 .verify_content_of_first_row_in_results_table(D.editedUser.email)
         });
 
-        it('2.1 Add User to a Group, then add to another Group --> Verify that previous User Group is not overwritten', function () {
+        it.only('2.1 Add User to a Group, then add to another Group --> Verify that previous User Group is not overwritten', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
             D.getNewUserData();
