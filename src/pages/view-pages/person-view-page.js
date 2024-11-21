@@ -6,8 +6,8 @@ import BaseViewPage from "../base-pages/base-view-page";
 
 let
     formContainer = timeout => cy.get('.form-horizontal', timeout),
-    view_form = e => cy.get('[name="frm"]'),
-    edit_form = e => cy.get('[name="forms.frmEdit"]'),
+    view_form = e => cy.get('[name="frms.frmView"]'),
+    edit_form = e => cy.get('[name="frms.frmEdit"]'),
     saveButton = e => cy.get('[ng-click="save()"]'),
     editButton = e => cy.get('[translate="GENERAL.EDIT"]').contains('Edit'),
     businessName = e => cy.get('[ng-model="person.businessName"]'),

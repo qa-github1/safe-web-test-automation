@@ -13,6 +13,7 @@ let
     saveAutoDispoButton = e => cy.get('[id="saveAutoDispo"]').contains('Save'),
     editButton = e => cy.get('[translate="GENERAL.EDIT"]').contains('Edit'),
     deleteButton = e => cy.get('[translate="GENERAL.DELETE"]').parent('li'),
+    actionsButton = e => cy.get('[translate="GENERAL.ACTIONS"]'),
     uploadFileInput = e => cy.get('input[type=file]'),
     addItem = e => cy.get('[translate="CASES.LIST.BUTTON_ADD_ITEM"]'),
     active_tab = e => cy.get('[class="tab-pane ng-scope active"]'),
@@ -70,7 +71,8 @@ let
     tableStriped = (tableIndex = 0) => cy.get('.table-striped').eq(tableIndex),
     dataGrid = (tableIndex = 0) => cy.get('.table-striped[tp-fixed-table-header-scrollable="scrollable-area"]').eq(tableIndex).find('tbody'),
     resultsEntriesCount = e => cy.get('[translate="BSGRID.DISPLAY_STATS"]'),
-    menuCustomization = e => cy.contains('Menu Customization'),
+    //menuCustomization = e => cy.contains('Menu Customization'),
+    menuCustomization = e => cy.get('[translate="BSGRID.BUTTON_MENU_CUSTOMIZATION"]'),
     menuCustomizationFromRoot = e => cy.root().parents('html').contains('Menu Customization'),
     customFormsSectionOnMenuCustomization = e => cy.get('[is-open="customFieldsToggle.isOpen"]'),
     searchCustomFormsOnMenuCustomization = e => cy.get('[ng-model="options.customFormSearchField"]'),
@@ -78,7 +80,8 @@ let
     standardColumnsOnMenuCustomization = e => cy.get('[ng-repeat="col in getStandardFields() | orderBy:\'name | translate\'"]'),
     columnsOnMenuCustomization = e => cy.get('[ng-class="col.visible ? \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\': \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]'),
     //disabledColumnsOsOnMenuCustomization = e => cy.get('[ng-class="col.visible ? \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\': \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
-    disabledColumnsOsOnMenuCustomization = e => cy.get('[ng-class="col.visible ?\n' +
+    //disabledColumnsOsOnMenuCustomization = e => cy.get('[class="glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray"]'),
+   disabledColumnsOsOnMenuCustomization = e => cy.get('[ng-class="col.visible ?\n' +
         '                                                            \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\':\n' +
         '                                                            \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
     enabledColumnsOnMenuCustomization = e => cy.get('.glyphicon-ok'),
@@ -881,7 +884,8 @@ export default class BasePage {
         this.pause(0.5)
         this.wait_until_modal_disappears()
         this.wait_until_spinner_disappears()
-        cy.contains('Actions').click()
+        //cy.contains('Actions').click()
+        actionsButton().click()
         return this;
     };
 
@@ -1992,8 +1996,7 @@ export default class BasePage {
     enable_all_standard_columns_on_the_grid(page) {
         menuCustomization().click()
         optionsOnMenuCustomization().click()
-
-        pageSizeAndColumnsContianer().within(($list) => {
+         pageSizeAndColumnsContianer().within(($list) => {
             enabledColumnsOnMenuCustomization().its('length').then(function (length) {
                 if (length < page.numberOfStandardColumns + 1) {
                     disabledColumnsOsOnMenuCustomization().its('length').then(function (length) {
@@ -2013,6 +2016,8 @@ export default class BasePage {
         })
         return this
     }
+
+
 
     enable_columns_for_specific__Custom_Form_on_the_grid(customFormName) {
         menuCustomization().click()

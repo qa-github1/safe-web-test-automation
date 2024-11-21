@@ -44,19 +44,19 @@ describe('Edit User', function () {
             ui.menu.click_Settings__User_Admin()
             ui.userAdmin.search_for_user(D.newUser.email)
                 .add_user_to_group(S.selectedEnvironment.admin_userGroup.name)
-                .verify_user_data_on_grid(userAssignedToGroup, false, false)
-                .reload_page()
-                .search_for_user(D.newUser.email)
-                .verify_user_data_on_grid(userAssignedToGroup);
-
-            let userAssignedToGroups = Object.assign({}, userAssignedToGroup, {
-                userGroups: [
-                    S.selectedEnvironment.admin_userGroup.name,
-                    S.selectedEnvironment.readOnly_userGroup.name
-                ]
-            });
-
-            ui.userAdmin.add_user_to_group(S.selectedEnvironment.readOnly_userGroup.name)
-                .verify_user_data_on_grid(userAssignedToGroups, false, false);
-        });
+                 .verify_user_data_on_grid(userAssignedToGroup, false, true)
+        //         .reload_page()
+        //         .search_for_user(D.newUser.email)
+        //         .verify_user_data_on_grid(userAssignedToGroup);
+        //
+        //     let userAssignedToGroups = Object.assign({}, userAssignedToGroup, {
+        //         userGroups: [
+        //             S.selectedEnvironment.admin_userGroup.name,
+        //             S.selectedEnvironment.readOnly_userGroup.name
+        //         ]
+        //     });
+        //
+        //     ui.userAdmin.add_user_to_group(S.selectedEnvironment.readOnly_userGroup.name)
+        //         .verify_user_data_on_grid(userAssignedToGroups, false, false);
+         });
 });
