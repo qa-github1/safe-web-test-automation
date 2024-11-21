@@ -18,8 +18,11 @@ let
     addItem = e => cy.get('[translate="CASES.LIST.BUTTON_ADD_ITEM"]'),
     active_tab = e => cy.get('[class="tab-pane ng-scope active"]'),
     quickSearch = e => cy.get('[name="navbarSearchField"]'),
+
     quickSearchCaseTypeahead = e => cy.get('[ng-repeat="match in matches track by $index"]'),
     quickSearchCaseTypeahead_FirstOption = e => cy.get('[ng-repeat="match in matches track by $index"]').eq(0),
+    //quickSearchCaseTypeahead = e => cy.get('[ng-repeat="match in matches track by $index"]'),
+    //quickSearchCaseTypeahead = e => cy.get('[ng-if="!match.model.last && match.model.text && !match.model.first"]'),
     active_tab_title = e => cy.get('[class="ng-scope ng-isolate-scope active"]'),
     gridOptionsDropdown = e => cy.get('[ng-if="optionsToggle.isOpen"]'),
     columnVisibilityIndicatorOnOptionsDropdown = (columnName) => cy.get('[ng-if="optionsToggle.isOpen"]').contains(columnName).find('i'),
@@ -80,10 +83,10 @@ let
     standardColumnsOnMenuCustomization = e => cy.get('[ng-repeat="col in getStandardFields() | orderBy:\'name | translate\'"]'),
     columnsOnMenuCustomization = e => cy.get('[ng-class="col.visible ? \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\': \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]'),
     //disabledColumnsOsOnMenuCustomization = e => cy.get('[ng-class="col.visible ? \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\': \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
-    //disabledColumnsOsOnMenuCustomization = e => cy.get('[class="glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray"]'),
-   disabledColumnsOsOnMenuCustomization = e => cy.get('[ng-class="col.visible ?\n' +
-        '                                                            \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\':\n' +
-        '                                                            \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
+    disabledColumnsOsOnMenuCustomization = e => cy.get('[class="glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray"]'),
+   //disabledColumnsOsOnMenuCustomization = e => cy.get('[ng-class="col.visible ?\n' +
+   //     '                                                            \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\':\n' +
+    //    '                                                            \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
     enabledColumnsOnMenuCustomization = e => cy.get('.glyphicon-ok'),
     pageSizeAndColumnsContianer = e => cy.get('.grid-menu-header').eq(1),
     //  resultsTableHeader = (tableIndex = 0) => cy.get('.table-striped').eq(tableIndex).find('thead'),
@@ -130,7 +133,7 @@ let
     tagsField = e => active_form().contains('Tags').parent('div'),
     //tagsField = e => cy.contains('Tags').parent('div').find('ng-transclude'),
     tagsInput = e => active_form().contains('Tags').parent('div').find('input'),
-    actionsContainer = e => cy.contains('Actions').parent('div'),
+    actionsContainer = e => cy.get('[translate="GENERAL.ACTIONS"]').parent('div'),
     case__ = e => cy.contains('Case').parent('div').find('ng-transclude'),
     status__ = e => cy.contains('Status').parent('div').find('ng-transclude'),
     recoveredAt__ = e => cy.contains('Recovered At').parent('div').find('ng-transclude'),

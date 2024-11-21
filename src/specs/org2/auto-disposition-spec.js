@@ -73,7 +73,7 @@ describe('Auto-Disposition', function () {
             let fileName = 'Case_pastDueReview';
             D.case1.reviewDate = '';
             D.case2.reviewDate = helper.getSpecificDateInSpecificFormat(DF.dateTimeFormats.long.mask, '01/08/2019');
-            D.case3.reviewDate = helper.getSpecificDateInSpecificFormat(DF.dateTimeFormats.long.mask, '01/08/2030');
+            D.case3.reviewDate = helper.getSpecificDateInSpecificFormat(DF.dateTimeFormats.short.mask, '01/08/2030');
 
             // import 3 cases (NO Review Date, Review Date past due and Upcoming Review Date )
             E.generateDataFor_CASES_Importer([D.case1, D.case2, D.case3]);
@@ -91,8 +91,9 @@ describe('Auto-Disposition', function () {
 
             ui.menu.click_Settings__Organization()
                 .click_element_containing_link(C.labels.organization.tabs.autoDisposition);
+            ui.autoDispo.click_disposition_Configuration_For_Case_Offense_Types();
             ui.autoDispo.verify_Redistribute_Case_Review_Date_labels(false, 1, 2)
-                .click_button(C.buttons.redestributeCaseReviewDates)
+                ui.autoDispo.click_button(C.buttons.redestributeCaseReviewDates)
                 .verify_modal_content(C.labels.autoDisposition.updateCases)
                 .click_button(C.tabs.pastDue)
                 .populate_Update_Cases_modal(minDate, maxDate, redistributeNote)

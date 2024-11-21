@@ -12,6 +12,7 @@ let
     dropdownFieldForMapping = fieldName => mapFieldsSection().find('[name="frm"]').contains('label', fieldName).parent().find('select'),
     defaultMappingSelected = (label) => mapFieldsSection().find('[name="frm"]').contains('label', label).parent().find('[selected="selected"]'),
     checkDefaultMappingSelected = (rowNumber, label) => mapFieldsSection().find('[data-ng-repeat="column in selected.imports[0].columns"]').eq(rowNumber).contains('option', label).parent().find('[selected="selected"]').should('contain', label),
+   // checkDefaultMappingSelected = (label, number) => mapFieldsSection().find('[name="frm"]').contains('option', label).parent().find('[value="number:' + number + '"]').should('contain', label),
     activeDropdown = e => mapFieldsSection().find('[name="frm"]').contains('active').parent().find('[selected="selected"]'),
     caseNumberDropdown = e => mapFieldsSection().find('[name="frm"]').contains('caseNumber').parent().find('[selected="selected"]'),
     creatorIdDropdown = e => mapFieldsSection().find('[name="frm"]').contains('creatorID').parent().find('[selected="selected"]'),
@@ -79,6 +80,7 @@ export default class ImportPage extends BasePage {
 
         switch (importType) {
             case C.importTypes.cases:
+
                 for(let i =0; i<6; i++){
                     let values = [
                         'Active',
@@ -99,6 +101,14 @@ export default class ImportPage extends BasePage {
                     ]
                     checkDefaultMappingSelected(i, values[i]);
                 }
+
+                // checkDefaultMappingSelected('Active', '108');
+                // checkDefaultMappingSelected('Case Number', '101');
+                // checkDefaultMappingSelected('Case Officer(s) [UserEmail OR userGUID, GroupName OR GroupID]', '102');
+                // checkDefaultMappingSelected('Offense Location', '105');
+                // checkDefaultMappingSelected('Office [Name or GUID]', '109');
+                // checkDefaultMappingSelected('Created By edited [User Email or GUID]', '110');
+
                 break;
             case C.importTypes.items:
                 checkDefaultMappingSelected('Category');
