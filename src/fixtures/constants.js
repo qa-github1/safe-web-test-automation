@@ -730,7 +730,7 @@ C.pages = {
         numberOfStandardColumnsReduced: 6,
     },
     userAdmin: {
-        numberOfStandardColumns: 24
+        numberOfStandardColumns: 25
     }
 }
 

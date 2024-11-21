@@ -79,11 +79,11 @@ let
     optionsOnMenuCustomization = e => cy.get('[is-open="optionsToggle.isOpen"]'),
     standardColumnsOnMenuCustomization = e => cy.get('[ng-repeat="col in getStandardFields() | orderBy:\'name | translate\'"]'),
     columnsOnMenuCustomization = e => cy.get('[ng-class="col.visible ? \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\': \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]'),
-    //disabledColumnsOsOnMenuCustomization = e => cy.get('[ng-class="col.visible ? \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\': \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
-    //disabledColumnsOsOnMenuCustomization = e => cy.get('[class="glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray"]'),
-   disabledColumnsOsOnMenuCustomization = e => cy.get('[ng-class="col.visible ?\n' +
-        '                                                            \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\':\n' +
-        '                                                            \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
+    disabledColumnsOsOnMenuCustomization = e => cy.get('.glyphicon-remove'),
+    //disabledColumnsOsOnMenuCustomization_PENTEST = e => cy.get('[ng-class="col.visible ? \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\': \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
+   //  disabledColumnsOsOnMenuCustomization_DEV = e => cy.get('[ng-class="col.visible ?\n' +
+   //      '                                                            \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\':\n' +
+   //      '                                                            \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
     enabledColumnsOnMenuCustomization = e => cy.get('.glyphicon-ok'),
     pageSizeAndColumnsContianer = e => cy.get('.grid-menu-header').eq(1),
     //  resultsTableHeader = (tableIndex = 0) => cy.get('.table-striped').eq(tableIndex).find('thead'),
@@ -386,8 +386,6 @@ export default class BasePage {
         });
         return this;
     };
-
-
 
 
     verify_toast_title(title) {
@@ -1657,7 +1655,7 @@ export default class BasePage {
         } else {
             this.verify_text_is_NOT_present_on_main_container('Review Date')
                 .verify_text_is_NOT_present_on_main_container('Review Date Notes')
-            }
+        }
         return this;
     };
 
@@ -1996,12 +1994,15 @@ export default class BasePage {
     enable_all_standard_columns_on_the_grid(page) {
         menuCustomization().click()
         optionsOnMenuCustomization().click()
-         pageSizeAndColumnsContianer().within(($list) => {
+        pageSizeAndColumnsContianer().within(($list) => {
             enabledColumnsOnMenuCustomization().its('length').then(function (length) {
                 if (length < page.numberOfStandardColumns + 1) {
                     disabledColumnsOsOnMenuCustomization().its('length').then(function (length) {
-                        for (let i = 0; i < length; i++) {
-                            disabledColumnsOsOnMenuCustomization().first().click()
+                        // iterate through options that have 'X' icon within "Options" section the number of times that matches the number of 'disabled columns' (exclude 3 'X' icons in pageSize section)
+                        for (let i = 0; i < length-3; i++) {
+
+                            //click 4th 'X' icon within 'Options' section one (1st disabled column)
+                            disabledColumnsOsOnMenuCustomization().eq(3).click()
 
                             if (i < length - 1) {
                                 menuCustomizationFromRoot().click()
@@ -2016,7 +2017,6 @@ export default class BasePage {
         })
         return this
     }
-
 
 
     enable_columns_for_specific__Custom_Form_on_the_grid(customFormName) {
