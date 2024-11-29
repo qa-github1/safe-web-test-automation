@@ -128,7 +128,7 @@ D.getEditedCaseData = function (caseNumber, autoDispoOff = false) {
         caseOfficerId: S.userAccounts.powerUser.id,
         caseOfficer: S.userAccounts.powerUser.email,
         caseOfficers: [S.userAccounts.powerUser.name],
-        caseOfficers_importFormat: 'user-' + S.userAccounts.powerUser.guid,
+        caseOfficers_importFormat: S.userAccounts.powerUser.guid,
         caseOfficers_userGuid: S.userAccounts.powerUser.guid,
         caseOfficers_userGroupId: S.selectedEnvironment.readOnly_userGroup.id,
         caseOfficerName: S.userAccounts.powerUser.name,

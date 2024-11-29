@@ -73,10 +73,10 @@ Cypress.on('uncaught:exception', (err, runnable) => {
 });
 
 //cy.generate_excel_file('Case_Import')  == usage example
-Cypress.Commands.add('generate_excel_file', (filename, dataObject) => {
+Cypress.Commands.add('generate_excel_file', (filename, arrayOfArraysWithExcelHeadersAndData) => {
     return cy.task('generate_excel_file', {
         filename: filename,
-        dataObject: dataObject
+        arrayOfArraysWithExcelHeadersAndData: arrayOfArraysWithExcelHeadersAndData
     });
 });
 

@@ -17,7 +17,7 @@ describe('Import Cases', function () {
         D.generateNewDataSet();
     });
 
-    it.only('I.C_1 Case with all fields -- user and user group in Case Officer(s) field', function () {
+    it('I.C_1 Case with all fields -- user and user group in Case Officer(s) field', function () {
         ui.app.log_title(this);
         let fileName = 'CaseImport_allFields_' + S.domain;
         api.auth.get_tokens(user);
@@ -80,7 +80,7 @@ describe('Import Cases', function () {
         D.newCase.reviewDateNotes = null
 
         ui.menu.click_Tools__Data_Import();
-        ui.importer.upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.cases)
+        ui.importer.upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.cases, C.importMappings.minimumCaseFields)
             .verify_toast_message([
                 C.toastMsgs.importComplete,
                 1 + C.toastMsgs.recordsImported])
@@ -110,7 +110,7 @@ describe('Import Cases', function () {
         api.auto_disposition.edit(false);
 
         ui.menu.click_Tools__Data_Import();
-        ui.importer.upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.cases)
+        ui.importer.upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.cases, C.importMappings.minimumCaseFields)
             .verify_toast_message([
                 C.toastMsgs.importComplete,
                 1 + C.toastMsgs.recordsImported])
@@ -125,16 +125,14 @@ describe('Import Cases', function () {
             .verify_title_on_active_tab(1)
     });
 
-    //enable test running regression test suite
-    // no need to import 5 thousand cases every day
-    xit('I.C_4 Five thousand cases and verify cases count on search by ', function () {
+    //enable test running regression test suite --> no need to import 5 thousand cases every day
+    it('I.C_4 Five thousand cases and verify cases count on search by ', function () {
         ui.app.log_title(this);
-        let fileName = '60k_Cases_' + S.domain;
+        let fileName = '5k_Cases_' + S.domain;
         api.auth.get_tokens(user);
 
         D.getNewCaseData();
-        D.newCase.offenseDescription = 'imported';
-        E.generateDataFor_CASES_Importer(D.newCase, 60000);
+        E.generateDataFor_CASES_Importer([D.newCase], null, null, 5000);
 
         cy.generate_excel_file(fileName, E.caseImportDataWithAllFields);
         api.org_settings.enable_all_Case_fields();
@@ -145,11 +143,10 @@ describe('Import Cases', function () {
                 C.toastMsgs.importComplete,
                 5000 + C.toastMsgs.recordsImported], false, 30);
         ui.menu.click_Search__Case();
-        ui.searchCase.enter_Offense_Description(D.newCase.offenseDescription)
-            .enter_Created_Date(D.newCase.createdDate)
+        ui.searchCase.enter_Offense_Description(C.searchCriteria.inputFields.equals, D.case1.offenseDescription)
+            .enter_Created_Date(C.searchCriteria.dates.exactly, D.newCase.createdDate)
             .click_button(C.buttons.search)
-            .verify_toast_message(C.toastMsgs.resultsLimitExceeded)
-            .verify_toast_message('60,000')
+            .verify_toast_message([C.toastMsgs.resultsLimitExceededTitle, C.toastMsgs.resultsLimitExceeded('5,000')])
     });
 
     it('I.C_5 Case Import - Precheck Only', function () {
