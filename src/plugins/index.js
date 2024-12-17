@@ -166,11 +166,11 @@ module.exports = (on, config) => {
         generate_excel_file(args) {
 
             let filename = args.filename;
-            let dataObject = args.dataObject;
+            let data = args.arrayOfArraysWithExcelHeadersAndData;
 
             let excel = require('../fixtures/files/excel-helper');
             return new Promise((resolve, reject) => {
-                excel.generate_file(filename, dataObject);
+                excel.generate_file(filename, data);
                 return resolve(true)
             });
         },

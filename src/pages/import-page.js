@@ -11,8 +11,7 @@ let
     importerContainer = e => cy.get('[tp-model-type="\'import\'"]'),
     dropdownFieldForMapping = fieldName => mapFieldsSection().find('[name="frm"]').contains('label', fieldName).parent().find('select'),
     defaultMappingSelected = (label) => mapFieldsSection().find('[name="frm"]').contains('label', label).parent().find('[selected="selected"]'),
-    checkDefaultMappingSelected = (rowNumber, label) => mapFieldsSection().find('[data-ng-repeat="column in selected.imports[0].columns"]').eq(rowNumber).contains('option', label).parent().find('[selected="selected"]').should('contain', label),
-   // checkDefaultMappingSelected = (label, number) => mapFieldsSection().find('[name="frm"]').contains('option', label).parent().find('[value="number:' + number + '"]').should('contain', label),
+    checkDefaultMappingSelected = (rowNumber, label) => mapFieldsSection().find('[data-ng-repeat="column in selected.imports[0].columns"]').eq(rowNumber).contains('option', label).parent('select').find('[selected="selected"]').should('contain', label),
     activeDropdown = e => mapFieldsSection().find('[name="frm"]').contains('active').parent().find('[selected="selected"]'),
     caseNumberDropdown = e => mapFieldsSection().find('[name="frm"]').contains('caseNumber').parent().find('[selected="selected"]'),
     creatorIdDropdown = e => mapFieldsSection().find('[name="frm"]').contains('creatorID').parent().find('[selected="selected"]'),
@@ -75,11 +74,13 @@ export default class ImportPage extends BasePage {
         return this;
     };
 
-    wait_Map_Fields_section_to_be_loaded(importType, isLinkedToCase = true, hasMinimumFields) {
+    wait_Map_Fields_section_to_be_loaded(importType, isLinkedToCase = true, specificMapping) {
         mapFieldsSection().should('be.visible');
+        let importMappings = C.importMappings
 
         switch (importType) {
             case C.importTypes.cases:
+
 
                 for(let i =0; i<6; i++){
                     let values = [
@@ -109,51 +110,37 @@ export default class ImportPage extends BasePage {
                 // checkDefaultMappingSelected('Office [Name or GUID]', '109');
                 // checkDefaultMappingSelected('Created By edited [User Email or GUID]', '110');
 
+
+                importMappings = specificMapping || importMappings.allCaseFields
+
                 break;
             case C.importTypes.items:
-                checkDefaultMappingSelected('Category');
-                checkDefaultMappingSelected('SubmittedById');
-                if (!hasMinimumFields) {
-                    this.map_the_field_from_excel_to_system_field('Make', 'Make')
-                    checkDefaultMappingSelected('Make');
-                }
+                importMappings = specificMapping || importMappings.checkedInItemFields
                 break;
             case C.importTypes.people:
-                checkDefaultMappingSelected('FirstName');
-                checkDefaultMappingSelected('LastName');
 
-                if (!hasMinimumFields) {
-                    this.map_the_field_from_excel_to_system_field('Email', 'Email')
-                    checkDefaultMappingSelected('Email');
-                }
                 break;
             case C.importTypes.users:
-                checkDefaultMappingSelected('FirstName');
-                this.map_the_field_from_excel_to_system_field('Email', 'Email');
-                checkDefaultMappingSelected('Email');
                 break;
             case C.importTypes.notes:
-                checkDefaultMappingSelected('Text');
-                checkDefaultMappingSelected('Date');
-                this.exclude_Excel_field_on_mapping_list('Id');
 
-                if (isLinkedToCase) {
-                    this.exclude_Excel_field_on_mapping_list('ItemGuid');
-                }
                 break;
             case C.importTypes.legacyCoC:
-                checkDefaultMappingSelected('IssuedFrom');
+
                 break;
             case C.importTypes.legacyTasks:
-                checkDefaultMappingSelected('User');
-                checkDefaultMappingSelected('Message');
+
                 break;
             case C.importTypes.locations:
-                checkDefaultMappingSelected('Name');
+
                 break;
             case C.importTypes.media:
-                checkDefaultMappingSelected('Hash');
+
                 break;
+        }
+
+        for (let i = 0; i < importMappings.length; i++) {
+            checkDefaultMappingSelected(i, importMappings[i]);
         }
         return this;
     };
@@ -172,11 +159,11 @@ export default class ImportPage extends BasePage {
         return this;
     };
 
-    upload_then_Map_and_Submit_file_for_importing(fileName, importType, isLinkedToCase, timeoutInMinutes, hasMinimumFields, validationMessagesAfterNextButton) {
+    upload_then_Map_and_Submit_file_for_importing(fileName, importType, specificMapping, isLinkedToCase, timeoutInMinutes, validationMessagesAfterNextButton) {
         this.upload_file_and_verify_toast_msg(fileName + '.xlsx', C.toastMsgs.uploadComplete, timeoutInMinutes)
             .save_import_type_and_name(importType)
             .click_button(C.buttons.next)
-            .wait_Map_Fields_section_to_be_loaded(importType, isLinkedToCase, hasMinimumFields)
+            .wait_Map_Fields_section_to_be_loaded(importType, isLinkedToCase, specificMapping)
             .click_button(C.buttons.nextSave)
             .check_validation_messages(validationMessagesAfterNextButton)
             .click_button(C.buttons.import);

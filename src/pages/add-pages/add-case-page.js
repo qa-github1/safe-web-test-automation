@@ -55,7 +55,7 @@ export default class AddCasePage extends BaseAddPage {
 
         this.enter_values_on_multi_select_typeahead_fields(
             [
-                [caseOfficerInput, caseObject.caseOfficers, caseOfficerTypeahead],
+                [caseOfficerInput, caseObject.caseOfficers, "users"],
                 [tagsInput, caseObject.tags, this.lastTagOnTypeahead],
             ]);
 

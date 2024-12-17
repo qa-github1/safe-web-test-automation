@@ -42,9 +42,9 @@ E.generateCustomValues = function () {
     ]
 };
 
-E.generateDataFor_CASES_Importer = function (arrayOfDataObjects, customFormName, importingCaseUpdates) {
+E.generateDataFor_CASES_Importer = function (arrayOfDataObjects, customFormName, importingCaseUpdates, specificNumberOfRecords) {
     // Set headers for Excel file
-    let allFieldsHeaders = [
+    let allFieldHeaders = [
         "Active",
         "CaseNumber",
         "CreatorId",
@@ -74,22 +74,27 @@ E.generateDataFor_CASES_Importer = function (arrayOfDataObjects, customFormName,
     let customFieldsValues = E.generateCustomValues()
 
     if (customFormName) {
-        allFieldsHeaders = allFieldsHeaders.concat(customFieldsHeaders);
+        allFieldHeaders = allFieldHeaders.concat(customFieldsHeaders);
         minimumFieldsHeaders = minimumFieldsHeaders.concat(customFieldsHeaders);
     }
 
     E.caseImportDataWithAllFields = [
-        allFieldsHeaders,
+        allFieldHeaders,
     ];
     E.caseImportDataWithMinimumFields = [
         minimumFieldsHeaders,
     ];
 
-    // Set values for Excel file
-    for (let i = 0; i < arrayOfDataObjects.length; i++) {
+    const numberOfRecords = specificNumberOfRecords || arrayOfDataObjects.length
 
-        let caseObject = arrayOfDataObjects[i]
-        if (!importingCaseUpdates) caseObject.caseNumber = 'imported_' + caseObject.caseNumber + '_' + i
+    // Set values for Excel file
+    for (let i = 0; i < numberOfRecords; i++) {
+
+        let caseObject = arrayOfDataObjects[i] || arrayOfDataObjects[0]
+        D['case' + i] = Object.assign({}, caseObject);
+
+        if (!importingCaseUpdates) D['case' + i].caseNumber = 'imported_' + caseObject.caseNumber + '_' + i;
+        if (caseObject.offenseDescription) D['case' + i].offenseDescription = 'imported_' + caseObject.caseNumber
         let tags = caseObject.tags ? caseObject.tags[0] : ''
         let reviewDate = caseObject.reviewDate || ''
         let closedDate = caseObject.closedDate || ''
@@ -97,24 +102,24 @@ E.generateDataFor_CASES_Importer = function (arrayOfDataObjects, customFormName,
 
         E.caseImportDataWithAllFields[i + 1] = [
             caseObject.active,
-            caseObject.caseNumber,
+            D['case' + i].caseNumber,
             caseObject.userGuid,
             caseObject.caseOfficers_importFormat,
             caseObject.officeGuid,
             caseObject.offenseType,
-            caseObject.offenseDescription,
+            D['case' + i].offenseDescription,
             caseObject.offenseDate,
             caseObject.offenseLocation,
             tags,
             caseObject.createdDate,
             reviewDate,
             reviewDateNotes,
-            closedDate
+            closedDate,
         ]
 
         E.caseImportDataWithMinimumFields[i + 1] = [
             caseObject.active,
-            caseObject.caseNumber,
+            D['case' + i].caseNumber,
             caseObject.userGuid,
             caseObject.caseOfficers_importFormat,
             caseObject.officeGuid,
@@ -126,34 +131,17 @@ E.generateDataFor_CASES_Importer = function (arrayOfDataObjects, customFormName,
             E.caseImportDataWithAllFields[i + 1] = E.caseImportDataWithAllFields[i + 1].concat(customFieldsValues);
             E.caseImportDataWithMinimumFields[i + 1] = E.caseImportDataWithMinimumFields[i + 1].concat(customFieldsValues);
         }
+
+        if(numberOfRecords === 1){
+            D.newCase = Object.assign({},  D['case' + 0]);
+        }
     }
 }
 
-E.generateDataFor_ITEMS_Importer = function (arrayOfDataObjects, customFormName) {
+E.generateDataFor_ITEMS_Importer = function (arrayOfDataObjects, customFormName, specificMapping) {
     // Set headers for Excel file
-    let allFieldsHeaders = [
-        "CaseNumber",
-        "Active",
-        "Category",
-        "Description",
-        "SerialNumber",
-        "RecoveredById",
-        "Location",
-        "CustodyReason",
-        "RecoveryLocation",
-        "RecoveryDate",
-        "Make",
-        "Model",
-        "Status",
-        "CustodianId",
-        "CurrentOfficeId",
-        "SubmittedById",
-        "ItemBelongsTo",
-        "DateCreated",
-        "ReturnedById",
-        "Tags",
-        "AdditionalBarcodes",
-    ]
+    let allFieldHeaders = specificMapping || C.importMappingsWithOutSquareBrackets.checkedInItemFields
+
     let minimumFieldsHeaders = [
         "CaseNumber",
         "Active",
@@ -170,12 +158,12 @@ E.generateDataFor_ITEMS_Importer = function (arrayOfDataObjects, customFormName)
     let customFieldsValues = E.generateCustomValues()
 
     if (customFormName) {
-        allFieldsHeaders = allFieldsHeaders.concat(customFieldsHeaders);
+        allFieldHeaders = allFieldHeaders.concat(customFieldsHeaders);
         minimumFieldsHeaders = minimumFieldsHeaders.concat(customFieldsHeaders);
     }
 
     E.itemImportDataWithAllFields = [
-        allFieldsHeaders,
+        allFieldHeaders,
     ];
     E.itemImportDataWithMinimumFields = [
         minimumFieldsHeaders,
@@ -191,27 +179,25 @@ E.generateDataFor_ITEMS_Importer = function (arrayOfDataObjects, customFormName)
         let tags = itemObject.tags ? itemObject.tags[0] : ''
 
         E.itemImportDataWithAllFields[i + 1] = [
-            itemObject.caseNumber,
-            itemObject.active,
-            itemObject.category,
             description,
-            serialNumber,
-            itemObject.recoveredByGuid,
-            itemObject.locationGuid,
-            itemObject.custodyReason,
-            itemObject.recoveryLocation,
             itemObject.recoveryDate,
-            itemObject.make,
-            itemObject.model,
+            itemObject.recoveryLocation,
+            itemObject.locationGuid,
             itemObject.status,
+            itemObject.category,
+            itemObject.custodyReason,
+            itemObject.recoveredByGuid,
+            itemObject.submittedByGuid,
             itemObject.custodianGuid,
             itemObject.officeGuid,
-            itemObject.submittedByGuid,
-            itemObject.itemBelongsToGuid,
+            itemObject.make,
+            itemObject.model,
+            serialNumber,
             itemObject.createdDate,
-            S.selectedEnvironment.person_2.guid,
+            itemObject.caseNumber,
+            additionalBarcode,
+            itemObject.itemBelongsToGuid,
             tags,
-            additionalBarcode
         ]
 
         E.itemImportDataWithMinimumFields[i + 1] = [
@@ -227,68 +213,73 @@ E.generateDataFor_ITEMS_Importer = function (arrayOfDataObjects, customFormName)
         ]
 
         if (itemObject.barcode) {
-            allFieldsHeaders.push('ItemBarcode')
+            allFieldHeaders.push('ItemBarcode')
             minimumFieldsHeaders.push('ItemBarcode')
             E.itemImportDataWithAllFields[i + 1].push(itemObject.barcode)
             E.itemImportDataWithMinimumFields[i + 1].push(itemObject.barcode)
         }
 
         if (itemObject.status === 'Disposed') {
-            allFieldsHeaders.push('DisposedMethod')
+            allFieldHeaders.push('DisposedMethod')
             minimumFieldsHeaders.push('DisposedMethod')
             E.itemImportDataWithAllFields[i + 1].push(itemObject.disposalMethod)
             E.itemImportDataWithMinimumFields[i + 1].push(itemObject.disposalMethod)
 
-            allFieldsHeaders.push('DisposedById')
+            allFieldHeaders.push('DisposedById')
             minimumFieldsHeaders.push('DisposedById')
             E.itemImportDataWithAllFields[i + 1].push(itemObject.submittedByGuid)
             E.itemImportDataWithMinimumFields[i + 1].push(itemObject.submittedByGuid)
 
-            allFieldsHeaders.push('DisposedDate')
+            allFieldHeaders.push('DisposalUserId')
+            minimumFieldsHeaders.push('DisposalUserId')
+            E.itemImportDataWithAllFields[i + 1].push(itemObject.disposalUserId)
+            E.itemImportDataWithMinimumFields[i + 1].push(itemObject.disposalUserId)
+
+            allFieldHeaders.push('DisposedDate')
             minimumFieldsHeaders.push('DisposedDate')
             E.itemImportDataWithAllFields[i + 1].push(itemObject.disposedDate)
             E.itemImportDataWithMinimumFields[i + 1].push(itemObject.disposedDate)
 
-            allFieldsHeaders.push('TransactionNotes')
+            allFieldHeaders.push('TransactionNotes')
             minimumFieldsHeaders.push('TransactionNotes')
             E.itemImportDataWithAllFields[i + 1].push(itemObject.disposalNotes)
             E.itemImportDataWithMinimumFields[i + 1].push(itemObject.disposalNotes)
         }
 
         if (itemObject.status === 'Checked Out') {
-            allFieldsHeaders.push("CheckOutReason")
+            allFieldHeaders.push("CheckOutReason")
             minimumFieldsHeaders.push("CheckOutReason")
             E.itemImportDataWithAllFields[i + 1].push(itemObject.checkoutReason)
             E.itemImportDataWithMinimumFields[i + 1].push(itemObject.checkoutReason)
 
-            allFieldsHeaders.push("CheckedOutById")
+            allFieldHeaders.push("CheckedOutById")
             minimumFieldsHeaders.push("CheckedOutById")
             E.itemImportDataWithAllFields[i + 1].push(itemObject.checkedOutBy_guid)
             E.itemImportDataWithMinimumFields[i + 1].push(itemObject.checkedOutBy_guid)
 
-            allFieldsHeaders.push("CheckedOutToId")
+            allFieldHeaders.push("CheckedOutToId")
             minimumFieldsHeaders.push("CheckedOutToId")
             E.itemImportDataWithAllFields[i + 1].push(itemObject.checkedOutTo_guid)
             E.itemImportDataWithMinimumFields[i + 1].push(itemObject.checkedOutTo_guid)
 
-            allFieldsHeaders.push("CheckedOutDate")
+            allFieldHeaders.push("CheckedOutDate")
             minimumFieldsHeaders.push("CheckedOutDate")
             E.itemImportDataWithAllFields[i + 1].push(itemObject.checkoutDate)
             E.itemImportDataWithMinimumFields[i + 1].push(itemObject.checkoutDate)
 
-            allFieldsHeaders.push("ExpectedReturnDate")
+            allFieldHeaders.push("ExpectedReturnDate")
             minimumFieldsHeaders.push("ExpectedReturnDate")
             E.itemImportDataWithAllFields[i + 1].push(itemObject.expectedReturnDate)
             E.itemImportDataWithMinimumFields[i + 1].push(itemObject.expectedReturnDate)
 
-            allFieldsHeaders.push('TransactionNotes')
+            allFieldHeaders.push('TransactionNotes')
             minimumFieldsHeaders.push('TransactionNotes')
             E.itemImportDataWithAllFields[i + 1].push(itemObject.checkedOutNotes)
             E.itemImportDataWithMinimumFields[i + 1].push(itemObject.checkedOutNotes)
         }
 
         if (itemObject.movedBy_name || itemObject.returnedByName_name) {
-            allFieldsHeaders.push('TransactionNotes')
+            allFieldHeaders.push('TransactionNotes')
             minimumFieldsHeaders.push('TransactionNotes')
 
             if (itemObject.movedBy_name) {
@@ -309,7 +300,7 @@ E.generateDataFor_ITEMS_Importer = function (arrayOfDataObjects, customFormName)
 
 E.generateDataFor_PEOPLE_Importer = function (arrayOfDataObjects, customFormName) {
     // Set headers for Excel file
-    let allFieldsHeaders = [
+    let allFieldHeaders = [
         "Person Type",
         "Case Number",
         "BusinessName",
@@ -351,12 +342,12 @@ E.generateDataFor_PEOPLE_Importer = function (arrayOfDataObjects, customFormName
     let customFieldsValues = E.generateCustomValues()
 
     if (customFormName) {
-        allFieldsHeaders = allFieldsHeaders.concat(customFieldsHeaders);
+        allFieldHeaders = allFieldHeaders.concat(customFieldsHeaders);
         minimumFieldsHeaders = minimumFieldsHeaders.concat(customFieldsHeaders);
     }
 
     E.peopleImportDataWithAllFields = [
-        allFieldsHeaders,
+        allFieldHeaders,
     ];
     E.peoplemportDataWithMinimumFields = [
         minimumFieldsHeaders,
@@ -409,7 +400,7 @@ E.generateDataFor_PEOPLE_Importer = function (arrayOfDataObjects, customFormName
         if (personObject.guid) {
             E.peopleImportDataWithAllFields[i + 1].push(personObject.guid)
             E.peoplemportDataWithMinimumFields[i + 1].push(personObject.guid)
-            allFieldsHeaders.push('Guid')
+            allFieldHeaders.push('Guid')
             minimumFieldsHeaders.push('Guid')
         }
 
@@ -575,7 +566,7 @@ E.generateDataFor_NOTES_Importer = function (caseOrItemObject, barcode, numberOf
 
 E.generateDataFor_USERS_Importer = function (arrayOfDataObjects) {
 
-    let allFieldsHeaders = [
+    let allFieldHeaders = [
         "FirstName",
         "MiddleName",
         "LastName",
@@ -594,7 +585,7 @@ E.generateDataFor_USERS_Importer = function (arrayOfDataObjects) {
     ]
 
     E.userImportDataWithAllFields = [
-        allFieldsHeaders
+        allFieldHeaders
     ]
 
     // Set values for Excel file
@@ -626,7 +617,7 @@ E.generateDataFor_USERS_Importer = function (arrayOfDataObjects) {
 
 E.generateDataFor_TASKS_Importer = function (itemObject, barcodesArray, numberOfTasks = 1) {
 
-    E.allFieldsHeaders = [
+    E.allFieldHeaders = [
         "User",
         "UserGroup",
         "Title",
@@ -645,7 +636,7 @@ E.generateDataFor_TASKS_Importer = function (itemObject, barcodesArray, numberOf
 
     E.setTasksWithAllFields = function (numberOfTasks) {
         E.tasksWithAllFields = [
-            E.allFieldsHeaders
+            E.allFieldHeaders
         ];
 
         for (let i = 0; i < numberOfTasks; i++) {

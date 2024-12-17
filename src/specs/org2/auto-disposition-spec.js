@@ -34,7 +34,7 @@ describe('Auto-Disposition', function () {
             .verify_toast_message(C.toastMsgs.saved);
     });
 
-    it('2. Verify Save button is disabled for Follow Up Days', function () {
+    it('2. Verify Save button is disabled when missing value in any "Follow Up Days" field', function () {
         api.auth.get_tokens(user);
         api.auto_disposition.edit(true);
 
@@ -44,8 +44,6 @@ describe('Auto-Disposition', function () {
         ui.autoDispo.click_Edit()
             .clear_and_enter_value_for_Days_to_follow_up(C.offenseTypes.arson, '')
             .verify_save_auto_dispo_button_is_disabled()
-            //.click_Save()
-           // .verify_toast_message(C.toastMsgs.daysCanOnlyBePositiveNumber);
     });
 
     context('3. Verify "Re-Distribute Case Review Dates" functionality', function () {
