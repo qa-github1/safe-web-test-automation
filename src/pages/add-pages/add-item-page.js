@@ -134,6 +134,7 @@ export default class AddItemPage extends BaseAddPage {
     };
 
     select_Category(option) {
+        cy.wait(300)
         category().click();
         cy.contains(option).click();
         return this;
