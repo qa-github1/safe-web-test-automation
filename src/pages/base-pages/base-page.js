@@ -64,8 +64,8 @@ let
     mainContainer = e => cy.get('.ui-view-main'),
     textOnMainContainer = text => cy.get('.ui-view-main').contains(text),
     toastMessage = (timeout = 50000) => cy.get('.toast', {timeout: timeout}),
-    toastContainer = (timeout = 0) => cy.get('#toast-container', {timeout: timeout}),
-    toastTitle = e => cy.get('.toast-title'),
+    toastContainer = (timeout = 50000) => cy.get('#toast-container', {timeout: timeout}),
+    toastTitle = (timeout = 50000) => cy.get('.toast-title', {timeout: timeout}),
     searchParametersAccordion = e => cy.get('[class="panel-collapse collapse in"]'),
     resultsTable = (tableIndex = 0) => cy.get('.table-striped').eq(tableIndex).find('tbody'),
     tableStriped = (tableIndex = 0) => cy.get('.table-striped').eq(tableIndex),
@@ -81,9 +81,9 @@ let
     columnsOnMenuCustomization = e => cy.get('[ng-class="col.visible ? \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\': \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]'),
     disabledColumnsOsOnMenuCustomization = e => cy.get('.glyphicon-remove'),
     //disabledColumnsOsOnMenuCustomization_PENTEST = e => cy.get('[ng-class="col.visible ? \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\': \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
-   //  disabledColumnsOsOnMenuCustomization_DEV = e => cy.get('[ng-class="col.visible ?\n' +
-   //      '                                                            \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\':\n' +
-   //      '                                                            \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
+    //  disabledColumnsOsOnMenuCustomization_DEV = e => cy.get('[ng-class="col.visible ?\n' +
+    //      '                                                            \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\':\n' +
+    //      '                                                            \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
     enabledColumnsOnMenuCustomization = e => cy.get('.glyphicon-ok'),
     pageSizeAndColumnsContianer = e => cy.get('.grid-menu-header').eq(1),
     //  resultsTableHeader = (tableIndex = 0) => cy.get('.table-striped').eq(tableIndex).find('thead'),
@@ -394,6 +394,12 @@ export default class BasePage {
         return this;
     };
 
+    verify_toast_title_and_message(title, message) {
+        toastTitle().should('be.visible').should('contain', title);
+        toastMessage().should('contain', message);
+        return this;
+    };
+
     set_page_size(pageSize = 25) {
         cy.contains('Menu Customization').click()
         optionsDropdownUnderMenuCustomization().click()
@@ -531,16 +537,32 @@ export default class BasePage {
     };
 
     enter_values_on_multi_select_typeahead_fields(element_value_typeahead__stacks) {
+        let that = this
         element_value_typeahead__stacks.forEach(function (stack) {
             // perform actions only if value is provided
             // for some optional fields it might be null -- e.g. D.generateNewDataSet(true) --> with 'setNullForDisabledFields'
             if (stack[1]) {
+                // if there are multiple values in array, repeat the same action to enter all of them
                 for (let i = 0; i < stack[1].length; i++) {
+                    if (stack[2] === "users") {
+                        that.define_API_request_to_be_awaited('GET',
+                            'api/users/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + stack[1][i].replace(/\s+/g, '%20'),
+                            "getUserInTypeahead")
+                        that.define_API_request_to_be_awaited('GET',
+                            '/api/userGroups/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + stack[1][i].replace(/\s+/g, '%20'),
+                            "getUserGroupInTypeahead")
+                    }
+
                     stack[0]().clear().invoke('val', stack[1][i]).trigger('input')
 
-                    // if (stack[2]) {
+                    if (stack[2] === "users") {
+                        that.wait_response_from_API_call("getUserInTypeahead")
+                        that.wait_response_from_API_call("getUserGroupInTypeahead")
+                    }
+
                     highlightedOptionOnTypeahead().click({force: true})
-                    // }
+                    cy.wait(100)
+
                 }
             }
         });
@@ -980,12 +1002,10 @@ export default class BasePage {
     };
 
     define_API_request_to_be_awaited(methodType, partOfRequestUrl, alias) {
-        //    cy.server();
-
         if (!alias) {
             alias = partOfRequestUrl;
         }
-        cy.intercept(methodType, '**' + partOfRequestUrl + '**').as(alias);
+        cy.intercept(methodType, '**' + `${partOfRequestUrl}` + '**' ).as(alias);
         return this;
     };
 
@@ -1999,7 +2019,7 @@ export default class BasePage {
                 if (length < page.numberOfStandardColumns + 1) {
                     disabledColumnsOsOnMenuCustomization().its('length').then(function (length) {
                         // iterate through options that have 'X' icon within "Options" section the number of times that matches the number of 'disabled columns' (exclude 3 'X' icons in pageSize section)
-                        for (let i = 0; i < length-3; i++) {
+                        for (let i = 0; i < length - 3; i++) {
 
                             //click 4th 'X' icon within 'Options' section one (1st disabled column)
                             disabledColumnsOsOnMenuCustomization().eq(3).click()

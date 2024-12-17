@@ -230,6 +230,11 @@ E.generateDataFor_ITEMS_Importer = function (arrayOfDataObjects, customFormName,
             E.itemImportDataWithAllFields[i + 1].push(itemObject.submittedByGuid)
             E.itemImportDataWithMinimumFields[i + 1].push(itemObject.submittedByGuid)
 
+            allFieldHeaders.push('DisposalUserId')
+            minimumFieldsHeaders.push('DisposalUserId')
+            E.itemImportDataWithAllFields[i + 1].push(itemObject.disposalUserId)
+            E.itemImportDataWithMinimumFields[i + 1].push(itemObject.disposalUserId)
+
             allFieldHeaders.push('DisposedDate')
             minimumFieldsHeaders.push('DisposedDate')
             E.itemImportDataWithAllFields[i + 1].push(itemObject.disposedDate)

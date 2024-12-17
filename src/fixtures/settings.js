@@ -2907,8 +2907,8 @@ S.PENTEST_3 = {
     },
     admin_permissionGroup: {
         name: 'Cypress - ADMIN',
-        id: 4449,
-        startingIndexForViewPermissions: 65919,
+        id: 4587,
+        startingIndexForViewPermissions: 81974,
         get startingIndexForCreatePermissions() {
             return S.PENTEST_3.admin_permissionGroup.startingIndexForViewPermissions + 22
         },
@@ -2921,8 +2921,8 @@ S.PENTEST_3 = {
     },
     blocked_permissionGroup: {
         name: 'Cypress - Blocked',
-        id: 4450,
-        startingIndexForViewPermissions: 65992,
+        id: 4588,
+        startingIndexForViewPermissions: 82049,
         get startingIndexForCreatePermissions() {
             return S.PENTEST_3.blocked_permissionGroup.startingIndexForViewPermissions + 22
         },
@@ -2935,8 +2935,8 @@ S.PENTEST_3 = {
     },
     regularUser_permissionGroup: {
         name: 'Cypress - Regular User',
-        id: 4451,
-        startingIndexForViewPermissions: 66065,
+        id: 4589,
+        startingIndexForViewPermissions: 82124,
         get startingIndexForCreatePermissions() {
             return S.PENTEST_3.regularUser_permissionGroup.startingIndexForViewPermissions + 22
         },
@@ -3285,7 +3285,7 @@ S.chainOfCustody = {
         },
         disposal: (itemObject) => {
             return {
-                type: 'disposals',
+                type: 'Disposals',
                 date: itemObject.disposedDate,
                 issuedFrom: itemObject.disposedByName,
                 issuedTo: itemObject.disposedByName,

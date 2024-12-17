@@ -130,6 +130,7 @@ describe('Import Cases', function () {
         ui.app.log_title(this);
         let fileName = '5k_Cases_' + S.domain;
         api.auth.get_tokens(user);
+        api.auto_disposition.edit(true);
 
         D.getNewCaseData();
         E.generateDataFor_CASES_Importer([D.newCase], null, null, 5000);
@@ -142,17 +143,18 @@ describe('Import Cases', function () {
             .verify_toast_message([
                 C.toastMsgs.importComplete,
                 5000 + C.toastMsgs.recordsImported], false, 30);
-        ui.menu.click_Search__Case();
-        ui.searchCase.enter_Offense_Description(C.searchCriteria.inputFields.equals, D.case1.offenseDescription)
+         ui.menu.click_Search__Case();
+         ui.searchCase.enter_Offense_Description(C.searchCriteria.inputFields.equals, D.case1.offenseDescription)
             .enter_Created_Date(C.searchCriteria.dates.exactly, D.newCase.createdDate)
             .click_button(C.buttons.search)
-            .verify_toast_message([C.toastMsgs.resultsLimitExceededTitle, C.toastMsgs.resultsLimitExceeded('5,000')])
+            .verify_toast_title_and_message(C.toastMsgs.resultsLimitExceededTitle, C.toastMsgs.resultsLimitExceeded('5,000').toString())
     });
 
     it('I.C_5 Case Import - Precheck Only', function () {
         ui.app.log_title(this);
         let fileName = 'Case_PrecheckOnly_' + S.domain;
         api.auth.get_tokens(user);
+        api.auto_disposition.edit(true);
 
         D.generateNewDataSet();
         E.generateDataFor_CASES_Importer([D.newCase]);
