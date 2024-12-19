@@ -10,7 +10,9 @@ const C = require('../../fixtures/constants');
 let
     searchParameters = e => cy.contains('Search Parameters'),
     createdByInput = e => cy.get('[translate="CASE_CREATED_BY"]').parent().find('[ng-model="user.text"]'),
-    currentUserCheckboxForCreatedBy = e => cy.get('[ng-change="userCheckboxClicked(\'CASE_CREATED_BY\')"]'),
+    currentUserCheckboxForCreatedBy = e => cy.get('input[ng-change*="userCheckboxClicked"]').first(),
+    //currentUserCheckboxForCreatedBy = e => cy.get('[ng-change="userCheckboxClicked(\'CASE_CREATED_BY\')"]'),
+    //currentUserCheckboxForCreatedBy = e => cy.get('[class="icheckbox_square-blue"]'),
     currentUserCheckboxForCaseOfficers = e => cy.get('[ng-change="userCheckboxClicked(\'CASE_OFFICERS\')"]'),
     caseOfficersInput = e => cy.contains('Case Officer(s)').parent('div').find('input').first(),
     updateMadeByInput = e => cy.get('[translate="HS_UPDATE_MADE_BY"]').parent().find('[ng-model="user.text"]'),

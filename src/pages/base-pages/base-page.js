@@ -18,8 +18,11 @@ let
     addItem = e => cy.get('[translate="CASES.LIST.BUTTON_ADD_ITEM"]'),
     active_tab = e => cy.get('[class="tab-pane ng-scope active"]'),
     quickSearch = e => cy.get('[name="navbarSearchField"]'),
+
     quickSearchCaseTypeahead = e => cy.get('[ng-repeat="match in matches track by $index"]'),
     quickSearchCaseTypeahead_FirstOption = e => cy.get('[ng-repeat="match in matches track by $index"]').eq(0),
+    //quickSearchCaseTypeahead = e => cy.get('[ng-repeat="match in matches track by $index"]'),
+    //quickSearchCaseTypeahead = e => cy.get('[ng-if="!match.model.last && match.model.text && !match.model.first"]'),
     active_tab_title = e => cy.get('[class="ng-scope ng-isolate-scope active"]'),
     gridOptionsDropdown = e => cy.get('[ng-if="optionsToggle.isOpen"]'),
     columnVisibilityIndicatorOnOptionsDropdown = (columnName) => cy.get('[ng-if="optionsToggle.isOpen"]').contains(columnName).find('i'),
@@ -28,7 +31,8 @@ let
     modalBodySectionAboveFooter = e => cy.get('.modal-body').children('div').last(),
     sweetAlert = e => cy.get('[data-animation="pop"]'),
     typeaheadList = e => cy.get('.ui-select-choices'),
-    highlightedOptionOnTypeahead = e => cy.get('.ui-select-choices-row').last(),
+    //highlightedOptionOnTypeahead = e => cy.get('.ui-select-choices-row-inner').last(),
+    highlightedOptionOnTypeahead = e => cy.get('.ui-select-highlight').last(),
     caseOfficersOverwrite = e => cy.get('[ng-model="toggle.caseOfficersOverwrite"]'),
     tagsOverwrite = e => cy.get('[ng-model="toggle.tagsOverwrite"]'),
     tagsTypeaheadList = e => cy.get('[repeat="tagModel in allTagModels | filter: $select.search"]'),
@@ -79,8 +83,16 @@ let
     optionsOnMenuCustomization = e => cy.get('[is-open="optionsToggle.isOpen"]'),
     standardColumnsOnMenuCustomization = e => cy.get('[ng-repeat="col in getStandardFields() | orderBy:\'name | translate\'"]'),
     columnsOnMenuCustomization = e => cy.get('[ng-class="col.visible ? \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\': \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]'),
-    disabledColumnsOsOnMenuCustomization = e => cy.get('.glyphicon-remove'),
+
+    //disabledColumnsOsOnMenuCustomization = e => cy.get('[ng-class="col.visible ? \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\': \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
+   // disabledColumnsOsOnMenuCustomization = e => cy.get('[class="glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray"]'),
+   //disabledColumnsOsOnMenuCustomization = e => cy.get('[ng-class="col.visible ?\n' +
+   //     '                                                            \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\':\n' +
+    //    '                                                            \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
+
+    //disabledColumnsOsOnMenuCustomization = e => cy.get('.glyphicon-remove'),
     //disabledColumnsOsOnMenuCustomization_PENTEST = e => cy.get('[ng-class="col.visible ? \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\': \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
+
     //  disabledColumnsOsOnMenuCustomization_DEV = e => cy.get('[ng-class="col.visible ?\n' +
     //      '                                                            \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\':\n' +
     //      '                                                            \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
@@ -130,7 +142,7 @@ let
     tagsField = e => active_form().contains('Tags').parent('div'),
     //tagsField = e => cy.contains('Tags').parent('div').find('ng-transclude'),
     tagsInput = e => active_form().contains('Tags').parent('div').find('input'),
-    actionsContainer = e => cy.contains('Actions').parent('div'),
+    actionsContainer = e => cy.get('[translate="GENERAL.ACTIONS"]').parent('div'),
     case__ = e => cy.contains('Case').parent('div').find('ng-transclude'),
     status__ = e => cy.contains('Status').parent('div').find('ng-transclude'),
     recoveredAt__ = e => cy.contains('Recovered At').parent('div').find('ng-transclude'),
@@ -552,12 +564,24 @@ export default class BasePage {
                             '/api/userGroups/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + stack[1][i].replace(/\s+/g, '%20'),
                             "getUserGroupInTypeahead")
                     }
+                    if (stack[2] === "usersCF") {
+                        that.define_API_request_to_be_awaited('GET',
+                            'api/users/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + stack[1][i].replace(/\s+/g, '%20'),
+                            "getUserInTypeahead2")
+                        that.define_API_request_to_be_awaited('GET',
+                            '/api/userGroups/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + stack[1][i].replace(/\s+/g, '%20'),
+                            "getUserGroupInTypeahead2")
+                    }
 
                     stack[0]().clear().invoke('val', stack[1][i]).trigger('input')
 
                     if (stack[2] === "users/groups typeahead") {
                         that.wait_response_from_API_call("getUserInTypeahead")
                         that.wait_response_from_API_call("getUserGroupInTypeahead")
+                    }
+                    if (stack[2] === "usersCF") {
+                        that.wait_response_from_API_call("getUserInTypeahead2")
+                        that.wait_response_from_API_call("getUserGroupInTypeahead2")
                     }
 
                     cy.wait(200)
@@ -1852,14 +1876,16 @@ export default class BasePage {
             } else if (['Tags'].some(v => label === v)) {
                 this.turnOnToggleEnterValueAndWaitApiRequestToFinish(label, value, 'tagTypeahead')
 
-            } else if (['Status'].some(v => label === v)) {
+             }
+                else if (['Status'].some(v => label === v)) {
                 this.turnOnToggleAndReturnParentElement(label)
                     .then(() => {
                         if (value === 'Closed') {
                             parentContainerFoundByInnerLabelOnModal(labelsArray[i]).find('[title="Toggle Open/Closed"]').click();
                         }
                     });
-            } else if (['Review Date Notes'].some(v => label === v)) {
+           }
+        else if (['Review Date Notes'].some(v => label === v)) {
                 this.turnOnToggleAndEnterValueInTextarea(label, value)
 
             } else if (['Case Officer(s)'].some(v => label === v)) {
@@ -1998,7 +2024,8 @@ export default class BasePage {
             ]);
 
         this.enter_values_on_multi_select_typeahead_fields([
-            [user_userGroup_OnCustomForm, dataObject.custom_user_or_group_names, userAndUserGroupTypeaheadOption]
+           // [user_userGroup_OnCustomForm, dataObject.custom_user_or_group_names, userAndUserGroupTypeaheadOption]
+            [user_userGroup_OnCustomForm, dataObject.custom_user_or_group_names, "usersCF"]
         ])
 
         if (dataObject.custom_selectListOption) {

@@ -372,7 +372,7 @@ describe('Add Item', function () {
             D.newItem.category = 'Currency'
             ui.menu.click_Add__Item()
             ui.addItem.populate_all_fields_on_both_forms(D.newItem)
-                .enter_value_to_input_field('Currency Total', 0)
+                //.enter_value_to_input_field('Currency Total', 0)
                 .select_post_save_action(C.postSaveActions.viewAddedItem)
                 .click_Save(D.newItem)
                 .verify_toast_message_(D.newCase)

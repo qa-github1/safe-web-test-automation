@@ -531,6 +531,7 @@ D.getEditedUserData = function () {
         middleName: 'edit_M' + randomNo,
         lastName: 'edit_L' + randomNo,
         fullName: 'edit_F' + randomNo + ' ' + 'edit_M' + randomNo + ' ' + 'edit_L' + randomNo,
+        personnelNumber: randomNo,
         email: 'qa+edit_' + randomNo + '@trackerproducts.com',
         emailEncoded: 'qa+edit_' + randomNo + '@trackerproducts.&#173;com',
         mobilePhone: '+1 270-543-3344',

@@ -11,7 +11,7 @@ let powerUser2 = S.userAccounts.basicUser;
 let admin_userGroup = S.selectedEnvironment.admin_userGroup;
 let readOnly_userGroup = S.selectedEnvironment.readOnly_userGroup;
 
-//we need to modify this spec because task template now cannot be deleted only deactivated
+//we need to modify this spec because task template now cannot be deleted, only deactivated
 describe('Add Task', function () {
 
     before(function () {

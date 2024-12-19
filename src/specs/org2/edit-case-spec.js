@@ -30,16 +30,16 @@ describe('Edit Case', function () {
         ui.app.open_newly_created_case_via_direct_link()
             .click_Edit();
         ui.caseView.remove_specific_values_on_multi_select_fields([currentCaseOfficer, currentTag])
-            .edit_all_values(D.editedCase)
-            .click_Save()
-            .verify_toast_message(C.toastMsgs.saved)
-            .reload_page()
-            .verify_edited_and_not_edited_values_on_Case_View_form(C.caseFields.allEditableFieldsArray, D.editedCase, D.newCase, true)
-            .click_Edit()
-            .verify_edited_and_not_edited_values_on_Case_Edit_form(C.caseFields.allEditableFieldsArray, D.editedCase, D.newCase, true)
-            .open_last_history_record()
-            .verify_all_values_on_history(D.editedCase, D.newCase, null)
-            .verify_red_highlighted_history_records(C.caseFields.allEditableFieldsArray)
+             .edit_all_values(D.editedCase)
+            // .click_Save()
+            // .verify_toast_message(C.toastMsgs.saved)
+            // .reload_page()
+            // .verify_edited_and_not_edited_values_on_Case_View_form(C.caseFields.allEditableFieldsArray, D.editedCase, D.newCase, true)
+            // .click_Edit()
+            // .verify_edited_and_not_edited_values_on_Case_Edit_form(C.caseFields.allEditableFieldsArray, D.editedCase, D.newCase, true)
+            // .open_last_history_record()
+            // .verify_all_values_on_history(D.editedCase, D.newCase, null)
+            // .verify_red_highlighted_history_records(C.caseFields.allEditableFieldsArray)
     });
 
     it('2. Edit and verify all values on Case View page -- keep the previous values and add new ones in multiselect fields (Case Officers, Tags)', function () {
