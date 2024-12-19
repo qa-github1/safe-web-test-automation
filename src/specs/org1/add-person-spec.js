@@ -136,7 +136,7 @@ describe('Add Person', function () {
     })
 
     context('3. Add Person with Custom Form', function () {
-        it('3.1. --- with required Custom Form filled out, all required fields on Form', function () {
+        it.only('3.1. --- with required Custom Form filled out, all required fields on Form', function () {
             set_preconditions_for_adding_Person_with_reduced_number_of_fields(this);
             api.cases.get_most_recent_case();
             D.newPerson.personType = D.newPerson.personTypelinkedToRequiredForm1

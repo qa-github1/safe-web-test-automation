@@ -2493,8 +2493,8 @@ S.PENTEST_2 = {
         orgAndOfficeName: "Web Test Automtion #2 - Cypress Office 1"
     },
     office_2: {
-        id: 137,
-        name: "Web Test Automtion #2 - Cypress Office 2"
+        id: 1123,
+        name: "Cypress Office 2"
     },
     org2: {
         office_1: {
@@ -2528,7 +2528,9 @@ S.PENTEST_2 = {
         },
         powerUser: {
             id: 43277,
-            guid: 'a9e64052-0d55-ed11-832b-021f02b7478f'
+            guid: 'a9e64052-0d55-ed11-832b-021f02b7478f',
+            email: 'qa+org2_poweruser@trackerproducts.com',
+            name: 'Power User'
         },
         clpUser: {
             id: 43529,

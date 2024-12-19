@@ -31,7 +31,8 @@ let
     modalBodySectionAboveFooter = e => cy.get('.modal-body').children('div').last(),
     sweetAlert = e => cy.get('[data-animation="pop"]'),
     typeaheadList = e => cy.get('.ui-select-choices'),
-    highlightedOptionOnTypeahead = e => cy.get('.ui-select-choices-row').last(),
+    //highlightedOptionOnTypeahead = e => cy.get('.ui-select-choices-row-inner').last(),
+    highlightedOptionOnTypeahead = e => cy.get('.ui-select-highlight').last(),
     caseOfficersOverwrite = e => cy.get('[ng-model="toggle.caseOfficersOverwrite"]'),
     tagsOverwrite = e => cy.get('[ng-model="toggle.tagsOverwrite"]'),
     tagsTypeaheadList = e => cy.get('[repeat="tagModel in allTagModels | filter: $select.search"]'),
@@ -89,7 +90,7 @@ let
    //     '                                                            \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\':\n' +
     //    '                                                            \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
 
-    disabledColumnsOsOnMenuCustomization = e => cy.get('.glyphicon-remove'),
+    //disabledColumnsOsOnMenuCustomization = e => cy.get('.glyphicon-remove'),
     //disabledColumnsOsOnMenuCustomization_PENTEST = e => cy.get('[ng-class="col.visible ? \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\': \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
 
     //  disabledColumnsOsOnMenuCustomization_DEV = e => cy.get('[ng-class="col.visible ?\n' +
