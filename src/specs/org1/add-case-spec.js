@@ -424,7 +424,7 @@ describe('Add Case', function () {
                 api.org_settings.set_Org_Level_Case_Number_formatting(false, false, false)
             });
 
-            it.only('7.1 verify all values are properly saved to the custom form -single user in custom User/User Group field', function () {
+            it('7.1 verify all values are properly saved to the custom form -single user in custom User/User Group field', function () {
                 ui.app.log_title(this);
 
                 api.auth.get_tokens(orgAdmin);
