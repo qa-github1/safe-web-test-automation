@@ -2870,7 +2870,7 @@ S.PENTEST_3 = {
         closedDate: '12/29/2022',
     },
     oldActiveCase: {
-        id: 7743099,
+        id: 7743205,
         caseNumber: 'AutomatedTest-Active Case',
         createdDate: '12/28/2022',
         offenseDate: '12/20/2022',
