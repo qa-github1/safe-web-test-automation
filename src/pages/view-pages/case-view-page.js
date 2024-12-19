@@ -37,8 +37,8 @@ let
     offenseDateInput = e => cy.get('[ng-model="caseEdit.offenseDate"]').find('[ng-model="ngModel"]'),
     closedDateInput = e => cy.get('[ng-model="caseEdit.closedDate"]').find('[ng-model="ngModel"]'),
     reviewDateInput = e => cy.get('[ng-model="caseEdit.reviewDate"]').find('[ng-model="ngModel"]'),
-    caseOfficerField = e => cy.get('#caseOfficers'),
-    caseOfficerInput = e => cy.get('#caseOfficers').find('input'),
+    caseOfficerField = e => cy.get('[name="caseOfficers"]'),
+    caseOfficerInput = e => cy.get('[name="caseOfficers"]').find('input'),
     caseOfficerEdit = e => cy.get('[id="caseOfficersEdit"]').find('input'),
     offenseLocationTypeahead = e => cy.root().parents('html').find('.pac-item').eq(0),
     requiredElement = e => cy.get(`label[for="${e}"]`).siblings().find('[ng-message="required"]'),
@@ -54,7 +54,7 @@ let
     offenseTypeDropdown__ = e => cy.contains('Offense Type').parent('div').find('select'),
     reviewDate__ = e => cy.contains('Review Date').parent('div').find('ng-transclude'),
     reviewDateNotes__ = e => cy.contains('Review Date Notes').parent('div').find('textarea'),
-    statusToggle_  = e => cy.contains('Status').parent('div').find('.toggle').find('.active'),
+    statusToggle_  = e => cy.contains('Status').parent('div').find('.toggle'),
     tagsField = e => cy.get('[tagging="addNew"]')
 
 
@@ -316,15 +316,25 @@ export default class CaseViewPage extends BaseViewPage {
         return this;
     };
 
-    edit_all_values(newCaseObject) {
-
+    edit_Status(setToActive) {
+        let that = this
         edit_form().within(($list) => {
-
-            statusToggle_().invoke('text').then(function (statusToBeTriggeredOnClick){
-                if ((statusToBeTriggeredOnClick === 'Closed' && !newCaseObject.active) || (statusToBeTriggeredOnClick === 'Open' && newCaseObject.active)){
-                    statusToggle_().click()
+            statusToggle_().then(($el) => {
+                if ($el.hasClass('off') && setToActive || !($el.hasClass('off')) && !setToActive) {
+                    statusToggle_().click();
                 }
-            })
+            });
+        })
+        return this;
+    };
+
+    edit_all_values(newCaseObject) {
+        edit_form().within(($list) => {
+            statusToggle_().then(($el) => {
+                if ($el.hasClass('off') && newCaseObject.active || !($el.hasClass('off')) && !newCaseObject.active) {
+                    statusToggle_().click();
+                }
+            });
             this.wait_element_to_be_visible(caseNumberInput_enabled);
 
             this.edit_fields_if_new_values_provided(
@@ -340,7 +350,7 @@ export default class CaseViewPage extends BaseViewPage {
 
             this.enter_values_on_multi_select_typeahead_fields(
                 [
-                    [caseOfficerInput, newCaseObject.caseOfficers, this.caseOfficerTypeahead],
+                    [caseOfficerInput, newCaseObject.caseOfficers, "users/groups typeahead"],
                     [tagsInput, newCaseObject.tags, this.lastTagOnTypeahead],
                 ]);
 

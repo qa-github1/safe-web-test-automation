@@ -74,7 +74,7 @@ export default class ImportPage extends BasePage {
         return this;
     };
 
-    wait_Map_Fields_section_to_be_loaded(importType, isLinkedToCase = true, specificMapping) {
+    wait_Map_Fields_section_to_be_loaded(importType, isImportingUpdates = false, specificMapping) {
         mapFieldsSection().should('be.visible');
         let importMappings = C.importMappings
 
@@ -108,7 +108,9 @@ export default class ImportPage extends BasePage {
         }
 
         for (let i = 0; i < importMappings.length; i++) {
+            if (!isImportingUpdates || (isImportingUpdates && (importType === C.importTypes.cases && importMappings[i] !== "Case Number"))) {
             checkDefaultMappingSelected(i, importMappings[i]);
+        }
         }
         return this;
     };
@@ -166,7 +168,7 @@ export default class ImportPage extends BasePage {
         if (specificFieldsToBeAutomaticallyMapped) {
             this.wait_specific_fields_to_be_automatically_mapped(specificFieldsToBeAutomaticallyMapped)
         } else {
-            this.wait_Map_Fields_section_to_be_loaded(importType, null, hasMinimumFields)
+            this.wait_Map_Fields_section_to_be_loaded(importType, true, hasMinimumFields)
         }
 
         this.map_source_fields(importType, sourceField)

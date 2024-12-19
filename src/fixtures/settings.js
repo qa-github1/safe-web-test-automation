@@ -2967,15 +2967,15 @@ S.PENTEST_3 = {
     // },
     admin_userGroup: {
         name: 'Cypress Admin Group',
-        id: 2903
+        id: 3138
     },
     blocked_userGroup: {
         name: 'Cypress Blocked Group',
-        id: 2904
+        id: 3139
     },
     readOnly_userGroup: {
         name: 'Cypress ReadOnly Group',
-        id: 2905
+        id: 3140
     },
     orgTag1: {tagModelId: 16827, name: 'sensitive information', color: "#ad2355", tagUsedBy: 1},
     orgTag2: {tagModelId: 16828, name: 'eligible for disposal', color: "#4b9b62", tagUsedBy: 1},

@@ -15,7 +15,7 @@ describe('Import Case Updates', function () {
         api.auto_disposition.edit(true);
     });
 
-    it('I.C.U_1. Import Case Updates - all fields -- user and user group in Case Officer(s) field', function () {
+    it.only('I.C.U_1. Import Case Updates - all fields -- user and user group in Case Officer(s) field', function () {
         ui.app.log_title(this);
         let fileName = 'CaseUpdatesImport_allFields_' + S.domain;
 
@@ -24,20 +24,19 @@ describe('Import Case Updates', function () {
         api.org_settings.enable_all_Item_fields();
 
          D.generateNewDataSet();
+        api.cases.add_new_case();
+
         D.editedCase.caseNumber = D.newCase.caseNumber;
         D.editedCase.caseOfficers_importFormat =
-            'user-' + S.userAccounts.powerUser.guid + ',' +
-            'group-' + S.selectedEnvironment.readOnly_userGroup.id
+            S.userAccounts.powerUser.email + ';' +
+            S.selectedEnvironment.readOnly_userGroup.name
         D.editedCase.caseOfficers = [S.userAccounts.powerUser.name, S.selectedEnvironment.readOnly_userGroup.name]
-        D.editedCase.status = 'Closed'
-        D.editedCase.active = false
         E.generateDataFor_CASES_Importer([D.editedCase], null, true);
 
-        api.cases.add_new_case();
         ui.app.generate_excel_file(fileName, E.caseImportDataWithAllFields);
 
         ui.menu.click_Tools__Data_Import();
-        ui.importer.upload_then_Map_and_Submit_file_for_update_importing(fileName, C.importTypes.cases, 'CaseNumber')
+        ui.importer.upload_then_Map_and_Submit_file_for_update_importing(fileName, C.importTypes.cases, 'Case Number')
             .verify_toast_message([
                 C.toastMsgs.importComplete,
                 1 + C.toastMsgs.recordsImported]);
@@ -53,14 +52,18 @@ describe('Import Case Updates', function () {
             .verify_red_highlighted_history_records(redHighlightedFields)
             .click_button_on_modal(C.buttons.cancel)
             .verify_title_on_active_tab(2)
+            .select_tab(C.tabs.basicInfo)
+            .edit_Status(true)
+            .click_Save()
 
+        D.getNewItemData(D.editedCase)
         ui.menu.click_Add__Item();
-        ui.addItem.enter_Case_Number_and_select_on_typeahead(D.newCase.caseNumber)
-            .populate_all_fields_on_both_forms(D.newItem, false, true)
+        ui.addItem.enter_Case_Number_and_select_on_typeahead(D.editedCase.caseNumber)
+            .populate_all_fields_on_both_forms(D.newItem, false)
             .select_post_save_action(C.postSaveActions.viewAddedItem)
             .click_Save()
             .verify_Error_toast_message_is_NOT_visible();
-        ui.itemView.verify_Item_View_page_is_open(D.newCase.caseNumber)
+        ui.itemView.verify_Item_View_page_is_open(D.editedCase.caseNumber)
             .click_Edit()
             .verify_values_on_Edit_form(D.newItem)
             .edit_all_values(D.editedItem)

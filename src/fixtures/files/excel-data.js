@@ -46,7 +46,7 @@ E.generateDataFor_CASES_Importer = function (arrayOfDataObjects, customFormName,
     // Set headers for Excel file
     let allFieldHeaders = [
         "Active",
-        "CaseNumber",
+        "Case Number",
         "CreatorId",
         "CaseOfficerIds",
         "OfficeID",
@@ -62,7 +62,7 @@ E.generateDataFor_CASES_Importer = function (arrayOfDataObjects, customFormName,
     ]
     let minimumFieldsHeaders = [
         "Active",
-        "CaseNumber",
+        "Case Number",
         "CreatorId",
         "CaseOfficerIds",
         "OfficeID",
@@ -93,8 +93,10 @@ E.generateDataFor_CASES_Importer = function (arrayOfDataObjects, customFormName,
         let caseObject = arrayOfDataObjects[i] || arrayOfDataObjects[0]
         D['case' + i] = Object.assign({}, caseObject);
 
-        if (!importingCaseUpdates) D['case' + i].caseNumber = 'imported_' + caseObject.caseNumber + '_' + i;
-        if (caseObject.offenseDescription) D['case' + i].offenseDescription = 'imported_' + caseObject.caseNumber
+        if (!importingCaseUpdates) {
+            D['case' + i].caseNumber = 'imported_' + caseObject.caseNumber + '_' + i;
+            if (caseObject.offenseDescription) D['case' + i].offenseDescription = 'imported_' + caseObject.caseNumber
+        }
         let tags = caseObject.tags ? caseObject.tags[0] : ''
         let reviewDate = caseObject.reviewDate || ''
         let closedDate = caseObject.closedDate || ''
@@ -132,7 +134,7 @@ E.generateDataFor_CASES_Importer = function (arrayOfDataObjects, customFormName,
             E.caseImportDataWithMinimumFields[i + 1] = E.caseImportDataWithMinimumFields[i + 1].concat(customFieldsValues);
         }
 
-        if(numberOfRecords === 1){
+        if(numberOfRecords === 1 && !importingCaseUpdates ){
             D.newCase = Object.assign({},  D['case' + 0]);
         }
     }

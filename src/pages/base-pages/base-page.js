@@ -544,7 +544,7 @@ export default class BasePage {
             if (stack[1]) {
                 // if there are multiple values in array, repeat the same action to enter all of them
                 for (let i = 0; i < stack[1].length; i++) {
-                    if (stack[2] === "users") {
+                    if (stack[2] === "users/groups typeahead") {
                         that.define_API_request_to_be_awaited('GET',
                             'api/users/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + stack[1][i].replace(/\s+/g, '%20'),
                             "getUserInTypeahead")
@@ -555,13 +555,14 @@ export default class BasePage {
 
                     stack[0]().clear().invoke('val', stack[1][i]).trigger('input')
 
-                    if (stack[2] === "users") {
+                    if (stack[2] === "users/groups typeahead") {
                         that.wait_response_from_API_call("getUserInTypeahead")
                         that.wait_response_from_API_call("getUserGroupInTypeahead")
                     }
 
+                    cy.wait(200)
                     highlightedOptionOnTypeahead().click({force: true})
-                    cy.wait(100)
+                    cy.wait(200)
 
                 }
             }
