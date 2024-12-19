@@ -158,7 +158,7 @@ describe('Cases Search', function () {
 
         context('1.2 Created Date', function () {
 
-            it('1.2.1 before', function () {
+            it.only('1.2.1 before', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 D.generateNewDataSet()

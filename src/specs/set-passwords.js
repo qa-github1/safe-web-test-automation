@@ -58,7 +58,7 @@ for (var i = Cypress.env('runPreconditionForSpecificEnv') ? 2 : 0; i < 3; i++) {
                 }
 
                 cy.log('*********************************************    ' +
-                    'Changing paswsword for all accounts on ' + S.domain + ', Org Num: ' +
+                    'Changing password for all accounts on ' + S.domain + ', Org Num: ' +
                     S.orgNum + '     *********************************************', 'cyan', 'green');
 
                 S.selectedEnvironment = S.setEnvironmentProperties(S.orgNum)

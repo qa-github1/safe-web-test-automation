@@ -84,7 +84,7 @@ let
     columnsOnMenuCustomization = e => cy.get('[ng-class="col.visible ? \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\': \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]'),
 
     //disabledColumnsOsOnMenuCustomization = e => cy.get('[ng-class="col.visible ? \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\': \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
-    disabledColumnsOsOnMenuCustomization = e => cy.get('[class="glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray"]'),
+   // disabledColumnsOsOnMenuCustomization = e => cy.get('[class="glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray"]'),
    //disabledColumnsOsOnMenuCustomization = e => cy.get('[ng-class="col.visible ?\n' +
    //     '                                                            \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\':\n' +
     //    '                                                            \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
@@ -563,12 +563,24 @@ export default class BasePage {
                             '/api/userGroups/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + stack[1][i].replace(/\s+/g, '%20'),
                             "getUserGroupInTypeahead")
                     }
+                    if (stack[2] === "usersCF") {
+                        that.define_API_request_to_be_awaited('GET',
+                            'api/users/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + stack[1][i].replace(/\s+/g, '%20'),
+                            "getUserInTypeahead2")
+                        that.define_API_request_to_be_awaited('GET',
+                            '/api/userGroups/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + stack[1][i].replace(/\s+/g, '%20'),
+                            "getUserGroupInTypeahead2")
+                    }
 
                     stack[0]().clear().invoke('val', stack[1][i]).trigger('input')
 
                     if (stack[2] === "users") {
                         that.wait_response_from_API_call("getUserInTypeahead")
                         that.wait_response_from_API_call("getUserGroupInTypeahead")
+                    }
+                    if (stack[2] === "usersCF") {
+                        that.wait_response_from_API_call("getUserInTypeahead2")
+                        that.wait_response_from_API_call("getUserGroupInTypeahead2")
                     }
 
                     highlightedOptionOnTypeahead().click({force: true})
@@ -1862,14 +1874,16 @@ export default class BasePage {
             } else if (['Tags'].some(v => label === v)) {
                 this.turnOnToggleEnterValueAndWaitApiRequestToFinish(label, value, 'tagTypeahead')
 
-            } else if (['Status'].some(v => label === v)) {
+             }
+                else if (['Status'].some(v => label === v)) {
                 this.turnOnToggleAndReturnParentElement(label)
                     .then(() => {
                         if (value === 'Closed') {
                             parentContainerFoundByInnerLabelOnModal(labelsArray[i]).find('[title="Toggle Open/Closed"]').click();
                         }
                     });
-            } else if (['Review Date Notes'].some(v => label === v)) {
+           }
+        else if (['Review Date Notes'].some(v => label === v)) {
                 this.turnOnToggleAndEnterValueInTextarea(label, value)
 
             } else if (['Case Officer(s)'].some(v => label === v)) {
@@ -2008,7 +2022,8 @@ export default class BasePage {
             ]);
 
         this.enter_values_on_multi_select_typeahead_fields([
-            [user_userGroup_OnCustomForm, dataObject.custom_user_or_group_names, userAndUserGroupTypeaheadOption]
+           // [user_userGroup_OnCustomForm, dataObject.custom_user_or_group_names, userAndUserGroupTypeaheadOption]
+            [user_userGroup_OnCustomForm, dataObject.custom_user_or_group_names, "usersCF"]
         ])
 
         if (dataObject.custom_selectListOption) {
