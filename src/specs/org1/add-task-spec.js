@@ -23,32 +23,14 @@ describe('Add Task', function () {
 
     context('1.1 Org Admin', function () {
 
-        xit('1.1.1 ' +
-            'Add task template for type + subtype' +
-            '-- and add task with required fields only - Unassigned' +
+        it('1.1.1 ' +
+           'Add task with required fields only - Unassigned' +
             '--keep template content  -- verify values on grid' +
-            '--search for task on the grid' +
-            '--delete task template',
+            '--search for task on the grid',
             function () {
                 ui.app.clear_gmail_inbox(S.gmailAccount);
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
-                D.getNewTaskTemplateData()
-
-                 api.tasks.delete_all_task_templates();
-                // add task template
-                 ui.menu.click_Settings__Task_Settings()
-                    .click('Task Templates')
-                   .click_button_on_active_tab('Add')
-                ui.modal
-                    .select_dropdown_option('Task Type', D.newTaskTemplate.type)
-                    .select_dropdown_option('Sub Type', D.newTaskTemplate.subtype)
-                    .enter_value_in_multi_select_typeahead_field('Task Actions', D.newTaskTemplate.taskActions)
-                    .enter_value_to_textarea_field('Title', D.newTaskTemplate.title)
-                    .enter_value_to_textarea_field('Message', D.newTaskTemplate.message)
-                    .enter_value_to_input_field('Due Date', D.newTaskTemplate.dueDateDays, true)
-                    .click_button('Ok')
-                    .verify_toast_message('Saved')
 
                 // add task -- keep template content
                 D.getNewTaskData(null, null, D.newTaskTemplate.dueDateDays);

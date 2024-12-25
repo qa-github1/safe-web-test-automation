@@ -80,48 +80,19 @@ export default class ImportPage extends BasePage {
 
         switch (importType) {
             case C.importTypes.cases:
-
-
-                for(let i =0; i<6; i++){
-                    let values = [
-                        'Active',
-                        'Case Number',
-                        'Created By [User Email or GUID]',
-                        'Case Officer(s) [UserEmail OR userGUID, GroupName OR GroupID]',
-                        'Office [Name or GUID]',
-                        'Offense Type',
-                        'Offense Description',
-                        'Offense Date',
-                        'Offense Location',
-                        'Tags',
-                        'Created Date',
-                        'Review Date',
-                        'Review Date Notes',
-                        'Closed Date',
-
-                    ]
-                    checkDefaultMappingSelected(i, values[i]);
-                }
-
-                // checkDefaultMappingSelected('Active', '108');
-                // checkDefaultMappingSelected('Case Number', '101');
-                // checkDefaultMappingSelected('Case Officer(s) [UserEmail OR userGUID, GroupName OR GroupID]', '102');
-                // checkDefaultMappingSelected('Offense Location', '105');
-                // checkDefaultMappingSelected('Office [Name or GUID]', '109');
-                // checkDefaultMappingSelected('Created By edited [User Email or GUID]', '110');
-
-
                 importMappings = specificMapping || importMappings.allCaseFields
-
                 break;
+
             case C.importTypes.items:
                 importMappings = specificMapping || importMappings.checkedInItemFields
                 break;
-            case C.importTypes.people:
 
+            case C.importTypes.people:
                 break;
+
             case C.importTypes.users:
                 break;
+
             case C.importTypes.notes:
 
                 break;

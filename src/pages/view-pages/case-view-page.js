@@ -350,7 +350,7 @@ export default class CaseViewPage extends BaseViewPage {
 
             this.enter_values_on_multi_select_typeahead_fields(
                 [
-                    [caseOfficerInput, newCaseObject.caseOfficers, "users/groups typeahead"],
+                    [caseOfficerInput, newCaseObject.caseOfficers, "users/groups"],
                     [tagsInput, newCaseObject.tags, this.lastTagOnTypeahead],
                 ]);
 

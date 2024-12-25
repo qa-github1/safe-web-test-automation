@@ -90,12 +90,12 @@ let
     //     '                                                            \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\':\n' +
     //    '                                                            \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
 
-    //disabledColumnsOsOnMenuCustomization = e => cy.get('.glyphicon-remove'),
+    disabledColumnsOsOnMenuCustomization = e => cy.get('.glyphicon-remove'),
     //disabledColumnsOsOnMenuCustomization_PENTEST = e => cy.get('[ng-class="col.visible ? \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\': \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
 
-    //  disabledColumnsOsOnMenuCustomization_DEV = e => cy.get('[ng-class="col.visible ?\n' +
-    //      '                                                            \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\':\n' +
-    //      '                                                            \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
+     //disabledColumnsOsOnMenuCustomization_DEV = e => cy.get('[ng-class="col.visible ?\n' +
+     //    '                                                            \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\':\n' +
+     //    '                                                            \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
     enabledColumnsOnMenuCustomization = e => cy.get('.glyphicon-ok'),
     pageSizeAndColumnsContianer = e => cy.get('.grid-menu-header').eq(1),
     //  resultsTableHeader = (tableIndex = 0) => cy.get('.table-striped').eq(tableIndex).find('thead'),
@@ -383,7 +383,7 @@ export default class BasePage {
         cy.getLocalStorage("recentCase").then(recentCase => {
             toastMessage(timeoutInMiliseconds).should('be.visible');
             toastMessage(timeoutInMiliseconds).invoke('text').then(function (toastMsg) {
-                toastMessage().click()
+                toastMessage().click({ multiple: true })
                 toastMessage().should('not.exist');
                 if (text instanceof Array) {
                     text.forEach(element =>
@@ -556,7 +556,7 @@ export default class BasePage {
             if (stack[1]) {
                 // if there are multiple values in array, repeat the same action to enter all of them
                 for (let i = 0; i < stack[1].length; i++) {
-                    if (["users/groups typeahead", "usersCF"].includes(stack[2])) {
+                    if (["users/groups", "usersCF"].includes(stack[2])) {
                         that.define_API_request_to_be_awaited('GET',
                             'api/users/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + stack[1][i].replace(/\s+/g, '%20'),
                             "getUserInTypeahead")
@@ -565,9 +565,14 @@ export default class BasePage {
                             "getUserGroupInTypeahead")
                     }
 
-                    stack[0]().clear().invoke('val', stack[1][i]).trigger('input')
+                    if (typeof stack[0] === 'string' || stack[0] instanceof String){
+                        typeaheadInputField(stack[0]).clear().invoke('val', stack[1][i]).trigger('input')
+                    }
+                    else{
+                        stack[0]().clear().invoke('val', stack[1][i]).trigger('input')
+                    }
 
-                    if (["users/groups typeahead", "usersCF"].includes(stack[2])) {
+                    if (["users/groups", "usersCF"].includes(stack[2])) {
                         that.wait_response_from_API_call("getUserInTypeahead")
                         that.wait_response_from_API_call("getUserGroupInTypeahead")
                     }
@@ -1018,7 +1023,7 @@ export default class BasePage {
         if (!alias) {
             alias = partOfRequestUrl;
         }
-        cy.intercept(methodType, '**' + `${partOfRequestUrl}`, (req) => {
+        cy.intercept(methodType, '**' + `${partOfRequestUrl}` + '**' , (req) => {
             req.continue(); // Explicitly pass through to backend
         }).as(alias);
         return this;

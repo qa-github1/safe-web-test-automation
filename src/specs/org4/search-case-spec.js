@@ -31,11 +31,11 @@ const orgAdmin = S.getUserData(S.userAccounts.orgAdmin),
     currentMonth = helper.getCurrentMonthNumber(),
     currentYear = helper.getCurrentMonthYear();
 
-let case1 = {},
-    case2 = {},
-    case3 = {},
-    case4 = {},
-    case5 = S.selectedEnvironment.oldActiveCase
+    D.case0 = {},
+    D.case1 = {},
+    D.case2 = {},
+    D.case3 = {},
+    D.case4 = S.selectedEnvironment.oldActiveCase
 
 describe('Cases Search', function () {
 
@@ -48,9 +48,9 @@ describe('Cases Search', function () {
         // all imported cases will be Closed
         D.newCase.active = false
         D.newCase.status = 'Closed'
-        case2 = Object.assign({}, D.newCase)
-        case3 = Object.assign({}, D.newCase)
-        case4 = Object.assign({}, D.newCase)
+        D.case1 = Object.assign({}, D.newCase)
+        D.case2 = Object.assign({}, D.newCase)
+        D.case3 = Object.assign({}, D.newCase)
 
         D.newCase = {
             caseNumber: 'searchCase1_' + S.currentDateAndTime,
@@ -78,17 +78,17 @@ describe('Cases Search', function () {
         D.newCase.createdBy = D.newUser.fullName
         api.users.update_current_user_settings('newUser')
 
-        case1 = Object.assign({}, D.newCase)
-        api.cases.add_new_case(case1.caseNumber);
+        D.case0 = Object.assign({}, D.newCase)
+        api.cases.add_new_case(D.case0.caseNumber);
 
         //last week
-        case2.caseNumber = 'searchCase_X.X.9_' + S.currentDateAndTime
-        case2.createdDate = case2.offenseDate = case2.reviewDate = case2.closedDate
+        D.case1.caseNumber = 'searchCase_X.X.9_' + S.currentDateAndTime
+        D.case1.createdDate = D.case1.offenseDate = D.case1.reviewDate = D.case1.closedDate
             = helper.getDateInPastInSpecificFormat('mm/dd/yyyy', 7)
 
         //last month
-        case3.caseNumber = 'searchCase_X.X.11_' + S.currentDateAndTime
-        case3.createdDate = case3.offenseDate = case3.reviewDate = case3.closedDate =
+        D.case2.caseNumber = 'searchCase_X.X.11_' + S.currentDateAndTime
+        D.case2.createdDate = D.case2.offenseDate = D.case2.reviewDate = D.case2.closedDate =
             (currentMonth > 1) ?
                 (helper.getSpecificDateInSpecificFormat('mm/dd/yyyy', (currentMonth - 1) + '/1/' + currentYear)):
                     //+ ' 10 am') :
@@ -96,12 +96,12 @@ describe('Cases Search', function () {
                     //+ ' 10 am')
 
         //last year
-        case4.caseNumber = 'searchCase_X.X.13_' + S.currentDateAndTime
-        case4.createdDate = case4.offenseDate = case4.reviewDate = case4.closedDate
+        D.case3.caseNumber = 'searchCase_X.X.13_' + S.currentDateAndTime
+        D.case3.createdDate = D.case3.offenseDate = D.case3.reviewDate = D.case3.closedDate
             = helper.getSpecificDateInSpecificFormat('mm/dd/yyyy', '1/1/' + (currentYear - 1))
             //+ ' 10 am'
 
-        E.generateDataFor_CASES_Importer([case2, case3, case4], 3);
+        E.generateDataFor_CASES_Importer([D.case1, D.case2, D.case3]);
         cy.generate_excel_file('Cases_forTestingSearchParameters', E.caseImportDataWithAllFields);
         ui.menu.click_Tools__Data_Import();
         ui.importer.upload_then_Map_and_Submit_file_for_importing('Cases_forTestingSearchParameters', C.importTypes.cases)
@@ -121,7 +121,7 @@ describe('Cases Search', function () {
                 ui.searchCase
                     .enter_Created_By(equals, D.newUser.email)
                     .click_Search()
-                    .verify_data_on_the_grid(case1);
+                    .verify_data_on_the_grid(D.case0);
             });
 
             it('1.1.2 "Created By" equals {current user - checkbox}', function () {
@@ -131,7 +131,7 @@ describe('Cases Search', function () {
                 ui.searchCase
                     .select_current_user_checkbox_for_Created_By(equals)
                     .click_Search()
-                    .verify_content_of_first_row_in_results_table(case1.caseNumber);
+                    .verify_content_of_first_row_in_results_table(D.case0.caseNumber);
             });
 
             it('1.1.3 "Created By" equals {email of the user (NOT current user) who created a case}', function () {
@@ -141,7 +141,7 @@ describe('Cases Search', function () {
                 ui.searchCase
                     .enter_Created_By(equals, D.newUser.email)
                     .click_Search()
-                    .verify_content_of_first_row_in_results_table(case1.caseNumber);
+                    .verify_content_of_first_row_in_results_table(D.case0.caseNumber);
             });
 
             it('1.1.4 "Created By" not equals {email of the current user who did not create a case}', function () {
@@ -152,52 +152,60 @@ describe('Cases Search', function () {
                     .select_current_user_checkbox_for_Created_By(notEquals)
                     .enter_Case_Number(equals, D.newCase.caseNumber)
                     .click_Search()
-                    .verify_content_of_first_row_in_results_table(case1.caseNumber);
+                    .verify_content_of_first_row_in_results_table(D.case0.caseNumber);
             });
         });
 
         context('1.2 Created Date', function () {
 
-            it.only('1.2.1 before', function () {
+            it('1.2.1 before', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 D.generateNewDataSet()
                 ui.menu.click_Search__Case();
                 let date = helper.getDateAfterXDaysFromSpecificDate(C.currentDateTimeFormat.mask, S.selectedEnvironment.oldActiveCase.createdDate, 1)
-                ui.searchCase.enter_Created_Date(before_, date)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case4.caseNumber)
+                    .enter_Created_Date(before_, date)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
-                    .verify_content_of_first_row_in_results_table(case5.caseNumber)
+                    .verify_content_of_first_row_in_results_table(D.case4.caseNumber)
             });
 
             it('1.2.2 after', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Created_Date(after, S.yesterdaysDate)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case0.caseNumber)
+                    .enter_Created_Date(after, S.yesterdaysDate)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
-                    .verify_content_of_first_row_in_results_table(case1.caseNumber)
+                    .verify_content_of_first_row_in_results_table(D.case0.caseNumber)
             });
 
             it('1.2.3 between', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Created_Date(between, S.yesterdaysDate, S.tomorrowsDate)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case0.caseNumber)
+                    .enter_Created_Date(between, S.yesterdaysDate, S.tomorrowsDate)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
-                    .verify_content_of_first_row_in_results_table(case1.caseNumber)
+                    .verify_content_of_first_row_in_results_table(D.case0.caseNumber)
             });
 
             it('1.2.4 exactly', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Created_Date(exactly, S.currentDate)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case0.caseNumber)
+                    .enter_Created_Date(exactly, S.currentDate)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
-                    .verify_content_of_first_row_in_results_table(case1.caseNumber)
+                    .verify_content_of_first_row_in_results_table(D.case0.caseNumber)
             });
 
             it('1.2.5 newer than X', function () {
@@ -205,10 +213,12 @@ describe('Cases Search', function () {
 
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Created_Date(newerThanX, 3)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case0.caseNumber)
+                    .enter_Created_Date(newerThanX, 3)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
-                    .verify_content_of_first_row_in_results_table(case1.caseNumber)
+                    .verify_content_of_first_row_in_results_table(D.case0.caseNumber)
             });
 
             it('1.2.6 older than X', function () {
@@ -220,7 +230,9 @@ describe('Cases Search', function () {
 
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Created_Date(olderThanX, numberOfDaysSinceCaseWasCreated - 1)
+                ui.searchCase
+                    .enter_Case_Number(equals, caseNo)
+                    .enter_Created_Date(olderThanX, numberOfDaysSinceCaseWasCreated - 1)
                     .click_Search()
                     .verify_text_is_present_on_main_container(caseNo)
             });
@@ -236,7 +248,9 @@ describe('Cases Search', function () {
 
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Created_Date(betweenXandY, newerThan_days, olderThan_days)
+                ui.searchCase
+                    .enter_Case_Number(equals, caseNo)
+                    .enter_Created_Date(betweenXandY, newerThan_days, olderThan_days)
                     .click_Search()
                     .set_page_size(50)
                     .verify_text_is_present_on_main_container(caseNo)
@@ -246,10 +260,12 @@ describe('Cases Search', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Created_Date(currentWeek)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case0.caseNumber)
+                    .enter_Created_Date(currentWeek)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
-                    .verify_content_of_first_row_in_results_table(case1.caseNumber)
+                    .verify_content_of_first_row_in_results_table(D.case0.caseNumber)
             });
 
             it('1.2.9 Last week', function () {
@@ -257,21 +273,23 @@ describe('Cases Search', function () {
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
                 ui.searchCase.enter_Created_Date(lastWeek)
-                    .enter_Case_Number(contains, case2.caseNumber)
+                    .enter_Case_Number(equals, D.case1.caseNumber)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
                     .set_page_size(50)
-                    .verify_text_is_present_on_main_container(case2.caseNumber)
+                    .verify_text_is_present_on_main_container(D.case1.caseNumber)
             });
 
             it('1.2.10 Month to date', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Created_Date(monthToDate)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case0.caseNumber)
+                    .enter_Created_Date(monthToDate)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
-                    .verify_text_is_present_on_main_container(case1.caseNumber)
+                    .verify_text_is_present_on_main_container(D.case0.caseNumber)
             });
 
             it('1.2.11 Last Month', function () {
@@ -279,29 +297,34 @@ describe('Cases Search', function () {
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
                 ui.searchCase.enter_Created_Date(lastMonth)
+                    .enter_Case_Number(equals, D.case2.caseNumber)
                     .click_Search()
                     .sort_by_ascending_order('Created Date')
-                    .verify_text_is_present_on_main_container(case3.caseNumber)
+                    .verify_text_is_present_on_main_container(D.case2.caseNumber)
             });
 
             it('1.2.12 Year to date', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Created_Date(yearToDate)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case0.caseNumber)
+                    .enter_Created_Date(yearToDate)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
-                    .verify_text_is_present_on_main_container(case1.caseNumber)
+                    .verify_text_is_present_on_main_container(D.case0.caseNumber)
             });
 
             it('1.2.13 Last Year', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Created_Date(lastYear)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case3.caseNumber)
+                    .enter_Created_Date(lastYear)
                     .click_Search()
                     .sort_by_ascending_order('Created Date')
-                    .verify_text_is_present_on_main_container(case4.caseNumber)
+                    .verify_text_is_present_on_main_container(D.case3.caseNumber)
             });
         });
 
@@ -309,16 +332,16 @@ describe('Cases Search', function () {
 
             it('1.3.1 equals', function () {
                 ui.app.log_title(this);
-                let caseNo = case1.caseNumber;
+                let caseNo = D.case0.caseNumber;
                 api.auth.get_tokens(orgAdmin);
                 ui.searchCase.run_search_by_Case_Number(equals, caseNo)
                     .verify_items_count_on_grid(1)
-                    .verify_data_on_the_grid(case1)
+                    .verify_data_on_the_grid(D.case0)
             });
 
             it('1.3.2 not equals', function () {
                 ui.app.log_title(this);
-                let caseNo = case1.caseNumber + 1;
+                let caseNo = D.case0.caseNumber + 1;
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
                 ui.searchCase.enter_Case_Number(notEquals, caseNo)
@@ -343,8 +366,9 @@ describe('Cases Search', function () {
                     api.cases.add_new_case()
 
                     ui.menu.click_Search__Case();
-                    ui.searchCase.enter_Case_Officers(equalsOr, userA.email)
-                        .enter_Case_Officers(equalsOr, userB.email)
+                    ui.searchCase
+                        .enter_Case_Number(equals, D.newCase.caseNumber)
+                        .enter_Case_Officers(equalsOr, [userA.name, userB.name])
                         .click_Search()
                         .sort_by_descending_order('Created Date')
                         .verify_data_on_the_grid(D.newCase)
@@ -363,9 +387,9 @@ describe('Cases Search', function () {
                     api.cases.add_new_case()
 
                     ui.menu.click_Search__Case();
-                    ui.searchCase.enter_Case_Officers(equalsOr, userGroupA.name)
-                        .enter_Case_Officers(equalsOr, userGroupB.name)
-                        .enter_Case_Officers(equalsOr, userB.email)
+                    ui.searchCase
+                        .enter_Case_Number(equals, D.newCase.caseNumber)
+                        .enter_Case_Officers(equalsOr, [userGroupA.name, userB.name])
                         .click_Search()
                         .sort_by_descending_order('Created Date')
                         .verify_data_on_the_grid(D.newCase)
@@ -383,7 +407,9 @@ describe('Cases Search', function () {
                     api.cases.add_new_case()
 
                     ui.menu.click_Search__Case();
-                    ui.searchCase.enter_Case_Officers(equalsOr, userA.email)
+                    ui.searchCase
+                        .enter_Case_Number(equals, D.newCase.caseNumber)
+                        .enter_Case_Officers(equalsOr, [userA.name])
                         .click_Search()
                         .sort_by_descending_order('Created Date')
                         .verify_data_on_the_grid(D.newCase)
@@ -401,7 +427,9 @@ describe('Cases Search', function () {
                     api.cases.add_new_case()
 
                     ui.menu.click_Search__Case();
-                    ui.searchCase.enter_Case_Officers(equalsOr, userGroupA.name)
+                    ui.searchCase
+                        .enter_Case_Number(equals, D.newCase.caseNumber)
+                        .enter_Case_Officers(equalsOr, [userGroupA.name])
                         .click_Search()
                         .sort_by_descending_order('Created Date')
                         .verify_text_is_NOT_present_on_main_container(D.newCase.caseNumber)
@@ -422,8 +450,9 @@ describe('Cases Search', function () {
                     api.cases.add_new_case()
 
                     ui.menu.click_Search__Case();
-                    ui.searchCase.enter_Case_Officers(equalsAnd, userA.email)
-                        .enter_Case_Officers(equalsAnd, userB.email)
+                    ui.searchCase
+                        .enter_Case_Number(equals, D.newCase.caseNumber)
+                        .enter_Case_Officers(equalsAnd, [userA.name, userB.name])
                         .click_Search()
                         .sort_by_descending_order('Created Date')
                         .verify_text_is_NOT_present_on_main_container(D.newCase.caseNumber)
@@ -440,8 +469,9 @@ describe('Cases Search', function () {
                     api.cases.add_new_case()
 
                     ui.menu.click_Search__Case();
-                    ui.searchCase.enter_Case_Officers(equalsAnd, userGroupA.name)
-                        .enter_Case_Officers(equalsAnd, userB.email)
+                    ui.searchCase
+                        .enter_Case_Number(equals, D.newCase.caseNumber)
+                        .enter_Case_Officers(equalsAnd, [userGroupA.name,  userB.name])
                         .click_Search()
                         .sort_by_descending_order('Created Date')
                         .verify_text_is_NOT_present_on_main_container(D.newCase.caseNumber)
@@ -460,9 +490,9 @@ describe('Cases Search', function () {
                     api.cases.add_new_case()
 
                     ui.menu.click_Search__Case();
-                    ui.searchCase.enter_Case_Officers(equalsAnd, userA.email)
-                        .enter_Case_Officers(equalsAnd, userB.email)
-                        .enter_Case_Officers(equalsAnd, userGroupA.name)
+                    ui.searchCase
+                        .enter_Case_Number(equals, D.newCase.caseNumber)
+                        .enter_Case_Officers(equalsAnd, [userA.name, userGroupA.name])
                         .click_Search()
                         .sort_by_descending_order('Created Date')
                         .verify_data_on_the_grid(D.newCase)
@@ -483,8 +513,9 @@ describe('Cases Search', function () {
                     api.cases.add_new_case()
 
                     ui.menu.click_Search__Case();
-                    ui.searchCase.enter_Case_Officers(notEquals, userA.email)
-                        .enter_Case_Officers(notEquals, userB.email)
+                    ui.searchCase
+                        .enter_Case_Number(equals, D.newCase.caseNumber)
+                        .enter_Case_Officers(notEquals, [userA.name,userB.name])
                         .click_Search()
                         .sort_by_descending_order('Created Date')
                         .verify_text_is_NOT_present_on_main_container(D.newCase.caseNumber)
@@ -500,7 +531,9 @@ describe('Cases Search', function () {
                     api.cases.add_new_case()
 
                     ui.menu.click_Search__Case();
-                    ui.searchCase.enter_Case_Officers(notEquals, userA.email)
+                    ui.searchCase
+                        .enter_Case_Number(equals, D.newCase.caseNumber)
+                        .enter_Case_Officers(notEquals, [userA.name])
                         .click_Search()
                         .sort_by_descending_order('Created Date')
                         .verify_text_is_NOT_present_on_main_container(D.newCase.caseNumber)
@@ -517,7 +550,9 @@ describe('Cases Search', function () {
                     api.cases.add_new_case()
 
                     ui.menu.click_Search__Case();
-                    ui.searchCase.enter_Case_Officers(notEquals, userB.email)
+                    ui.searchCase
+                        .enter_Case_Number(equals, D.newCase.caseNumber)
+                        .enter_Case_Officers(notEquals, [userB.name])
                         .click_Search()
                         .sort_by_descending_order('Created Date')
                         .verify_data_on_the_grid(D.newCase)
@@ -533,7 +568,9 @@ describe('Cases Search', function () {
                     api.cases.add_new_case()
 
                     ui.menu.click_Search__Case();
-                    ui.searchCase.enter_Case_Officers(notEquals, userGroupA.name)
+                    ui.searchCase
+                        .enter_Case_Number(equals, D.newCase.caseNumber)
+                        .enter_Case_Officers(notEquals, [userGroupA.name])
                         .click_Search()
                         .sort_by_descending_order('Created Date')
                         .verify_text_is_NOT_present_on_main_container(D.newCase.caseNumber)
@@ -550,7 +587,9 @@ describe('Cases Search', function () {
                     api.cases.add_new_case()
 
                     ui.menu.click_Search__Case();
-                    ui.searchCase.enter_Case_Officers(notEquals, userB.email)
+                    ui.searchCase
+                        .enter_Case_Number(equals, D.newCase.caseNumber)
+                        .enter_Case_Officers(notEquals, [userB.name])
                         .click_Search()
                         .sort_by_descending_order('Created Date')
                         .verify_text_is_NOT_present_on_main_container(D.newCase.caseNumber)
@@ -568,7 +607,9 @@ describe('Cases Search', function () {
                     api.cases.add_new_case()
 
                     ui.menu.click_Search__Case();
-                    ui.searchCase.enter_Case_Officers(notEquals, userGroupB.name)
+                    ui.searchCase
+                        .enter_Case_Number(equals, D.newCase.caseNumber)
+                        .enter_Case_Officers(notEquals, [userGroupB.name])
                         .click_Search()
                         .sort_by_descending_order('Created Date')
                         .verify_data_on_the_grid(D.newCase)
@@ -582,20 +623,24 @@ describe('Cases Search', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.select_Offense_Type(equals, case1.offenseType)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case0.caseNumber)
+                    .select_Offense_Type(equals, D.case0.offenseType)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
-                    .verify_data_on_the_grid(case1);
+                    .verify_data_on_the_grid(D.case0);
             });
 
             it('1.5.2 not equals', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.select_Offense_Type(notEquals, case1.offenseType)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case0.caseNumber)
+                    .select_Offense_Type(notEquals, D.case0.offenseType)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
-                    .verify_text_is_NOT_present_on_main_container(case1.caseNumber);
+                    .verify_text_is_NOT_present_on_main_container(D.case0.caseNumber);
             });
         });
 
@@ -605,7 +650,9 @@ describe('Cases Search', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Offense_Location(equals, D.newCase.offenseLocation)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.newCase.caseNumber)
+                    .enter_Offense_Location(equals, D.newCase.offenseLocation)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
                     .verify_data_on_the_grid(D.newCase);
@@ -615,7 +662,9 @@ describe('Cases Search', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Offense_Location(notEquals, D.newCase.offenseLocation)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.newCase.caseNumber)
+                    .enter_Offense_Location(notEquals, D.newCase.offenseLocation)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
                     .verify_text_is_NOT_present_on_main_container(D.newCase.caseNumber);
@@ -626,45 +675,54 @@ describe('Cases Search', function () {
 
             it('1.7.1 before', function () {
                 ui.app.log_title(this);
+                let caseNo = S.selectedEnvironment.oldActiveCase.caseNumber
                 let date1 = S.selectedEnvironment.oldActiveCase.offenseDate;
                 let date2 = helper.getDateAfterXDaysFromSpecificDate('mm/dd/yy', date1, 1)
                 api.auth.get_tokens(orgAdmin);
                 D.generateNewDataSet()
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Offense_Date(before_, date2)
+                ui.searchCase
+                    .enter_Case_Number(equals, caseNo)
+                    .enter_Offense_Date(before_, date2)
                     .click_Search()
                     .sort_by_descending_order('Offense Date')
-                    .verify_content_of_first_row_in_results_table(S.selectedEnvironment.oldActiveCase.caseNumber)
+                    .verify_content_of_first_row_in_results_table(caseNo)
             });
 
             it('1.7.2 after', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Offense_Date(after, S.yesterdaysDate)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case0.caseNumber)
+                    .enter_Offense_Date(after, S.yesterdaysDate)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
-                    .verify_content_of_first_row_in_results_table(case1.caseNumber)
+                    .verify_content_of_first_row_in_results_table(D.case0.caseNumber)
             });
 
             it('1.7.3 between', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Offense_Date(between, S.yesterdaysDate, S.tomorrowsDate)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case0.caseNumber)
+                    .enter_Offense_Date(between, S.yesterdaysDate, S.tomorrowsDate)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
-                    .verify_content_of_first_row_in_results_table(case1.caseNumber)
+                    .verify_content_of_first_row_in_results_table(D.case0.caseNumber)
             });
 
             it('1.7.4 exactly', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Offense_Date(exactly, S.currentDate)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case0.caseNumber)
+                    .enter_Offense_Date(exactly, S.currentDate)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
-                    .verify_content_of_first_row_in_results_table(case1.caseNumber)
+                    .verify_content_of_first_row_in_results_table(D.case0.caseNumber)
             });
 
             it('1.7.5 newer than X', function () {
@@ -672,10 +730,12 @@ describe('Cases Search', function () {
 
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Offense_Date(newerThanX, 3)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case0.caseNumber)
+                    .enter_Offense_Date(newerThanX, 3)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
-                    .verify_content_of_first_row_in_results_table(case1.caseNumber)
+                    .verify_content_of_first_row_in_results_table(D.case0.caseNumber)
             });
 
             it('1.7.6 older than X', function () {
@@ -687,8 +747,9 @@ describe('Cases Search', function () {
 
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Offense_Date(olderThanX, numberOfDaysSinceOffenseDate - 1)
-                    .sort_by_descending_order('Offense Date')
+                ui.searchCase
+                    .enter_Case_Number(equals, caseNo)
+                    .enter_Offense_Date(olderThanX, numberOfDaysSinceOffenseDate - 1)
                     .click_Search()
                     .verify_text_is_present_on_main_container(caseNo)
             });
@@ -704,7 +765,9 @@ describe('Cases Search', function () {
 
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Offense_Date(betweenXandY, newerThan_days, olderThan_days)
+                ui.searchCase
+                    .enter_Case_Number(equals, caseNo)
+                    .enter_Offense_Date(betweenXandY, newerThan_days, olderThan_days)
                     .click_Search()
                     .sort_by_descending_order('Offense Date')
                     .set_page_size(50)
@@ -715,61 +778,73 @@ describe('Cases Search', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Offense_Date(currentWeek)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case0.caseNumber)
+                    .enter_Offense_Date(currentWeek)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
-                    .verify_content_of_first_row_in_results_table(case1.caseNumber)
+                    .verify_content_of_first_row_in_results_table(D.case0.caseNumber)
             });
 
             it('1.7.9 Last week', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Offense_Date(lastWeek)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case1.caseNumber)
+                    .enter_Offense_Date(lastWeek)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
                     .set_page_size(50)
-                    .verify_text_is_present_on_main_container(case2.caseNumber)
+                    .verify_text_is_present_on_main_container(D.case1.caseNumber)
             });
 
             it('1.7.10 Month to date', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Offense_Date(monthToDate)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case0.caseNumber)
+                    .enter_Offense_Date(monthToDate)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
-                    .verify_text_is_present_on_main_container(case1.caseNumber)
+                    .verify_text_is_present_on_main_container(D.case0.caseNumber)
             });
 
             it('1.7.11 Last Month', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Offense_Date(lastMonth)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case2.caseNumber)
+                    .enter_Offense_Date(lastMonth)
                     .click_Search()
                     .sort_by_ascending_order('Created Date')
-                    .verify_text_is_present_on_main_container(case3.caseNumber)
+                    .verify_text_is_present_on_main_container(D.case2.caseNumber)
             });
 
             it('1.7.12 Year to date', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Offense_Date(yearToDate)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case0.caseNumber)
+                    .enter_Offense_Date(yearToDate)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
-                    .verify_text_is_present_on_main_container(case1.caseNumber)
+                    .verify_text_is_present_on_main_container(D.case0.caseNumber)
             });
 
             it('1.7.13 Last Year', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Offense_Date(lastYear)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case3.caseNumber)
+                    .enter_Offense_Date(lastYear)
                     .click_Search()
                     .sort_by_ascending_order('Created Date')
-                    .verify_text_is_present_on_main_container(case4.caseNumber)
+                    .verify_text_is_present_on_main_container(D.case3.caseNumber)
             });
         });
 
@@ -779,20 +854,24 @@ describe('Cases Search', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Offense_Description(equals, case1.offenseDescription)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case0.caseNumber)
+                    .enter_Offense_Description(equals, D.case0.offenseDescription)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
-                    .verify_data_on_the_grid(case1);
+                    .verify_data_on_the_grid(D.case0);
             });
 
             it('1.8.2 not equals', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Offense_Description(notEquals, case1.offenseDescription)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case0.caseNumber)
+                    .enter_Offense_Description(notEquals, D.case0.offenseDescription)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
-                    .verify_text_is_NOT_present_on_main_container(case1.caseNumber);
+                    .verify_text_is_NOT_present_on_main_container(D.case0.caseNumber);
             });
         });
 
@@ -802,20 +881,24 @@ describe('Cases Search', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.select_option_on_Active_dropdown(equals, case1.active)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case0.caseNumber)
+                    .select_option_on_Active_dropdown(equals, D.case0.active)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
-                    .verify_data_on_the_grid(case1);
+                    .verify_data_on_the_grid(D.case0);
             });
 
             it('1.9.2 not equals', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.select_option_on_Active_dropdown(notEquals, case1.active)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case0.caseNumber)
+                    .select_option_on_Active_dropdown(notEquals, D.case0.active)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
-                    .verify_text_is_NOT_present_on_main_container(case1.caseNumber);
+                    .verify_text_is_NOT_present_on_main_container(D.case0.caseNumber);
             });
         });
 
@@ -834,7 +917,9 @@ describe('Cases Search', function () {
                     api.cases.add_new_case()
 
                     ui.menu.click_Search__Case();
-                    ui.searchCase.enter_Tags(equalsOr, tagA)
+                    ui.searchCase
+                        .enter_Case_Number(equals, D.newCase.caseNumber)
+                        .enter_Tags(equalsOr, tagA)
                         .enter_Tags(equalsOr, tagB)
                         .enter_Tags(equalsOr, tagC)
                         .click_Search()
@@ -852,7 +937,9 @@ describe('Cases Search', function () {
                     api.cases.add_new_case()
 
                     ui.menu.click_Search__Case();
-                    ui.searchCase.enter_Tags(equalsOr, tagA)
+                    ui.searchCase
+                        .enter_Case_Number(equals, D.newCase.caseNumber)
+                        .enter_Tags(equalsOr, tagA)
                         .click_Search()
                         .sort_by_descending_order('Created Date')
                         .verify_data_on_the_grid(D.newCase)
@@ -872,7 +959,9 @@ describe('Cases Search', function () {
                     api.cases.add_new_case()
 
                     ui.menu.click_Search__Case();
-                    ui.searchCase.enter_Tags(equalsAnd, tagA)
+                    ui.searchCase
+                        .enter_Case_Number(equals, D.newCase.caseNumber)
+                        .enter_Tags(equalsAnd, tagA)
                         .enter_Tags(equalsAnd, tagB)
                         .click_Search()
                         .sort_by_descending_order('Created Date')
@@ -890,7 +979,9 @@ describe('Cases Search', function () {
                     api.cases.add_new_case()
 
                     ui.menu.click_Search__Case();
-                    ui.searchCase.enter_Tags(equalsAnd, tagA)
+                    ui.searchCase
+                        .enter_Case_Number(equals, D.newCase.caseNumber)
+                        .enter_Tags(equalsAnd, tagA)
                         .click_Search()
                         .sort_by_descending_order('Created Date')
                         .verify_data_on_the_grid(D.newCase)
@@ -909,7 +1000,9 @@ describe('Cases Search', function () {
                     api.cases.add_new_case()
 
                     ui.menu.click_Search__Case();
-                    ui.searchCase.enter_Tags(notEquals, tagA)
+                    ui.searchCase
+                        .enter_Case_Number(equals, D.newCase.caseNumber)
+                        .enter_Tags(notEquals, tagA)
                         .enter_Tags(notEquals, tagB)
                         .click_Search()
                         .sort_by_descending_order('Created Date')
@@ -926,40 +1019,48 @@ describe('Cases Search', function () {
                 api.auth.get_tokens(orgAdmin);
                 D.generateNewDataSet()
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Closed_Date(before_, S.tomorrowsDate)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case0.caseNumber)
+                    .enter_Closed_Date(before_, S.tomorrowsDate)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
-                    .verify_content_of_first_row_in_results_table(case1.caseNumber)
+                    .verify_content_of_first_row_in_results_table(D.case0.caseNumber)
             });
 
             it('1.13.2 after', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Closed_Date(after, S.yesterdaysDate)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case0.caseNumber)
+                    .enter_Closed_Date(after, S.yesterdaysDate)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
-                    .verify_content_of_first_row_in_results_table(case1.caseNumber)
+                    .verify_content_of_first_row_in_results_table(D.case0.caseNumber)
             });
 
             it('1.13.3 between', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Closed_Date(between, S.yesterdaysDate, S.tomorrowsDate)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case0.caseNumber)
+                    .enter_Closed_Date(between, S.yesterdaysDate, S.tomorrowsDate)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
-                    .verify_content_of_first_row_in_results_table(case1.caseNumber)
+                    .verify_content_of_first_row_in_results_table(D.case0.caseNumber)
             });
 
             it('1.13.4 exactly', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Closed_Date(exactly, S.currentDate)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case0.caseNumber)
+                    .enter_Closed_Date(exactly, S.currentDate)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
-                    .verify_content_of_first_row_in_results_table(case1.caseNumber)
+                    .verify_content_of_first_row_in_results_table(D.case0.caseNumber)
             });
 
             it('1.13.5 newer than X', function () {
@@ -967,22 +1068,26 @@ describe('Cases Search', function () {
 
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Closed_Date(newerThanX, 3)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case0.caseNumber)
+                    .enter_Closed_Date(newerThanX, 3)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
-                    .verify_content_of_first_row_in_results_table(case1.caseNumber)
+                    .verify_content_of_first_row_in_results_table(D.case0.caseNumber)
             });
 
             it('1.13.6 older than X', function () {
                 ui.app.log_title(this);
-                let caseNo = case4.caseNumber;
+                let caseNo = D.case3.caseNumber;
                 let date1 = helper.getCurrentDateInSpecificFormat('mm/dd/yyyy')
-                let date2 = case4.closedDate;
+                let date2 = D.case3.closedDate;
                 let numberOfDaysSinceClosedDate = helper.getNumberOfDaysBetween2Dates(date1, date2)
 
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Closed_Date(olderThanX, numberOfDaysSinceClosedDate - 1)
+                ui.searchCase
+                    .enter_Case_Number(equals, caseNo)
+                    .enter_Closed_Date(olderThanX, numberOfDaysSinceClosedDate - 1)
                     .click_Search()
                     .verify_text_is_present_on_main_container(caseNo)
             });
@@ -998,7 +1103,9 @@ describe('Cases Search', function () {
 
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Closed_Date(betweenXandY, newerThan_days, olderThan_days)
+                ui.searchCase
+                    .enter_Case_Number(equals, caseNo)
+                    .enter_Closed_Date(betweenXandY, newerThan_days, olderThan_days)
                     .click_Search()
                     .set_page_size(50)
                     .verify_text_is_present_on_main_container(caseNo)
@@ -1008,61 +1115,73 @@ describe('Cases Search', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Closed_Date(currentWeek)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case0.caseNumber)
+                    .enter_Closed_Date(currentWeek)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
-                    .verify_content_of_first_row_in_results_table(case1.caseNumber)
+                    .verify_content_of_first_row_in_results_table(D.case0.caseNumber)
             });
 
             it('1.13.9 Last week', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Closed_Date(lastWeek)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case1.caseNumber)
+                    .enter_Closed_Date(lastWeek)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
                     .set_page_size(50)
-                    .verify_text_is_present_on_main_container(case2.caseNumber)
+                    .verify_text_is_present_on_main_container(D.case1.caseNumber)
             });
 
             it('1.13.10 Month to date', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Closed_Date(monthToDate)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case0.caseNumber)
+                    .enter_Closed_Date(monthToDate)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
-                    .verify_text_is_present_on_main_container(case1.caseNumber)
+                    .verify_text_is_present_on_main_container(D.case0.caseNumber)
             });
 
             it('1.13.11 Last Month', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Closed_Date(lastMonth)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case2.caseNumber)
+                    .enter_Closed_Date(lastMonth)
                     .click_Search()
                     .sort_by_ascending_order('Created Date')
-                    .verify_text_is_present_on_the_grid(case3.caseNumber)
+                    .verify_text_is_present_on_the_grid(D.case2.caseNumber)
             });
 
             it('1.13.12 Year to date', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Closed_Date(yearToDate)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case0.caseNumber)
+                    .enter_Closed_Date(yearToDate)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
-                    .verify_text_is_present_on_main_container(case1.caseNumber)
+                    .verify_text_is_present_on_main_container(D.case0.caseNumber)
             });
 
             it('1.13.13 Last Year', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Closed_Date(lastYear)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case3.caseNumber)
+                    .enter_Closed_Date(lastYear)
                     .click_Search()
                     .sort_by_ascending_order('Created Date')
-                    .verify_text_is_present_on_main_container(case4.caseNumber)
+                    .verify_text_is_present_on_main_container(D.case3.caseNumber)
             });
         });
 
@@ -1073,40 +1192,48 @@ describe('Cases Search', function () {
                 api.auth.get_tokens(orgAdmin);
                 D.generateNewDataSet()
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Review_Date(before_, S.tomorrowsDate)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case0.caseNumber)
+                    .enter_Review_Date(before_, S.tomorrowsDate)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
-                    .verify_content_of_first_row_in_results_table(case1.caseNumber)
+                    .verify_content_of_first_row_in_results_table(D.case0.caseNumber)
             });
 
             it('1.14.2 after', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Review_Date(after, S.yesterdaysDate)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case0.caseNumber)
+                    .enter_Review_Date(after, S.yesterdaysDate)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
-                    .verify_content_of_first_row_in_results_table(case1.caseNumber)
+                    .verify_content_of_first_row_in_results_table(D.case0.caseNumber)
             });
 
             it('1.14.3 between', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Review_Date(between, S.yesterdaysDate, S.tomorrowsDate)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case0.caseNumber)
+                    .enter_Review_Date(between, S.yesterdaysDate, S.tomorrowsDate)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
-                    .verify_content_of_first_row_in_results_table(case1.caseNumber)
+                    .verify_content_of_first_row_in_results_table(D.case0.caseNumber)
             });
 
             it('1.14.4 exactly', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Review_Date(exactly, S.currentDate)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case0.caseNumber)
+                    .enter_Review_Date(exactly, S.currentDate)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
-                    .verify_content_of_first_row_in_results_table(case1.caseNumber)
+                    .verify_content_of_first_row_in_results_table(D.case0.caseNumber)
             });
 
             it('1.14.5 newer than X', function () {
@@ -1114,10 +1241,12 @@ describe('Cases Search', function () {
 
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Review_Date(newerThanX, 3)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case0.caseNumber)
+                    .enter_Review_Date(newerThanX, 3)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
-                    .verify_content_of_first_row_in_results_table(case1.caseNumber)
+                    .verify_content_of_first_row_in_results_table(D.case0.caseNumber)
             });
 
             it('1.14.6 older than X', function () {
@@ -1129,7 +1258,9 @@ describe('Cases Search', function () {
 
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Review_Date(olderThanX, numberOfDaysSinceReviewDate - 1)
+                ui.searchCase
+                    .enter_Case_Number(equals, caseNo)
+                    .enter_Review_Date(olderThanX, numberOfDaysSinceReviewDate - 1)
                     .click_Search()
                     .verify_text_is_present_on_main_container(caseNo)
             });
@@ -1145,7 +1276,9 @@ describe('Cases Search', function () {
 
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Review_Date(betweenXandY, newerThan_days, olderThan_days)
+                ui.searchCase
+                    .enter_Case_Number(equals, caseNo)
+                    .enter_Review_Date(betweenXandY, newerThan_days, olderThan_days)
                     .click_Search()
                     .set_page_size(50)
                     .verify_text_is_present_on_main_container(caseNo)
@@ -1155,61 +1288,73 @@ describe('Cases Search', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Review_Date(currentWeek)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case0.caseNumber)
+                    .enter_Review_Date(currentWeek)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
-                    .verify_content_of_first_row_in_results_table(case1.caseNumber)
+                    .verify_content_of_first_row_in_results_table(D.case0.caseNumber)
             });
 
             it('1.14.9 Last week', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Review_Date(lastWeek)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case1.caseNumber)
+                    .enter_Review_Date(lastWeek)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
                     .set_page_size(50)
-                    .verify_text_is_present_on_main_container(case2.caseNumber)
+                    .verify_text_is_present_on_main_container(D.case1.caseNumber)
             });
 
             it('1.14.10 Month to date', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Review_Date(monthToDate)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case0.caseNumber)
+                    .enter_Review_Date(monthToDate)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
-                    .verify_text_is_present_on_main_container(case1.caseNumber)
+                    .verify_text_is_present_on_main_container(D.case0.caseNumber)
             });
 
             it('1.14.11 Last Month', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Review_Date(lastMonth)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case2.caseNumber)
+                    .enter_Review_Date(lastMonth)
                     .click_Search()
                     .sort_by_ascending_order('Created Date')
-                    .verify_text_is_present_on_main_container(case3.caseNumber)
+                    .verify_text_is_present_on_main_container(D.case2.caseNumber)
             });
 
             it('1.14.12 Year to date', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Review_Date(yearToDate)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case0.caseNumber)
+                    .enter_Review_Date(yearToDate)
                     .click_Search()
                     .sort_by_descending_order('Created Date')
-                    .verify_text_is_present_on_main_container(case1.caseNumber)
+                    .verify_text_is_present_on_main_container(D.case0.caseNumber)
             });
 
             it('1.14.13 Last Year', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
-                ui.searchCase.enter_Review_Date(lastYear)
+                ui.searchCase
+                    .enter_Case_Number(equals, D.case3.caseNumber)
+                    .enter_Review_Date(lastYear)
                     .click_Search()
                     .sort_by_ascending_order('Created Date')
-                    .verify_text_is_present_on_main_container(case4.caseNumber)
+                    .verify_text_is_present_on_main_container(D.case3.caseNumber)
             });
         });
 

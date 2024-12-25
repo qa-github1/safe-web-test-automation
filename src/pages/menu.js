@@ -33,7 +33,7 @@ let
     massImportButton = e => cy.get('[translate="ITEMS.SCAN.MASS_IMPORT_LIST"]'),
     tools = e => cy.get('[translate="NAV.TOOLS"]'),
     storageLocations = e => cy.get('[translate="NAV.LOCATIONS"]'),
-    discrepancyReport = e => cy.get('[ui-sref="discrepancy-reports"]'),
+    InventoryReport = e => cy.get('[translate="GENERAL.DISCREPANCY_REPORTS"]'),
     settings = e => cy.get('[translate="NAV.SETTINGS"]'),
     organization = e => cy.get('[translate="NAV.ORGANIZATION"]'),
     offices = e => cy.get('[translate="NAV.OFFICES"]'),
@@ -222,10 +222,10 @@ export default class Menu extends BasePage {
         return this;
     };
 
-    click_Tools__Discrepancy_Reports () {
+    click_Tools__Inventory_Reports () {
         tools().click();
-        discrepancyReport().click();
-        this.verify_text_is_present_on_main_container(C.labels.discrepancyReports.title);
+        InventoryReport().click();
+        this.verify_text_is_present_on_main_container(C.labels.InventoryReports.title);
         this.verify_Error_toast_message_is_NOT_visible()
         return this;
     };

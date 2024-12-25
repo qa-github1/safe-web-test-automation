@@ -42,24 +42,10 @@ E.generateCustomValues = function () {
     ]
 };
 
-E.generateDataFor_CASES_Importer = function (arrayOfDataObjects, customFormName, importingCaseUpdates, specificNumberOfRecords) {
+E.generateDataFor_CASES_Importer = function (arrayOfDataObjects, customFormName, importingCaseUpdates, numberOfRecords, specificMapping) {
     // Set headers for Excel file
-    let allFieldHeaders = [
-        "Active",
-        "Case Number",
-        "CreatorId",
-        "CaseOfficerIds",
-        "OfficeID",
-        "OffenseType",
-        "OffenseDescription",
-        "OffenseDate",
-        "OffenseLocation",
-        "Tags",
-        "createdDate",
-        "ReviewDate",
-        "ReviewDateNotes",
-        "ClosedDate",
-    ]
+    let allFieldHeaders = specificMapping || C.importMappingsWithOutSquareBrackets.allCaseFields
+
     let minimumFieldsHeaders = [
         "Active",
         "Case Number",
@@ -69,6 +55,8 @@ E.generateDataFor_CASES_Importer = function (arrayOfDataObjects, customFormName,
         "OffenseType",
         "CreatedDate"
     ];
+
+    numberOfRecords = numberOfRecords || arrayOfDataObjects.length
 
     let customFieldsHeaders = E.generateCustomFormHeaders(customFormName)
     let customFieldsValues = E.generateCustomValues()
@@ -85,17 +73,19 @@ E.generateDataFor_CASES_Importer = function (arrayOfDataObjects, customFormName,
         minimumFieldsHeaders,
     ];
 
-    const numberOfRecords = specificNumberOfRecords || arrayOfDataObjects.length
 
     // Set values for Excel file
     for (let i = 0; i < numberOfRecords; i++) {
 
+        // set unique case object accessible like D.case2 with ordinal number as a suffix, based on order of data in array of objects
+        let j = i + 1
+
         let caseObject = arrayOfDataObjects[i] || arrayOfDataObjects[0]
-        D['case' + i] = Object.assign({}, caseObject);
+        D['case' + j] = Object.assign({}, caseObject);
 
         if (!importingCaseUpdates) {
-            D['case' + i].caseNumber = 'imported_' + caseObject.caseNumber + '_' + i;
-            if (caseObject.offenseDescription) D['case' + i].offenseDescription = 'imported_' + caseObject.caseNumber
+            D['case' + j].caseNumber = 'imported_' + caseObject.caseNumber + '_' + j;
+            if (caseObject.offenseDescription) D['case' + j].offenseDescription = 'imported_' + caseObject.caseNumber
         }
         let tags = caseObject.tags ? caseObject.tags[0] : ''
         let reviewDate = caseObject.reviewDate || ''
@@ -104,12 +94,12 @@ E.generateDataFor_CASES_Importer = function (arrayOfDataObjects, customFormName,
 
         E.caseImportDataWithAllFields[i + 1] = [
             caseObject.active,
-            D['case' + i].caseNumber,
+            D['case' + j].caseNumber,
             caseObject.userGuid,
             caseObject.caseOfficers_importFormat,
             caseObject.officeGuid,
             caseObject.offenseType,
-            D['case' + i].offenseDescription,
+            D['case' + j].offenseDescription,
             caseObject.offenseDate,
             caseObject.offenseLocation,
             tags,
@@ -121,7 +111,7 @@ E.generateDataFor_CASES_Importer = function (arrayOfDataObjects, customFormName,
 
         E.caseImportDataWithMinimumFields[i + 1] = [
             caseObject.active,
-            D['case' + i].caseNumber,
+            D['case' + j].caseNumber,
             caseObject.userGuid,
             caseObject.caseOfficers_importFormat,
             caseObject.officeGuid,
@@ -134,27 +124,18 @@ E.generateDataFor_CASES_Importer = function (arrayOfDataObjects, customFormName,
             E.caseImportDataWithMinimumFields[i + 1] = E.caseImportDataWithMinimumFields[i + 1].concat(customFieldsValues);
         }
 
-        if(numberOfRecords === 1 && !importingCaseUpdates ){
-            D.newCase = Object.assign({},  D['case' + 0]);
+        if (numberOfRecords === 1 && !importingCaseUpdates) {
+            D.newCase = Object.assign({}, D['case' + 1]);
         }
     }
 }
 
-E.generateDataFor_ITEMS_Importer = function (arrayOfDataObjects, customFormName, specificMapping) {
+E.generateDataFor_ITEMS_Importer = function (arrayOfDataObjects, customFormName, importingItemUpdates, numberOfRecords, specificMapping) {
     // Set headers for Excel file
     let allFieldHeaders = specificMapping || C.importMappingsWithOutSquareBrackets.checkedInItemFields
+    let minimumFieldsHeaders = specificMapping || C.importMappingsWithOutSquareBrackets.minimumItemFields
 
-    let minimumFieldsHeaders = [
-        "CaseNumber",
-        "Active",
-        "Category",
-        "Description",
-        "Location",
-        "Status",
-        "CurrentOfficeId",
-        "SubmittedById",
-        "DateCreated",
-    ];
+    numberOfRecords = numberOfRecords || arrayOfDataObjects.length
 
     let customFieldsHeaders = E.generateCustomFormHeaders(customFormName)
     let customFieldsValues = E.generateCustomValues()
@@ -172,19 +153,26 @@ E.generateDataFor_ITEMS_Importer = function (arrayOfDataObjects, customFormName,
     ];
 
     // Set values for Excel file
-    for (let i = 0; i < arrayOfDataObjects.length; i++) {
-        let itemObject = arrayOfDataObjects[i]
-        let description = itemObject.description ? (i + 1) + itemObject.description + '__imported on ' + S.currentDate : ''
-        itemObject.description = description
-        let serialNumber = itemObject.serialNumber ? (i + 1) + itemObject.serialNumber + 'serial_' + S.currentDate : ''
-        let additionalBarcode = itemObject.additionalBarcodes ? itemObject.additionalBarcodes[0] : ''
+    for (let i = 0; i < numberOfRecords; i++) {
+
+        // set unique item object accessible like D.item2 with ordinal number as a suffix, based on order of data in array of objects
+        let j = i + 1
+
+        let itemObject = arrayOfDataObjects[i] || arrayOfDataObjects[0]
+        D['item' + j] = Object.assign({}, itemObject);
+
+        if (!importingItemUpdates) {
+            D['item' + j].description = itemObject.description ? j + itemObject.description + '__imported on ' + S.currentDate : ''
+        }
+        let serialNumber = itemObject.serialNumber ? j + itemObject.serialNumber + 'serial_' + S.currentDate : ''
+        let additionalBarcode = itemObject.additionalBarcodes ? j + itemObject.additionalBarcodes[0] + S.currentDate : ''
         let tags = itemObject.tags ? itemObject.tags[0] : ''
 
         E.itemImportDataWithAllFields[i + 1] = [
-            description,
+            D['item' + j].description,
             itemObject.recoveryDate,
             itemObject.recoveryLocation,
-            itemObject.locationGuid,
+            itemObject.location,
             itemObject.status,
             itemObject.category,
             itemObject.custodyReason,
@@ -204,10 +192,9 @@ E.generateDataFor_ITEMS_Importer = function (arrayOfDataObjects, customFormName,
 
         E.itemImportDataWithMinimumFields[i + 1] = [
             itemObject.caseNumber,
-            itemObject.active,
             itemObject.category,
-            description,
-            itemObject.locationGuid,
+            D['item' + j].description,
+            itemObject.location,
             itemObject.status,
             itemObject.officeGuid,
             itemObject.submittedByGuid,
@@ -296,6 +283,10 @@ E.generateDataFor_ITEMS_Importer = function (arrayOfDataObjects, customFormName,
         if (customFormName) {
             E.itemImportDataWithAllFields[i + 1] = E.itemImportDataWithAllFields[i + 1].concat(customFieldsValues);
             E.itemImportDataWithMinimumFields[i + 1] = E.itemImportDataWithMinimumFields[i + 1].concat(customFieldsValues);
+        }
+
+        if (numberOfRecords === 1 && !importingItemUpdates) {
+            D.newItem = Object.assign({}, D['item' + 1]);
         }
     }
 }

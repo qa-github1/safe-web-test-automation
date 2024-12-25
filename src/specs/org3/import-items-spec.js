@@ -160,7 +160,7 @@ describe('Import Items', function () {
             .verify_title_on_active_tab(1)
     });
 
-    it.only('5. Item with custom fields', function () {
+    it('5. Item with custom fields', function () {
         ui.app.log_title(this);
         let fileName = 'ItemImport_customFields_' + S.domain;
         api.auth.get_tokens(orgAdmin);
@@ -193,7 +193,7 @@ describe('Import Items', function () {
 
     //remove X when running regression test suite
     // no need to import 5K of items every day
-    xit('4.. five thousand items', function () {
+    it('6. Import five thousand items', function () {
         ui.app.log_title(this);
         let fileName = '5k_Items_' + S.domain;
         api.auth.get_tokens(orgAdmin);
@@ -203,14 +203,13 @@ describe('Import Items', function () {
 
         D.getNewItemData(D.newCase)
         D.newItem.description = D.currentDateAndRandomNumber
-        D.newItem.status = 'Checked Out'
-        E.generateDataFor_ITEMS_Importer(D.newItem, false, 50000);
+        E.generateDataFor_ITEMS_Importer([D.newItem], false, false, 5000);
         cy.generate_excel_file(fileName, E.itemImportDataWithAllFields);
 
         api.org_settings.enable_all_Item_fields();
 
         ui.menu.click_Tools__Data_Import();
-        ui.importer.upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.items, false, 30)
+        ui.importer.upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.items, C.importMappings.minimumCaseFields)
             .verify_toast_message([
                 C.toastMsgs.importComplete,
                 5000 + C.toastMsgs.recordsImported], false, 50);
@@ -219,7 +218,7 @@ describe('Import Items', function () {
             .verify_title_on_active_tab(5000)
     });
 
-    it('6. Item Import- Precheck Only', function () {
+    it('7. Item Import- Precheck Only', function () {
         ui.app.log_title(this);
         let fileName = 'Item_PrecheckOnly_' + S.domain;
         api.auth.get_tokens(orgAdmin);

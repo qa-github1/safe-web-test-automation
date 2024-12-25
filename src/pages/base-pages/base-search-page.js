@@ -42,6 +42,13 @@ export default class BaseSearchPage extends BasePage {
         return this;
     };
 
+    enter_value_to_input_field(fieldLabel, value, clearExistingValue) {
+        if (clearExistingValue) inputField(fieldLabel).clear()
+        inputField(fieldLabel).type(value)
+        inputField(fieldLabel).should('have.value', value);
+        return this;
+    };
+
     enter_search_criteria_and_value_in_input_field(fieldLabel, searchCriteria, value) {
         searchCriteriaBasedOnFieldLabel(fieldLabel).select(searchCriteria);
         this.enter_value_to_input_field(fieldLabel, value)
@@ -71,8 +78,18 @@ export default class BaseSearchPage extends BasePage {
         searchCriteriaBasedOnFieldLabel(fieldLabel).select(searchCriteria);
         typeaheadInputField(fieldLabel).type(value);
         this.wait_response_from_API_call('typeahead')
-        this.pause(1)
+        this.pause(0.3)
         typeaheadOption(fieldLabel).click();
+        return this;
+    };
+
+    enter_values_in_multiselect_typeahead_search_field(fieldLabel, searchCriteria, values, typeahead) {
+        searchCriteriaBasedOnFieldLabel(fieldLabel).select(searchCriteria);
+        this.enter_values_on_multi_select_typeahead_fields(
+            [
+                [fieldLabel, values, typeahead],
+            ]);
+        this.pause(0.3)
         return this;
     };
 

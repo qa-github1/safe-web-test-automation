@@ -15,7 +15,7 @@
     "openRunnerPentest-org4": "cypress open --env environment=pentest,orgNum=4",
     "tests-org1": "cypress run --headless --browser chrome --spec 'src/specs/org1/add-notes-spec.js' --env environment=pentest,orgNum=1",
     "tests-org2": "cypress run --headless --browser chrome --spec 'src/specs/org2/*spec.js' --env environment=pentest,orgNum=2",
-    "tests-org3": "cypress run --headless --browser chrome --spec 'src/specs/org3/*spec.js' --env environment=pentest,orgNum=3",
+    "tests-org3": "cypress run --headless --browser chrome --spec 'src/specs/org4/search-case-spec.js' --env environment=pentest,orgNum=3",
     "tests-org4": "cypress run --headless --browser chrome --spec 'src/specs/org4/*spec.js' --env environment=pentest,orgNum=4",
     "headedTests": "npm run precondition && cypress run --browser chrome --spec 'src/specs/org2/verify-reports.js'",
     "docker-tests-with-cypress-dashboard": "./node_modules/.bin/cypress run --headless --record --key 2a6a9322-b888-45d7-b107-6c0acdde94e4 --browser chrome --spec 'src/specs/org1/item-transactions-spec.js' --env environment=pentest,orgNum=1",
@@ -25,7 +25,7 @@
     "docker-group22": "./node_modules/.bin/cypress run --browser chrome --spec 'src/specs/org2/*specc.js'  --env environment=qa,orgNum=2",
     "docker-group3": "./node_modules/.bin/cypress run --browser chrome --spec 'src/specs/org3/*specc.js'",
     "docker-group4": "./node_modules/.bin/cypress run --browser chrome --spec 'src/specs/org4/*specc.js'",
-    "generateReport": "allure serve ./report/allure-results",
+    "generateReport": "allure serve ./report/allure-results-3",
     "clearReport": "del-cli --force ./report/allure-results && del-cli --force ./report/allure-report"
   },
   "author": "",

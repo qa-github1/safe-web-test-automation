@@ -93,6 +93,20 @@ exports.get_item_data = function (itemId) {
     });
 };
 
+exports.get_items_from_specific_case = function (caseId) {
+    cy.setLocalStorage('barcodes', [])
+    cy.getLocalStorage("currentCase").then(caseData => {
+        cy.getLocalStorage("barcodes").then(barcodes => {
+            generic_request.POST(
+                 '/api/cases/' + JSON.parse(caseData).cases[0].id + '/items',
+                {"orderBy":"SequentialCaseId","orderByAsc":true,"thenOrderBy":"","thenOrderByAsc":false,"pageSize":1000,"pageNumber":1},
+                'Getting items from the case',
+                'caseItems'
+            )
+        })
+    })
+};
+
 exports.sort_items_in_ASC_order = function (firstSortColumn, secondSortColumn = null) {
 
     const secondSortOrder = secondSortColumn ? true : null;

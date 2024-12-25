@@ -912,7 +912,7 @@ D.getDataForMultipleCases = function (numberOfCases) {
 
 D.currentDateAndRandomNumber = helper.mediumDate + '_' + helper.getRandomNo(3);
 
-D.getStorageLocationData = function (locationSuffix, parentId = null, canStore = true, isActive = true) {
+D.buildStorageLocationData = function (locationSuffix, parentId = null, canStore = true, isActive = true) {
 
     return D['newLocation' + locationSuffix] = [{
         "name": D.currentDateAndRandomNumber + '_' + locationSuffix,

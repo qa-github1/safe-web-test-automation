@@ -156,7 +156,7 @@ exports.generate_POST_request_payload_for_bulk_saving_VIEW_PERMISSIONS = functio
             "grant": shouldEnable,
         },
 
-        // Discrepancy Reports --> modelTypeId = 34
+        // Inventory Reports --> modelTypeId = 34
         {
             "id": group.startingIndexForViewPermissions + 16,
             "entityId": S.selectedEnvironment.orgSettings.id,
@@ -391,7 +391,7 @@ exports.generate_POST_request_payload_for_bulk_saving_CREATE_PERMISSIONS = funct
             "grant": shouldEnable,
         },
 
-        // Discrepancy Reports --> modelTypeId = 34
+        // Inventory Reports --> modelTypeId = 34
         {
             "id": group.startingIndexForCreatePermissions + 16,
             "entityId": S.selectedEnvironment.orgSettings.id,
@@ -604,7 +604,7 @@ exports.generate_POST_request_payload_for_bulk_saving_UPDATE_PERMISSIONS = funct
             "grant": shouldEnable,
         },
 
-        // Discrepancy Reports --> modelTypeId = 34
+        // Inventory Reports --> modelTypeId = 34
         {
             "id": group.startingIndexForUpdatePermissions + 15,
             "entityId": S.selectedEnvironment.orgSettings.id,

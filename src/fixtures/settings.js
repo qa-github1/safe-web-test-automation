@@ -2863,7 +2863,7 @@ S.PENTEST_3 = {
     // },
     oldClosedCase: {
         id: 7743098,
-        caseNumber: 'TestCase1',
+        caseNumber: 'AutomatedTest-Closed Case',
         createdDate: '12/28/2022',
         offenseDate: '12/21/2022',
         reviewDate: '12/30/2022',
@@ -2984,6 +2984,15 @@ S.PENTEST_3 = {
     tagA: {tagModelId: 16829, name: 'Tag_A__', color: "#4b9b62", tagUsedBy: 1},
     tagB: {tagModelId: 16830, name: 'Tag_B__', color: "#4b9b62", tagUsedBy: 1},
     tagC: {tagModelId: 16831, name: 'Tag_C__', color: "#4b9b62", tagUsedBy: 1},
+    taskTemplates: {
+        dispoAuth: {
+            title: 'Disposition Authorization',
+            id: 4308,
+            taskEscalation: true,
+            dueDays: 5,
+            useDispositionAuthorizationActions: true
+        },
+    }
 };
 
 S.PENTEST_4 = {

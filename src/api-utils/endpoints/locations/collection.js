@@ -32,7 +32,7 @@ exports.get_all_accessible_storage_locations = function () {
 
 exports.add_storage_location = function (locationSuffix, parentLocSuffix) {
 
-    let newLocation = Object.assign({}, D.getStorageLocationData(locationSuffix)[0])
+    let newLocation = Object.assign({}, D.buildStorageLocationData(locationSuffix)[0])
 
     cy.getLocalStorage(parentLocSuffix).then(parentLoc => {
         newLocation.parentId = (parentLoc && (parentLoc !== 'null')) ? JSON.parse(parentLoc).id : 0;
@@ -105,14 +105,14 @@ exports.move_location = function (locationSuffix, newParentLocationSuffix) {
 
 exports.get_and_save_new_location_data_to_local_storage = function (locationSuffix, parentLocId) {
 
-    let newLocation = Object.assign({}, D.getStorageLocationData(locationSuffix)[0])
+    let newLocation = Object.assign({}, D.buildStorageLocationData(locationSuffix)[0])
 
     exports.get_storage_locations(parentLocId);
     cy.getLocalStorage('locations').then(locationsArray => {
         JSON.parse(locationsArray).forEach(loc => {
 
             if (loc.name.includes(newLocation.name)) {
-                D.getStorageLocationData(locationSuffix)[0] = loc
+                D.buildStorageLocationData(locationSuffix)[0] = loc
                 S.selectedEnvironment[locationSuffix] = loc
                 S[locationSuffix] = loc
                 cy.setLocalStorage(locationSuffix, JSON.stringify(loc))

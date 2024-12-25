@@ -3,10 +3,11 @@ const S = require('../../fixtures/settings');
 const D = require('../../fixtures/data');
 const api = require('../../api-utils/api-spec');
 const ui = require('../../pages/ui-spec');
+const E = require("../../fixtures/files/excel-data");
 
 let orgAdmin = S.userAccounts.orgAdmin;
 
-describe('Discrepancy Reports', function () {
+describe('Inventory Reports', function () {
 
     context('1. Parent/child locations with items but without containers', function () {
 
@@ -33,7 +34,7 @@ describe('Discrepancy Reports', function () {
 
         before(function () {
             api.auth.get_tokens(orgAdmin);
-            api.org_settings.disable_Item_fields()
+            api.org_settings.disable_Item_fields([C.itemFields.description])
             D.generateNewDataSet();
             api.cases.add_new_case(D.newCase.caseNumber);
             api.people.add_new_person();
@@ -83,22 +84,19 @@ describe('Discrepancy Reports', function () {
             let arrayOfPropertiesInLocalStorage = locations.concat(items);
 
             api.auth.get_tokens(orgAdmin, arrayOfPropertiesInLocalStorage);
-            cy.getLocalStorage('item0').then(item => {
-                barcodes.push(JSON.parse(item).barcode)
-                ui.menu.click_Tools__Discrepancy_Reports()
-                    .click_button(C.buttons.newReport)
-                ui.discrepancyReports.start_report(reportName, D['newLocationParent1'][0].barcode)
-                    .enter_barcode(barcodes[0])
-                    .enter_barcode(D['newLocationChild1_1'][0].barcode, true)
-                    .enter_barcode(barcodes[1])
-                    .enter_barcode(barcodes[2])
-                    .enter_barcode(D['newLocationChild1_2'][0].barcode, true)
-                    .enter_barcode(barcodes[3])
-                    .enter_barcode(barcodes[4])
-                    .click_button(C.buttons.runReport)
-                    .verify_text_is_present_on_main_container(C.labels.discrepancyReports.noDiscrepanciesFound)
-                    .verify_summary_table(5, 3, 5, 0)
-            })
+            ui.menu.click_Tools__Inventory_Reports()
+                .click_button(C.buttons.newReport)
+            ui.inventoryReports.start_report(reportName, D['newLocationParent1'][0].barcode)
+                .enter_barcode(barcodes[0])
+                .enter_barcode(D['newLocationChild1_1'][0].barcode, true)
+                .enter_barcode(barcodes[1])
+                .enter_barcode(barcodes[2])
+                .enter_barcode(D['newLocationChild1_2'][0].barcode, true)
+                .enter_barcode(barcodes[3])
+                .enter_barcode(barcodes[4])
+                .click_button(C.buttons.runReport)
+                .verify_text_is_present_on_main_container(C.labels.InventoryReports.noDiscrepanciesFound)
+                .verify_summary_table(5, 3, 5, 0, 0)
         });
 
         it('1.2. DR for single child location - No Discrepancies Found', function () {
@@ -107,18 +105,15 @@ describe('Discrepancy Reports', function () {
 
             api.auth.get_tokens(orgAdmin, arrayOfPropertiesInLocalStorage);
 
-            cy.getLocalStorage('item0').then(item => {
-                barcodes.push(JSON.parse(item).barcode)
-                ui.menu.click_Tools__Discrepancy_Reports()
-                    .click_button(C.buttons.newReport)
-                ui.discrepancyReports.start_report(reportName, D['newLocationChild1_1'][0].barcode)
-                    .enter_barcode(barcodes[1])
-                    .enter_barcode(barcodes[2])
-                    .click_button(C.buttons.runReport)
-                    .verify_text_is_present_on_main_container(C.labels.discrepancyReports.noDiscrepanciesFound)
-                    .verify_summary_table(2, 1, 2, 0)
-            })
-        });
+            ui.menu.click_Tools__Inventory_Reports()
+                .click_button(C.buttons.newReport)
+            ui.inventoryReports.start_report(reportName, D['newLocationChild1_1'][0].barcode)
+                .enter_barcode(barcodes[1])
+                .enter_barcode(barcodes[2])
+                .click_button(C.buttons.runReport)
+                .verify_text_is_present_on_main_container(C.labels.InventoryReports.noDiscrepanciesFound)
+                .verify_summary_table(2, 1, 2, 0, 0)
+        })
 
         it('1.3. DR for multiple parent and child locations - starting with Parent loc - No Discrepancies Found', function () {
             let reportName = D.getCurrentDateAndRandomNumber(4);
@@ -131,9 +126,9 @@ describe('Discrepancy Reports', function () {
                     barcodes.push(JSON.parse(item).barcode)
 
                     if (i === 7) {
-                        ui.menu.click_Tools__Discrepancy_Reports()
+                        ui.menu.click_Tools__Inventory_Reports()
                             .click_button(C.buttons.newReport)
-                        ui.discrepancyReports.start_report(reportName, D['newLocationParent1'][0].barcode)
+                        ui.inventoryReports.start_report(reportName, D['newLocationParent1'][0].barcode)
                             .enter_barcode(barcodes[0])
                             .enter_barcode(D['newLocationChild1_1'][0].barcode, true)
                             .enter_barcode(barcodes[1])
@@ -148,7 +143,7 @@ describe('Discrepancy Reports', function () {
                             .enter_barcode(barcodes[7])
                             .click_button(C.buttons.runReport)
                             .verify_text_is_present_on_main_container
-                            (C.labels.discrepancyReports.noDiscrepanciesFound)
+                            (C.labels.InventoryReports.noDiscrepanciesFound)
                     }
                 })
             }
@@ -165,9 +160,9 @@ describe('Discrepancy Reports', function () {
                     barcodes.push(JSON.parse(item).barcode)
 
                     if (i === 7) {
-                        ui.menu.click_Tools__Discrepancy_Reports()
+                        ui.menu.click_Tools__Inventory_Reports()
                             .click_button(C.buttons.newReport)
-                        ui.discrepancyReports.start_report(reportName, D['newLocationChild1_1'][0].barcode)
+                        ui.inventoryReports.start_report(reportName, D['newLocationChild1_1'][0].barcode)
                             .enter_barcode(barcodes[1])
                             .enter_barcode(barcodes[2])
                             .enter_barcode(D['newLocationChild1_2'][0].barcode, true)
@@ -180,7 +175,7 @@ describe('Discrepancy Reports', function () {
                             .enter_barcode(barcodes[7])
                             .click_button(C.buttons.runReport)
                             .verify_text_is_present_on_main_container
-                            (C.labels.discrepancyReports.noDiscrepanciesFound)
+                            (C.labels.InventoryReports.noDiscrepanciesFound)
                     }
                 })
             }
@@ -197,9 +192,9 @@ describe('Discrepancy Reports', function () {
                     barcodes.push(JSON.parse(item).barcode)
 
                     if (i === 7) {
-                        ui.menu.click_Tools__Discrepancy_Reports()
+                        ui.menu.click_Tools__Inventory_Reports()
                             .click_button(C.buttons.newReport)
-                        ui.discrepancyReports.start_report(reportName, D['newLocationChild1_1'][0].barcode)
+                        ui.inventoryReports.start_report(reportName, D['newLocationChild1_1'][0].barcode)
                             .enter_barcode(barcodes[1])
                             .enter_barcode(D['newLocationParent1'][0].barcode, true)
                             .enter_barcode(barcodes[0])
@@ -215,7 +210,7 @@ describe('Discrepancy Reports', function () {
                             .enter_barcode(barcodes[7])
                             .click_button(C.buttons.runReport)
                             .verify_text_is_present_on_main_container
-                            (C.labels.discrepancyReports.noDiscrepanciesFound)
+                            (C.labels.InventoryReports.noDiscrepanciesFound)
                     }
                 })
             }
@@ -227,14 +222,14 @@ describe('Discrepancy Reports', function () {
 
             api.auth.get_tokens(orgAdmin, arrayOfPropertiesInLocalStorage);
 
-            ui.menu.click_Tools__Discrepancy_Reports()
+            ui.menu.click_Tools__Inventory_Reports()
                 .click_button(C.buttons.newReport)
-            ui.discrepancyReports.start_report(reportName, D['newLocationParent1'][0].barcode)
+            ui.inventoryReports.start_report(reportName, D['newLocationParent1'][0].barcode)
                 .enter_barcode(barcodes[1])
                 .click_button(C.buttons.runReport)
-                .verify_text_is_present_on_main_container(C.labels.discrepancyReports.wrongStorageLocation(1))
-                .verify_text_is_present_on_main_container(C.labels.discrepancyReports.itemsNotScanned(4))
-                .verify_summary_table(5, 1, 1, 5)
+                .verify_text_is_present_on_main_container(C.labels.InventoryReports.wrongStorageLocation(1))
+                .verify_text_is_present_on_main_container(C.labels.InventoryReports.itemsNotScanned(4))
+                .verify_summary_table(5, 1, 1, 0, 5)
         })
 
         it('1.7. Create and run DR for single child location - multiple Discrepancies Found', function () {
@@ -243,14 +238,14 @@ describe('Discrepancy Reports', function () {
 
             api.auth.get_tokens(orgAdmin, arrayOfPropertiesInLocalStorage);
 
-            ui.menu.click_Tools__Discrepancy_Reports()
+            ui.menu.click_Tools__Inventory_Reports()
                 .click_button(C.buttons.newReport)
-            ui.discrepancyReports.start_report(reportName, D['newLocationChild1_1'][0].barcode)
+            ui.inventoryReports.start_report(reportName, D['newLocationChild1_1'][0].barcode)
                 .enter_barcode(barcodes[0])
                 .click_button(C.buttons.runReport)
-                .verify_text_is_present_on_main_container(C.labels.discrepancyReports.wrongStorageLocation(1))
-                .verify_text_is_present_on_main_container(C.labels.discrepancyReports.itemsNotScanned(2))
-                .verify_summary_table(2, 1, 1, 3)
+                .verify_text_is_present_on_main_container(C.labels.InventoryReports.wrongStorageLocation(1))
+                .verify_text_is_present_on_main_container(C.labels.InventoryReports.itemsNotScanned(2))
+                .verify_summary_table(2, 1, 1, 0, 3)
         })
 
         it('1.8. Create and run DR for multiple storage locations - multiple Discrepancies Found', function () {
@@ -259,17 +254,17 @@ describe('Discrepancy Reports', function () {
 
             api.auth.get_tokens(orgAdmin, arrayOfPropertiesInLocalStorage);
 
-            ui.menu.click_Tools__Discrepancy_Reports()
+            ui.menu.click_Tools__Inventory_Reports()
                 .click_button(C.buttons.newReport)
-            ui.discrepancyReports.start_report(reportName, D['newLocationParent1'][0].barcode)
+            ui.inventoryReports.start_report(reportName, D['newLocationParent1'][0].barcode)
                 .enter_barcode(barcodes[0])
                 .enter_barcode(barcodes[1])
                 .enter_barcode(D['newLocationChild1_1'][0].barcode, true)
                 .enter_barcode(barcodes[2])
                 .click_button(C.buttons.runReport)
-                .verify_text_is_present_on_main_container(C.labels.discrepancyReports.wrongStorageLocation(1))
-                .verify_text_is_present_on_main_container(C.labels.discrepancyReports.itemsNotScanned(2))
-                .verify_summary_table(5, 2, 3, 3)
+                .verify_text_is_present_on_main_container(C.labels.InventoryReports.wrongStorageLocation(1))
+                .verify_text_is_present_on_main_container(C.labels.InventoryReports.itemsNotScanned(2))
+                .verify_summary_table(5, 2, 3, 0, 3)
         })
     })
 
@@ -322,21 +317,23 @@ describe('Discrepancy Reports', function () {
             api.locations.update_location('EmptyContainer2', 'isContainer', true)
             api.locations.add_storage_location('Sublocation2', 'LOC2')
 
-            api.items.add_new_item(true, 'LOC1', 'item0')
-            api.items.add_new_item(true, 'Container1', 'item1')
-            api.items.add_new_item(true, 'Sublocation1', 'item2')
-            api.items.add_new_item(true, 'SubContainer1', 'item3')
-            api.items.add_new_item(true, 'LOC2', 'item4')
-            api.items.add_new_item(true, 'Container2', 'item5')
 
-            for (let i = 0; i < 5; i++) {
+            api.items.add_new_item(true, 'LOC1', 'item0')
+            api.items.add_new_item(true, 'LOC1', 'item1')
+            api.items.add_new_item(true, 'Container1', 'item2')
+            api.items.add_new_item(true, 'Sublocation1', 'item3')
+            api.items.add_new_item(true, 'SubContainer1', 'item4')
+            api.items.add_new_item(true, 'LOC2', 'item5')
+            api.items.add_new_item(true, 'Container2', 'item6')
+
+            for (let i = 0; i < 7; i++) {
                 cy.getLocalStorage('item' + i).then(item => {
                     barcodes.push(JSON.parse(item).barcode)
                 })
             }
         })
 
-        it('2.1. Create and run DR for storage location that has: ' +
+        it('2.1. Create and run DR for 2 storage locations that have: ' +
             'container with item, empty container, sub-location, empty sub-container and sub-container with item - No Discrepancies Found', function () {
 
             let reportName = D.getCurrentDateAndRandomNumber(4);
@@ -344,42 +341,103 @@ describe('Discrepancy Reports', function () {
 
             api.auth.get_tokens(orgAdmin, arrayOfPropertiesInLocalStorage);
 
-            ui.menu.click_Tools__Discrepancy_Reports()
+            ui.menu.click_Tools__Inventory_Reports()
                 .click_button(C.buttons.newReport)
-            ui.discrepancyReports.start_report(reportName, S.LOC1.barcode)
+            ui.inventoryReports.start_report(reportName, S.LOC1.barcode)
                 .enter_barcode(barcodes[0])
+                .enter_barcode(barcodes[1])
                 .enter_barcode(S.Container1.barcode, false)
                 .enter_barcode(S.Sublocation1.barcode, true)
                 .enter_barcode(S.SubContainer1.barcode, false)
-                .enter_barcode(barcodes[2])
+                .enter_barcode(barcodes[3])
                 .enter_barcode(S.LOC2.barcode, true)
                 .enter_barcode(S.Container2.barcode, false)
-                .enter_barcode(barcodes[4])
+                .enter_barcode(barcodes[5])
                 .click_button(C.buttons.runReport)
-                .verify_text_is_present_on_main_container(C.labels.discrepancyReports.noDiscrepanciesFound)
-                .verify_summary_table(3, 3, 6, 0)
+                .verify_text_is_present_on_main_container(C.labels.InventoryReports.noDiscrepanciesFound)
+                .verify_summary_table(4, 3, 7, 3, 0)
         })
 
-        it('2.2. "Items Not Scanned", "Container Not Scanned"  & "Containers in Wrong Location" discrepancies', function () {
+        it('2.2. Scanning some barcodes multiple times and checking all types of discrepancies in one Report: ' +
+            '"Barcode valid but not found in the system"' +
+            '"Items Not Scanned", ' +
+            '"Wrong Storage Location",' +
+            '"Container Not Scanned",' +
+            '"Containers in Wrong Location"', function () {
 
             let reportName = D.getCurrentDateAndRandomNumber(4);
             let arrayOfPropertiesInLocalStorage = locations.concat(items);
 
             api.auth.get_tokens(orgAdmin, arrayOfPropertiesInLocalStorage);
 
-            ui.menu.click_Tools__Discrepancy_Reports()
+            ui.menu.click_Tools__Inventory_Reports()
                 .click_button(C.buttons.newReport)
-            ui.discrepancyReports.start_report(reportName, S.LOC1.barcode)
+            ui.inventoryReports.start_report(reportName, S.LOC1.barcode)
+                .enter_barcode('test')
+                .enter_barcode('test', false, true)
                 .enter_barcode(barcodes[0])
+                .enter_barcode(barcodes[0], false, true)
+                .enter_barcode(barcodes[0], false, true)
                 .enter_barcode(S.Container2.barcode, false)
-                .enter_barcode(S.SubContainer1.barcode, false)
+                .enter_barcode(S.Container2.barcode, false, true)
+                .enter_barcode(barcodes[2])
+                .enter_barcode(barcodes[2])
+                .enter_barcode(barcodes[5])
                 .enter_barcode(S.LOC2.barcode, true)
                 .click_button(C.buttons.runReport)
-                .verify_text_is_present_on_main_container(C.labels.discrepancyReports.itemsNotScanned(2))
-                .verify_text_is_present_on_main_container(C.labels.discrepancyReports.containersNotScanned(1))
-                .verify_text_is_present_on_main_container(C.labels.discrepancyReports.containersInWrongLocation(2))
-             .verify_summary_table(3, 1, 3, 5)
+                .verify_text_is_present_on_main_container(C.labels.InventoryReports.barcodeValidButNotFoundInSystem(1))
+                .verify_text_is_present_on_main_container(C.labels.InventoryReports.wrongStorageLocation(2))
+                .verify_text_is_present_on_main_container(C.labels.InventoryReports.itemsNotScanned(2))
+                .verify_text_is_present_on_main_container(C.labels.InventoryReports.containersNotScanned(2))
+                .verify_text_is_present_on_main_container(C.labels.InventoryReports.containersInWrongLocation(1))
+                .verify_summary_table(4, 1, 5, 1, 8)
         })
-    })
+    });
 
+    context('2. Parent/child locations with items and containers', function () {
+    it('3. Scanning 500 items during Inventory report', function () {
+
+        let barcodes = []
+
+        api.auth.get_tokens(orgAdmin);
+        api.org_settings.disable_Item_fields([C.itemFields.description])
+
+        D.getNewCaseData()
+        D.getNewItemData(D.newCase)
+         api.locations.add_storage_location('Parent3')
+        api.cases.add_new_case()
+        D.newItem.location = D['newLocationParent3'][0].name
+        E.generateDataFor_ITEMS_Importer([D.newItem], null, null, 500);
+        cy.generate_excel_file('Items_forTestingInventoryReports', E.itemImportDataWithMinimumFields);
+        ui.menu.click_Tools__Data_Import();
+        ui.importer.upload_then_Map_and_Submit_file_for_importing('Items_forTestingInventoryReports', C.importTypes.items, C.importMappings.minimumItemFields)
+            .verify_toast_message([
+                C.toastMsgs.importComplete,
+                500 + C.toastMsgs.recordsImported])
+
+        api.cases.fetch_current_case_data(D.newCase.caseNumber)
+        api.items.get_items_from_specific_case(D.newCase.caseNumber)
+        cy.getLocalStorage("caseItems").then(caseItems => {
+            let caseItemsObject = JSON.parse(caseItems);
+            caseItemsObject.entities.forEach(item => {
+                barcodes.push(item.barcode)
+            })
+        })
+
+        let reportName = D.getCurrentDateAndRandomNumber(4);
+
+        ui.menu.click_Tools__Inventory_Reports()
+            .click_button(C.buttons.newReport)
+
+        cy.getLocalStorage("Parent3").then(parentLoc => {
+            ui.inventoryReports.start_report(reportName, JSON.parse(parentLoc).barcode)
+            for (let i = 0; i < 500; i++) {
+                ui.inventoryReports.enter_barcode_(barcodes[i])
+            }
+        })
+        ui.inventoryReports.click_button(C.buttons.runReport)
+            .verify_text_is_present_on_main_container(C.labels.InventoryReports.noDiscrepanciesFound)
+            .verify_summary_table(500, 1, 500, 0, 0)
+    })
+})
 });

@@ -455,9 +455,7 @@ C = {
             'Review Date Notes',
             'Closed Date',
         ],
-        minimumCaseFields: [
-
-        ],
+        minimumCaseFields: [],
         allItemFields: [
             'Description',
             'Recovery Date',
@@ -486,6 +484,16 @@ C = {
             'Checkout Reason',
             'Returned By [Person Email or GUID]',
             'Tags'
+        ],
+        minimumItemFields: [
+            "Primary Case #",
+            "Category",
+            "Description",
+            'Storage Location [Full Path, GUID or Legacy Barcode]',
+            "Status",
+            'Office [Name or GUID]',
+            'Created By [User Email or GUID]',
+            'Created Date'
         ],
         checkedInItemFields: [
             'Description',
@@ -526,10 +534,8 @@ C = {
             'Review Date Notes',
             'Closed Date',
         ],
-        minimumCaseFields: [
-
-        ],
-        allItemFields:  [
+        minimumCaseFields: [],
+        allItemFields: [
             'Description',
             'Recovery Date',
             'Recovered At',
@@ -558,7 +564,17 @@ C = {
             'Returned By',
             'Tags'
         ],
-        checkedInItemFields:  [
+        minimumItemFields: [
+            "Primary Case #",
+            "Category",
+            "Description",
+            "Storage Location",
+            "Status",
+            "Office",
+            "Created By",
+            "Created Date",
+        ],
+        checkedInItemFields: [
             'Description',
             'Recovery Date',
             'Recovered At',
@@ -610,11 +626,11 @@ C = {
             taskCreated: {
                 subject: 'Notice: Task notification',
                 content1: (taskObject) =>
-                     [`Task ${taskObject.taskNumber} has been created by ${taskObject.createdBy}`,
-                     `Click here to view the Task</a><br /><br /><b>Task Type:</b> : ${taskObject.type}<br/><b>Title:</b> ${taskObject.title}<br/><b>Message:</b> ${taskObject.message}<br/><b>Status:</b> New<br/><b>Due Date:</b> ${taskObject.dueDate_inEmail}`],
+                    [`Task ${taskObject.taskNumber} has been created by ${taskObject.createdBy}`,
+                        `Click here to view the Task</a><br /><br /><b>Task Type:</b> : ${taskObject.type}<br/><b>Title:</b> ${taskObject.title}<br/><b>Message:</b> ${taskObject.message}<br/><b>Status:</b> New<br/><b>Due Date:</b> ${taskObject.dueDate_inEmail}`],
                 content1_withSubtype: (taskObject) =>
-                     [`Task ${taskObject.taskNumber} has been created by ${taskObject.createdBy}`,
-                     `Click here to view the Task</a><br /><br /><b>Task Type:</b> : ${taskObject.type}: ${taskObject.subtype}<br/><b>Title:</b> ${taskObject.title}<br/><b>Message:</b> ${taskObject.message}<br/><b>Status:</b> New<br/><b>Due Date:</b> ${taskObject.dueDate_inEmail}`],
+                    [`Task ${taskObject.taskNumber} has been created by ${taskObject.createdBy}`,
+                        `Click here to view the Task</a><br /><br /><b>Task Type:</b> : ${taskObject.type}: ${taskObject.subtype}<br/><b>Title:</b> ${taskObject.title}<br/><b>Message:</b> ${taskObject.message}<br/><b>Status:</b> New<br/><b>Due Date:</b> ${taskObject.dueDate_inEmail}`],
                 content2: (assignedTo) =>
                     `Assigned to:</b> ${assignedTo}<br/>`
             },
@@ -752,16 +768,17 @@ C.labels = {
     storageLocations: {
         title: 'Storage Locations',
     },
-    discrepancyReports: {
+    InventoryReports: {
         summaryTableColumns: {
             totalActiveItems: 'Total Active Items In Scanned Locations:',
             locationsScanned: 'Locations Scanned',
             itemsScanned: 'Items Scanned',
+            containersScanned: 'Containers Scanned',
             discrepanciesFound: 'Discrepancies Found'
         },
         title: 'Inventory Reports',
         noDiscrepanciesFound: 'No Discrepancies Found',
-        barcodeValidButNotFoundInSystem: "Barcode valid but not found in the system",
+        barcodeValidButNotFoundInSystem: numberOfItems => `Barcode valid, but not found in system  (${numberOfItems}):`,
         wrongStorageLocation: numberOfItems => `Wrong Storage Location (${numberOfItems}):`,
         containersInWrongLocation: numberOfItems => `Containers in Wrong Location (${numberOfItems}):`,
         containersNotScanned: numberOfItems => `Containers Not Scanned (${numberOfItems}):`,
@@ -896,7 +913,7 @@ C.perissionMatrixEntity = {
     userAdmin: 10,
     storageLocation: 6,
     autoDispo: 32,
-    discrepancyReports: 34,
+    InventoryReports: 34,
     randomAudits: 45,
     imports: 35,
     tags: 8,

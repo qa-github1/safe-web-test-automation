@@ -89,8 +89,8 @@ export default class SearchCasePage extends BaseSearchPage {
         return this;
     };
 
-    enter_Case_Officers(searchCriteria, value) {
-        this.enter_value_in_typeahead_search_field('Case Officer(s)', searchCriteria, value)
+    enter_Case_Officers(searchCriteria, values) {
+        this.enter_values_in_multiselect_typeahead_search_field('Case Officer(s)', searchCriteria, values,  "users/groups")
         return this;
     };
 

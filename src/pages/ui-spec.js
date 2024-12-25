@@ -28,7 +28,7 @@ import SearchPeoplePage from "./search-pages/search-people-page";
 import UserAdminPage from "./user-admin-page";
 import WorkflowsPage from "./workflows_page";
 import AutoDispoPage from "./auto-dispo-page";
-import DiscrepancyReportsPage from "./discrepancy-reports-page";
+import InventoryReportsPage from "./inventory-reports-page";
 import UserSettingsPage from "./user-settings-page";
 import StorageLocationsPage from "./locations-page";
 
@@ -61,7 +61,7 @@ const importer = new ImportPage();
 const userAdmin = new UserAdminPage();
 const workflows = new WorkflowsPage();
 const autoDispo = new AutoDispoPage();
-const discrepancyReports = new DiscrepancyReportsPage();
+const inventoryReports = new InventoryReportsPage();
 
 module.exports = {
     open_base_url: e => cy.visit(S.base_url),
@@ -95,5 +95,5 @@ module.exports = {
     userSettings: new UserSettingsPage(),
     workflows: workflows,
     autoDispo: autoDispo,
-    discrepancyReports: discrepancyReports,
+    inventoryReports: inventoryReports,
 }
