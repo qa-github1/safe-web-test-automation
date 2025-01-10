@@ -21,6 +21,7 @@ import AddCasePage from "./add-pages/add-case-page";
 import AddItemPage from "./add-pages/add-item-page";
 import AddPersonPage from "./add-pages/add-person-page";
 import PersonViewPage from "./view-pages/person-view-page";
+import TaskListPage from "./task-list-page";
 import TaskViewPage from "./view-pages/task-view-page";
 import ScanPage from "./scan-page";
 import ImportPage from "./import-page";
@@ -50,6 +51,7 @@ const caseView = new CaseView();
 const itemView = new ItemView();
 const personView = new PersonViewPage();
 const taskView = new TaskViewPage();
+const taskList = new TaskListPage();
 const addTask = new AddTaskPage();
 const searchTasks = new SearchTasks();
 const searchNotes = new SearchNotes();
@@ -85,6 +87,7 @@ module.exports = {
     itemView: itemView,
     personView: personView,
     taskView: taskView,
+    taskList: taskList,
     addItem: addItem,
     addCase: addCase,
     addPerson: addPerson,

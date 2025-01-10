@@ -1,20 +1,21 @@
 const S = require('../../../fixtures/settings.js');
-const C = require('../../../fixtures/constants.js');
-const userAccounts = require('../../../fixtures/user-accounts.js');
+const D = require("../../../fixtures/data");
 
-exports.generate_POST_request_payload_for_creating_new_task = function (taskTemplate, taskTitle, entityId) {
+exports.generate_POST_request_payload_for_creating_new_task = function (taskObject) {
+    taskObject.assignedUserIds = taskObject.assignedUserIds ? taskObject.assignedUserIds : []
+    taskObject.assignedGroupIds = taskObject.assignedGroupIds ? taskObject.assignedGroupIds : []
 
     let body = {
-        "taskTemplateId": S.selectedEnvironment.taskTemplate.otherTaskTemplateId,
-        "title": taskTitle,
-        "message": taskTitle,
-        "creatorId": S.selectedUser.id,
-        "assignedUserIds": [],
-        "assignedGroupIds": [],
+        "taskTemplateId": taskObject.templateId,
+        "title": taskObject.title,
+        "message": taskObject.message,
+        "creatorId": taskObject.creatorId,
+        "assignedUserIds": taskObject.assignedUserIds,
+        "assignedGroupIds": taskObject.assignedGroupIds,
         "userGroupIds": [],
-        "taskAttachments": [{"taskId": null, "entityId": entityId, "entityType": 0}]
+        "taskAttachments": taskObject.attachments
     };
-    return body;
+    return body
 };
 
 exports.generate_POST_request_payload_for_creating_new_task_template = function (taskTemplate) {

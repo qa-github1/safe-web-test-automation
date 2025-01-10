@@ -3,11 +3,11 @@ const body = require('./payload');
 const S = require('../../../fixtures/settings');
 const D = require('../../../fixtures/data');
 
-exports.add_new_person = function (addToCase, caseObject) {
+exports.add_new_person = function (addToCase, caseObject, personObject) {
 
     generic_request.POST(
         '/api/people',
-        body.generate_POST_request_payload_for_Add_Person(),
+        body.generate_POST_request_payload_for_Add_Person(personObject),
         'Adding new person via API with ID_______',
         'newPerson',
     );

@@ -225,7 +225,7 @@ export default class ItemViewPage extends BaseViewPage {
         if (newItemObject.custodyReason) custodyReasonDropdown().select(newItemObject.custodyReason);
 
 
-        this.enter_values_on_multi_select_typeahead_fields(
+        this.enter_values_on_several_multi_select_typeahead_fields(
             [
                 [itemBelongsToInput, newItemObject.itemBelongsTo],
                 [tagsInput, newItemObject.tags],

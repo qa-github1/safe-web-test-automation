@@ -1,6 +1,8 @@
 const generic_request = require('../../generic-api-requests');
 const body = require('./payload');
 const S = require('../../../fixtures/settings');
+const D = require("../../../fixtures/data");
+const ui = require('../../../pages/ui-spec');
 
 exports.get_task_templates = function () {
     generic_request.GET(
@@ -63,12 +65,58 @@ exports.add_new_task_template = function (taskTemplate) {
     return this;
 };
 
-exports.add_new_task = function (taskTitle) {
+exports. add_new_task = function (taskObject, numberOfItemsAttached) {
+    cy.getLocalStorage("newCase").then(newCase => {
+            cy.getLocalStorage("newItem").then(newItem => {
+                cy.getLocalStorage("newPerson").then(newPerson => {
+
+                    taskObject.attachments = []
+                    if (newCase !== 'undefined') {
+                        taskObject.attachments.push( {entityId: JSON.parse(newCase).id, entityType: 0, taskId: null})
+                    }
+                    if (newItem !== 'undefined') {
+                        taskObject.attachments.push(  {entityId: JSON.parse(newItem).id, entityType: 1, taskId: null})
+                    }
+                    if (newPerson !== 'undefined') {
+                        taskObject.attachments.push(  {entityId: JSON.parse(newPerson).id, entityType: 2, taskId: null})
+                    }
+
+                    for (let i = 0; i < numberOfItemsAttached; i++) {
+                        cy.getLocalStorage('item' + i).then(item => {
+                            taskObject.attachments.push({entityId: JSON.parse(item).id, entityType: 1, taskId: null})
+                        })
+                    }
+                    ui.app.pause(5)
+
+                    generic_request.POST(
+                        '/api/tasks/saveNewTask',
+                        body.generate_POST_request_payload_for_creating_new_task(taskObject),
+                        'Creating new task via API and saving to local storage __ ',
+                        'newTaskId');
+            });
+        });
+    });
+    return this;
+};
+
+exports.get_my_tasks = function () {
     generic_request.POST(
         '/api/tasks/saveNewTask',
-        body.generate_POST_request_payload_for_creating_new_task(taskTitle),
-        'Creating new task via API and saving to local storage __ ',
-        'newTaskId',
+        {
+            "pageNumber": 1,
+            "sort": "LastActionDate",
+            "tasksPerPage": 25,
+            "asc": false,
+            "search": "",
+            "isClosed": false,
+            "showItemsTasks": true,
+            "taskTypeId": null,
+            "taskSubTypeId": null,
+            "taskStatus": 1,
+            "taskStatuses": [1, 4]
+        },
+        'Fetching my tasks via API and saving to local storage __ ',
+        'myTasks',
     );
     return this;
 };

@@ -348,7 +348,7 @@ export default class CaseViewPage extends BaseViewPage {
                     [closedDateInput, newCaseObject.closedDate]
                 ]);
 
-            this.enter_values_on_multi_select_typeahead_fields(
+            this.enter_values_on_several_multi_select_typeahead_fields(
                 [
                     [caseOfficerInput, newCaseObject.caseOfficers, "users/groups"],
                     [tagsInput, newCaseObject.tags, this.lastTagOnTypeahead],

@@ -1,3 +1,5 @@
+import C from "../../fixtures/constants";
+
 const S = require('../../fixtures/settings')
 import BasePage from "../base-pages/base-page";
 
@@ -7,6 +9,11 @@ let
     titleInput = e => cy.get('[name="taskTitle"]'),
     messageInput = e => cy.get('[name="taskMessage"]'),
     dueDateInput = e => cy.get('[name="DUEDate"]').find('input').first(),
+    plusIcon = e => cy.get('[ng-click="attachToTask()"]'),
+    attachmentTypeDropdown = e => cy.get('#taskAttachmentType'),
+    itemTypeaheadInputField = e => cy.get('input[placeholder="Type an item description, org #, or item # within your case..."]'),
+    itemTypeaheadDivField = e => cy.get('[aria-label="Select box activate"]').last(),
+    personInputField = e => cy.get('[ng-model="person.text"]').last(),
     usersAndGroupsInput = e => cy.contains('Users and groups').parent('div').find('input'),
     saveButton = e => cy.findAllByText('Save').last()
 
@@ -16,11 +23,8 @@ export default class AddTaskPage extends BasePage {
     }
 
 //************************************ ACTIONS ***************************************//
-    enter_user(email) {
-        //this.enter_and_select_value_in_typeahead_field('Users and groups', email)
-        this.type_if_value_provided(usersAndGroupsInput, email)
-        this.pause(1)
-        this.click_highlighted_option_on_typeahead(email);
+    enter_value_to_Users_and_Groups_field(arrayOfValues) {
+        this.enter_values_on_single_multi_select_typeahead_field(['Users and groups', arrayOfValues, "users/groups"])
         return this;
     }
 
@@ -34,8 +38,7 @@ export default class AddTaskPage extends BasePage {
 
     populate_all_fields(taskObject, keepDefaultDueDate = true, keepTemplateValues = true, templateObject) {
 
-        this.select_dropdown_option('Task Type', taskObject.type)
-        if (taskObject.subtype) this.select_dropdown_option('Sub Type', taskObject.subtype)
+        this.select_dropdown_option('Task Template', taskObject.template)
 
         this.verify_value_in_textarea_field('Title', templateObject.title)
         this.verify_value_in_textarea_field('Message', templateObject.message)
@@ -51,16 +54,40 @@ export default class AddTaskPage extends BasePage {
             });
         }
 
-        if (taskObject.userEmail) this.enter_user(taskObject.userEmail)
-        if (taskObject.userGroupName) this.enter_user_group(taskObject.userGroupName)
-        this.define_API_request_to_be_awaited('POST', 'api/tasks', 'addTask', 'newTask')
+        this.enter_value_to_Users_and_Groups_field([taskObject.userName])
+
+        if (taskObject.linkedObjects) {
+            taskObject.linkedObjects.forEach(object => {
+                if (object.type === 'case') {
+                    plusIcon().click()
+                    this.findElementByLabelEnterValueAndPressEnter('Case', object.caseNumber)
+                    this.caseNumberOnTypeahead().click()
+                    this.click_button_on_modal('Add')
+                }
+                if (object.type === 'item') {
+                    plusIcon().click()
+                    attachmentTypeDropdown().select('Item')
+                    this.findElementByLabelEnterValueAndPressEnter('Case', object.caseNumber)
+                    this.caseNumberOnTypeahead().click()
+                    this.pause(1)
+                    itemTypeaheadDivField().click()
+                    cy.contains(object.orgNumber).click()
+                    this.click_button_on_modal('Add')
+                    this.verify_toast_message('Added!')
+                    this.click_button_on_modal('Finish Adding')
+                }
+                if (object.type === 'person') {
+                    plusIcon().click()
+                    attachmentTypeDropdown().select('Person')
+                    personInputField().type(object.personName.name)
+                    this.dropdownTypeaheadOption().click()
+                    this.click_button_on_modal('Add')
+                }
+            })
+        }
+        this.define_API_request_to_be_awaited('POST', 'api/tasks/getmytasks', 'getMyTasks')
         return this;
     }
-
-    verify_toast_message_(text) {
-        this.verify_toast_message(text)
-        return this;
-    };
 
     populate_and_submit_form(title, message, user) {
         titleInput().type(title);
@@ -71,34 +98,17 @@ export default class AddTaskPage extends BasePage {
         return this;
     }
 
-    verify_content_of_specific_cell_in_first_table_row_(columnTitle, cellContent) {
-        this.verify_content_of_specific_cell_in_first_table_row(columnTitle, cellContent, 'td')
+    store_Task_Number_from_API_response_to_local_storage() {
+        this.wait_response_from_API_call('getMyTasks', 200, 'myTasks')
         return this;
     };
 
-    verify_task_data_on_grid(taskObject) {
-
-        S.getCurrentDate();
-        this.verify_content_of_specific_cell_in_first_table_row_('Task Type', taskObject.type)
-        this.verify_content_of_specific_cell_in_first_table_row_('Sub Type', taskObject.subtype)
-        this.verify_content_of_specific_cell_in_first_table_row_('Status', taskObject.status)
-        this.verify_content_of_specific_cell_in_first_table_row_('Creation Date', S.currentDate)
-        this.verify_content_of_specific_cell_in_first_table_row_('Last Action', S.currentDate)
-        this.verify_content_of_specific_cell_in_first_table_row_('Title', taskObject.title)
-        this.verify_content_of_specific_cell_in_first_table_row_('Created by', taskObject.createdBy)
-        this.verify_content_of_specific_cell_in_first_table_row_('Due Date', taskObject.dueDate)
-
-        if (taskObject.userName || taskObject.userGroupName) {
-            if (taskObject.userName) {
-                this.verify_content_of_specific_cell_in_first_table_row_('Assigned to', taskObject.userName)
-            } else if (taskObject.userGroupName) {
-                this.verify_content_of_specific_cell_in_first_table_row_('Assigned to', taskObject.userGroupName)
-            }
-        } else {
-            this.verify_content_of_specific_cell_in_first_table_row_('Assigned to', 'Unassigned')
-        }
+    click_Save_() {
+        this.click_Save()
+        this.store_Task_Number_from_API_response_to_local_storage()
         return this;
-    }
+    };
+
 
     verify_email_content_(recipient, emailTemplate, taskObject, assignedTo, numberOfExpectedEmails = 1, markSeen = true) {
         cy.getLocalStorage("taskNumber").then(number => {

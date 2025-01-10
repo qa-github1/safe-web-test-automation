@@ -85,7 +85,7 @@ export default class BaseSearchPage extends BasePage {
 
     enter_values_in_multiselect_typeahead_search_field(fieldLabel, searchCriteria, values, typeahead) {
         searchCriteriaBasedOnFieldLabel(fieldLabel).select(searchCriteria);
-        this.enter_values_on_multi_select_typeahead_fields(
+        this.enter_values_on_several_multi_select_typeahead_fields(
             [
                 [fieldLabel, values, typeahead],
             ]);

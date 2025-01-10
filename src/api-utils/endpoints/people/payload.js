@@ -1,9 +1,12 @@
 const D = require('../../../fixtures/data.js');
 
-exports.generate_POST_request_payload_for_Add_Person = function () {
+exports.generate_POST_request_payload_for_Add_Person = function (personObject) {
 
-    let personData = D.newPerson;
-    let addressData = D.newPersonAddress;
+    let personData = personObject || Object.assign({}, D.newPerson)
+    let addressData = Object.assign({}, D.newPersonAddress)
+    addressData.state = null
+    addressData.addressType = null
+    addressData.country = null
 
     let body = {
         person: {
@@ -27,19 +30,7 @@ exports.generate_POST_request_payload_for_Add_Person = function () {
             formData: personData.formData,
             createdDate: personData.createdDate,
         },
-        address: {
-            id: addressData.id,
-            date: addressData.date,
-            entityId: addressData.entityId,
-            line1: addressData.line1,
-            line2: addressData.line2,
-            city: addressData.city,
-            zip: addressData.zip,
-            stateId: addressData.stateId,
-            addressTypeId: addressData.addressTypeId,
-            countryId: addressData.countryId,
-            isDefaultAddress: addressData.isDefaultAddress,
-        }
+        address: addressData
     };
     return body;
 };

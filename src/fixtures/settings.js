@@ -2874,7 +2874,8 @@ S.PENTEST_3 = {
         caseNumber: 'AutomatedTest-Active Case',
         createdDate: '12/28/2022',
         offenseDate: '12/20/2022',
-        reviewDate: '01/03/2023'
+        reviewDate: '01/03/2023',
+        caseReviewNotes: 'reviewNotes_122822788007',
     },
     otherTaskTemplateId: 3605,
     recentCase: {
@@ -2986,11 +2987,27 @@ S.PENTEST_3 = {
     tagC: {tagModelId: 16831, name: 'Tag_C__', color: "#4b9b62", tagUsedBy: 1},
     taskTemplates: {
         dispoAuth: {
-            title: 'Disposition Authorization',
-            id: 4308,
+            templateId: 4308,
+            type: 'Disposition Authorization',
+            subtype: '',
+            active: true,
+            emailUser: true,
             taskEscalation: true,
             dueDays: 5,
-            useDispositionAuthorizationActions: true
+            useDispositionAuthorizationActions: true,
+            title: 'Disposition Authorization',
+        },
+        other: {
+            templateId: 3382,
+            type: 'Other',
+            subtype: '',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 10,
+            useDispositionAuthorizationActions: true,
+            title: 'Title--forAutomatedTests',
+            message: 'Message-forAutomatedTests'
         },
     }
 };

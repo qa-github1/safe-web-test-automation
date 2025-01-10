@@ -53,7 +53,7 @@ export default class AddCasePage extends BaseAddPage {
                 [offenseDescriptionInput, caseObject.offenseDescription],
             ]);
 
-        this.enter_values_on_multi_select_typeahead_fields(
+        this.enter_values_on_several_multi_select_typeahead_fields(
             [
                 [caseOfficerInput, caseObject.caseOfficers, "users/groups"],
                 [tagsInput, caseObject.tags, this.lastTagOnTypeahead],

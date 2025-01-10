@@ -3,6 +3,7 @@ const D = exports;
 const S = require('../fixtures/settings.js');
 const C = require('../fixtures/constants.js');
 const helper = require('../support/e2e-helper.js');
+const {randomNo} = require("../support/e2e-helper");
 
 D.setNewRandomNo = function () {
     return helper.setNewRandomNo();
@@ -391,7 +392,7 @@ D.getNewPersonData = function (caseObject) {
         raceId: S.selectedEnvironment.race.id,
         dateOfBirthForApi: '1970-05-10T23:00:00.000Z',
         dateOfBirth: helper.setDate(C.currentDateFormat.editMode, 1970, 5, 11),
-        active: false,
+        active: true,
         deceased: true,
         juvenile: true,
         notes: [],
@@ -425,6 +426,29 @@ D.getNewPersonData = function (caseObject) {
     };
 
     return D.newPerson;
+};
+
+D.getNewPersonAddressData = function () {
+    let randomValue = helper.setNewRandomString();
+
+    D.newPersonAddress = {
+        id: 0,
+        date: '2020-04-11T05:19:49.040Z',
+        entityId: 0,
+        line1: 'Address1' + randomValue,
+        line2: 'Address2',
+        city: 'AddressCity',
+        zip: 'ZIP_123',
+        stateId: C.states.Kentucky.id,
+        state: C.states.Kentucky.name,
+        addressTypeId: C.addressTypes.home.id,
+        addressType: C.addressTypes.home.name,
+        countryId: 231,
+        country: 'United States',
+        isDefaultAddress: true
+    };
+
+    return D.newPersonAddress;
 };
 
 D.getEditedPersonData = function () {
@@ -585,23 +609,40 @@ D.getNewTaskTemplateData = function () {
     return D.newTaskTemplate;
 };
 
-D.getNewTaskData = function (user_assignee, userGroup_assignee, createdBy = S.userAccounts.orgAdmin, dueDate_daysAfterToday = 14) {
+D.getNewTaskData = function (user_assignee, userGroup_assignee, createdBy = S.userAccounts.orgAdmin, dueDate_daysAfterToday = 14, linkedObjects) {
+
+    const assignedTo =
+        user_assignee && userGroup_assignee ? [user_assignee.name, userGroup_assignee.name] :
+            user_assignee && !userGroup_assignee ? [user_assignee.name] :
+                !user_assignee && userGroup_assignee ? [userGroup_assignee.name]
+                    : 'Unassigned';
 
     D.newTask = {
         template: 'Other',
-        //type: 'Other',
-        //subtype: '',
-        status: 'Open',
+        status: 'New',
+        state: 'Open',
+        creationDate: helper.setDate(C.currentDateTimeFormat.dateOnly),
+        lastActionDate: helper.setDate(C.currentDateTimeFormat.dateOnly),
+        closedDate: '',
         title: 'title_' + helper.setNewRandomString(),
         message: 'message_' + helper.setNewRandomString(),
         userEmail: user_assignee ? user_assignee.email : null,
         userName: user_assignee ? user_assignee.name : null,
         userGroupName: userGroup_assignee ? userGroup_assignee.name : null,
+        assignedTo: assignedTo,
+        linkedObjects: linkedObjects || 'There aren\'t any linked objects',
         createdBy: createdBy ? createdBy.name : null,
-        dueDate: helper.getDateAfterXDaysInSpecificFormat(C.currentDateTimeFormat.mask, dueDate_daysAfterToday),
-        dueDate_inEmail: helper.getDateAfterXDaysInSpecificFormat(C.currentDateTimeFormat.dateOnly.fullYearMask, dueDate_daysAfterToday)
-    }
-
+        dueDate: helper.getDateAfterXDaysInSpecificFormat(
+            C.currentDateTimeFormat.dateOnly.mask,
+            dueDate_daysAfterToday
+        ),
+        dueDate_inEmail: helper.getDateAfterXDaysInSpecificFormat(
+            C.currentDateTimeFormat.dateOnly.fullYearMask,
+            dueDate_daysAfterToday
+        ),
+        caseReviewDate: 'N/A',
+        caseReviewNotes: 'N/A'
+    };
     return D.newTask;
 };
 

@@ -1,3 +1,6 @@
+import authApi from "../../api-utils/endpoints/auth";
+import orgSettingsApi from "../../api-utils/endpoints/org-settings/collection";
+
 let S = require('../../fixtures/settings');
 let D = require('../../fixtures/data');
 let C = require('../../fixtures/constants');
@@ -13,7 +16,7 @@ let
     saveAutoDispoButton = e => cy.get('[id="saveAutoDispo"]').contains('Save'),
     editButton = e => cy.get('[translate="GENERAL.EDIT"]').contains('Edit'),
     deleteButton = e => cy.get('[translate="GENERAL.DELETE"]').parent('li'),
-    actionsButton = e => cy.get('[translate="GENERAL.ACTIONS"]'),
+    actionsButton = e => cy.get('[title="Select an item or items for which you would like to perform Action."]'),
     uploadFileInput = e => cy.get('input[type=file]'),
     addItem = e => cy.get('[translate="CASES.LIST.BUTTON_ADD_ITEM"]'),
     active_tab = e => cy.get('[class="tab-pane ng-scope active"]'),
@@ -31,6 +34,7 @@ let
     modalBodySectionAboveFooter = e => cy.get('.modal-body').children('div').last(),
     sweetAlert = e => cy.get('[data-animation="pop"]'),
     typeaheadList = e => cy.get('.ui-select-choices'),
+    firstTypeaheadOption = e => cy.get('.ui-select-choices-row').first(),
     //highlightedOptionOnTypeahead = e => cy.get('.ui-select-choices-row-inner').last(),
     highlightedOptionOnTypeahead = e => cy.get('.ui-select-highlight').last(),
     caseOfficersOverwrite = e => cy.get('[ng-model="toggle.caseOfficersOverwrite"]'),
@@ -53,7 +57,7 @@ let
     pageSizesUnderMenuCustomization = e => cy.get('[ng-if="optionsToggle.isOpen"]'),
     elementOnGridContainer = elementTitle => cy.get('.bs-grid').contains(elementTitle),
     parentContainerFoundByInnerLabel = (innerLabel, parentElementTag = 'div') => cy.contains(innerLabel).parent(parentElementTag),
-    parentContainerFoundByInnerLabelOnModal = (innerLabel, parentElementTag = 'div') => modal().contains(innerLabel).parent(parentElementTag),
+    parentContainerFoundByInnerLabelOnModal = (innerLabel, parentElementTag = 'div') => modal().contains(innerLabel).parents(parentElementTag),
     navTabs = e => cy.get('.nav-tabs'),
     specificTab = tabTitle => navTabs().children().contains(tabTitle).parent('li'),
     historyTab = e => cy.get('[translate="GENERAL.HISTORY"]').parent('tab-heading').parent('a').parent('li'),
@@ -93,9 +97,9 @@ let
     disabledColumnsOsOnMenuCustomization = e => cy.get('.glyphicon-remove'),
     //disabledColumnsOsOnMenuCustomization_PENTEST = e => cy.get('[ng-class="col.visible ? \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\': \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
 
-     //disabledColumnsOsOnMenuCustomization_DEV = e => cy.get('[ng-class="col.visible ?\n' +
-     //    '                                                            \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\':\n' +
-     //    '                                                            \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
+    //disabledColumnsOsOnMenuCustomization_DEV = e => cy.get('[ng-class="col.visible ?\n' +
+    //    '                                                            \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\':\n' +
+    //    '                                                            \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
     enabledColumnsOnMenuCustomization = e => cy.get('.glyphicon-ok'),
     pageSizeAndColumnsContianer = e => cy.get('.grid-menu-header').eq(1),
     //  resultsTableHeader = (tableIndex = 0) => cy.get('.table-striped').eq(tableIndex).find('thead'),
@@ -110,8 +114,9 @@ let
     firstRowInResultsTableOnActiveTab = e => active_tab().find('tbody').children('tr').first(),
     checkboxOnFirstRowInResultsTableOnActiveTab = e => active_tab().find('tbody').children('tr').first().find('.bg-grid-checkbox'),
     checkboxOnFirstTableRow = e => resultsTable().find('.bg-grid-checkbox').first(),
+    checkboxToSelectAll = e => cy.get('[ng-model="options.selectAllToggle"]').first(),
     locationPin = name => cy.contains(name).parent('div'),
-    checkboxOnSpecificTableRow = rowNumber => resultsTable().find('.bg-grid-checkbox').eq(rowNumber - 1),
+    checkboxOnSpecificTableRow = rowNumber => resultsTable().find('.bg-grid-checkbox', { timeout: 0 }).eq(rowNumber - 1),
     checkboxOnTableRowOnModal = rowNumber => tableOnModal().find('.bg-grid-checkbox').eq(rowNumber - 1),
     checkboxOnTableHeader = e => resultsTableHeader().find('[type="checkbox"]'),
     caseNumberOnTypeahead = e => cy.get('[ng-repeat="match in matches track by $index"]').first(),
@@ -133,7 +138,7 @@ let
     personOnCustomForm = e => cy.get('.fg-form-fields').contains('Person').parent('div').find('input'),
     user_userGroup_OnCustomForm = e => cy.get('.fg-form-fields').contains('User/User Group').parent('div').find('input'),
     dateOnCustomForm = e => cy.get('.fg-form-fields').contains('Date').parent('div').find('[ng-model="ngModel"]'),
-    dropdownTypeaheadOption = e => cy.get('[ng-repeat="match in matches track by $index"]'),
+    dropdownTypeaheadOption = e => cy.get('[ng-repeat="match in matches track by $index"]').first(),
     userAndUserGroupTypeaheadOption = e => cy.get('[ng-repeat="item in $group.items"]').first(),
     firstOptionOnCheckboxListOnCustomForm = e => cy.get('.fg-form-fields').contains('Checkbox List').parent('div').children().find('input').first(),
     secondOptionOnRadiobuttonListOnCustomForm = e => cy.get('.fg-form-fields').contains('Radiobutton List').parent('div').children().find('input').eq(1),
@@ -181,7 +186,7 @@ let
     typeaheadInputField = fieldLabel => cy.contains(fieldLabel).parent().find('input').first(),
     dropdownField = fieldLabel => cy.findByLabelText(fieldLabel).parent().find('select').eq(0),
     inputField = fieldLabel => cy.findByLabelText(fieldLabel).parent().find('input').eq(0),
-    textareaField = fieldLabel => cy.contains('span', fieldLabel).parent('label').parent('div').find('textarea').eq(0),
+    textareaField = fieldLabel => cy.contains('span', fieldLabel).parents('label').parent('div').find('textarea').eq(0),
     typeaheadOption = fieldLabel => cy.contains(fieldLabel).parent().find('ul').find('li').eq(0)
 
 let dashboardGetRequests = [
@@ -202,6 +207,7 @@ export default class BasePage {
         this.offenseTypeOnTypeahead = offenseTypeOnTypeahead;
         this.firstLocationOnTypeahead = firstLocationOnTypeahead;
         this.locationsOnTypeahead = locationsOnTypeahead;
+        this.dropdownTypeaheadOption = dropdownTypeaheadOption;
         this.lastTagOnTypeahead = lastTagOnTypeahead;
         this.caseOfficerTypeahead = caseOfficerTypeahead;
         this.createPersonalTagOnTypeahead = createPersonalTagOnTypeahead;
@@ -209,6 +215,8 @@ export default class BasePage {
         this.toastMessage = toastMessage;
         this.resultsTable = resultsTable;
         this.firstRowInResultsTable = firstRowInResultsTable;
+        this.firstTypeaheadOption = firstTypeaheadOption;
+        this.checkboxToSelectAll = checkboxToSelectAll;
         this.mainContainer = mainContainer;
         this.tagsField = tagsField;
         this.tagsInput = tagsInput;
@@ -383,7 +391,7 @@ export default class BasePage {
         cy.getLocalStorage("recentCase").then(recentCase => {
             toastMessage(timeoutInMiliseconds).should('be.visible');
             toastMessage(timeoutInMiliseconds).invoke('text').then(function (toastMsg) {
-                toastMessage().click({ multiple: true })
+                toastMessage().click({multiple: true})
                 toastMessage().should('not.exist');
                 if (text instanceof Array) {
                     text.forEach(element =>
@@ -548,41 +556,45 @@ export default class BasePage {
         return this;
     };
 
-    enter_values_on_multi_select_typeahead_fields(element_value_typeahead__stacks) {
+    enter_values_on_single_multi_select_typeahead_field(LabelValueArray) {
+        if (LabelValueArray[1]) {
+            // if there are multiple values in array, repeat the same action to enter all of them
+            for (let i = 0; i < LabelValueArray[1].length; i++) {
+                if (["users/groups", "usersCF"].includes(LabelValueArray[2])) {
+                    this.define_API_request_to_be_awaited('GET',
+                        'api/users/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + LabelValueArray[1][i].replace(/\s+/g, '%20'),
+                        "getUserInTypeahead")
+                    this.define_API_request_to_be_awaited('GET',
+                        '/api/userGroups/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + LabelValueArray[1][i].replace(/\s+/g, '%20'),
+                        "getUserGroupInTypeahead")
+                }
+
+                if (typeof LabelValueArray[0] === 'string' || LabelValueArray[0] instanceof String) {
+                    typeaheadInputField(LabelValueArray[0]).clear().invoke('val', LabelValueArray[1][i]).trigger('input')
+                } else {
+                    LabelValueArray[0]().clear().invoke('val', LabelValueArray[1][i]).trigger('input')
+                }
+
+                if (["users/groups", "usersCF"].includes(LabelValueArray[2])) {
+                    this.wait_response_from_API_call("getUserInTypeahead")
+                    this.wait_response_from_API_call("getUserGroupInTypeahead")
+                }
+
+                cy.wait(200)
+                highlightedOptionOnTypeahead().click({force: true})
+                cy.wait(200)
+
+            }
+        }
+        return this;
+    };
+
+    enter_values_on_several_multi_select_typeahead_fields(element_value_typeahead__stacks) {
         let that = this
         element_value_typeahead__stacks.forEach(function (stack) {
             // perform actions only if value is provided
             // for some optional fields it might be null -- e.g. D.generateNewDataSet(true) --> with 'setNullForDisabledFields'
-            if (stack[1]) {
-                // if there are multiple values in array, repeat the same action to enter all of them
-                for (let i = 0; i < stack[1].length; i++) {
-                    if (["users/groups", "usersCF"].includes(stack[2])) {
-                        that.define_API_request_to_be_awaited('GET',
-                            'api/users/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + stack[1][i].replace(/\s+/g, '%20'),
-                            "getUserInTypeahead")
-                        that.define_API_request_to_be_awaited('GET',
-                            '/api/userGroups/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + stack[1][i].replace(/\s+/g, '%20'),
-                            "getUserGroupInTypeahead")
-                    }
-
-                    if (typeof stack[0] === 'string' || stack[0] instanceof String){
-                        typeaheadInputField(stack[0]).clear().invoke('val', stack[1][i]).trigger('input')
-                    }
-                    else{
-                        stack[0]().clear().invoke('val', stack[1][i]).trigger('input')
-                    }
-
-                    if (["users/groups", "usersCF"].includes(stack[2])) {
-                        that.wait_response_from_API_call("getUserInTypeahead")
-                        that.wait_response_from_API_call("getUserGroupInTypeahead")
-                    }
-
-                    cy.wait(200)
-                    highlightedOptionOnTypeahead().click({force: true})
-                    cy.wait(200)
-
-                }
-            }
+            that.enter_values_on_single_multi_select_typeahead_field(stack)
         });
         return this;
     };
@@ -804,10 +816,23 @@ export default class BasePage {
         return this;
     };
 
-    click_element_if_has_a_class = function (element, className) {
-        element.then(($el) => {
+    verify_element_does_not_have_class(element, className) {
+        element().should('not.have.class', className);
+        return this;
+    };
+
+    click_element_if_has_a_class = function (elementAsFunction, className) {
+        elementAsFunction.then(($el) => {
             if ($el.hasClass(className)) {
                 element.click();
+            }
+        });
+    };
+
+    click_element_if_has_a_class_= function (element, className) {
+        element().then(($el) => {
+            if ($el.hasClass(className)) {
+                element().click();
             }
         });
     };
@@ -906,6 +931,26 @@ export default class BasePage {
         return this;
     };
 
+    get_next_item_id_for_case_and_Org(caseNumber) {
+        cy.getLocalStorage("currentUserSettings").then(currentUserSettings => {
+            if (!JSON.parse(currentUserSettings).isOrgAdmin) {
+                authApi.get_tokens_without_page_reload(S.userAccounts.orgAdmin)
+            }
+        })
+        casesApi.fetch_current_case_data(caseNumber);
+        orgSettingsApi.get_current_org_settings();
+
+        cy.getLocalStorage("orgSettings").then(orgSettings => {
+            cy.getLocalStorage("currentCase").then(currentCase => {
+                orgSettings = JSON.parse(orgSettings);
+                currentCase = JSON.parse(currentCase).cases[0];
+
+                cy.setLocalStorage('nextItemId_inOrg', orgSettings.nextItemId)
+                cy.setLocalStorage('nextItemId_onCase', currentCase.nextItemId)
+            });
+        });
+    }
+
     click_Edit() {
         editButton().should('be.enabled');
         editButton().click();
@@ -919,7 +964,7 @@ export default class BasePage {
     };
 
     click_Actions() {
-        this.pause(0.5)
+        this.pause(1)
         this.wait_until_modal_disappears()
         this.wait_until_spinner_disappears()
         //cy.contains('Actions').click()
@@ -1023,7 +1068,7 @@ export default class BasePage {
         if (!alias) {
             alias = partOfRequestUrl;
         }
-        cy.intercept(methodType, '**' + `${partOfRequestUrl}` + '**' , (req) => {
+        cy.intercept(methodType, '**' + `${partOfRequestUrl}` + '**', (req) => {
             req.continue(); // Explicitly pass through to backend
         }).as(alias);
         return this;
@@ -1135,22 +1180,48 @@ export default class BasePage {
 
             cy.log('EMAIL TEMPLATE ' + content)
             cy.log('EMAIL received ' + JSON.stringify(emails))
-            if (emails[numberOfExpectedEmails - 1]) {
-                self.verify_content_of_email_for_specific_recipient(recipient, subject, content, shouldSaveLinkToLocalStorage)
-            } else {
-                self.pause(5)
-                self.fetch_emails(markSeen).then(function (emails) {
-                    D.unreadEmails = emails
-                    self.verify_content_of_email_for_specific_recipient(recipient, subject, content, shouldSaveLinkToLocalStorage)
+            // if (emails[numberOfExpectedEmails - 1]) {
+            self.verify_content_of_email_for_specific_recipient(recipient, subject, content, shouldSaveLinkToLocalStorage)
+            // } else {
+            //     self.pause(5)
+            //     self.fetch_emails(markSeen).then(function (emails) {
+            //         D.unreadEmails = emails
+            //         self.verify_content_of_email_for_specific_recipient(recipient, subject, content, shouldSaveLinkToLocalStorage)
+            //     })
+            // }
+        })
+        return this;
+    };
+
+    verify_no_new_email_arrived_with_specific_subject(recipient, subject, content, numberOfExpectedEmails = 1, markSeen = true, shouldSaveLinkToLocalStorage) {
+        let self = this
+        D.unreadEmail1 = 'No Emails'
+        D.unreadEmailsForSpecificRecipient = []
+
+        self.fetch_emails(markSeen).then(function (emails) {
+            D.unreadEmails = emails
+            if (D.unreadEmails[0]) {
+                D.unreadEmails.forEach(function (unreadEmail) {
+                    if (JSON.stringify(unreadEmail.to).includes(recipient)) {
+                        D.unreadEmailsForSpecificRecipient.push(unreadEmail)
+                    }
+                })
+
+                D.unreadEmailsForSpecificRecipient.forEach(function (unreadEmail) {
+                    if ((JSON.stringify(unreadEmail.subject)).includes(subject)) {
+                        D.unreadEmail1 = unreadEmail
+                        expect(D.unreadEmail1).to.equal('Email has arrived but it was not expected in this scenario!')
+                    }
                 })
             }
+            expect(D.unreadEmail1).to.equal('No Emails')
         })
         return this;
     };
 
     clear_gmail_inbox() {
-        D.unreadEmail1 = []
-        D.unreadEmailsForSpecificRecipient = []
+        D.unreadEmail1 = ''
+        D.unreadEmailsForSpecificRecipient = ''
 
         cy.task('fetchGmailUnseenMails', {
             username: S.gmailAccount.email,
@@ -1234,7 +1305,32 @@ export default class BasePage {
     };
 
     select_checkbox_on_first_table_row() {
+        this.wait_until_spinner_disappears()
+        checkboxOnFirstTableRow().should('be.enabled');
         checkboxOnFirstTableRow().click();
+        return this;
+    };
+
+    click_checkbox_to_select_all_rows() {
+        this.wait_until_spinner_disappears()
+        this.pause(1)
+        checkboxToSelectAll().should('be.enabled');
+        checkboxToSelectAll().click();
+        return this;
+    };
+
+    click_checkbox_to_select_specific_rows(rowNumbers) {
+        this.wait_until_spinner_disappears()
+        this.pause(1)
+
+        checkboxToSelectAll().click({force:true})
+        this.pause(0.3)
+        checkboxToSelectAll().click({force:true})
+
+        rowNumbers.forEach(row => {
+            // checkboxOnSpecificTableRow(row).should('be.enabled');
+            checkboxOnSpecificTableRow(row).click();
+        })
         return this;
     };
 
@@ -1469,7 +1565,7 @@ export default class BasePage {
         } else {
             resultsTableHeader().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
                 tableStriped().find('td').eq(i).invoke('text').then(function (textFound) {
-                    self.verify_text(tableStriped().find('td').eq(i), textFound)
+                    self.verify_text(tableStriped().find('td').eq(i), cellContent)
                 })
             });
         }
@@ -1576,6 +1672,14 @@ export default class BasePage {
         //cy.log('Opening Peron URL: ' + url);
         cy.visit(url);
 
+        return this;
+    };
+
+    open_newly_created_task_via_direct_link() {
+        cy.getLocalStorage("newTaskId").then(newTaskId => {
+            let url = `${S.base_url}/#/view-task/` + newTaskId;
+            cy.visit(url);
+        })
         return this;
     };
 
@@ -1842,7 +1946,7 @@ export default class BasePage {
     }
 
     findElementByLabelEnterValueAndPressEnter(label, value) {
-        parentContainerFoundByInnerLabelOnModal(label, '.form-group')
+        parentContainerFoundByInnerLabelOnModal(label, 'form')
             .find('input').first()
             .clear()
             .type(value)
@@ -2016,7 +2120,7 @@ export default class BasePage {
                 [dateOnCustomForm, dataObject.custom_date],
             ]);
 
-        this.enter_values_on_multi_select_typeahead_fields([
+        this.enter_values_on_several_multi_select_typeahead_fields([
             // [user_userGroup_OnCustomForm, dataObject.custom_user_or_group_names, userAndUserGroupTypeaheadOption]
             [user_userGroup_OnCustomForm, dataObject.custom_user_or_group_names, "usersCF"]
         ])
@@ -2040,10 +2144,12 @@ export default class BasePage {
                 if (length < page.numberOfStandardColumns + 1) {
                     disabledColumnsOsOnMenuCustomization().its('length').then(function (length) {
                         // iterate through options that have 'X' icon within "Options" section the number of times that matches the number of 'disabled columns' (exclude 3 'X' icons in pageSize section)
-                        for (let i = 0; i < length - 3; i++) {
+                        let numberOfPageSizeOptionsWithXIcon = (page === C.pages.taskList) ? 1 : 3
+
+                        for (let i = 0; i < length - numberOfPageSizeOptionsWithXIcon; i++) {
 
                             //click 4th 'X' icon within 'Options' section one (1st disabled column)
-                            disabledColumnsOsOnMenuCustomization().eq(3).click()
+                            disabledColumnsOsOnMenuCustomization().eq(numberOfPageSizeOptionsWithXIcon).click()
 
                             if (i < length - 1) {
                                 menuCustomizationFromRoot().click()
@@ -2094,6 +2200,7 @@ export default class BasePage {
         } else {
             element().invoke('val', arrayOrString).trigger('input')
         }
+        return this
     }
 
     clearAndEnterValue(element, value) {
