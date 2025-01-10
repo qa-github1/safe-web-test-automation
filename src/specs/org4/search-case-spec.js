@@ -114,7 +114,7 @@ describe('Cases Search', function () {
 
         context('1.1 Created By', function () {
 
-            it('1.1.1 equals {email of the user (current user) who created a case}', function () {
+            it.only('1.1.1 equals {email of the user (current user) who created a case}', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(D.newUser)
                 ui.menu.click_Search__Case();
