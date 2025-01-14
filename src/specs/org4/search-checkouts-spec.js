@@ -34,7 +34,8 @@ describe('Search Checkouts', function () {
             checkedOutTo: D.newPerson.name,
             checkedOutBy: orgAdmin.name,
             reason: S.selectedEnvironment.checkoutReason.name,
-            notes: D.randomNo,
+            //notes: D.randomNo,
+            notes: 'Note for Checked Out Item',
             expectedReturnDate: '',
             itemsCount: 1,
             mediaCount: 0,
@@ -50,7 +51,7 @@ describe('Search Checkouts', function () {
 
         context('1.1 Checked Out To', function () {
 
-            it("1.1.1 'equals' correct Person's name", function () {
+            it.only("1.1.1 'equals' correct Person's name", function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Checkouts();

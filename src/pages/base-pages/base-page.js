@@ -1510,38 +1510,72 @@ export default class BasePage {
         return this;
     };
 
-    verify_content_of_specific_cell_in_first_table_row(columnTitle, cellContent, headerCellTag = 'th') {
+    // verify_content_of_specific_cell_in_first_table_row(columnTitle, cellContent, headerCellTag = 'th') {
+    //
+    //     firstRowInResultsTable().within(($list) => {
+    //         if (cellContent) {
+    //             if (this.isObject(cellContent)) {
+    //                 for (let property in cellContent) {
+    //                     resultsTableHeaderFromRoot().contains(headerCellTag, columnTitle).invoke('index').then((i) => {
+    //                         cy.get('td').eq(i).invoke('text').then(function (textFound) {
+    //                             assert.include(textFound, cellContent[property]);
+    //                         })
+    //
+    //                     })
+    //                 }
+    //             } else if (Array.isArray(cellContent)) {
+    //                 cellContent.forEach(function (value) {
+    //                     resultsTableHeaderFromRoot().contains(headerCellTag, columnTitle).invoke('index').then((i) => {
+    //                         cy.get('td').eq(i).invoke('text').then(function (textFound) {
+    //                             assert.include(textFound, value);
+    //                         })
+    //                     })
+    //                 })
+    //             } else {
+    //                 resultsTableHeaderFromRoot().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
+    //                     cy.get('td').eq(i).invoke('text').then(function (textFound) {
+    //                         assert.include(textFound, cellContent.toString().trim());
+    //                     })
+    //                 });
+    //             }
+    //         }
+    //     });
+    //     return this;
+    // };
 
+ //need a review for this replaced method -> old one is above
+    verify_content_of_specific_cell_in_first_table_row(columnTitle, cellContent, headerCellTag = 'th') {
         firstRowInResultsTable().within(($list) => {
             if (cellContent) {
                 if (this.isObject(cellContent)) {
                     for (let property in cellContent) {
                         resultsTableHeaderFromRoot().contains(headerCellTag, columnTitle).invoke('index').then((i) => {
-                            cy.get('td').eq(i).invoke('text').then(function (textFound) {
-                                assert.include(textFound, cellContent[property]);
-                            })
-
-                        })
+                            cy.get('td').eq(i).should(($cell) => {
+                                expect($cell.text()).to.include(cellContent[property]);
+                            });
+                        });
                     }
                 } else if (Array.isArray(cellContent)) {
                     cellContent.forEach(function (value) {
                         resultsTableHeaderFromRoot().contains(headerCellTag, columnTitle).invoke('index').then((i) => {
-                            cy.get('td').eq(i).invoke('text').then(function (textFound) {
-                                assert.include(textFound, value);
-                            })
-                        })
-                    })
+                            cy.get('td').eq(i).should(($cell) => {
+                                expect($cell.text()).to.include(value);
+                            });
+                        });
+                    });
                 } else {
                     resultsTableHeaderFromRoot().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
-                        cy.get('td').eq(i).invoke('text').then(function (textFound) {
-                            assert.include(textFound, cellContent.toString().trim());
-                        })
+                        cy.get('td').eq(i).should(($cell) => {
+                            expect($cell.text().trim()).to.include(cellContent.toString().trim());
+                        });
                     });
                 }
             }
         });
         return this;
     };
+
+
 
     verify_content_of_first_table_row_by_provided_column_title_and_value(columnTitle, cellContent, headerCellTag = 'th') {
         let self = this
