@@ -282,7 +282,7 @@ exports.setNewRandomString = function (length = 3) {
     for (var i = 0; i < length; i++) {
         result += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
     }
-    exports.randomString = dateFormat(Date(), 'mmmddyy') + result;
+    exports.randomString = dateFormat(Date(), 'mmmmddyyhhmm') + result;
     return exports.randomString.toLowerCase();
 };
 

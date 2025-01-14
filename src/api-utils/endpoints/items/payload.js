@@ -20,7 +20,7 @@ exports.generate_POST_request_payload_for_creating_new_item = function (specific
         locationId: locationId,
         recoveryDate: itemData.recoveryDateInIsoFormat,
         createdDate: itemData.createdDate,
-        barcodes: itemData.barcodes,
+        barcodes: [],
         formData: itemData.formData,
         cases: itemData.cases,
         people: [person],

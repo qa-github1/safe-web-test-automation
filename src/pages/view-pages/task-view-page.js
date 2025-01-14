@@ -1,5 +1,8 @@
+import AddPersonPage from "../add-pages/add-person-page";
+
 const C = require('../../fixtures/constants');
 const S = require('../../fixtures/settings');
+const addPersonPage = new AddPersonPage();
 import BaseViewPage from "../base-pages/base-view-page";
 
 //************************************ ELEMENTS ***************************************//
@@ -16,6 +19,8 @@ let
     personTypeOnModal = e => cy.get('[ng-model="selectedCase.person.typeId"]'),
     addressTypeOnModal = e => cy.get('[ng-model="model.addressTypeId"]'),
     address1OnModal = e => cy.get('[placeholder="Address 1"]'),
+    existingNewPersonToggle = e => cy.get('[ng-model="options.selectExistingPerson"]'),
+    addThisPersonAsClaimantButton = e => cy.get('[translate="DISPO.AUTH.ADD_THIS_PERSON_AS_CLAIMANT"]'),
     claimantFieldOnApproveForReleaseModal = e => cy.get('#claimantId'),
     okButtonOnModal = e => cy.get('[translate="GENERAL.BUTTON_OK"]'),
     claimantInputFieldOnApproveForReleaseModal = e => cy.get('input[placeholder="Select person linked to the case or search for any other person"]'),
@@ -88,7 +93,7 @@ export default class TaskViewPage extends BaseViewPage {
         return this;
     };
 
-    set_Action___Approve_for_Release(rowNumbers, personObject, addressObject, isExistingPerson, isPersonLinkedToCase, personHasAddress, isDelayedRelease) {
+    set_Action___Approve_for_Release(rowNumbers, personObject, addressObject, isExistingPerson, isPersonLinkedToCase, personHasAddress, isDelayedRelease, duplicateDetected, useDuplicatePerson) {
         let personName = personObject.firstName
         this.click_checkbox_to_select_specific_rows(rowNumbers)
             .click_Actions()
@@ -101,19 +106,38 @@ export default class TaskViewPage extends BaseViewPage {
             this.press_ENTER(releaseAfterDate)
         }
 
-        claimantFieldOnApproveForReleaseModal().click()
+        if (isExistingPerson){
+            claimantFieldOnApproveForReleaseModal().click()
+            if (isPersonLinkedToCase) {
+                specificClaimantOnTypeahead(personName).click()
+                this.pause(0.5)
+            } else {
+                claimantInputFieldOnApproveForReleaseModal().type(personName)
+                this.pause(1)
+                this.firstTypeaheadOption().click()
+                personTypeOnModal().select(personObject.personType)
+            }
+        }
+        else {
+            existingNewPersonToggle().click()
+            addPersonPage.populate_all_fields(personObject)
 
-        if (!isPersonLinkedToCase) {
-            claimantInputFieldOnApproveForReleaseModal().type(personName)
-            this.pause(0.3)
-            this.firstTypeaheadOption().click()
-            personTypeOnModal().select(personObject.personType)
-        } else {
-            claimantInputFieldOnApproveForReleaseModal().click()
-            specificClaimantOnTypeahead(personName).click()
+                if (duplicateDetected){
+                    addPersonPage
+                    //     .verify_number_of_warnings_for_potential_duplicates
+                    // (4, true, true, true, true)
+                        .potentialDuplicatePersonLink().first().click()
+
+                    if (useDuplicatePerson){
+                        addThisPersonAsClaimantButton().click()
+                    }
+                    else {
+                        addPersonPage.proceedAnywayButton().click()
+                    }
+                }
         }
 
-        if (!personHasAddress && addressObject.addressType) {
+        if ((!personHasAddress || !isExistingPerson) && addressObject.addressType) {
             addressTypeOnModal().select(addressObject.addressType)
             this.enterValue(address1OnModal, addressObject.line1)
         }
@@ -122,7 +146,13 @@ export default class TaskViewPage extends BaseViewPage {
         }
 
         okButtonOnModal().click()
-        this.verify_toast_message('Saved')
+
+        if (!isExistingPerson && !useDuplicatePerson){
+            this.verify_toast_message('A new person created as a Claimant. Person ID is ')
+        }
+        else{
+            this.verify_toast_message('Saved')
+        }
         return this;
     };
 

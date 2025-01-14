@@ -14,6 +14,8 @@ describe('Dispo Auth', function () {
 
         ui.app.log_title(this);
         api.auth.get_tokens(user);
+        api.org_settings.enable_all_Item_fields()
+        api.org_settings.enable_all_Person_fields()
 
         let selectedTemplate = S.selectedEnvironment.taskTemplates.dispoAuth
         D.getNewTaskData()
@@ -22,42 +24,71 @@ describe('Dispo Auth', function () {
         D.newTask.creatorId = S.userAccounts.orgAdmin.id
         D.newTask.assignedUserIds = [S.userAccounts.orgAdmin.id]
         api.cases.add_new_case()
-        let newAddress1 = D.newPersonAddress
 
-     //   person1 NOT linked to the case, WITHOUT an address -->link person to the case from modal but keep address blank
+        // For "Approve for Release" to New Person --> use detected duplicate person, keep address blank
         let person1 = Object.assign({}, D.getNewPersonData())
+        person1.firstName = 'Person_1'
+        api.people.add_new_person(false, null, person1)
+        let address1 = {}
+
+        // For "Approve for Release" to New Person, --> proceed to create a duplicate person after warning, and add address
+        let person2 = Object.assign({}, person1)
+        person2.firstName = 'Person_1'
+        let address2 = Object.assign({}, D.getNewPersonAddressData())
+
+        // For "Approve for Release" to New Person, --> add an address
+        D.newPerson = D.getNewPersonData()
+        let person3 = Object.assign({}, {firstName: D.newPerson.firstName, lastName: D.newPerson.lastName, personType: S.selectedEnvironment.personType.name})
+        person3.firstName = person3.firstName + '_P_3'
+        let address3 = Object.assign({}, D.getNewPersonAddressData())
+
+        // For "Approve for Release" to Existing Person, NOT linked to the case, WITHOUT an address --> add address
+        let person4 = Object.assign({}, D.getNewPersonData())
+        person4.firstName = person4.firstName + '_P_4'
         D.newPersonAddress = {}
-        api.people.add_new_person(false)
+        api.people.add_new_person(false, null, person4)
+        let address4 = Object.assign({}, D.getNewPersonAddressData())
 
-        //person2 linked to the case, WITHOUT an address -->  populate address on the modal
-        let person2 = Object.assign({}, D.getNewPersonData())
-        D.newPersonAddress = {}
-        api.people.add_new_person(true, D.newCase, person2)
-        let newAddress2 = D.getNewPersonAddressData()
+        // For "Approve for Release" to Existing Person, already linked to the case, WITH an address
+        let person5 = Object.assign({}, D.getNewPersonData())
+        person5.firstName = person5.firstName + '_P_5'
+        api.people.add_new_person(true, D.newCase, person5)
+        let address5 = Object.assign({}, D.getNewPersonAddressData())
 
-        //person3 linked to multiple cases, with multiple addresses
-        let person3 =  Object.assign({}, D.getNewPersonData())
-        api.people.add_new_person(true, D.newCase, person3)
-        api.people.add_person_to_case(true, false, null, S.selectedEnvironment.oldActiveCase.id)
-
-        //api.people. TODO Make api request to add another address
-
-        for (let i = 0; i < 11; i++) {
+        for (let i = 0; i < 13; i++) {
             api.items.add_new_item(true, null, 'item' + i)
         }
-        api.tasks.add_new_task(D.newTask, 11)
+        api.tasks.add_new_task(D.newTask, 12)
 
-        ui.taskView.open_newly_created_task_via_direct_link()
+       // ui.app.open_url_and_wait_all_GET_requests_to_finish('https://pentest.trackerproducts.com/#/view-task/696288')
+        ui.taskView
+            .open_newly_created_task_via_direct_link()
             .select_tab('Items')
             .set_Action___Approve_for_Disposal([1, 2])
-            .set_Action___Approve_for_Release([3, 4], person1, {}, true, false, false)
-            .set_Action___Delayed_Release([5, 6], person2, newAddress2, true, true, false)
-            .set_Action___Delayed_Release([7,8], person3, {}, true, true, true)
-            .set_Action___Hold([9],  'Case Active', false, 10)
-            .set_Action___Hold([10],  'Active Warrant', true)
-            .set_Action___Timed_Disposal([11], '3y' )
-            .verify_values_on_the_grid()
+            .set_Action___Approve_for_Release([3], person1, {}, false, false, false, false, true, true)
+            .set_Action___Approve_for_Release([4], person2, address2, false, false, false, false, true, false)
+             .set_Action___Approve_for_Release([5], person3, address3, false, false, false, false, false, false)
+            .set_Action___Approve_for_Release([6], person4, address4, true, false, false, false)
+            .set_Action___Approve_for_Release([7], person5, address5, true, true, true, false)
+            .set_Action___Delayed_Release([8, 9], person4, {}, true, true, false, true)
+            .set_Action___Hold([10],  'Case Active', false, 10)
+            .set_Action___Hold([11],  'Active Warrant', true)
+            .set_Action___Timed_Disposal([12], '3y' )
             .click('Submit For Disposition')
+            .verify_toast_message('Saved')
+            .wait_until_spinner_disappears()
+            .verify_content_of_specified_cell_in_specified_table_row(1, 'Disposition Status', 'Approved for Disposal')
+            .verify_content_of_specified_cell_in_specified_table_row(2, 'Disposition Status', 'Approved for Disposal')
+            .verify_content_of_specified_cell_in_specified_table_row(3, 'Disposition Status', 'Approved for Release')
+            .verify_content_of_specified_cell_in_specified_table_row(4, 'Disposition Status', 'Approved for Release')
+            .verify_content_of_specified_cell_in_specified_table_row(5, 'Disposition Status', 'Approved for Release')
+            .verify_content_of_specified_cell_in_specified_table_row(6, 'Disposition Status', 'Approved for Release')
+            .verify_content_of_specified_cell_in_specified_table_row(7, 'Disposition Status', 'Approved for Release')
+            .verify_content_of_specified_cell_in_specified_table_row(8, 'Disposition Status', 'Delayed Release')
+            .verify_content_of_specified_cell_in_specified_table_row(9, 'Disposition Status', 'Delayed Release')
+            .verify_content_of_specified_cell_in_specified_table_row(10, 'Disposition Status', 'Hold')
+            .verify_content_of_specified_cell_in_specified_table_row( 11, 'Disposition Status', 'Indefinite Retention')
+            .verify_content_of_specified_cell_in_specified_table_row( 12, 'Disposition Status', 'Delayed Disposal')
             .verify_toast_message('Saved')
             .select_tab('Basic Info')
             .verify_text_is_present_on_main_container('Closed')

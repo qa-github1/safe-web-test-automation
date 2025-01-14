@@ -1,6 +1,6 @@
 import BaseAddPage from "../base-pages/base-add-page";
 
-const C = require ('../../fixtures/constants')
+const C = require('../../fixtures/constants')
 import BasePage from "../base-pages/base-page";
 
 let
@@ -17,18 +17,26 @@ let
     mobilePhone = e => cy.get('.form-horizontal').contains('Mobile Phone').parent('div').find('input'),
     otherPhone = e => cy.get('.form-horizontal').contains('Other Phone').parent('div').find('input'),
     email = e => cy.findByPlaceholderText(C.placeholders.addPerson.email),
-    dateOfBirth = e => cy.get('.ibox-content').contains('Date of Birth').parent('div').find('input'),
-    deceased = e => cy.get('.iCheck-helper').eq(0),
-    juvenile = e => cy.get('.iCheck-helper').eq(1),
+    dateOfBirth = e => cy.get('[translate="GENERAL.DOB"]').parents('tp-modal-field').find('[ng-readonly="isDatePickerOnly"]'),
+    deceased = e => cy.get('[name="deceased"]').parent('div').find('.iCheck-helper'),
+    juvenile = e => cy.get('[name="juvenile"]').parent('div').find('.iCheck-helper'),
     addPersonHeader = e => cy.get('[translate="PEOPLE.HEADING_ADD"]'),
+    proceedAnywayButton = e => cy.get('[translate="GENERAL.PROCEED_ANYWAY"]'),
+    potentialDuplicatePersonBasedOnBusinessName = e => cy.get('[ng-if="frm.businessName.$error.duplicates"]'),
+    potentialDuplicatePersonBasedOnFirstName = e => cy.get('[ng-if="frm.personfirstname.$error.duplicates"]'),
+    potentialDuplicatePersonBasedOnLastName = e => cy.get('[ng-if="frm.personlastname.$error.duplicates"]'),
+    potentialDuplicatePersonBasedOnDriverLicenseName = e => cy.get('[ng-if="frm.driverLicence.$error.duplicates"]'),
+    potentialDuplicatePersonLink = e => cy.get('[translate="GENERAL.PLEASE_CLICK_TO_REVIEW"]'),
     toastMessage = (timeout = 50000) => cy.get('.toast', {timeout: timeout})
 
 //************************************ ELEMENTS ***************************************//
 
-export default class AddPersonPage extends BaseAddPage{
+export default class AddPersonPage extends BaseAddPage {
 
     constructor() {
         super();
+        this.potentialDuplicatePersonLink = potentialDuplicatePersonLink;
+        this.proceedAnywayButton = proceedAnywayButton;
     }
 
 //************************************ ACTIONS ***************************************//
@@ -44,6 +52,24 @@ export default class AddPersonPage extends BaseAddPage{
         this.toastMessage().should('not.exist');
         caseNumberInput_enabled().should('be.enabled');
         caseNumberInput_enabled().should('have.value', caseNo);
+        return this;
+    };
+
+    verify_number_of_warnings_for_potential_duplicates(numberofWarnings, isDuplicateBasedOnBusinessName, isDuplicateBasedOnFirstsName, isDuplicateBasedOnLastName, isDuplicateBasedOnDriverLicense) {
+        potentialDuplicatePersonLink().should('have.length', numberofWarnings);
+
+        switch (true) {
+            case isDuplicateBasedOnBusinessName:
+                potentialDuplicatePersonBasedOnBusinessName().scrollIntoView().should('be.visible')
+            case isDuplicateBasedOnFirstName:
+                potentialDuplicatePersonBasedOnFirstName().scrollIntoView().should('be.visible')
+            case isDuplicateBasedOnLastName:
+                potentialDuplicatePersonBasedOnLastName().scrollIntoView().should('be.visible')
+            case isDuplicateBasedOnDriverLicense:
+                potentialDuplicatePersonBasedOnDriverLicenseName().scrollIntoView().should('be.visible')
+            default:
+                cy.log("No duplicates found.");
+        }
         return this;
     };
 

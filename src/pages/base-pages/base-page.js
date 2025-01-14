@@ -615,7 +615,7 @@ export default class BasePage {
     //     var self = this;
     //     headerValuePairs.forEach(function (pair) {
     //         if (pair[1] !== null) {
-    //             self.verify_content_of_specific_cell_in_first_table_row(pair[0], pair[1])
+    //             self.verify_content_of_specified_cell_in_first_table_row(pair[0], pair[1])
     //         }
     //     });
     //     return this;
@@ -1054,13 +1054,19 @@ export default class BasePage {
     }
 
     open_url_and_wait_all_GET_requests_to_finish(urlToOpen, partOfRequestUrl) {
-        cy.server();
-        this.define_API_request_to_be_mocked('GET', partOfRequestUrl)
-        cy.intercept('GET', '**').as('all_GET_Requests').then(function () {
+        if (partOfRequestUrl) {
+            cy.server();
+            this.define_API_request_to_be_mocked('GET', partOfRequestUrl)
+            cy.intercept('GET', '**').as('all_GET_Requests').then(function () {
+                cy.visit(urlToOpen);
+            })
+            cy.wait('@all_GET_Requests')
+            this.wait_response_from_API_call(partOfRequestUrl)
+        }
+        else{
             cy.visit(urlToOpen);
-        })
-        cy.wait('@all_GET_Requests')
-        this.wait_response_from_API_call(partOfRequestUrl)
+            this.wait_until_spinner_disappears()
+        }
         return this;
     };
 
@@ -1510,9 +1516,42 @@ export default class BasePage {
         return this;
     };
 
-    verify_content_of_specific_cell_in_first_table_row(columnTitle, cellContent, headerCellTag = 'th') {
+    verify_content_of_specified_cell_in_first_table_row(columnTitle, cellContent, headerCellTag = 'th') {
 
         firstRowInResultsTable().within(($list) => {
+            if (cellContent) {
+                if (this.isObject(cellContent)) {
+                    for (let property in cellContent) {
+                        resultsTableHeaderFromRoot().contains(headerCellTag, columnTitle).invoke('index').then((i) => {
+                            cy.get('td').eq(i).invoke('text').then(function (textFound) {
+                                assert.include(textFound, cellContent[property]);
+                            })
+
+                        })
+                    }
+                } else if (Array.isArray(cellContent)) {
+                    cellContent.forEach(function (value) {
+                        resultsTableHeaderFromRoot().contains(headerCellTag, columnTitle).invoke('index').then((i) => {
+                            cy.get('td').eq(i).invoke('text').then(function (textFound) {
+                                assert.include(textFound, value);
+                            })
+                        })
+                    })
+                } else {
+                    resultsTableHeaderFromRoot().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
+                        cy.get('td').eq(i).invoke('text').then(function (textFound) {
+                            assert.include(textFound, cellContent.toString().trim());
+                        })
+                    });
+                }
+            }
+        });
+        return this;
+    };
+
+    verify_content_of_specified_cell_in_specified_table_row(rowNumber, columnTitle, cellContent, headerCellTag = 'th') {
+
+        specificRowInResultsTable(rowNumber-1).within(($list) => {
             if (cellContent) {
                 if (this.isObject(cellContent)) {
                     for (let property in cellContent) {
@@ -1571,7 +1610,7 @@ export default class BasePage {
         }
         return this;
     };
-
+    
     verify_content_of_first_row_in_results_table_on_active_tab(content) {
         if (Array.isArray(content)) {
             content.forEach(value =>
