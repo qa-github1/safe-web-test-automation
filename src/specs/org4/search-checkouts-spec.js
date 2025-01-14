@@ -51,7 +51,7 @@ describe('Search Checkouts', function () {
 
         context('1.1 Checked Out To', function () {
 
-            it.only("1.1.1 'equals' correct Person's name", function () {
+            it("1.1.1 'equals' correct Person's name", function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Checkouts();

@@ -75,7 +75,7 @@ let
     toastContainer = (timeout = 50000) => cy.get('#toast-container', {timeout: timeout}),
     toastTitle = (timeout = 50000) => cy.get('.toast-title', {timeout: timeout}),
     searchParametersAccordion = e => cy.get('[class="panel-collapse collapse in"]'),
-    resultsTable = (tableIndex = 0) => cy.get('.table-striped').eq(tableIndex).find('tbody'),
+    resultsTable = (tableIndex) => cy.get('.table-striped').eq(tableIndex).find('tbody'),
     tableStriped = (tableIndex = 0) => cy.get('.table-striped').eq(tableIndex),
     dataGrid = (tableIndex = 0) => cy.get('.table-striped[tp-fixed-table-header-scrollable="scrollable-area"]').eq(tableIndex).find('tbody'),
     resultsEntriesCount = e => cy.get('[translate="BSGRID.DISPLAY_STATS"]'),
@@ -105,7 +105,7 @@ let
     //  resultsTableHeader = (tableIndex = 0) => cy.get('.table-striped').eq(tableIndex).find('thead'),
     resultsTableHeader = (tableIndex = 0) => cy.get('thead'),
     resultsTableHeaderFromRoot = (tableIndex = 0) => cy.root().parents('html').find('.table-striped').eq(tableIndex).find('thead'),
-    firstRowInResultsTable = e => resultsTable().children('tr').first(),
+    firstRowInResultsTable = (tableIndex) => resultsTable(tableIndex).children('tr').first(),
     specificRowInResultsTable = index => resultsTable().children('tr').eq(index),
     tableRowFoundByUniqueTextInAnyCell = (text, tableIndex = 0) => resultsTable(tableIndex).contains(text).parent('tr'),
     tableColumnFoundByText = (text, tableIndex = 0) => resultsTableHeader(tableIndex).contains(text),
@@ -1813,10 +1813,9 @@ export default class BasePage {
     }
 
     wait_search_criteria_to_be_visible() {
-        this.searchParametersAccordion().should('be.visible');
-
+        this.searchParametersAccordion().should('be.visible').and('not.be.disabled');
         this.mainContainer().then(parentElm =>
-            cy.findByText(C.buttons.search, {container: parentElm}).should('not.be.disabled')
+            cy.findByText(C.buttons.search, {container: parentElm}).should('be.visible').and('not.be.disabled')
         );
         return this;
     };
