@@ -20,7 +20,11 @@ describe('System Services Page: verify the existing Services are in place, if a 
             "ScheduledJobs",
             "PersonMerge",
             "ItemMassUpdate",
-            "Verifications"
+            "Verifications",
+            "TransactionByQuery",
+            "SharedViews",
+            "MassUpdateByQuery",
+            "LocationsMove"
         ]);
         ui.app.verify_system_services_page_status();
     });

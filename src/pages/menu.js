@@ -132,7 +132,7 @@ export default class Menu extends BasePage {
 
     click_Search__Checkouts () {
         search().click();
-        checkouts().click();
+        checkouts().should('be.visible').and('not.be.disabled').click();
         this.wait_search_criteria_to_be_visible();
         return this;
     };

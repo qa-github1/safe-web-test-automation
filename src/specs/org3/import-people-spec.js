@@ -36,11 +36,11 @@ describe('Import People', function () {
         ui.menu.click_Search__People();
         ui.searchPeople.enter_Business_Name(person1.businessName)
             .click_button(C.buttons.search)
-            .click_link(person1.firstName, ui.searchPeople.firstRowInResultsTable());
+            .click_link(person1.firstName, ui.searchPeople.firstRowInResultsTable(0));
         ui.personView.verify_Person_View_page_is_open()
             .click_button(C.buttons.edit)
             .verify_values_on_Edit_form(person1)
-            .open_last_history_record()
+             .open_last_history_record()
             .verify_all_values_on_history(person1)
             .click_button_on_modal(C.buttons.cancel)
             .verify_title_on_active_tab(1)
@@ -52,7 +52,7 @@ describe('Import People', function () {
             .click_Search__People();
         ui.searchPeople.enter_Business_Name(person2.businessName)
             .click_button(C.buttons.search)
-            .click_link(person2.firstName, ui.searchPeople.firstRowInResultsTable());
+            .click_link(person2.firstName, ui.searchPeople.firstRowInResultsTable(0));
         ui.personView.verify_Person_View_page_is_open()
             .click_button(C.buttons.edit)
             .verify_values_on_Edit_form(person2)

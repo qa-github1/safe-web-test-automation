@@ -20,6 +20,7 @@ let
     edit_form = e => cy.get('[name="frmEdit"]'),
     active_tab_container = e => cy.get('[class="tab-pane ng-scope active"]'),
     customFormContainerOnEdit = e => cy.get('[ng-repeat="form in formsEdit track by $index"]'),
+    detailsButton = e => cy.get('[translate="GENERAL.DETAILS"]'),
     historyView_leftColumn = e => cy.get('[ng-class="previousHistory ? \'col-md-6\' : \'col-md-12\'"]'),
     historyView_rightColumn = e => cy.get('[ng-if="previousHistory"]'),
     fieldFoundByLabelOnLeftHistoryColumn = fieldLabel => historyView_leftColumn().contains(fieldLabel).parents('tp-modal-field'),
@@ -128,7 +129,7 @@ export default class BaseViewPage extends BasePage {
         this.select_tab(C.tabs.history)
             .set_visibility_of_table_column(C.tableColumns.details, true)
             .verify_title_on_active_tab(C.tabs.history)
-            this.click(C.buttons.details, this.firstRowInResultsTable())
+            this.click(C.buttons.details, this.firstRowInResultsTable(1))
         //  .verify_element_is_visible('History View')
         return this;
     }
