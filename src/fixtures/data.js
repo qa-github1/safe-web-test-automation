@@ -927,6 +927,7 @@ D.generateNewDataSet = function (setNullForDisabledFields = false, autoDispoOff 
     D.getNewUserData()
 
     D.getNewTaskData()
+    D.newTask = Object.assign(D.newTask, S.selectedEnvironment.taskTemplates.other)
 
     D.getCustomFormData()
 
