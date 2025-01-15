@@ -9,7 +9,7 @@ const S = require('../../fixtures/settings');
 const D = require('../../fixtures/data');
 
 let
-    category = e => cy.get('[ng-model="newItem.categoryId"]'),
+    category = e => cy.get('[id="newItemCategorySelect"]'),
     caseNumberInput_enabled = e => cy.get('[for="primaryCaseId"]').parent('div').find('input'),
     recoveredBy = e => cy.contains('Recovered By').parent('div').find('input'),
     recoveryDate = e => cy.get('div[name="recoveryDate"]').find('[min-date="minDate"]'),
@@ -134,9 +134,9 @@ export default class AddItemPage extends BaseAddPage {
     };
 
     select_Category(option) {
-        cy.wait(300)
+        this.pause(1)
         category().click();
-        cy.wait(1000)
+        //this.pause(3)
         cy.contains(option).click();
         return this;
     };
@@ -195,7 +195,7 @@ export default class AddItemPage extends BaseAddPage {
 
     populate_all_fields_on_both_forms(itemObject, skipStorageLocation, skipItemBelongsTo, enterCaseNumber = true, addingItemToClosedCase) {
         if (enterCaseNumber) this.enter_Case_Number_and_select_on_typeahead(itemObject.caseNumber);
-        this.pause(1)
+        this.pause(2)
         this.select_Category(itemObject.category)
         this.pause(1)
         this.click(C.buttons.next)

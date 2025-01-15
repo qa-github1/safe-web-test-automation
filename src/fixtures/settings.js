@@ -2633,7 +2633,7 @@ S.PENTEST_2 = {
             sealRequiresSignatureAndDate: 1689
 
         },
-        otherTaskTemplateId: 3381,
+        otherTaskTemplateId: 3388,
         dispositionAuthorization: 3511,
         errorCorrection: 3768,
 
@@ -2739,6 +2739,33 @@ S.PENTEST_2 = {
     readOnly_userGroup: {
         name: 'Cypress ReadOnly Group',
         id: 2898
+    },
+
+    taskTemplates: {
+        dispoAuth: {
+            templateId: 3511,
+            type: 'Disposition Authorization',
+            subtype: '',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 5,
+            useDispositionAuthorizationActions: true,
+            title: 'Disposition Authorization',
+            message: 'Message-forAutomatedTests'
+        },
+        other: {
+            templateId: 3381,
+            type: 'Other',
+            subtype: '',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 10,
+            useDispositionAuthorizationActions: true,
+            title: 'Title--forAutomatedTests',
+            message: 'Message-forAutomatedTests'
+        },
     },
     orgTag1: {tagModelId: 6751, name: 'sensitive information', color: "#ad2355", tagUsedBy: 1},
     orgTag2: {tagModelId: 6752, name: 'eligible for disposal', color: "#4b9b62", tagUsedBy: 1},
@@ -2998,7 +3025,7 @@ S.PENTEST_3 = {
             title: 'Disposition Authorization',
         },
         other: {
-            templateId: 3382,
+            templateId: 3388,
             type: 'Other',
             subtype: '',
             active: true,

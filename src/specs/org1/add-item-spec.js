@@ -73,7 +73,7 @@ describe('Add Item', function () {
             ui.addItem.select_tab(C.tabs.items)
                 .click_element_on_active_tab(C.buttons.addItem)
                 .verify_Add_Item_page_is_open()
-                .populate_all_fields_on_both_forms(D.newItem, false, false )
+                .populate_all_fields_on_both_forms(D.newItem, false, true )
                  .select_post_save_action(C.postSaveActions.viewAddedItem)
                  .click_Save(D.newItem)
                  .verify_toast_message_(oldCase)

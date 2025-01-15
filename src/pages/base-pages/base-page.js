@@ -106,7 +106,7 @@ let
     resultsTableHeader = (tableIndex = 0) => cy.get('thead'),
     resultsTableHeaderFromRoot = (tableIndex = 0) => cy.root().parents('html').find('.table-striped').eq(tableIndex).find('thead'),
     firstRowInResultsTable = (tableIndex) => resultsTable(tableIndex).children('tr').first(),
-    specificRowInResultsTable = index => resultsTable().children('tr').eq(index),
+    specificRowInResultsTable = (tableIndex, index) => resultsTable(tableIndex).children('tr').eq(index),
     tableRowFoundByUniqueTextInAnyCell = (text, tableIndex = 0) => resultsTable(tableIndex).contains(text).parent('tr'),
     tableColumnFoundByText = (text, tableIndex = 0) => resultsTableHeader(tableIndex).contains(text),
     lastRowInResultsTable = e => resultsTable().children('tr').last(),
@@ -1516,9 +1516,10 @@ export default class BasePage {
         return this;
     };
 
-    verify_content_of_specified_cell_in_first_table_row(columnTitle, cellContent, headerCellTag = 'th') {
 
-        firstRowInResultsTable().within(($list) => {
+    verify_content_of_specific_cell_in_first_table_row(columnTitle, cellContent, headerCellTag = 'th') {
+        firstRowInResultsTable(0).within(($list) => {
+
             if (cellContent) {
                 if (this.isObject(cellContent)) {
                     for (let property in cellContent) {

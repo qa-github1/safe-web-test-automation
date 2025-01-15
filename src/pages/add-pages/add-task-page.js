@@ -54,7 +54,7 @@ export default class AddTaskPage extends BasePage {
             });
         }
 
-        this.enter_value_to_Users_and_Groups_field([taskObject.userName])
+       this.enter_value_to_Users_and_Groups_field([taskObject.userName])
 
         if (taskObject.linkedObjects) {
             taskObject.linkedObjects.forEach(object => {
