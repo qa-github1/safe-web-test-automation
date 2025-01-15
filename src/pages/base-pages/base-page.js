@@ -105,7 +105,7 @@ let
     //  resultsTableHeader = (tableIndex = 0) => cy.get('.table-striped').eq(tableIndex).find('thead'),
     resultsTableHeader = (tableIndex = 0) => cy.get('thead'),
     resultsTableHeaderFromRoot = (tableIndex = 0) => cy.root().parents('html').find('.table-striped').eq(tableIndex).find('thead'),
-    firstRowInResultsTable = (tableIndex) => resultsTable(tableIndex).children('tr').first(),
+    firstRowInResultsTable = (tableIndex = 0) => resultsTable(tableIndex).children('tr').first(),
     specificRowInResultsTable = index => resultsTable().children('tr').eq(index),
     tableRowFoundByUniqueTextInAnyCell = (text, tableIndex = 0) => resultsTable(tableIndex).contains(text).parent('tr'),
     tableColumnFoundByText = (text, tableIndex = 0) => resultsTableHeader(tableIndex).contains(text),

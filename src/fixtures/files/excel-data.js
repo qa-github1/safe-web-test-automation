@@ -291,7 +291,7 @@ E.generateDataFor_ITEMS_Importer = function (arrayOfDataObjects, customFormName,
     }
 }
 
-E.generateDataFor_PEOPLE_Importer = function (arrayOfDataObjects, customFormName) {
+E.generateDataFor_PEOPLE_Importer = function (arrayOfDataObjects, customFormName ) {
     // Set headers for Excel file
     let allFieldHeaders = [
         "Person Type",
@@ -393,8 +393,9 @@ E.generateDataFor_PEOPLE_Importer = function (arrayOfDataObjects, customFormName
         if (personObject.guid) {
             E.peopleImportDataWithAllFields[i + 1].push(personObject.guid)
             E.peoplemportDataWithMinimumFields[i + 1].push(personObject.guid)
-            allFieldHeaders.push('Guid')
-            minimumFieldsHeaders.push('Guid')
+
+            if (!allFieldHeaders.includes('Guid')) allFieldHeaders.push('Guid');
+            if (!minimumFieldsHeaders.includes('Guid')) minimumFieldsHeaders.push('Guid');
         }
 
         if (customFormName) {
