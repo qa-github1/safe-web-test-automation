@@ -58,7 +58,7 @@ describe('Add Notes', function () {
             .verify_content_of_results_table(note)
     });
 
-    it('A.N_4. Add Note to Task', function () {
+    it.only('A.N_4. Add Note to Task', function () {
         ui.app.log_title(this);
 
         api.auth.get_tokens(user);

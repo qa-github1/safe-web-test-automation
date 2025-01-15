@@ -1519,7 +1519,6 @@ export default class BasePage {
 
     verify_content_of_specific_cell_in_first_table_row(columnTitle, cellContent, headerCellTag = 'th') {
         firstRowInResultsTable(0).within(($list) => {
-
             if (cellContent) {
                 if (this.isObject(cellContent)) {
                     for (let property in cellContent) {

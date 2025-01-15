@@ -2753,7 +2753,7 @@ S.PENTEST_2 = {
             useDispositionAuthorizationActions: true,
             title: 'Disposition Authorization',
             message: 'Message-forAutomatedTests'
-        },
+
         other: {
             templateId: 3381,
             type: 'Other',
@@ -3036,8 +3036,8 @@ S.PENTEST_3 = {
             title: 'Title--forAutomatedTests',
             message: 'Message-forAutomatedTests'
         },
-    }
-};
+    },
+},
 
 S.PENTEST_4 = {
     newUser: {},
