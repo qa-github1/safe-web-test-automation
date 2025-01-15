@@ -77,19 +77,15 @@ describe('Dispo Auth', function () {
             .click('Submit For Disposition')
             .verify_toast_message('Saved')
             .wait_until_spinner_disappears()
-            .verify_content_of_specified_cell_in_specified_table_row(1, 'Disposition Status', 'Approved for Disposal')
-            .verify_content_of_specified_cell_in_specified_table_row(2, 'Disposition Status', 'Approved for Disposal')
-            .verify_content_of_specified_cell_in_specified_table_row(3, 'Disposition Status', 'Approved for Release')
-            .verify_content_of_specified_cell_in_specified_table_row(4, 'Disposition Status', 'Approved for Release')
-            .verify_content_of_specified_cell_in_specified_table_row(5, 'Disposition Status', 'Approved for Release')
-            .verify_content_of_specified_cell_in_specified_table_row(6, 'Disposition Status', 'Approved for Release')
-            .verify_content_of_specified_cell_in_specified_table_row(7, 'Disposition Status', 'Approved for Release')
-            .verify_content_of_specified_cell_in_specified_table_row(8, 'Disposition Status', 'Delayed Release')
-            .verify_content_of_specified_cell_in_specified_table_row(9, 'Disposition Status', 'Delayed Release')
-            .verify_content_of_specified_cell_in_specified_table_row(10, 'Disposition Status', 'Hold')
-            .verify_content_of_specified_cell_in_specified_table_row( 11, 'Disposition Status', 'Indefinite Retention')
-            .verify_content_of_specified_cell_in_specified_table_row( 12, 'Disposition Status', 'Delayed Disposal')
-            .verify_toast_message('Saved')
+            .verify_Disposition_Statuses_on_the_grid
+            ([
+                [[1, 2], 'Approved for Disposal'],
+                [[3, 4, 5, 6, 7], 'Approved for Release'],
+                [[8, 9],'Delayed Release'],
+                [10,'Hold'],
+                [11,'Indefinite Retention'],
+                [12,'Delayed Disposal'],
+                ])
             .select_tab('Basic Info')
             .verify_text_is_present_on_main_container('Closed')
 
