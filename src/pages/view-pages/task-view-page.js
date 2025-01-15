@@ -108,9 +108,10 @@ export default class TaskViewPage extends BaseViewPage {
 
         if (isExistingPerson){
             claimantFieldOnApproveForReleaseModal().click()
+            this.pause(0.5)
+
             if (isPersonLinkedToCase) {
                 specificClaimantOnTypeahead(personName).click()
-                this.pause(0.5)
             } else {
                 claimantInputFieldOnApproveForReleaseModal().type(personName)
                 this.pause(1)
@@ -159,6 +160,23 @@ export default class TaskViewPage extends BaseViewPage {
     set_Action___Delayed_Release(rowNumbers, personObject, addressObject, isExistingPerson, isPersonLinkedToCase, personHasAddress) {
         this.set_Action___Approve_for_Release(rowNumbers, personObject, addressObject, isExistingPerson, isPersonLinkedToCase, personHasAddress, true)
         return this;
+    };
+
+    verify_Disposition_Statuses_on_the_grid(arrayOfArrays_rowNumberAndStatusInEach) {
+        arrayOfArrays_rowNumberAndStatusInEach.forEach(array => {
+
+            // array[0] --> as first element in each array represents the ROW NUMBER which can be single number or again array of row numbers
+            if (Array.isArray(array[0])){
+                array[0].forEach(row => {
+                    // array[1] --> as second element in each array represents THE VALUE that we expect for 'Disposition Status' column in that row number
+                    this.verify_content_of_specified_cell_in_specified_table_row(row, 'Disposition Status', array[1])
+                })
+            }
+            else{
+                this.verify_content_of_specified_cell_in_specified_table_row(array[0], 'Disposition Status', array[1])
+            }
+        })
+       return this;
     };
 
 

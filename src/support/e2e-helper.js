@@ -286,6 +286,14 @@ exports.setNewRandomString = function (length = 3) {
     return exports.randomString.toLowerCase();
 };
 
+exports.generateGUID = function (length ) {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (char) => {
+        const random = Math.random() * 16 | 0; // Generate a random number
+        const value = char === 'x' ? random : (random & 0x3 | 0x8); // Set bits for `y` to be 8, 9, A, or B
+        return value.toString(16); // Convert to hexadecimal
+    });
+}
+
 exports.getRandomNo = function (length) {
     if (length) {
         let randomChars = '0123456789';
