@@ -230,6 +230,7 @@ export default class CaseViewPage extends BaseViewPage {
 
         this.verify_all_values_on_history_for_standard_fields(leftOrRightColumn,
             [
+                ['Update Made By', dataObject.updateMadeBy],
                 ['Update Date', dataObject.updateDate],
                 ['Org / Office', dataObject.orgAndOffice],
                 ['Case Officer(s)', dataObject.caseOfficers],
@@ -239,7 +240,6 @@ export default class CaseViewPage extends BaseViewPage {
                 ['Status', dataObject.status]
             ],
             [
-                ['Update Made By', dataObject.updateMadeBy],
                 ['Case Number', dataObject.caseNumber],
                 ['Offense Location', dataObject.offenseLocation],
             ],

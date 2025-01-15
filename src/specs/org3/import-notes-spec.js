@@ -7,7 +7,7 @@ const ui = require('../../pages/ui-spec');
 
 describe('Import Notes', function () {
 
-    it.only('1 Import Notes for Case', function () {
+    it('1 Import Notes for Case', function () {
         ui.app.log_title(this);
         let fileName = 'NotesForCase_allFields_'+ S.domain;
         let user = S.userAccounts.orgAdmin;
