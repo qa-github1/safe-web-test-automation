@@ -38,7 +38,7 @@ describe('Import People Updates', function () {
             ui.app.open_newly_created_person_via_direct_link();
             ui.personView.click_button(C.buttons.edit)
                 .verify_values_on_Edit_form(D.editedPerson)
-                .open_last_history_record()
+                .open_last_history_record(1)
                 .verify_all_values_on_history(D.editedPerson, D.newPerson, false)
         });
     });
@@ -68,7 +68,7 @@ describe('Import People Updates', function () {
                 .click_button(C.buttons.edit);
             ui.personView.verify_values_on_Edit_form(D.newPerson)
                 .verify_values_on_Edit_form(D.newPerson)
-                .open_last_history_record()
+                .open_last_history_record(1)
                 .verify_all_values_on_history(D.newPerson)
         });
     });
