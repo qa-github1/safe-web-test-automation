@@ -17,7 +17,7 @@ describe('Edit Case', function () {
     });
 
     // ******* Org Admin *******
-    it.only('1. Edit and verify all values on Case View page -- replace the current values in multiselect fields (Case Officers, Tags)', function () {
+    it('1. Edit and verify all values on Case View page -- replace the current values in multiselect fields (Case Officers, Tags)', function () {
         ui.app.log_title(this);
         api.auth.get_tokens(orgAdmin);
         D.generateNewDataSet();

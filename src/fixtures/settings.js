@@ -2646,12 +2646,12 @@ S.PENTEST_2 = {
     person: {
         name: 'Person_1',
         fullName: 'Cypress Person_1',
-        id: 6606995,
+        id: 97006,
         get organizationId() {
             return S.PENTEST_2.orgSettings.id
         },
         userId: null,
-        guid: '535530de-c2e1-40bd-ad7d-4189dbbeb6af',
+        guid: '57e2b224-95ee-4e4e-9a65-c83fa8957d9a',
         email: 'qa+person_1@trackerproducts.com'
     },
     person_2: {

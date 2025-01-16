@@ -67,7 +67,7 @@ describe('Add Media', function () {
 
         api.auth.get_tokens(user);
         D.generateNewDataSet();
-        api.tasks.add_new_task(D.getRandomNo());
+        api.tasks.add_new_task(D.newTask);
 
         ui.app.open_newly_created_task_via_direct_link();
         ui.taskView.select_tab(C.tabs.media)

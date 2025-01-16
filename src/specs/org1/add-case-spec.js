@@ -488,7 +488,7 @@ describe('Add Case', function () {
             api.auto_disposition.edit(false)
         });
 
-        it.only('9.1 verify multiple Users and Groups can be saved in Case Officers field and Custom User/User Group', function () {
+        it('9.1 verify multiple Users and Groups can be saved in Case Officers field and Custom User/User Group', function () {
             ui.app.log_title(this);
             D.newCustomFormData = {
                 custom_user_or_group_names: [S.userAccounts.basicUser.name, S.selectedEnvironment.blocked_userGroup.name]
