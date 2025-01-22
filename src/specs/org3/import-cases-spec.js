@@ -127,7 +127,7 @@ describe('Import Cases', function () {
     });
 
     //enable test running regression test suite --> no need to import 5 thousand cases every day
-    it('I.C_4 Five thousand cases and verify cases count on search by ', function () {
+    xit('I.C_4 Five thousand cases and verify cases count on search by ', function () {
         ui.app.log_title(this);
         let fileName = '5k_Cases_' + S.domain;
         api.auth.get_tokens(user);

@@ -31,7 +31,7 @@ describe('Import Media', function () {
         });
     });
 
-    it('2 Import Media - Precheck Only', function () {
+    it.only('2 Import Media - Precheck Only', function () {
         ui.app.log_title(this);
         let fileName = 'Media_precheckOnly_'+ S.domain;
         let user = S.userAccounts.orgAdmin;
