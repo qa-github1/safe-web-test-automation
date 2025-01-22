@@ -28,11 +28,11 @@ export default class InventoryReportsPage extends BasePage {
     };
 
     verify_summary_table(totalActiveItems, locationsScanned, itemsScanned, containersScanned, discrepanciesFound) {
-        this.verify_content_of_specified_cell_in_first_table_row(C.labels.InventoryReports.summaryTableColumns.totalActiveItems, totalActiveItems)
-        this.verify_content_of_specified_cell_in_first_table_row(C.labels.InventoryReports.summaryTableColumns.locationsScanned, locationsScanned)
-        this.verify_content_of_specified_cell_in_first_table_row(C.labels.InventoryReports.summaryTableColumns.itemsScanned, itemsScanned)
-        this.verify_content_of_specified_cell_in_first_table_row(C.labels.InventoryReports.summaryTableColumns.containersScanned, containersScanned)
-        this.verify_content_of_specified_cell_in_first_table_row(C.labels.InventoryReports.summaryTableColumns.discrepanciesFound, discrepanciesFound)
+        this.verify_content_of_specific_cell_in_first_table_row(C.labels.InventoryReports.summaryTableColumns.totalActiveItems, totalActiveItems)
+        this.verify_content_of_specific_cell_in_first_table_row(C.labels.InventoryReports.summaryTableColumns.locationsScanned, locationsScanned)
+        this.verify_content_of_specific_cell_in_first_table_row(C.labels.InventoryReports.summaryTableColumns.itemsScanned, itemsScanned)
+        this.verify_content_of_specific_cell_in_first_table_row(C.labels.InventoryReports.summaryTableColumns.containersScanned, containersScanned)
+        this.verify_content_of_specific_cell_in_first_table_row(C.labels.InventoryReports.summaryTableColumns.discrepanciesFound, discrepanciesFound)
         return this;
     };
 
