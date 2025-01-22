@@ -110,7 +110,7 @@ exports.get_items_from_specific_case = function (caseNumber, numberOfPagesWith10
                         "thenOrderBy": "",
                         "thenOrderByAsc": false,
                         "pageSize": 1000,
-                        "pageNumber": numberOfPagesWith1000Items
+                        "pageNumber": i
                     },
                     headers: JSON.parse(headers),
                 }).then(response => {
