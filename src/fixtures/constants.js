@@ -770,7 +770,7 @@ C.labels = {
     },
     InventoryReports: {
         summaryTableColumns: {
-            totalActiveItems: 'Total Active Items In Scanned Locations:',
+            totalActiveItems: 'Total Active Items In Scanned Locations',
             locationsScanned: 'Locations Scanned',
             itemsScanned: 'Items Scanned',
             containersScanned: 'Containers Scanned',
