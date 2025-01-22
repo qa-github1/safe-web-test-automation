@@ -31,9 +31,10 @@ let
     tasksList = e => sideMenu().find('.badge'),
     taskSettings = e => sideMenu().find('[translate="NAV.TSK_SETTINGS"]'),
     massImportButton = e => cy.get('[translate="ITEMS.SCAN.MASS_IMPORT_LIST"]'),
-    tools = e => cy.get('[translate="NAV.TOOLS"]'),
+    tools = e => cy.get('[translate="NAV.TOOLS"]').parents('li'),
     storageLocations = e => cy.get('[translate="NAV.LOCATIONS"]'),
-    InventoryReport = e => cy.get('[translate="GENERAL.DISCREPANCY_REPORTS"]'),
+    InventoryReport = e => cy.get('[translate="GENERAL.DISCREPANCY_REPORTS"]').first(),
+    autoReports = e => cy.get('[translate="AUTO_REPORT.AUTO_REPORTS"]'),
     settings = e => cy.get('[translate="NAV.SETTINGS"]'),
     organization = e => cy.get('[translate="NAV.ORGANIZATION"]'),
     offices = e => cy.get('[translate="NAV.OFFICES"]'),
@@ -186,12 +187,6 @@ export default class Menu extends BasePage {
         return this;
     };
 
-    click_Task_Settings () {
-        taskSettings().click();
-        this.verify_url_contains_some_value('tasks/settings');
-        return this;
-    };
-
     click_Settings__Task_Settings () {
         settings().click()
         taskSettings().click();
@@ -224,7 +219,16 @@ export default class Menu extends BasePage {
 
     click_Tools__Inventory_Reports () {
         tools().click();
+        this.pause(0.3)
         InventoryReport().click();
+        this.verify_text_is_present_on_main_container(C.labels.InventoryReports.title);
+        this.verify_Error_toast_message_is_NOT_visible()
+        return this;
+    };
+
+    click_Tools__Auto_Reports () {
+        tools().click();
+        autoReports().click();
         this.verify_text_is_present_on_main_container(C.labels.InventoryReports.title);
         this.verify_Error_toast_message_is_NOT_visible()
         return this;

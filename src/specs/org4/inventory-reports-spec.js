@@ -395,50 +395,45 @@ describe('Inventory Reports', function () {
     });
 
     context('2. Scanning 500 items', function () {
-    it.only('3. Scanning 500 items during Inventory report', function () {
+        it.only('3. Scanning 500 items during Inventory report', function () {
 
-        let barcodes = []
+            api.auth.get_tokens(orgAdmin);
+            api.org_settings.disable_Item_fields([C.itemFields.description])
+            var numberOfRecords = 2000
 
-        api.auth.get_tokens(orgAdmin);
-        api.org_settings.disable_Item_fields([C.itemFields.description])
-        var numberOfRecords = 2000
+            D.getNewCaseData()
+            D.getNewItemData(D.newCase)
+            api.locations.add_storage_location('Parent3')
+            api.cases.add_new_case()
+            D.newItem.location = D['newLocationParent3'][0].name
+            E.generateDataFor_ITEMS_Importer([D.newItem], null, null, numberOfRecords);
+            cy.generate_excel_file('Items_forTestingInventoryReports', E.itemImportDataWithMinimumFields);
+            ui.menu.click_Tools__Data_Import();
+            ui.importer.upload_then_Map_and_Submit_file_for_importing('Items_forTestingInventoryReports', C.importTypes.items, C.importMappings.minimumItemFields)
+                .verify_toast_message([
+                    C.toastMsgs.importComplete,
+                    numberOfRecords + C.toastMsgs.recordsImported])
 
-        D.getNewCaseData()
-        D.getNewItemData(D.newCase)
-         api.locations.add_storage_location('Parent3')
-        api.cases.add_new_case()
-        D.newItem.location = D['newLocationParent3'][0].name
-        E.generateDataFor_ITEMS_Importer([D.newItem], null, null, numberOfRecords);
-        cy.generate_excel_file('Items_forTestingInventoryReports', E.itemImportDataWithMinimumFields);
-        ui.menu.click_Tools__Data_Import();
-        ui.importer.upload_then_Map_and_Submit_file_for_importing('Items_forTestingInventoryReports', C.importTypes.items, C.importMappings.minimumItemFields)
-            .verify_toast_message([
-                C.toastMsgs.importComplete,
-                numberOfRecords + C.toastMsgs.recordsImported])
+            api.cases.fetch_current_case_data(D.newCase.caseNumber)
+            api.items.get_items_from_specific_case(D.newCase.caseNumber, 2)
 
-        api.cases.fetch_current_case_data(D.newCase.caseNumber)
-        api.items.get_items_from_specific_case(D.newCase.caseNumber)
-        cy.getLocalStorage("caseItems").then(caseItems => {
-            let caseItemsObject = JSON.parse(caseItems);
-            caseItemsObject.entities.forEach(item => {
-                barcodes.push(item.barcode)
+            let reportName = D.getCurrentDateAndRandomNumber(4);
+
+            ui.menu.click_Tools__Inventory_Reports()
+                .click_button(C.buttons.newReport)
+
+            cy.getLocalStorage("Parent3").then(parentLoc => {
+                cy.getLocalStorage("barcodes").then(barcodes => {
+                    let barcodesArray = barcodes.split(",")
+                    ui.inventoryReports.start_report(reportName, JSON.parse(parentLoc).barcode)
+                    for (let i = 0; i < numberOfRecords; i++) {
+                        ui.inventoryReports.enter_barcode_(barcodesArray[i])
+                    }
+                })
             })
+            ui.inventoryReports.click_button(C.buttons.runReport)
+                .verify_text_is_present_on_main_container(C.labels.InventoryReports.noDiscrepanciesFound)
+                .verify_summary_table(numberOfRecords, 1, numberOfRecords, 0, 0)
         })
-
-        let reportName = D.getCurrentDateAndRandomNumber(4);
-
-        ui.menu.click_Tools__Inventory_Reports()
-            .click_button(C.buttons.newReport)
-
-        cy.getLocalStorage("Parent3").then(parentLoc => {
-            ui.inventoryReports.start_report(reportName, JSON.parse(parentLoc).barcode)
-            for (let i = 0; i < numberOfRecords; i++) {
-                ui.inventoryReports.enter_barcode_(barcodes[i])
-            }
-        })
-        ui.inventoryReports.click_button(C.buttons.runReport)
-            .verify_text_is_present_on_main_container(C.labels.InventoryReports.noDiscrepanciesFound)
-            .verify_summary_table(numberOfRecords, 1, numberOfRecords, 0, 0)
     })
-})
 });
