@@ -120,8 +120,8 @@ exports.get_items_from_specific_case = function (caseNumber, numberOfPagesWith10
                     })
                 });
             });
-            cy.setLocalStorage('barcodes', barcodes)
         }
+        cy.setLocalStorage('barcodes', barcodes)
     })
 };
 
