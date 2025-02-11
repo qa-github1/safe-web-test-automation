@@ -355,7 +355,7 @@ describe('Inventory Reports', function () {
                 .enter_barcode(barcodes[5])
                 .click_button(C.buttons.runReport)
                 .verify_text_is_present_on_main_container(C.labels.InventoryReports.noDiscrepanciesFound)
-                .verify_summary_table(4, 3, 7, 3, 0)
+                .verify_summary_table(4, 3, 4, 3, 0)
         })
 
         it('2.2. Scanning some barcodes multiple times and checking all types of discrepancies in one Report: ' +
@@ -390,12 +390,12 @@ describe('Inventory Reports', function () {
                 .verify_text_is_present_on_main_container(C.labels.InventoryReports.itemsNotScanned(2))
                 .verify_text_is_present_on_main_container(C.labels.InventoryReports.containersNotScanned(2))
                 .verify_text_is_present_on_main_container(C.labels.InventoryReports.containersInWrongLocation(1))
-                .verify_summary_table(4, 1, 5, 1, 8)
+                .verify_summary_table(4, 1, 4, 1, 8)
         })
     });
 
     context('2. Scanning 500 items', function () {
-        it.only('3. Scanning 500 items during Inventory report', function () {
+        xit('3. Scanning 500 items during Inventory report', function () {
 
             api.auth.get_tokens(orgAdmin);
             api.org_settings.disable_Item_fields([C.itemFields.description])

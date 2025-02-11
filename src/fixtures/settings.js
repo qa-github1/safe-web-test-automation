@@ -2646,23 +2646,23 @@ S.PENTEST_2 = {
     person: {
         name: 'Person_1',
         fullName: 'Cypress Person_1',
-        id: 97006,
+        id: 6608613,
         get organizationId() {
             return S.PENTEST_2.orgSettings.id
         },
         userId: null,
-        guid: '57e2b224-95ee-4e4e-9a65-c83fa8957d9a',
+        guid: '1cd84bfd-eee9-4001-8973-9baaac20f681',
         email: 'qa+person_1@trackerproducts.com'
     },
     person_2: {
         name: 'Person_2',
         fullName: 'Cypress Person_2',
-        id: 6606996,
+        id: 6609514,
         get organizationId() {
             return S.PENTEST_2.orgSettings.id
         },
         userId: null,
-        guid: '8fbb5deb-86ef-4e7e-b427-5eae07c65b33',
+        guid: 'dcad04c6-23a5-4c8d-81c6-f2ae59abc65d',
         email: 'qa+person_2@trackerproducts.com'
     },
     get recoveredById() {

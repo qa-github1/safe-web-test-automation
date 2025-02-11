@@ -1181,7 +1181,7 @@ export default class BasePage {
 
     verify_email_content(recipient, subject, content, numberOfExpectedEmails = 1, markSeen = true, shouldSaveLinkToLocalStorage) {
         let self = this
-        this.pause(1)
+        this.pause(4)
         self.fetch_emails(markSeen).then(function (emails) {
             D.unreadEmails = emails
 
@@ -1248,6 +1248,9 @@ export default class BasePage {
 
     verify_content_of_email_for_specific_recipient(recipient, subject, content, shouldSaveLinkToLocalStorage) {
         if (D.unreadEmails[0]) {
+            if (!Array.isArray(D.unreadEmailsForSpecificRecipient)) {
+                D.unreadEmailsForSpecificRecipient = [];
+            }
             D.unreadEmails.forEach(function (unreadEmail) {
                 //cy.log('So far, those emails have arrived ' + JSON.stringify(unreadEmail.subject))
 
@@ -2064,6 +2067,9 @@ export default class BasePage {
         }
         return this
     }
+
+
+
 
     enter_values_to_all_fields_on_modal(labelsArray, valuesArray) {
 

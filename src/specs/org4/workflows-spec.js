@@ -43,7 +43,7 @@ describe('Workflows', function () {
                 .set_up_workflow(
                     'workflow' + D.randomNo,
                     C.workflows.types.cases,
-                    powerUser.email,
+                    powerUser.name,
                     ['Email',
                         //'Create new Task'
                     ],
@@ -64,7 +64,7 @@ describe('Workflows', function () {
                 .set_up_workflow(
                     'workflow' + D.randomNo,
                     C.workflows.types.cases,
-                    powerUser.email,
+                    powerUser.name,
                     ['Email',
                         //'Create new Task'
                     ],
@@ -95,7 +95,7 @@ describe('Workflows', function () {
                 .set_up_workflow(
                     'workflow' + D.randomNo,
                     C.workflows.types.cases,
-                    powerUser.email,
+                    powerUser.name,
                     ['Email',
                       //  'Create new Task'
                     ],
@@ -130,7 +130,7 @@ describe('Workflows', function () {
                 .set_up_workflow(
                     'workflow' + D.randomNo,
                     C.workflows.types.cases,
-                    powerUser.email,
+                    powerUser.name,
                     ['Email',
                       //  'Create new Task'
                     ],
@@ -162,7 +162,7 @@ describe('Workflows', function () {
                 .set_up_workflow(
                     'workflow' + D.randomNo,
                     C.workflows.types.cases,
-                    powerUser.email,
+                    powerUser.name,
                     ['Email',
                         //  'Create new Task'
                     ],
@@ -196,7 +196,7 @@ describe('Workflows', function () {
                 .set_up_workflow(
                     'workflow' + D.randomNo,
                     C.workflows.types.items,
-                    powerUser.email,
+                    powerUser.name,
                     ['Email'],
                     C.workflows.executeWhen.created)
                 .click_Save();
@@ -214,7 +214,7 @@ describe('Workflows', function () {
                 .set_up_workflow(
                     'workflow' + D.randomNo,
                     C.workflows.types.items,
-                    powerUser.email,
+                    powerUser.name,
                     ['Email'],
                     C.workflows.executeWhen.edited,
                     C.workflows.whichRecords.matchingCriteria)
@@ -239,7 +239,7 @@ describe('Workflows', function () {
                 .set_up_workflow(
                     'workflow' + D.randomNo,
                     C.workflows.types.items,
-                    powerUser.email,
+                    powerUser.name,
                     ['Email'],
                     C.workflows.executeWhen.createdOrEdited,
                     C.workflows.whichRecords.matchingCriteria)
@@ -268,7 +268,7 @@ describe('Workflows', function () {
                 .set_up_workflow(
                     'workflow' + D.randomNo,
                     C.workflows.types.items,
-                    powerUser.email,
+                    powerUser.name,
                     ['Email'],
                     C.workflows.executeWhen.fieldEdited,
                     C.workflows.whichRecords.matchingCriteriaCustomField,
@@ -301,7 +301,7 @@ describe('Workflows', function () {
                 .set_up_workflow(
                     'workflow' + D.randomNo,
                     C.workflows.types.items,
-                    powerUser.email,
+                    powerUser.name,
                     ['Email'],
                     C.workflows.executeWhen.customFieldEdited,
                     undefined,
