@@ -129,7 +129,7 @@ describe('Add Case', function () {
             ui.caseView.verify_active_tab(C.tabs.notes);
         });
 
-        it.only('1.7 Power User can add case and view/enter/update Review Date/Notes when having AutoDispo permissions', function () {
+        it('1.7 Power User can add case and view/enter/update Review Date/Notes when having AutoDispo permissions', function () {
             ui.app.log_title(this);
 
             api.auth.get_tokens(orgAdmin);

@@ -41,7 +41,9 @@ let
     addToGroupButton = e => cy.get('[ng-click="addToGroup()"]'),
     groupInput = e => cy.get('[name="usergroups"] [type="search"]'),
     groupInTypeaheadList = e => cy.get('[ng-repeat="userGroup in $select.items"]'),
-    userGroups = e => cy.get('[ng-model="selectedUserGroups.userGroups"]').last()
+    userGroups = e => cy.get('[ng-model="selectedUserGroups.userGroups"]').last(),
+    reassign_active_tasks_and_cases_toggle_ON = e => cy.get('[ng-model="updateModel.reassign"]'),
+    reassign_active_tasks_and_cases_toggle_OFF = e => cy.get('[class="btn active btn-default btn-sm toggle-off"]')
 
 export default class UserAdminPage extends BasePage {
 
@@ -324,6 +326,12 @@ export default class UserAdminPage extends BasePage {
         this.wait_until_spinner_disappears();
         userGroups().scrollIntoView().should('be.visible');
         userGroups().contains(userGroup).should('be.visible');
+        return this;
+    }
+
+    turn_off_reassign_tasks_and_cases_modal(){
+reassign_active_tasks_and_cases_toggle_ON().click()
+        this.click_Ok()
         return this;
     }
 

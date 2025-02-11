@@ -395,7 +395,7 @@ describe('Inventory Reports', function () {
     });
 
     context('2. Scanning 500 items', function () {
-        xit('3. Scanning 500 items during Inventory report', function () {
+        it.only('3. Scanning 500 items during Inventory report', function () {
 
             api.auth.get_tokens(orgAdmin);
             api.org_settings.disable_Item_fields([C.itemFields.description])
