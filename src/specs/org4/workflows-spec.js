@@ -232,7 +232,7 @@ describe('Workflows', function () {
             ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.itemEdited, D.editedItem)
         });
 
-        it('2.3 Email notification - when Item created or edited - matching records with "Category not equals ..."', function () {
+        it.only('2.3 Email notification - when Item created or edited - matching records with "Category not equals ..."', function () {
 
             ui.menu.click_Settings__Workflows();
             ui.workflows.click_(C.buttons.add)

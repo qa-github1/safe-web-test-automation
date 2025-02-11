@@ -14,7 +14,7 @@ let
     matchingCriteriaField = e => cy.get('[ng-model="filter.selectedRecordSelectionFilterField"]'),
     matchingCriteriaCustomField = e => cy.get('[ng-model="workflowRecordSelectionTypeahead"]'),
     matchingCriteriaOperator = e => cy.get('[ng-model="filter.selectedRecordSelectionFilterOperation"]'),
-    matchingCriteriaDropdownValue = e => cy.get('[ng-model="filter.recordSelectionFilterEnumValue"]'),
+    matchingCriteriaDropdownValue = e => cy.get('[class="col-sm-7 ng-scope"]'),
     matchingCriteriaInputFieldValue = e => cy.get('[ng-model="filter.recordSelectionFilterValue"]'),
     fieldEditedDropdown = e => cy.get('[ng-model="workflow.selectedExecutionEditedField"]'),
     filterByOfficeCheckbox = e => cy.get('[ng-model="workflow.filterByOffice"]'),
@@ -94,7 +94,8 @@ export default class WorkflowsPage extends BasePage {
         if (isInputField) {
             matchingCriteriaInputFieldValue().type(value);
         } else {
-            matchingCriteriaDropdownValue().select(value);
+            matchingCriteriaDropdownValue().type(value);
+            this.press_ENTER(matchingCriteriaDropdownValue())
         }
         return this;
     }
