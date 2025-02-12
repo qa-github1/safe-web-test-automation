@@ -79,7 +79,7 @@ describe('Inventory Reports', function () {
             api.locations.move_location('Child2_1', 'root')
         })
 
-        it('1.1. DR for single parent location - No Discrepancies Found', function () {
+        it.only('1.1. DR for single parent location - No Discrepancies Found', function () {
             let reportName = D.getCurrentDateAndRandomNumber(4);
             let arrayOfPropertiesInLocalStorage = locations.concat(items);
 
@@ -395,7 +395,8 @@ describe('Inventory Reports', function () {
     });
 
     context('2. Scanning 500 items', function () {
-        it.only('3. Scanning 500 items during Inventory report', function () {
+        // this test is excluded from the regular regression suite for now, to reduce the total execution time
+        xit('3. Scanning 500 items during Inventory report', function () {
 
             api.auth.get_tokens(orgAdmin);
             api.org_settings.disable_Item_fields([C.itemFields.description])

@@ -1703,6 +1703,7 @@ export default class BasePage {
     reload_page() {
         cy.reload();
         this.pause(2)
+        this.wait_until_spinner_disappears()
         return this;
     };
 

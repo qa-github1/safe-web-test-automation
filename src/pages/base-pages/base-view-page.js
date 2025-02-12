@@ -129,7 +129,7 @@ export default class BaseViewPage extends BasePage {
         this.select_tab(C.tabs.history)
             .set_visibility_of_table_column(C.tableColumns.details, true)
             .verify_title_on_active_tab(C.tabs.history)
-            this.click(C.buttons.details, this.firstRowInResultsTable(tableIndex))
+            this.click(C.buttons.details, this.firstRowInResultsTable(1))
         //  .verify_element_is_visible('History View')
         return this;
     }

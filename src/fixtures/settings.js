@@ -595,22 +595,30 @@ S.DEV_2 = {
         offenseDate: '12/13/2022',
         reviewDate: '12/2022/2022'
     },
-    taskTemplate: {
-        taskTypeId: {
-            errorCorrection: 3388,
-
+    taskTemplates: {
+        dispoAuth: {
+            templateId: 4527,
+            type: 'Disposition Authorization',
+            subtype: '',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 5,
+            useDispositionAuthorizationActions: true,
+            title: 'Disposition Authorization',
         },
-        taskSubTypeId: {
-            packagingAndLabeling: 2808,
-
+        other: {
+            templateId: 4526,
+            type: 'Other',
+            subtype: '',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 10,
+            useDispositionAuthorizationActions: true,
+            title: 'Title--forAutomatedTests',
+            message: 'Message-forAutomatedTests'
         },
-        taskActionId: {
-            packageMustBeSealed: 1690,
-            mustBeRenderedSafe: 1688,
-            sealRequiresSignatureAndDate: 1689
-
-        },
-        otherTaskTemplateId: 4526,
     },
     recentCase: {
         id: 5446732,
@@ -2775,7 +2783,6 @@ S.PENTEST_2 = {
     tagC: {tagModelId: 16811, name: 'Tag_C__', color: "#4b9b62", tagUsedBy: 1},
 
 };
-
 
 S.PENTEST_3 = {
     newUser: {},

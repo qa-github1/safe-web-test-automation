@@ -94,7 +94,7 @@ exports.get_item_data = function (itemId) {
     });
 };
 
-exports.get_items_from_specific_case = function (caseNumber, numberOfPagesWith1000Items = 1) {
+exports.get_items_from_specific_case = function (caseNumber, numberOfPagesWith1000Items = 1, storeAllItemsToLocalStorage = false) {
     let barcodes = []
     cy.getLocalStorage("currentCase").then(caseData => {
         for (let i = 1; i < numberOfPagesWith1000Items + 1; i++) {
@@ -115,9 +115,11 @@ exports.get_items_from_specific_case = function (caseNumber, numberOfPagesWith10
                     headers: JSON.parse(headers),
                 }).then(response => {
                     let caseItemsObjects = response.body.entities
-                    caseItemsObjects.forEach(item => {
+
+                    for (let i = 0; i<caseItemsObjects.length; i++){
                         barcodes.push(item.barcode)
-                    })
+                        if (storeAllItemsToLocalStorage) cy.setLocalStorage("seqOrgItemHistoryId", item);
+                    }
                 });
             });
         }

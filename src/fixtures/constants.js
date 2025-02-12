@@ -768,9 +768,14 @@ C.labels = {
     storageLocations: {
         title: 'Storage Locations',
     },
+    autoReports: {
+        itemReturnLetters: {
+            alert: 'Item Return Letters get deleted from this list after 45 days, but you can find them later on Item View - Media tab (under Root folder)'
+        }
+    },
     InventoryReports: {
         summaryTableColumns: {
-            totalActiveItems: 'Total Active Items In Scanned Locations:',
+            totalActiveItems: 'Total Active Items In Scanned Locations',
             locationsScanned: 'Locations Scanned',
             itemsScanned: 'Items Scanned',
             containersScanned: 'Containers Scanned',

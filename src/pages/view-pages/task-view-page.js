@@ -113,6 +113,7 @@ export default class TaskViewPage extends BaseViewPage {
             if (isPersonLinkedToCase) {
                 specificClaimantOnTypeahead(personName).click()
             } else {
+                this.pause(1)
                 claimantInputFieldOnApproveForReleaseModal().type(personName)
                 this.pause(1)
                 this.firstTypeaheadOption().click()

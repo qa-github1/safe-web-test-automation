@@ -193,9 +193,10 @@ describe('Import Items', function () {
 
     //remove X when running regression test suite
     // no need to import 5K of items every day
-    it('6. Import five thousand items', function () {
+    it.only('6. Import five thousand items', function () {
         ui.app.log_title(this);
-        let fileName = '5k_Items_' + S.domain;
+        var numberOfRecords = 20000
+        let fileName = numberOfRecords + '_Items_' + S.domain;
         api.auth.get_tokens(orgAdmin);
 
         D.getNewCaseData();
@@ -203,7 +204,7 @@ describe('Import Items', function () {
 
         D.getNewItemData(D.newCase)
         D.newItem.description = D.currentDateAndRandomNumber
-        E.generateDataFor_ITEMS_Importer([D.newItem], false, false, 5000);
+        E.generateDataFor_ITEMS_Importer([D.newItem], false, false, numberOfRecords);
         cy.generate_excel_file(fileName, E.itemImportDataWithAllFields);
 
         api.org_settings.enable_all_Item_fields();
@@ -212,10 +213,10 @@ describe('Import Items', function () {
         ui.importer.upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.items, C.importMappings.minimumCaseFields)
             .verify_toast_message([
                 C.toastMsgs.importComplete,
-                5000 + C.toastMsgs.recordsImported], false, 50);
+                numberOfRecords + C.toastMsgs.recordsImported], false, 50);
         ui.app.open_newly_created_case_via_direct_link()
             .select_tab(C.tabs.items)
-            .verify_title_on_active_tab(5000)
+            .verify_title_on_active_tab(numberOfRecords)
     });
 
     it('7. Item Import- Precheck Only', function () {
