@@ -9,6 +9,8 @@ exports.generate_POST_request_payload_for_creating_new_item = function (specific
     let primaryCaseId = specificCaseObject? specificCaseObject.id : itemData.primaryCaseId;
     let person = (newPerson && newPerson.id) ? newPerson : S.selectedEnvironment.person;
     let locationId = locationObject? locationObject.id : itemData.locationId;
+    let randomNo = D.setNewRandomNo();
+
 
     let body = {
         caseNumber: caseNumber,
@@ -21,6 +23,7 @@ exports.generate_POST_request_payload_for_creating_new_item = function (specific
         recoveryDate: itemData.recoveryDateInIsoFormat,
         createdDate: itemData.createdDate,
         barcodes: [],
+        additionalBarcodes: [randomNo],
         formData: itemData.formData,
         cases: itemData.cases,
         people: [person],

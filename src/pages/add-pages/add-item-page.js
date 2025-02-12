@@ -24,6 +24,7 @@ let
     //disabledItemBelongsTo = e => cy.get('.form-horizontal').contains('Item Belongs to').parent('div').find('span').find('[ng-disabled="true"]'),
     disabledItemBelongsTo = e => cy.get('span[ng-disabled="true"]'),
     itemBelongsTo = e => cy.get('.form-horizontal').contains('Item Belongs to').parent('div').find('input'),
+    additionalBarcodes = e => cy.get('[ng-model="newItem.barcodes[0].value"]'),
     serialNumber = e => cy.findByPlaceholderText(C.placeholders.addItem.itemSerialNumber),
     storageLocation = e => cy.findByPlaceholderText(C.placeholders.addItem.storageLocation),
     arrowDownForStorageLocations = e => cy.get('[title="View next location level."]'),
@@ -166,6 +167,7 @@ export default class AddItemPage extends BaseAddPage {
                 [make, itemObject.make],
                 [model, itemObject.model],
                 [serialNumber, itemObject.serialNumber],
+                [additionalBarcodes, itemObject.additionalBarcodes],
             ]);
 
         this.enter_values_on_several_multi_select_typeahead_fields(

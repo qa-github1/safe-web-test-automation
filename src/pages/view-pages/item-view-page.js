@@ -17,6 +17,7 @@ let
     additionalBarcodeInput = e => cy.get('input[name="barcodes"]'),
     additionalBarcodeOldValue = e => cy.get('[label="\'ITEM_BARCODES\'"]').eq(2),
     additionalBarcodeNewValue = e => cy.get('[label="\'ITEM_BARCODES\'"]').eq(1),
+    additionalBarcodes = e => cy.get('[ng-model="newItem.barcodes[0].value"]'),
     save_button_on_active_tab = text => active_tab_container().children().find('[ng-click="doPreSave()"]'),
     takenByInput = e => cy.get('[ng-model="person.text"]'),
     expectedReturnDateInput = e => cy.get('[ng-class="{invalidFutureDate: futureDateViolated, datePickerOnly: isDatePickerOnly}"]'),
@@ -93,7 +94,8 @@ export default class ItemViewPage extends BaseViewPage {
                 [serialNoInput, itemObject.serialNumber],
                 [makeInput, itemObject.make],
                 [modelInput, itemObject.model],
-                [descriptionInput, itemObject.description]
+                [descriptionInput, itemObject.description],
+                [additionalBarcodeInput, itemObject.additionalBarcodes]
             ]);
 
         this.verify_text_on_multiple_elements(
