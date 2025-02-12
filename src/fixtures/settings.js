@@ -2566,8 +2566,8 @@ S.PENTEST_2 = {
         }
     },
     forms: {
-        userFormWithRequiredFields: 2542,
-        userFormWithOptionalFields: 2546,
+        userFormWithRequiredFields: 24198,
+        userFormWithOptionalFields: 24199,
         taskFormWithRequiredFields: 2547,
         taskFormWithOptionalFields: 2548
     },

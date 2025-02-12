@@ -947,6 +947,7 @@ C.customForms = {
     itemsFormWithOptionalFields: 'Optional fields - Cypress Items Form',
 
     usersFormWithRequiredFields: 'Required fields - Cypress Users Form',
+    usersFormWithRequiredFields_2: 'Required fields - Cypress Users Form - Org #2',
     usersFormWithOptionalFields: 'Optional fields - Cypress Users Form',
 
     peopleFormWithRequiredFields: 'Required fields - Cypress People Form',
