@@ -14,7 +14,8 @@ let
     matchingCriteriaField = e => cy.get('[ng-model="filter.selectedRecordSelectionFilterField"]'),
     matchingCriteriaCustomField = e => cy.get('[ng-model="workflowRecordSelectionTypeahead"]'),
     matchingCriteriaOperator = e => cy.get('[ng-model="filter.selectedRecordSelectionFilterOperation"]'),
-    matchingCriteriaDropdownValue = e => cy.get('[class="col-sm-7 ng-scope"]'),
+    matchingCriteriaDropdownValue_2 = e => cy.get('[class="col-sm-7 ng-scope"]'),
+    matchingCriteriaDropdownValue = e => cy.get('[ng-model="filter.recordSelectionFilterEnumValue"]'),
     matchingCriteriaInputFieldValue = e => cy.get('[ng-model="filter.recordSelectionFilterValue"]'),
     fieldEditedDropdown = e => cy.get('[ng-model="workflow.selectedExecutionEditedField"]'),
     filterByOfficeCheckbox = e => cy.get('[ng-model="workflow.filterByOffice"]'),
@@ -86,19 +87,47 @@ export default class WorkflowsPage extends BasePage {
         return this;
     }
 
+    // set_matching_criteria(field, operator, value, isInputField = true) {
+    //     matchingCriteriaField().select(field);
+    //
+    //     matchingCriteriaOperator().select(operator);
+    //
+    //     if (isInputField) {
+    //         matchingCriteriaInputFieldValue().type(value);
+    //     } else {
+    //         matchingCriteriaDropdownValue().select(value)
+    //     }
+    //     return this;
+    // }
+
     set_matching_criteria(field, operator, value, isInputField = true) {
         matchingCriteriaField().select(field);
-
         matchingCriteriaOperator().select(operator);
 
         if (isInputField) {
             matchingCriteriaInputFieldValue().type(value);
         } else {
-            matchingCriteriaDropdownValue().type(value);
-            this.press_ENTER(matchingCriteriaDropdownValue())
+            cy.get('body').then($body => {
+                if ($body.find('[ng-model="filter.recordSelectionFilterEnumValue"]').length > 0) {
+                    matchingCriteriaDropdownValue()
+                        .should('exist')
+                        .should('be.visible')
+                        .select(value)
+                } else {
+                    cy.log(`Selector NOT found, using different one`);
+                     matchingCriteriaDropdownValue_2().type(value);
+                     this.pause(2)
+                     this.press_ENTER(matchingCriteriaDropdownValue_2)
+                }
+            });
         }
         return this;
     }
+
+
+
+
+
 
     set_matching_criteria_custom_field(field, operator, value, isInputField = true) {
         matchingCriteriaCustomField().type(field);
