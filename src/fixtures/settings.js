@@ -2574,8 +2574,8 @@ S.PENTEST_2 = {
         }
     },
     forms: {
-        userFormWithRequiredFields: 2542,
-        userFormWithOptionalFields: 2546,
+        userFormWithRequiredFields: 24198,
+        userFormWithOptionalFields: 24199,
         taskFormWithRequiredFields: 2547,
         taskFormWithOptionalFields: 2548
     },
@@ -2654,12 +2654,12 @@ S.PENTEST_2 = {
     person: {
         name: 'Person_1',
         fullName: 'Cypress Person_1',
-        id: 97006,
+        id: 6606995,
         get organizationId() {
             return S.PENTEST_2.orgSettings.id
         },
         userId: null,
-        guid: '57e2b224-95ee-4e4e-9a65-c83fa8957d9a',
+        guid: '535530de-c2e1-40bd-ad7d-4189dbbeb6af',
         email: 'qa+person_1@trackerproducts.com'
     },
     person_2: {

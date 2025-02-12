@@ -16,7 +16,8 @@ let
     saveAutoDispoButton = e => cy.get('[id="saveAutoDispo"]').contains('Save'),
     editButton = e => cy.get('[translate="GENERAL.EDIT"]').contains('Edit'),
     deleteButton = e => cy.get('[translate="GENERAL.DELETE"]').parent('li'),
-    actionsButton = e => cy.get('[title="Select an item or items for which you would like to perform Action."]'),
+    //actionsButton = e => cy.get('[title="Select an item or items for which you would like to perform Action."]'),
+    actionsButton = e => cy.get('[translate="GENERAL.ACTIONS"]'),
     uploadFileInput = e => cy.get('input[type=file]'),
     addItem = e => cy.get('[translate="CASES.LIST.BUTTON_ADD_ITEM"]'),
     active_tab = e => cy.get('[class="tab-pane ng-scope active"]'),
@@ -95,7 +96,7 @@ let
     //    '                                                            \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
 
     disabledColumnsOsOnMenuCustomization = e => cy.get('.glyphicon-remove'),
-    //disabledColumnsOsOnMenuCustomization_PENTEST = e => cy.get('[ng-class="col.visible ? \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\': \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
+    disabledColumnsOsOnMenuCustomization_PENTEST = e => cy.get('[ng-class="col.visible ? \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\': \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
 
     //disabledColumnsOsOnMenuCustomization_DEV = e => cy.get('[ng-class="col.visible ?\n' +
     //    '                                                            \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\':\n' +
@@ -1180,7 +1181,7 @@ export default class BasePage {
 
     verify_email_content(recipient, subject, content, numberOfExpectedEmails = 1, markSeen = true, shouldSaveLinkToLocalStorage) {
         let self = this
-        this.pause(1)
+        this.pause(4)
         self.fetch_emails(markSeen).then(function (emails) {
             D.unreadEmails = emails
 
@@ -1247,6 +1248,9 @@ export default class BasePage {
 
     verify_content_of_email_for_specific_recipient(recipient, subject, content, shouldSaveLinkToLocalStorage) {
         if (D.unreadEmails[0]) {
+            if (!Array.isArray(D.unreadEmailsForSpecificRecipient)) {
+                D.unreadEmailsForSpecificRecipient = [];
+            }
             D.unreadEmails.forEach(function (unreadEmail) {
                 //cy.log('So far, those emails have arrived ' + JSON.stringify(unreadEmail.subject))
 
@@ -2065,6 +2069,9 @@ export default class BasePage {
         return this
     }
 
+
+
+
     enter_values_to_all_fields_on_modal(labelsArray, valuesArray) {
 
         for (let i = 0; i < labelsArray.length; i++) {
@@ -2237,28 +2244,57 @@ export default class BasePage {
     }
 
 
-    enable_columns_for_specific__Custom_Form_on_the_grid(customFormName) {
-        menuCustomization().click()
-        customFormsSectionOnMenuCustomization().click()
-        this.enterValue(searchCustomFormsOnMenuCustomization, customFormName)
+    // enable_columns_for_specific__Custom_Form_on_the_grid(customFormName) {
+    //     menuCustomization().click()
+    //     customFormsSectionOnMenuCustomization().click()
+    //     this.enterValue(searchCustomFormsOnMenuCustomization, customFormName)
+    //
+    //     cy.get('[ng-if="customFieldsToggle.isOpen"]')
+    //         .then(($body) => {
+    //             if ($body.find('.glyphicon-remove').length > 0) {
+    //                 disabledColumnsOsOnMenuCustomization().its('length').then(function (length) {
+    //                     for (let i = 0; i < length; i++) {
+    //                         disabledColumnsOsOnMenuCustomization().first().click()
+    //                         if (i < length - 1) {
+    //                             menuCustomization().click()
+    //                         }
+    //                     }
+    //                 })
+    //             } else {
+    //                 menuCustomization().click()
+    //             }
+    //         })
+    //     return this
+    // }
 
-        cy.get('[ng-if="customFieldsToggle.isOpen"]')
-            .then(($body) => {
-                if ($body.find('.glyphicon-remove').length > 0) {
-                    disabledColumnsOsOnMenuCustomization().its('length').then(function (length) {
+    enable_columns_for_specific__Custom_Form_on_the_grid(customFormName) {
+        menuCustomization().click();
+        customFormsSectionOnMenuCustomization().click();
+        this.enterValue(searchCustomFormsOnMenuCustomization, customFormName);
+
+        cy.get('[ng-if="customFieldsToggle.isOpen"]').then(($body) => {
+            if ($body.find('.glyphicon-remove').length > 0) {
+                cy.get('body').then(($page) => {
+                    let selectorToUse = $page.find(disabledColumnsOsOnMenuCustomization().selector).length > 0
+                        ? disabledColumnsOsOnMenuCustomization
+                        : disabledColumnsOsOnMenuCustomization_PENTEST;
+
+                    selectorToUse().its('length').then((length) => {
                         for (let i = 0; i < length; i++) {
-                            disabledColumnsOsOnMenuCustomization().first().click()
+                            selectorToUse().first().click();
                             if (i < length - 1) {
-                                menuCustomization().click()
+                                menuCustomization().click();
                             }
                         }
-                    })
-                } else {
-                    menuCustomization().click()
-                }
-            })
-        return this
+                    });
+                });
+            } else {
+                menuCustomization().click();
+            }
+        });
+        return this;
     }
+
 
     enterValue(element, arrayOrString) {
         // this is a much faster action than 'element.type()'

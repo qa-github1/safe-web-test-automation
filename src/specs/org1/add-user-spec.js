@@ -187,7 +187,7 @@ describe('Add User', function () {
     });
 
     context('1.2 Power User -- all permissions in Office', function () {
-        it.only('1.2.1. Office Admin can create a new user account', function () {
+        it('1.2.1. Office Admin can create a new user account', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
             api.org_settings.update_org_settings_by_specifying_property_and_value('addUserSupervisor', true)
@@ -237,10 +237,10 @@ describe('Add User', function () {
                 .click_button(C.buttons.save)
                 .verify_toast_message(C.toastMsgs.saved)
                 .search_for_user(D.newUser.email)
-                ui.userAdmin.verify_user_data_on_grid(D.newUser, C.customForms.usersFormWithRequiredFields)
+                 ui.userAdmin.verify_user_data_on_grid(D.newUser, C.customForms.usersFormWithRequiredFields_2)
 
-            ui.userAdmin.verify_email_content_(D.newUser.email, C.users.emailTemplates.welcomeToSafe, D.newUser)
-            api.users.deactivate_previously_created_user();
+             ui.userAdmin.verify_email_content_(D.newUser.email, C.users.emailTemplates.welcomeToSafe, D.newUser)
+             api.users.deactivate_previously_created_user();
         });
 
         it('1.3.2 --- with required Custom Form but not filled out, all optional fields on Form', function () {

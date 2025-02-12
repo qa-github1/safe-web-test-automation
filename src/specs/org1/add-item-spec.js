@@ -27,7 +27,7 @@ describe('Add Item', function () {
 
     context('1. Org Admin', function () {
 
-        it('1.1 All fields enabled ' +
+        it.only('1.1 All fields enabled ' +
             '-- "Item Belongs To Shows All People" turned ON in Org Settings -- multiple people not linked to Primary Case are selected in "Item Belongs to" field ', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
@@ -46,8 +46,8 @@ describe('Add Item', function () {
             ui.itemView.verify_Item_View_page_is_open(D.newItem.caseNumber)
                 .click_Edit()
                 .verify_values_on_Edit_form(D.newItem)
-            ui.menu.click_Item();
-            ui.addItem.verify_Case_Number_is_populated_on_enabled_input_field(D.newItem.caseNumber)
+             ui.menu.click_Item();
+             ui.addItem.verify_Case_Number_is_populated_on_enabled_input_field(D.newItem.caseNumber)
         });
 
         xit('1.2. Optional fields disabled -- redirect to View Added Item ' +

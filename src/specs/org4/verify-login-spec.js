@@ -6,7 +6,7 @@ const D = require("../../fixtures/data");
 
 describe('Login page', function () {
 
-    it('1.2 Validation messages', function () {
+    it.only('1.2 Validation messages', function () {
         ui.app.log_title(this);
 
         api.auth.get_tokens(S.userAccounts.blockedUser);
