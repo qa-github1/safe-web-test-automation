@@ -117,8 +117,8 @@ exports.get_items_from_specific_case = function (caseNumber, numberOfPagesWith10
                     let caseItemsObjects = response.body.entities
 
                     for (let i = 0; i<caseItemsObjects.length; i++){
-                        barcodes.push(item.barcode)
-                        if (storeAllItemsToLocalStorage) cy.setLocalStorage("seqOrgItemHistoryId", item);
+                        barcodes.push(caseItemsObjects[i].barcode)
+                        if (storeAllItemsToLocalStorage) cy.setLocalStorage("item" + i, caseItemsObjects[i]);
                     }
                 });
             });
