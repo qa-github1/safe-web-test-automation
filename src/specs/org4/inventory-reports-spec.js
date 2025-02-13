@@ -79,7 +79,7 @@ describe('Inventory Reports', function () {
             api.locations.move_location('Child2_1', 'root')
         })
 
-        it.only('1.1. DR for single parent location - No Discrepancies Found', function () {
+        it('1.1. DR for single parent location - No Discrepancies Found', function () {
             let reportName = D.getCurrentDateAndRandomNumber(4);
             let arrayOfPropertiesInLocalStorage = locations.concat(items);
 
@@ -394,26 +394,27 @@ describe('Inventory Reports', function () {
         })
     });
 
-    context('2. Scanning 500 items', function () {
+    context('2. Scanning 1000 items', function () {
         // this test is excluded from the regular regression suite for now, to reduce the total execution time
-        xit('3. Scanning 500 items during Inventory report', function () {
+        xit('3. Scanning 1000 items during Inventory report', function () {
 
             api.auth.get_tokens(orgAdmin);
             api.org_settings.disable_Item_fields([C.itemFields.description])
-            var numberOfRecords = 2000
+            // setting 20 items here for now, but we can adjust the number at any point
+            var numberOfRecords = 20
 
             D.getNewCaseData()
             D.getNewItemData(D.newCase)
-            api.locations.add_storage_location('Parent3')
+            api.locations.add_storage_location('RootLevel')
             api.cases.add_new_case()
-            D.newItem.location = D['newLocationParent3'][0].name
+            D.newItem.location = D['newLocationRootLevel'][0].name
             E.generateDataFor_ITEMS_Importer([D.newItem], null, null, numberOfRecords);
             cy.generate_excel_file('Items_forTestingInventoryReports', E.itemImportDataWithMinimumFields);
             ui.menu.click_Tools__Data_Import();
             ui.importer.upload_then_Map_and_Submit_file_for_importing('Items_forTestingInventoryReports', C.importTypes.items, C.importMappings.minimumItemFields)
                 .verify_toast_message([
                     C.toastMsgs.importComplete,
-                    numberOfRecords + C.toastMsgs.recordsImported])
+                    numberOfRecords + C.toastMsgs.recordsImported], false, 2)
 
             api.cases.fetch_current_case_data(D.newCase.caseNumber)
             api.items.get_items_from_specific_case(D.newCase.caseNumber, 2)
@@ -423,12 +424,13 @@ describe('Inventory Reports', function () {
             ui.menu.click_Tools__Inventory_Reports()
                 .click_button(C.buttons.newReport)
 
-            cy.getLocalStorage("Parent3").then(parentLoc => {
+            cy.getLocalStorage("RootLevel").then(parentLoc => {
                 cy.getLocalStorage("barcodes").then(barcodes => {
                     let barcodesArray = barcodes.split(",")
                     ui.inventoryReports.start_report(reportName, JSON.parse(parentLoc).barcode)
                     for (let i = 0; i < numberOfRecords; i++) {
                         ui.inventoryReports.enter_barcode_(barcodesArray[i])
+                        if(i === numberOfRecords-1) ui.app.pause(3)
                     }
                 })
             })

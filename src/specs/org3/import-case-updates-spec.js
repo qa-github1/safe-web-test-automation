@@ -15,7 +15,7 @@ describe('Import Case Updates', function () {
         api.auto_disposition.edit(true);
     });
 
-    it.only('I.C.U_1. Import Case Updates - all fields -- user and user group in Case Officer(s) field', function () {
+    it('I.C.U_1. Import Case Updates - all fields -- user and user group in Case Officer(s) field', function () {
         ui.app.log_title(this);
         let fileName = 'CaseUpdatesImport_allFields_' + S.domain;
 

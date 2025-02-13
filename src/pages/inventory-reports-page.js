@@ -57,6 +57,8 @@ export default class InventoryReportsPage extends BasePage {
 
     enter_barcode_(barcode) {
         scanBarcodeInput().clear().invoke('val', barcode).trigger('input').type('{enter}')
+        //we might be able to get rid of statis wait here if environment is fast and stable enough
+        this.pause(0.6)
         return this;
     };
 
