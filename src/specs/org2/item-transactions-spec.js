@@ -16,7 +16,7 @@ describe('Item Transactions & Actions', function () {
         api.org_settings.enable_all_Person_fields()
     });
 
-    it.only('1. Verify Check Out transaction and enabled/disabled actions for Checked Out item', function () {
+    it('1. Verify Check Out transaction and enabled/disabled actions for Checked Out item', function () {
         ui.app.log_title(this);
         const enabledActions = [
             'Check Item In',
@@ -43,8 +43,8 @@ describe('Item Transactions & Actions', function () {
             .verify_enabled_and_disabled_options_under_Actions_dropdown(enabledActions, disabledActions)
         ui.searchItem.run_search_by_Item_Description(D.newItem.description)
             .select_row_on_the_grid_that_contains_specific_value(D.newItem.description)
-            .click_Actions()
-            .verify_enabled_and_disabled_options_under_Actions_dropdown(enabledActions, disabledActions)
+            .click_Actions_on_Search_Page()
+            .verify_enabled_and_disabled_options_under_Actions_dropdown_on_Search_Page(enabledActions, disabledActions)
     });
 
     it('2. Verify Transfer transaction and enabled/disabled actions for Checked Out item', function () {
@@ -70,14 +70,14 @@ describe('Item Transactions & Actions', function () {
 
         ui.itemView
             .check_Out_the_item(orgAdmin, C.checkoutReasons.lab, 'test-note', D.currentDate)
-            .transfer_the_item(powerUser, 'test-note')
-            .verify_Items_Status('Checked Out')
+            .transfer_the_item(powerUser, orgAdmin, 'test-note')
+           .verify_Items_Status('Checked Out')
             .click_Actions()
             .verify_enabled_and_disabled_options_under_Actions_dropdown(enabledActions, disabledActions)
         ui.searchItem.run_search_by_Item_Description(D.newItem.description)
             .select_row_on_the_grid_that_contains_specific_value(D.newItem.description)
-            .click_Actions()
-            .verify_enabled_and_disabled_options_under_Actions_dropdown(enabledActions, disabledActions)
+            .click_Actions_on_Search_Page()
+            .verify_enabled_and_disabled_options_under_Actions_dropdown_on_Search_Page(enabledActions, disabledActions)
     });
 
     it('3. Verify Check Item In transaction and enabled/disabled actions for Checked In item', function () {
@@ -108,8 +108,8 @@ describe('Item Transactions & Actions', function () {
             .verify_enabled_and_disabled_options_under_Actions_dropdown(enabledActions, disabledActions)
         ui.searchItem.run_search_by_Item_Description(D.newItem.description)
             .select_row_on_the_grid_that_contains_specific_value(D.newItem.description)
-            .click_Actions()
-            .verify_enabled_and_disabled_options_under_Actions_dropdown(enabledActions, disabledActions)
+            .click_Actions_on_Search_Page()
+            .verify_enabled_and_disabled_options_under_Actions_dropdown_on_Search_Page(enabledActions, disabledActions)
     });
 
     it('4. Verify Dispose transaction and enabled/disabled actions for Disposed item', function () {
@@ -139,8 +139,8 @@ describe('Item Transactions & Actions', function () {
             .verify_enabled_and_disabled_options_under_Actions_dropdown(enabledActions, disabledActions)
         ui.searchItem.run_search_by_Item_Description(D.newItem.description)
             .select_row_on_the_grid_that_contains_specific_value(D.newItem.description)
-            .click_Actions()
-            .verify_enabled_and_disabled_options_under_Actions_dropdown(enabledActions, disabledActions)
+            .click_Actions_on_Search_Page()
+            .verify_enabled_and_disabled_options_under_Actions_dropdown_on_Search_Page(enabledActions, disabledActions)
     });
 
     it('5. Verify Undispose transaction and enabled/disabled actions for Checked In item', function () {
@@ -171,7 +171,7 @@ describe('Item Transactions & Actions', function () {
             .verify_enabled_and_disabled_options_under_Actions_dropdown(enabledActions, disabledActions)
         ui.searchItem.run_search_by_Item_Description(D.newItem.description)
             .select_row_on_the_grid_that_contains_specific_value(D.newItem.description)
-            .click_Actions()
-            .verify_enabled_and_disabled_options_under_Actions_dropdown(enabledActions, disabledActions)
+            .click_Actions_on_Search_Page()
+            .verify_enabled_and_disabled_options_under_Actions_dropdown_on_Search_Page(enabledActions, disabledActions)
     });
 });

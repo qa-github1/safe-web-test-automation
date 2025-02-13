@@ -90,7 +90,6 @@ C = {
         custodian: 'Custodian',
         custodyReason: 'Custody Reason',
         itemBelongsTo: 'Item Belongs To',
-        releasedTo: 'Released To',
         publicFacingDescription: 'Public Facing Description',
         dispositionStatus: 'Disposition Status',
         description: 'Description',

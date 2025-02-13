@@ -13,7 +13,7 @@ describe('Edit Person', function () {
         api.users.update_current_user_settings(user.id)
     });
 
-    it.only('1. Edit and verify all values on Person View page', function () {
+    it('1. Edit and verify all values on Person View page', function () {
         ui.app.log_title(this);
         api.auth.get_tokens(user);
         D.generateNewDataSet();

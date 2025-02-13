@@ -503,6 +503,15 @@ exports.generate_request_payload_for_disabling_Item_fields = function (fieldsToE
         })
     }
 
+    if (!shouldFieldBeEnabled(fieldsToEnable, C.itemFields.dispositionStatus)) {
+        body.push({
+            "orgFieldId": S.selectedEnvironment.fieldIds.item.dispositionAuthorizationStatus,
+            "entityType": 1,
+            "name": "DISPO_AUTH_STATUS",
+            "recordType": 1
+        })
+    }
+
     return body;
 };
 

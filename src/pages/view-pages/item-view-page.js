@@ -20,6 +20,8 @@ let
     additionalBarcodes = e => cy.get('[ng-model="newItem.barcodes[0].value"]'),
     save_button_on_active_tab = text => active_tab_container().children().find('[ng-click="doPreSave()"]'),
     takenByInput = e => cy.get('[ng-model="person.text"]'),
+    transferFrom = e => cy.get('[name="transferredFrom"]'),
+    transferTo = e => cy.get('[name="transferredTo"]'),
     expectedReturnDateInput = e => cy.get('[ng-class="{invalidFutureDate: futureDateViolated, datePickerOnly: isDatePickerOnly}"]'),
     returnedByInput = e => cy.get('[ng-model="person.text"]'),
     transferToInput = e => cy.get('[ng-model="person.text"]'),
@@ -369,9 +371,11 @@ export default class ItemViewPage extends BaseViewPage {
         return this;
     }
 
-    populate_Transfer_form(transferTo_user, notes) {
-        takenByInput().type(transferTo_user.email);
+    populate_Transfer_form(transferTo_user, transferFrom_user, notes) {
+        transferTo().type(transferTo_user.email);
         this.click_option_on_typeahead(transferTo_user.email);
+        transferFrom().type(transferFrom_user.email)
+        this.click_option_on_typeahead(transferFrom_user.email)
         this.enter_notes_on_modal(notes);
         return this;
     }
@@ -418,13 +422,13 @@ export default class ItemViewPage extends BaseViewPage {
         return this;
     }
 
-    transfer_the_item(transferTo_userObject, notes) {
-        this.define_API_request_to_be_awaited('POST', 'api/transfers')
+    transfer_the_item(transferTo_userObject, transferFrom_userObject, notes) {
+        this.define_API_request_to_be_awaited('POST', 'api/transfers/V2')
         this.click_button_on_active_tab(C.buttons.actions)
             .click_option_on_expanded_menu(C.dropdowns.itemActions.transferItem)
-            .populate_Transfer_form(transferTo_userObject, notes)
+            .populate_Transfer_form(transferTo_userObject, transferFrom_userObject,  notes)
             .click_button_on_modal(C.buttons.ok)
-            .wait_response_from_API_call('api/transfers')
+            .wait_response_from_API_call('api/transfers/V2')
             .verify_toast_message('Saved');
         return this;
     }

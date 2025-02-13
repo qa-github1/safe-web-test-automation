@@ -18,6 +18,8 @@ let
     deleteButton = e => cy.get('[translate="GENERAL.DELETE"]').parent('li'),
     //actionsButton = e => cy.get('[title="Select an item or items for which you would like to perform Action."]'),
     actionsButton = e => cy.get('[translate="GENERAL.ACTIONS"]'),
+    actionsButtonOnSearchPage = e => cy.get('[class="grid-buttons inline"]').eq(1),
+    actionsButtonOnSearchPage2 = e => cy.get('[class="grid-buttons inline"]').eq(3),
     uploadFileInput = e => cy.get('input[type=file]'),
     addItem = e => cy.get('[translate="CASES.LIST.BUTTON_ADD_ITEM"]'),
     active_tab = e => cy.get('[class="tab-pane ng-scope active"]'),
@@ -148,7 +150,8 @@ let
     tagsField = e => active_form().contains('Tags').parent('div'),
     //tagsField = e => cy.contains('Tags').parent('div').find('ng-transclude'),
     tagsInput = e => active_form().contains('Tags').parent('div').find('input'),
-    actionsContainer = e => cy.get('[translate="GENERAL.ACTIONS"]').parent('div'),
+    actionsContainer = e => cy.get('[translate="GENERAL.ACTIONS"]').closest('div'),
+    actionsContainerOnSearchPage = e => cy.get('[title="Select an item or items for which you would like to perform Action."]').closest('div'),
     case__ = e => cy.contains('Case').parent('div').find('ng-transclude'),
     status__ = e => cy.contains('Status').parent('div').find('ng-transclude'),
     recoveredAt__ = e => cy.contains('Recovered At').parent('div').find('ng-transclude'),
@@ -970,6 +973,14 @@ export default class BasePage {
         this.wait_until_spinner_disappears()
         //cy.contains('Actions').click()
         actionsButton().click()
+        return this;
+    };
+
+    click_Actions_on_Search_Page() {
+        this.pause(1)
+        this.wait_until_modal_disappears()
+        this.wait_until_spinner_disappears()
+        actionsButtonOnSearchPage().click()
         return this;
     };
 
@@ -2132,6 +2143,21 @@ export default class BasePage {
         this.wait_until_spinner_disappears()
 
         actionsContainer().within(($list) => {
+            for (let option of enabledOptions) {
+                cy.contains('li', option).should('not.have.class', 'disabled')
+            }
+            for (let option of disabledOptions) {
+                cy.contains('li', option).should('have.class', 'disabled')
+            }
+        })
+        return this;
+    }
+
+    verify_enabled_and_disabled_options_under_Actions_dropdown_on_Search_Page(enabledOptions, disabledOptions) {
+        actionsContainerOnSearchPage().should('have.class', 'open')
+        this.wait_until_spinner_disappears()
+
+        actionsContainerOnSearchPage().within(($list) => {
             for (let option of enabledOptions) {
                 cy.contains('li', option).should('not.have.class', 'disabled')
             }
