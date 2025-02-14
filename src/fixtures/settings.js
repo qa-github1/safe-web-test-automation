@@ -2551,6 +2551,10 @@ S.PENTEST_2 = {
             id: 43529,
             guid: '99aa4fce-da6f-ed11-832d-021f02b7478f'
         },
+        blockedUser: {
+            id: 97113,
+            guid: '9d1bed96-e9ea-ef11-835c-021f02b7478f'
+        },
     },
     divisions: {
         div1: {
