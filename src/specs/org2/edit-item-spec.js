@@ -38,7 +38,7 @@ describe('Edit Item', function () {
             .verify_edited_and_not_edited_values_on_Item_View_form(C.itemFields.allEditableFieldsArray, D.editedItem, D.newItem, true)
             .click_Edit()
             .verify_edited_and_not_edited_values_on_Item_Edit_form(C.itemFields.allEditableFieldsArray, D.editedItem, D.newItem, true)
-             .open_last_history_record()
+             .open_last_history_record(0)
              .verify_all_values_on_history(D.editedItem, D.newItem)
              .verify_red_highlighted_history_records(C.itemFields.allEditableFieldsArray)
     });
@@ -63,7 +63,7 @@ describe('Edit Item', function () {
             .verify_edited_and_not_edited_values_on_Item_View_form(C.itemFields.allEditableFieldsArray, D.editedItem, D.newItem, false)
             .click_Edit()
             .verify_edited_and_not_edited_values_on_Item_Edit_form(C.itemFields.allEditableFieldsArray, D.editedItem, D.newItem, false)
-            .open_last_history_record()
+            .open_last_history_record(0)
             .verify_all_values_on_history(D.editedItem, D.newItem)
             .verify_red_highlighted_history_records(C.itemFields.allEditableFieldsArray)
             .click_button_on_modal(C.buttons.cancel)
@@ -113,7 +113,7 @@ describe('Edit Item', function () {
             .verify_edited_and_not_edited_values_on_Item_View_form(allEditedFieldsArray, editedItem, D.newItem, true)
             .click_Edit()
             .verify_edited_and_not_edited_values_on_Item_Edit_form(allEditedFieldsArray, editedItem, D.newItem, true)
-            .open_last_history_record()
+            .open_last_history_record(0)
             .verify_all_values_on_history(editedItem, D.newItem)
             .verify_red_highlighted_history_records(allEditedFieldsArray)
     });
@@ -150,7 +150,7 @@ describe('Edit Item', function () {
             .verify_edited_and_not_edited_values_on_Item_View_form(C.itemFields.reducedEditableFieldsArray, D.editedItem, D.newItem, true)
             .click_Edit()
             .verify_edited_and_not_edited_values_on_Item_Edit_form(C.itemFields.reducedEditableFieldsArray, D.editedItem, D.newItem, true)
-            .open_last_history_record()
+            .open_last_history_record(0)
             .verify_all_values_on_history(D.editedItem, D.newItem)
             .verify_red_highlighted_history_records(C.itemFields.reducedEditableFieldsArray, allFieldsOnHistory)
     });

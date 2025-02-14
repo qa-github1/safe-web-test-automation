@@ -37,7 +37,7 @@ describe('Edit Case', function () {
              .verify_edited_and_not_edited_values_on_Case_View_form(C.caseFields.allEditableFieldsArray, D.editedCase, D.newCase, true)
              .click_Edit()
              .verify_edited_and_not_edited_values_on_Case_Edit_form(C.caseFields.allEditableFieldsArray, D.editedCase, D.newCase, true)
-             .open_last_history_record()
+             .open_last_history_record(0)
              .verify_all_values_on_history(D.editedCase, D.newCase, null)
              .verify_red_highlighted_history_records(C.caseFields.allEditableFieldsArray)
     });
@@ -59,7 +59,7 @@ describe('Edit Case', function () {
             .verify_edited_and_not_edited_values_on_Case_View_form(C.caseFields.allEditableFieldsArray, D.editedCase, D.newCase, false)
             .click_Edit()
             .verify_edited_and_not_edited_values_on_Case_Edit_form(C.caseFields.allEditableFieldsArray, D.editedCase, D.newCase, false)
-            .open_last_history_record()
+            .open_last_history_record(0)
             .verify_all_values_on_history(D.editedCase, D.newCase, null)
             .verify_red_highlighted_history_records(C.caseFields.allEditableFieldsArray)
     });
@@ -91,7 +91,7 @@ describe('Edit Case', function () {
 
         //remove the line below when issue #14697 gets fixed ⁃ Disabled Case/Person fields are displayed on History Details
         D.newCase.tagsOnHistory = D.editedCase.tagsOnHistory = 'No Tags'
-        ui.caseView.open_last_history_record()
+        ui.caseView.open_last_history_record(0)
             .verify_all_values_on_history(D.editedCase, D.newCase, null)
             .verify_red_highlighted_history_records(C.caseFields.reducedEditableFieldsArray)
     });
@@ -214,7 +214,7 @@ describe('Edit Case', function () {
             .verify_edited_and_not_edited_values_on_Case_View_form(allEditedFieldsArray, editedCase, D.newCase, true)
             .click_Edit()
             .verify_edited_and_not_edited_values_on_Case_View_form(allEditedFieldsArray, editedCase, D.newCase, true)
-            .open_last_history_record()
+            .open_last_history_record(0)
             .verify_all_values_on_history(editedCase, D.newCase)
             .verify_red_highlighted_history_records(allEditedFieldsArray)
     });

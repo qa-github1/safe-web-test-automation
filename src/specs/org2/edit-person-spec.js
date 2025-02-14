@@ -29,7 +29,7 @@ describe('Edit Person', function () {
             .verify_edited_and_not_edited_values_on_Person_View_form(C.personFields.allEditableFieldsArray, D.editedPerson, D.newPerson)
             .click_Edit()
             .verify_edited_and_not_edited_values_on_Person_Edit_form(C.personFields.allEditableFieldsArray, D.editedPerson, D.newPerson)
-            .open_last_history_record()
+            .open_last_history_record(1)
             .verify_all_values_on_history(D.editedPerson, D.newPerson)
         //-- uncomment method in the next line and remove the one below that when bug gets fixed in #13328
         // .verify_red_highlighted_history_records(C.personFields.allEditableFieldsArray)
@@ -63,7 +63,7 @@ describe('Edit Person', function () {
             .verify_edited_and_not_edited_values_on_Person_View_form(editedFields, D.editedPerson, D.newPerson)
             .click_Edit()
             .verify_edited_and_not_edited_values_on_Person_Edit_form(editedFields, D.editedPerson, D.newPerson)
-            .open_last_history_record()
+            .open_last_history_record(0)
             .verify_all_values_on_history(D.editedPerson, D.newPerson)
             //-- uncomment method in the next line and remove the one below that when bug gets fixed in #13328
             // .verify_red_highlighted_history_records(C.personFields.allEditableFieldsArray)
@@ -100,7 +100,7 @@ describe('Edit Person', function () {
             .verify_edited_and_not_edited_values_on_Person_View_form(editedFields, D.editedPerson, D.newPerson)
             .click_Edit()
             .verify_edited_and_not_edited_values_on_Person_Edit_form(editedFields, D.editedPerson, D.newPerson)
-            .open_last_history_record()
+            .open_last_history_record(0)
             .verify_all_values_on_history(D.editedPerson, D.newPerson)
             .verify_red_highlighted_history_records(editedFields, fieldsOnHistory)
     });
