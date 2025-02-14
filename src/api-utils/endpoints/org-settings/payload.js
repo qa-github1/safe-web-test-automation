@@ -408,6 +408,36 @@ exports.generate_request_payload_for_disabling_Item_fields = function (fieldsToE
             "name": "ITEM_BARCODES",
             "recordType": 1
         },
+        {
+            "orgFieldId": S.selectedEnvironment.fieldIds.item.publicFacingDescription,
+            "entityType": 1,
+            "name": "ITEM.PUBLIC_FACING_DESCRIPTION",
+            "recordType": 1
+        },
+        {
+            "orgFieldId": S.selectedEnvironment.fieldIds.item.latestTransactionNotes,
+            "entityType": 1,
+            "name": "ITEM.LATEST_TRANSACTION_NOTES",
+            "recordType": 1
+        },
+        {
+            "orgFieldId": S.selectedEnvironment.fieldIds.item.checkInNotes,
+            "entityType": 1,
+            "name": "ITEM.CHECKINNOTES",
+            "recordType": 1
+        },
+        {
+            "orgFieldId": S.selectedEnvironment.fieldIds.item.actualDisposedDate,
+            "entityType": 1,
+            "name": "ITEM.DISPOSAL.ACTUAL_DISPOSED_DATE",
+            "recordType": 1
+        },
+        {
+            "orgFieldId": S.selectedEnvironment.fieldIds.item.expectedReturnDate,
+            "entityType": 1,
+            "name": "ITEM.EXPECTED_RETURN_DATE",
+            "recordType": 1
+        },
     ];
 
     if (!shouldFieldBeEnabled(fieldsToEnable, C.itemFields.tags)) {
@@ -485,6 +515,21 @@ exports.generate_request_payload_for_disabling_Item_fields = function (fieldsToE
             })
     }
 
+    if (!shouldFieldBeEnabled(fieldsToEnable, C.itemFields.releasedTo)) {
+        body.push({
+                "orgFieldId": S.selectedEnvironment.fieldIds.item.releasedTo,
+                "entityType": 1,
+                "name": "ITEMS.DISPOSAL.RELEASED_TO",
+                "recordType": 0
+            },
+            {
+                "orgFieldId": S.selectedEnvironment.fieldIds.item.releasedTo,
+                "entityType": 1,
+                "name": "ITEMS.DISPOSAL.RELEASED_TO",
+                "recordType": 1
+            })
+    }
+
     if (!shouldFieldBeEnabled(fieldsToEnable, C.itemFields.recoveredBy)) {
         body.push({
             "orgFieldId": S.selectedEnvironment.fieldIds.item.recoveredBy,
@@ -499,6 +544,15 @@ exports.generate_request_payload_for_disabling_Item_fields = function (fieldsToE
             "orgFieldId": S.selectedEnvironment.fieldIds.item.custodyReason,
             "entityType": 1,
             "name": "ITEM_CUSTODY_REASON",
+            "recordType": 1
+        })
+    }
+
+    if (!shouldFieldBeEnabled(fieldsToEnable, C.itemFields.dispositionStatus)) {
+        body.push({
+            "orgFieldId": S.selectedEnvironment.fieldIds.item.dispositionAuthorizationStatus,
+            "entityType": 1,
+            "name": "DISPO_AUTH_STATUS",
             "recordType": 1
         })
     }

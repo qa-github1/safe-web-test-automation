@@ -2098,7 +2098,9 @@ S.PENTEST = {
             expectedReturnDate: 41,
             actualDisposedDate: 42,
             publicFacingDescription: 46,
-            dispositionAuthorizationStatus: 44
+            dispositionAuthorizationStatus: 44,
+            latestTransactionNotes: 48,
+            checkInNotes: 43,
         },
         person: {
             businessName: 9,
@@ -2502,20 +2504,21 @@ S.PENTEST_2 = {
     },
     office_2: {
         id: 1123,
-        name: "Cypress Office 2"
+        name: "Cypress Office 2",
+        orgAndOfficeName: "Web Test Automtion #2 - Cypress Office 2"
     },
     org2: {
         office_1: {
-            id: 1054,
+            id: 1118,
             guid: 'a9e131e6-3d36-eb11-aa49-062d5b58f56e',
             name: "Cypress Office 1",
-            orgAndOfficeName: "Web Test Automation - Cypress Office 1"
+            orgAndOfficeName: "Web Test Automtion #3 - Cypress Office 1"
         },
-        id: 546,
-        orgName: "Web Test Automation",
-        officeId: 1054,
+        id: 556,
+        orgName: "Web Test Automation #3",
+        officeId: 1118,
         officeName: "Cypress Office 1",
-        orgAndOfficeName: "Web Test Automation - Cypress Office 1"
+        orgAndOfficeName: "Web Test Automtion #3 - Cypress Office 1"
     },
     users: {
         systemAdminId: 40357,

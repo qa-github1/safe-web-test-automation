@@ -79,7 +79,8 @@ C = {
             'Make',
             'Description',
             'Item Belongs to',
-            'Tags'
+            'Tags',
+            'Released To'
         ],
         reducedEditableFieldsArray: ['Category'],
         orgNo: 'Org #',
@@ -90,7 +91,6 @@ C = {
         custodian: 'Custodian',
         custodyReason: 'Custody Reason',
         itemBelongsTo: 'Item Belongs To',
-        releasedTo: 'Released To',
         publicFacingDescription: 'Public Facing Description',
         dispositionStatus: 'Disposition Status',
         description: 'Description',

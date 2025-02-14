@@ -263,7 +263,7 @@ describe('Add Case', function () {
                 .verify_toast_message(C.toastMsgs.addedNewCase + 'officeFormat_' + D.newCase.caseNumber);
             ui.caseView.verify_Case_View_page_is_open('officeFormat_' + D.newCase.caseNumber)
             ui.menu.reload_page()
-                .select_office(office_2.name)
+                .select_office(office_2.orgAndOfficeName)
                 .click_Add__Case();
             ui.addCase.enter_Case_Number('?<>', true)
                 .verify_text_is_present_on_main_container("Please enter a valid character based on guidelines below:")
@@ -375,7 +375,7 @@ describe('Add Case', function () {
                 .verify_toast_message(C.toastMsgs.addedNewCase + 'prefix22' + D.newCase.caseNumber);
             ui.caseView.verify_Case_View_page_is_open('prefix22' + D.newCase.caseNumber)
             ui.menu.reload_page()
-                .select_office(office_2.name)
+                .select_office(office_2.orgAndOfficeName)
                 .click_Add__Case();
             ui.addCase.enter_Case_Number('abc')
                 .verify_text_is_present_on_main_container("Please enter a valid character based on guidelines below:")
