@@ -52,7 +52,7 @@ describe('Import Items', function () {
             .verify_title_on_active_tab(1)
     });
 
-    it('2. Item with all fields - Disposed Status', function () {
+    it.only('2. Item with all fields - Disposed Status', function () {
         ui.app.log_title(this);
         let fileName = 'ItemImport_allFields_Disposed_' + S.domain;
         api.auth.get_tokens(orgAdmin);
@@ -193,7 +193,7 @@ describe('Import Items', function () {
 
     //remove X when running regression test suite
     // no need to import 5K of items every day
-    it.only('6. Import five thousand items', function () {
+    xit('6. Import five thousand items', function () {
         ui.app.log_title(this);
         var numberOfRecords = 20000
         let fileName = numberOfRecords + '_Items_' + S.domain;

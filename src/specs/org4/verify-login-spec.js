@@ -6,7 +6,7 @@ const D = require("../../fixtures/data");
 
 describe('Login page', function () {
 
-    it.only('1.2 Validation messages', function () {
+    it('1.2 Validation messages', function () {
         ui.app.log_title(this);
 
         api.auth.get_tokens(S.userAccounts.blockedUser);
@@ -78,6 +78,7 @@ describe('Login page', function () {
                 .click_button(C.buttons.yes)
                 .verify_text_is_present_on_main_container(C.labels.dashboard.title);
            ui.menu.click_Log_Out()
+            ui.menu.click_Login()
             ui.login.enter_credentials(S.userAccounts.orgAdmin.email, S.userAccounts.orgAdmin.password)
                 .verify_text_is_present_on_main_container('If you use SAML, please login with your provider')
                 .click_button(C.buttons.login)
