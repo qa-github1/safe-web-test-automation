@@ -206,7 +206,7 @@ D.getNewItemData = function (specificCaseObject, locationObject, newPerson) {
         itemBelongsToOnHistory: [person.name],
         itemBelongsToGuid: [person.guid],
         barcodes: [{id: 0, value: randomNo}],
-        additionalBarcodes: [randomNo],
+        //additionalBarcodes: [randomNo],
         actualDisposedDate: '',
         disposedDate: '',
         disposalMethod: '',

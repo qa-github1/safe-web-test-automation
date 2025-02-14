@@ -30,7 +30,7 @@ exports.generate_POST_request_payload_for_creating_new_item = function (specific
         model: itemData.model,
         serialNumber: itemData.serialNumber,
         primaryCaseId: primaryCaseId,
-        custodyReasonId: itemData.custodyReasonId,
+        custodyReasonId: itemData.custodyReasonId ?? 0,
         peopleIds: [person.id],
         tags: itemData.tagsForApi
     };

@@ -38,9 +38,9 @@ describe('Edit Item', function () {
             .verify_edited_and_not_edited_values_on_Item_View_form(C.itemFields.allEditableFieldsArray, D.editedItem, D.newItem, true)
             .click_Edit()
             .verify_edited_and_not_edited_values_on_Item_Edit_form(C.itemFields.allEditableFieldsArray, D.editedItem, D.newItem, true)
-            .open_last_history_record()
-            .verify_all_values_on_history(D.editedItem, D.newItem)
-            .verify_red_highlighted_history_records(C.itemFields.allEditableFieldsArray)
+             .open_last_history_record()
+             .verify_all_values_on_history(D.editedItem, D.newItem)
+             .verify_red_highlighted_history_records(C.itemFields.allEditableFieldsArray)
     });
 
     it('2. Edit and verify all values on Item View page -- keep the previous values in multiselect fields  - Tags & Item Belongs To;' +

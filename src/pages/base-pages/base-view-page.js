@@ -129,8 +129,9 @@ export default class BaseViewPage extends BasePage {
         this.select_tab(C.tabs.history)
             .set_visibility_of_table_column(C.tableColumns.details, true)
             .verify_title_on_active_tab(C.tabs.history)
-            this.click(C.buttons.details, this.firstRowInResultsTable(1))
-        //  .verify_element_is_visible('History View')
+        // this method is used in a lot of tests. I changed the index from 1 to 0. Need to check if this method will be fine for all usages
+            this.click(C.buttons.details, this.firstRowInResultsTable(0))
+            .verify_element_is_visible('History View')
         return this;
     }
 

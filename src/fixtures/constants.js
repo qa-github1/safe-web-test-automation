@@ -79,7 +79,8 @@ C = {
             'Make',
             'Description',
             'Item Belongs to',
-            'Tags'
+            'Tags',
+            'Released To'
         ],
         reducedEditableFieldsArray: ['Category'],
         orgNo: 'Org #',
