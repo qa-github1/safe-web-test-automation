@@ -825,7 +825,7 @@ export default class BasePage {
     click_element_if_has_a_class = function (elementAsFunction, className) {
         elementAsFunction.then(($el) => {
             if ($el.hasClass(className)) {
-                element.click();
+                elementAsFunction.click();
             }
         });
     };
