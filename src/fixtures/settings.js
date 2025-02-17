@@ -2613,15 +2613,15 @@ S.PENTEST_2 = {
         caseNumber: 'TestCase1',
         createdDate: '10/26/2022',
         offenseDate: '10/26/2022',
-        reviewDate: '10/27/2022',
-        closedDate: '10/27/2022',
+        reviewDate: '11/15/2025',
+        closedDate: '02/17/2025',
     },
     oldActiveCase: {
         id: 7742584,
         caseNumber: 'AutomatedTest-Active Case',
         createdDate: '12/17/2022',
         offenseDate: '12/13/2022',
-        reviewDate: '12/2022/2022'
+        reviewDate: '11/15/2025'
     },
     taskTemplate: {
         taskTypeId: {

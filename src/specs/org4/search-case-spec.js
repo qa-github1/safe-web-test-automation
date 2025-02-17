@@ -303,7 +303,7 @@ describe('Cases Search', function () {
                     .verify_text_is_present_on_main_container(D.case2.caseNumber)
             });
 
-            it.only('1.2.12 Year to date', function () {
+            it('1.2.12 Year to date', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
