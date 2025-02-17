@@ -22,7 +22,9 @@ let
     orgItemNoInput = e => cy.get('[translate="ITEM_SEQUENTIAL_ORG_ID"]').parent().find('[ng-model="field.model"]'),
     custodyReasonDropdown = e => cy.get('[translate="ITEM_CUSTODY_REASON"]').parent().find('select').eq(1),
     statusDropdown = e => cy.get('[translate="ITEM_STATUS"]').parent().find('select').eq(1),
-    categoryDropdown = e => cy.get('[translate="ITEM_CATEGORY"]').parent().find('select').eq(1),
+    categoryDropdown = e => cy.get('[class="btn btn-default form-control ui-select-toggle"]').eq(1),
+    categoryDropdownOption = e => cy.get('[id="ui-select-choices-row-6-0"]'),
+    //categoryDropdown = e => cy.get('[translate="ITEM_CATEGORY"]').parent().find('select').eq(1),
     typeaheadOption = e => cy.get('[ng-repeat="match in matches track by $index"]'),
     tableColumn_header = columnTitle => cy.get('thead').contains(columnTitle),
     tableColumn_header_arrowUp = columnTitle => cy.get('thead').contains(columnTitle).parent().find('.order'),
@@ -118,8 +120,9 @@ export default class SearchItemPage extends BaseSearchPage {
     };
 
     select_Category(option) {
-        categoryDropdown().select(option);
-        categoryDropdown().should('contain', option);
+        categoryDropdown().type(option);
+        categoryDropdownOption().should('contain', option);
+        categoryDropdownOption().type('{enter}')
         return this;
     };
 

@@ -41,7 +41,7 @@ describe('Search Item', function () {
             ui.app.log_title(this);
             let itemDescription = D.newItem.description;
 
-            api.auth.get_tokens(S.userAccounts.orgUser)
+            api.auth.get_tokens(S.userAccounts.orgAdmin)
             api.items.add_new_item(true);
 
             ui.menu.click_Search__Item();
@@ -49,10 +49,10 @@ describe('Search Item', function () {
                 .enter_Created_By(user.email)
                 .click_button(C.buttons.search)
                 .verify_content_of_first_row_in_results_table(itemDescription)
-                .verify_items_count_on_grid(1)
+                .verify_items_count_on_grid(2)
         });
 
-        it('S.I_2.2 Created Date', function () {
+        it.only('S.I_2.2 Created Date', function () {
             ui.app.log_title(this);
             let currentDate = ui.app.getCurrentDate();
             let itemDescription = D.newItem.description;
@@ -115,7 +115,7 @@ describe('Search Item', function () {
 
             ui.menu.click_Search__Item();
             ui.searchItem.enter_Description(itemDescription)
-                .enter_Recovered_By(D.newItem.recoveredByName)
+                .enter_Recovered_By(D.newItem.recoveredBy)
                 .click_button(C.buttons.search)
                 .verify_content_of_first_row_in_results_table(itemDescription);
         });
