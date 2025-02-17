@@ -65,7 +65,7 @@ describe('Search Checkouts', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Checkouts();
-                ui.searchCheckOuts.enter_CheckedOutTo(S.selectedEnvironment.person.email, notEquals)
+                ui.searchCheckOuts.enter_CheckedOutTo(S.selectedEnvironment.person.fullName, notEquals)
                     .enter_CheckOutDate(exactly, S.currentDate)
                     .click_Search()
                     .sort_by_descending_order('Transaction Date')
