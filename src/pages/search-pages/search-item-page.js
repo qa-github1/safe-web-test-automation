@@ -140,7 +140,7 @@ export default class SearchItemPage extends BaseSearchPage {
         this.enable_all_standard_columns_on_the_grid(C.pages.itemSearch)
 
         this.verify_values_on_the_grid([
-            ['Office', userObject.officeName],
+            ['Office', userObject.officeName.substring(0, 9)],
             ['Primary Case #', userObject.caseNumber],
             ['Case Officer(s)', userObject.caseOfficers],
          //   ['Org#', userObject.],

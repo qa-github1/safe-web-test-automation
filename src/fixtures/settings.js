@@ -866,7 +866,31 @@ S.DEV_3 = {
         offenseDate: '12/20/2022',
         reviewDate: '01/03/2023'
     },
-    otherTaskTemplateId: 3605,
+    taskTemplates: {
+        dispoAuth: {
+            templateId: 4530,
+            type: 'Disposition Authorization',
+            subtype: '',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 5,
+            useDispositionAuthorizationActions: true,
+            title: 'Disposition Authorization',
+        },
+        other: {
+            templateId: 4529,
+            type: 'Other',
+            subtype: '',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 10,
+            useDispositionAuthorizationActions: true,
+            title: 'Title--forAutomatedTests',
+            message: 'Message-forAutomatedTests'
+        },
+    },
     recentCase: {
         id: 7743099,
         caseNumber: 'AutomatedTest-Active Case'

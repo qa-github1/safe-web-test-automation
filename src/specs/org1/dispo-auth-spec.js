@@ -7,9 +7,9 @@ const E = require("../../fixtures/files/excel-data");
 describe('Dispo Auth', function () {
 
     it('Add Dispo Task with 11 1DA items and assign to Org Admin, ' +
-        'set different actions for item using all variations' +
-        'using Actions menu and grid, ' +
-        'check statuses and notes upon submission', function () {
+        '--set different actions for item using all variations' +
+        '--using Actions menu and grid, ' +
+        '--check statuses and notes upon submission', function () {
 
         let user = S.getUserData(S.userAccounts.orgAdmin);
 
@@ -115,7 +115,7 @@ describe('Dispo Auth', function () {
         E.generateDataFor_ITEMS_Importer([D.newItem], null, null, numberOfRecords);
         cy.generate_excel_file('Items_forTestingDispoActionsService', E.itemImportDataWithAllFields);
         ui.menu.click_Tools__Data_Import();
-        ui.importer.upload_then_Map_and_Submit_file_for_importing('Items_forTestingDispoActionsService', C.importTypes.items, C.importMappings.minimumItemFields)
+        ui.importer.upload_then_Map_and_Submit_file_for_importing('Items_forTestingDispoActionsService', C.importTypes.items)
             .verify_toast_message([
                 C.toastMsgs.importComplete,
                 numberOfRecords + C.toastMsgs.recordsImported])
