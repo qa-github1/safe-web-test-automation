@@ -47,6 +47,7 @@ let
     userSettings = e => cy.get('[translate="NAV.USER_SETTINGS"]'),
     systemServices = e => cy.get('[translate="NAV.SYSTEM_SERVICES"]'),
     logOut = e => cy.get('[tooltip="Logout"]').first(),
+    logIn = e => cy.get('[href="#/login"]'),
     dataImport = e => cy.get('[ui-sref="flat-import.view"]'),
     dragAndDropBox = e => cy.get('[flow-file-success="uploadSuccess($file, $message)"]')
 
@@ -274,6 +275,13 @@ export default class Menu extends BasePage {
         logOut().scrollIntoView();
         logOut().should('be.visible');
         logOut().click();
+        return this;
+    }
+
+    click_Login() {
+        logIn().scrollIntoView();
+        logIn().should('be.visible');
+        logIn().click();
         return this;
     }
 

@@ -59,15 +59,15 @@ export default class SearchCheckOuts extends BaseSearchPage {
     verify_data_on_the_grid(dataObject) {
 
         S.getCurrentDate();
-        this.verify_content_of_specified_cell_in_first_table_row('Media', 'Media')
-        this.verify_content_of_specified_cell_in_first_table_row('Transaction Date', S.currentDate)
-        this.verify_content_of_specified_cell_in_first_table_row('Checked out by', dataObject.checkedOutBy)
-        this.verify_content_of_specified_cell_in_first_table_row('Checked Out To', dataObject.checkedOutTo)
-        this.verify_content_of_specified_cell_in_first_table_row('Reason', dataObject.reason)
-        this.verify_content_of_specified_cell_in_first_table_row('Notes', dataObject.notes)
-        this.verify_content_of_specified_cell_in_first_table_row('Expected Return Date', dataObject.expectedReturnDate)
-        this.verify_content_of_specified_cell_in_first_table_row('Items', dataObject.itemsCount)
-        this.verify_content_of_specified_cell_in_first_table_row('Media Count', dataObject.mediaCount)
+        this.verify_content_of_specific_cell_in_first_table_row('Media', 'Media')
+        this.verify_content_of_specific_cell_in_first_table_row('Transaction Date', S.currentDate)
+        this.verify_content_of_specific_cell_in_first_table_row('Checked out by', dataObject.checkedOutBy)
+        this.verify_content_of_specific_cell_in_first_table_row('Checked Out To', dataObject.checkedOutTo)
+        this.verify_content_of_specific_cell_in_first_table_row('Reason', dataObject.reason)
+        this.verify_content_of_specific_cell_in_first_table_row('Notes', dataObject.notes)
+        this.verify_content_of_specific_cell_in_first_table_row('Expected Return Date', dataObject.expectedReturnDate)
+        this.verify_content_of_specific_cell_in_first_table_row('Items', dataObject.itemsCount)
+        this.verify_content_of_specific_cell_in_first_table_row('Media Count', dataObject.mediaCount)
         return this;
     }
 

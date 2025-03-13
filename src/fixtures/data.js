@@ -182,7 +182,7 @@ D.getNewItemData = function (specificCaseObject, locationObject, newPerson) {
         locationId: locationObject.id,
         location: locationObject.name,
         locationGuid: locationObject.guid,
-        recoveryDate: helper.setDateAndTime(C.currentDateTimeFormat, 2020, 3, 5, 17, 27),
+        recoveryDate: helper.setDateAndTime(C.currentDateTimeFormat, 2024, 3, 5, 17, 27),
         recoveryDate_withoutTime: helper.setDate(C.currentDateTimeFormat.dateOnly, 2020, 3, 5),
         recoveryDate_withoutTime_editMode: helper.setDate(C.currentDateTimeFormat.dateOnly.editMode, 2020, 3, 5),
         recoveryDateEditMode: helper.setDateAndTime(C.currentDateTimeFormat.editMode, 2020, 3, 5, 17, 27),

@@ -506,7 +506,7 @@ E.generateDataFor_LOCATIONS_Importer = function (numberOfLocations = 3) {
     E.setLocationImportStructure(numberOfLocations);
 };
 E.notesFieldsHeaders = [
-    "Id",
+    //"Id",
     "UserGuid",
     "ItemId",
     "CaseNumber",
