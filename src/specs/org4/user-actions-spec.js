@@ -28,7 +28,7 @@ describe('User Actions', function () {
             .click_option_on_expanded_menu(C.dropdowns.userActions.sendVerificationEmail)
             .verify_toast_message(C.toastMsgs.emailsSent(1))
         ui.menu.click_Log_Out()
-        ui.userAdmin.verify_email_content_( C.users.emailTemplates.welcomeToSafe, D.newUser)
+        ui.userAdmin.verify_email_content_( D.newUser.email, C.users.emailTemplates.welcomeToSafe, D.newUser)
             .open_verification_link_from_email()
             .set_password(D.newUser.password)
             .scroll_and_click(C.buttons.setPassword)

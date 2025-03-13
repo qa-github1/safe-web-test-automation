@@ -123,7 +123,7 @@ exports.update_ALL_permissions_for_an_existing_Permission_group = function (grou
     return this;
 };
 
-exports.assign_Org_Admin_permissions_to_user = function (userObjectFromLocalStorageOrId, office1_ID, group1_ID, office2_ID = null, group2_ID = null, office3_ID = null, group3_ID = null) {
+exports.assign_Org_Admin_permissions_to_user = function (userObjectFromLocalStorageOrId, office1_ID, group1_ID , office2_ID = null, group2_ID = null, office3_ID = null, group3_ID = null) {
 
     cy.getLocalStorage(userObjectFromLocalStorageOrId).then(user => {
         let userId = user ? JSON.parse(user).id : userObjectFromLocalStorageOrId;

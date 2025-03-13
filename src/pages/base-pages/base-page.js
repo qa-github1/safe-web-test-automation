@@ -130,6 +130,7 @@ let
     caseOfficerTypeahead = e => cy.get('[ng-repeat="item in $group.items"]').first(),
     createPersonalTagOnTypeahead = e => cy.get('[ng-repeat="tagModel in $select.items"]').first(),
     addItemHeader = e => cy.get('[translate="ITEMS.ADD.MODAL_HEADING"]'),
+    closedTaskFilter = e => cy.get('[ng-model="showClosedTasks"]'),
     textboxOnCustomForm = e => cy.get('.fg-form-fields').contains('Textbox').parent('div').find('input'),
     emailOnCustomForm = e => cy.get('.fg-form-fields').contains('Email').parent('div').find('input'),
     numberOnCustomForm = e => cy.get('.fg-form-fields').contains('Number').parent('div').find('input'),
@@ -1317,6 +1318,11 @@ export default class BasePage {
         return this;
     };
 
+    click_closed_task_filter() {
+        closedTaskFilter().click();
+        return this;
+    }
+
     select_location(el, name) {
         if (name) {
             el().type(name.substr(0, 6))
@@ -2055,8 +2061,8 @@ export default class BasePage {
             let label = labelsArray[i]
             let value = valuesArray[i]
 
-            if (['Offense Type', ''].some(v => label === v)) {
-                this.turnOnToggleAndSelectDropdownOption(label, value)
+             if (['Offense Type', ''].some(v => label === v)) {
+                 this.turnOnToggleAndSelectDropdownOption(label, value)
 
             } else if (['Tags'].some(v => label === v)) {
                 this.turnOnToggleEnterValueAndWaitApiRequestToFinish(label, value, 'tagTypeahead')
@@ -2074,7 +2080,7 @@ export default class BasePage {
             } else if (['Case Officer(s)'].some(v => label === v)) {
                 this.turnOnToggleAndSelectTypeaheadOptionsOnMultiSelectField(label, value)
             } else {
-                this.turnOnToggleEnterValueAndPressEnter(label, value)
+                  this.turnOnToggleEnterValueAndPressEnter(label, value)
             }
         }
         return this

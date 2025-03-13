@@ -52,7 +52,7 @@ describe('Search Item', function () {
                 .verify_items_count_on_grid(2)
         });
 
-        it.only('S.I_2.2 Created Date', function () {
+        it('S.I_2.2 Created Date', function () {
             ui.app.log_title(this);
             let currentDate = ui.app.getCurrentDate();
             let itemDescription = D.newItem.description;

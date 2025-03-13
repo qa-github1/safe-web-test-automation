@@ -27,6 +27,7 @@ describe('Import Tasks', function () {
                     2 + C.toastMsgs.recordsImported]);
             ui.caseView.open_newly_created_item_via_direct_link()
                 .select_tab(C.tabs.tasks)
+                .click_closed_task_filter()
                 .verify_text_is_present_on_main_container(E.tasksWithAllFields[1][2])
         });
     });
