@@ -506,7 +506,6 @@ E.generateDataFor_LOCATIONS_Importer = function (numberOfLocations = 3) {
     E.setLocationImportStructure(numberOfLocations);
 };
 E.notesFieldsHeaders = [
-    //"Id",
     "UserGuid",
     "ItemId",
     "CaseNumber",
@@ -532,7 +531,6 @@ E.generateDataFor_NOTES_Importer = function (caseOrItemObject, barcode, numberOf
         for (let i = 0; i < numberOfNotes; i++) {
 
             E.notesWithAllFields.push([
-                '',
                 caseOrItemObject.userGuid,
                 '',
                 caseNumber,
