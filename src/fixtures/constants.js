@@ -828,24 +828,32 @@ C.labels = {
                     'Either the Item Id or the Item GUID MUST be mapped!'
                 ],
                 wronglyFormattedValues: [
-                    'Row #2 has Error: Field UserGUID. Cannot use $ as GUID.',
+                    'Row #2 has Error: Field UserGUID Email is not in proper format.',
+                    'Row #2 has Error: Field UserGUID. User not found. Value: \'$\'',
+                    'Row #2 has Error: Field OfficeGUID. Office not found',
+                    'Row #2 has Error: Field Date. Date \'$\' is not in the proper format.',
                     'Row #2 has Error: Field ItemID. Value \'$\' is not in a recognizable format.',
-                    'Row #2 has Error: Field OfficeGUID. Cannot use $ as GUID.',
+                    'Row #2 has Error: Field CaseNumber. Case \'$\' not found.',
+                    'Row #2 has Error: The note is neither Case nor Item'
                 ],
                 invalidValues: [
-                    'Row #2 has Error: Field UserGUID. User not found',
-                    'Row #2 has Error: The note is neither Case nor Item',
-                    'Field OfficeGUID. Office not found',
-                    'Row #2 has Error: Field Date. Date \'02032022\' is not in the proper format.',
-                    'Row #2 has Error: Field CaseNumber. Case \'non-existing case number>>\' not found.',
+                    'Row #2 has Error: Field UserGUID Email is empty.',
+                    'Row #2 has Error: Field UserGUID. User not found. Value: \'\'',
+                    'Row #2 has Error: Field OfficeGUID. Office not found',
+                    'Row #2 has Error: Field Date. Date \'535530de-c2e1-40bd-ad7d-4189dbbeb6af\' is not in the proper format.',
+                    'Row #2 has Error: Field ItemID. Value \'535530de-c2e1-40bd-ad7d-4189dbbeb6af\' is not in a recognizable format.',
+                    'Row #2 has Error: Field CaseNumber. Case number invalid format.',
+                    'Row #2 has Error: The note is neither Case nor Item'
                 ],
                 blankValues: [
-                    'Row #2 has Error: Field UserGUID. Cannot use <blank value> as GUID.',
-                    'Row #2 has Error: Field OfficeGUID. Cannot use <blank value> as GUID.',
+                    'Row #2 has Error: Field UserGUID Email is empty.',
+                    'Row #2 has Error: Field UserGUID. User not found. Value: \'\'',
+                    'Row #2 has Error: Field OfficeGUID is empty.',
+                    'Row #2 has Error: Field OfficeGUID. Office not found',
                     'Row #2 has Error: Field Date. Date is empty.',
                     'Row #2 has Error: Field Text is empty.',
                     'Row #2 has Error: Field CaseNumber. Case number invalid format.',
-                    'Row #2 has Error: The note is neither Case nor Item',
+                    'Row #2 has Error: The note is neither Case nor Item'
                 ]
             }
         },
