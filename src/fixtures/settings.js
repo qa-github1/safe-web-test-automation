@@ -527,6 +527,10 @@ S.DEV_2 = {
             id: 43529,
             guid: '99aa4fce-da6f-ed11-832d-021f02b7478f'
         },
+        blockedUser: {
+            id: 73851,
+            guid: '24abf752-0a00-f011-8356-0254a7906fb1'
+        },
     },
     divisions: {
         div1: {
