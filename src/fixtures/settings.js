@@ -3362,7 +3362,7 @@ S.chainOfCustody = {
         },
         move: (itemObject) => {
             return {
-                type: 'move',
+                type: 'Move',
                 date: itemObject.moveDate,
                 issuedFrom: itemObject.movedBy_name,
                 issuedTo: itemObject.movedBy_name,

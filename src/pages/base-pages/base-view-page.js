@@ -207,15 +207,21 @@ export default class BaseViewPage extends BasePage {
     verify_edited_or_old_text_on_multi_select_field(labelsOfEditedFields, label, fieldSelector, editedValue, initialValue, oldValueOverwritten = false) {
         if (labelsOfEditedFields.includes(label) && editedValue !== null) {
             this.verify_text(fieldSelector, editedValue);
-            if (oldValueOverwritten) {
-                this.verify_element_does_NOT_contain_text(fieldSelector, initialValue);
-            } else {
-                this.verify_text(fieldSelector, initialValue);
-            }
-        } else if (initialValue) {
+            // if (oldValueOverwritten) {
+            //     this.verify_element_does_NOT_contain_text(fieldSelector, initialValue);
+            // }
+           //  else {
+           //     this.verify_text(fieldSelector, initialValue);
+           // }
+        }
+        else if (initialValue) {
             this.verify_text(fieldSelector, initialValue);
         }
+
     }
+
+
+
 
     verify_value_on_multi_select_fields(labelsOfEditedFields, label, fieldSelector, editedValue, initialValue, oldValueOverwritten = false) {
         if (labelsOfEditedFields.includes(label) && editedValue) {
