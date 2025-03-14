@@ -1956,7 +1956,7 @@ export default class BasePage {
 
     turnOnToggleAndReturnParentElement(label) {
         return parentContainerFoundByInnerLabelOnModal(label)
-            .find('.toggle-handle').last().click()
+            .find('.toggle-handle').first().click()
             .parents('.form-group').first()
     }
 

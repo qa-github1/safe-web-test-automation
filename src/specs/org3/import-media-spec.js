@@ -31,7 +31,7 @@ describe('Import Media', function () {
         });
     });
 
-    it.only('2 Import Media - Precheck Only', function () {
+    it('2 Import Media - Precheck Only', function () {
         ui.app.log_title(this);
         let fileName = 'Media_precheckOnly_'+ S.domain;
         let user = S.userAccounts.orgAdmin;
@@ -51,6 +51,6 @@ describe('Import Media', function () {
             ui.caseView.open_newly_created_item_via_direct_link()
                 .select_tab(C.tabs.media)
                 .verify_text_is_NOT_present_on_main_container(E.mediaWithAllFields[1][13])
-        });
+       });
     });
 });

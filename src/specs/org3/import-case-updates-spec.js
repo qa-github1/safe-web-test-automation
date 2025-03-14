@@ -15,7 +15,7 @@ describe('Import Case Updates', function () {
         api.auto_disposition.edit(true);
     });
 
-    it.only('I.C.U_1. Import Case Updates - all fields -- user and user group in Case Officer(s) field', function () {
+    it('I.C.U_1. Import Case Updates - all fields -- user and user group in Case Officer(s) field', function () {
         ui.app.log_title(this);
         let fileName = 'CaseUpdatesImport_allFields_' + S.domain;
 
@@ -71,7 +71,7 @@ describe('Import Case Updates', function () {
             .verify_Error_toast_message_is_NOT_visible();
     });
 
-    it('I.C.U_2 Case Updates Import - Precheck Only', function () {
+    it.only('I.C.U_2 Case Updates Import - Precheck Only', function () {
         ui.app.log_title(this);
         let fileName = 'CaseUpdates_precheckOnly_' + S.domain;
         api.auth.get_tokens(user);

@@ -18,7 +18,7 @@ describe('Import Items', function () {
         api.cases.add_new_case(D.newCase.caseNumber);
     });
 
-    it.only('1. Item with all fields - Checked In status', function () {
+    it('1. Item with all fields - Checked In status', function () {
         ui.app.log_title(this);
         let fileName = 'ItemImport_allFields_' + S.domain;
         api.auth.get_tokens(orgAdmin);

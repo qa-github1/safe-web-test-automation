@@ -9,9 +9,16 @@ exports.add_new_item = function (toNewCase = true, locationSuffix = null, proper
         cy.getLocalStorage("newPerson").then(newPerson => {
             cy.getLocalStorage(locationSuffix).then(location => {
 
-                let caseObject = toNewCase ? JSON.parse(newCase) : null;
-                let locationObject = JSON.parse(location);
-                if (newPerson !== 'undefined') newPerson = JSON.parse(newPerson);
+               // let caseObject = toNewCase ? JSON.parse(newCase) : null;
+               // let locationObject = JSON.parse(location);
+                //if (newPerson !== 'undefined') newPerson = JSON.parse(newPerson);
+
+                // we had issue with parse so I changed this commented part
+                let caseObject = (toNewCase && newCase && newCase !== "undefined") ? JSON.parse(newCase) : null;
+
+                let locationObject = location && location !== "undefined" ? JSON.parse(location) : null;
+
+                let personObject = (newPerson && newPerson !== "undefined") ? JSON.parse(newPerson) : null;
 
                 generic_request.POST(
                     '/api/items',
