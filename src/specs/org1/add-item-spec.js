@@ -27,14 +27,14 @@ describe('Add Item', function () {
 
     context('1. Org Admin', function () {
 
-        it.only('1.1 All fields enabled ' +
+        it('1.1 All fields enabled ' +
             '-- "Item Belongs To Shows All People" turned ON in Org Settings -- multiple people not linked to Primary Case are selected in "Item Belongs to" field ', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
             D.getNewItemData(D.newCase);
              api.org_settings.update_org_settings(true, true);
             api.org_settings.enable_all_Item_fields();
-            D.newItem.itemBelongsTo = [S.selectedEnvironment.person.name, S.selectedEnvironment.person_2.name]
+            D.newItem.itemBelongsTo = [S.selectedEnvironment.person.email, S.selectedEnvironment.person_2.email]
 
             ui.app.open_newly_created_case_via_direct_link()
             ui.menu.click_Add__Item()

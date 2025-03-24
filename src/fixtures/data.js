@@ -349,7 +349,7 @@ D.getEditedItemData = function (specificCaseObject, locationObject, newPerson) {
         peopleIds: [Person_2.id],
         peopleGuids: [Person_2.guid],
         peopleNames: [Person_2.fullName],
-        itemBelongsTo: [Person_2.name],
+        itemBelongsTo: [Person_2.email],
         itemBelongsToOnHistory: [Person_2.name],
         itemBelongsToGuid: [Person_2.guid],
         additionalBarcodes: [randomNo + 2],

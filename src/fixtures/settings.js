@@ -483,7 +483,8 @@ S.DEV_2 = {
     },
     office_2: {
         id: 11091,
-        name: "Cypress Office 2"
+        name: "Cypress Office 2",
+        orgAndOfficeName: "Web Test Automation #2 - Cypress Office 2"
     },
     org2: {
         office_1: {

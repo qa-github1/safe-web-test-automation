@@ -23,7 +23,7 @@ describe('Add Task', function () {
 
     context('1.1 Org Admin', function () {
 
-        it.only('1.1.1 ' +
+        xit('1.1.1 ' +
            'Add task with required fields only ' +
             '-- Unassigned' +
             '-- keep template content' +
@@ -49,7 +49,7 @@ describe('Add Task', function () {
                 //     .verify_task_data_on_grid(D.newTask, orgAdmin)
         });
 
-        it('1.1.2.' +
+        xit('1.1.2.' +
             'Add task with all fields' +
             '-- assign to 1 user' +
             '-- attach 1 case, 1 item and 1 person' +

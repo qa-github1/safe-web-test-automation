@@ -6,7 +6,7 @@ const ui = require('../../pages/ui-spec');
 const E = require("../../fixtures/files/excel-data");
 describe('Dispo Auth', function () {
 
-    it.only('Add Dispo Task with 11 1DA items and assign to Org Admin, ' +
+    it('Add Dispo Task with 11 1DA items and assign to Org Admin, ' +
         '--set different actions for item using all variations' +
         '--using Actions menu and grid, ' +
         '--check statuses and notes upon submission', function () {
