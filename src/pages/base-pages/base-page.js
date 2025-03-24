@@ -729,6 +729,7 @@ export default class BasePage {
         return this;
     };
 
+
     check_text(element, text) {
         if (element instanceof Function) {
             if (text === '') {
@@ -744,6 +745,34 @@ export default class BasePage {
             }
         }
     }
+
+    // I needed to add this method because we had an issue with reading  empty ' ' on DEV while on Pentest method above worked fine
+    check_text_2(element, text, fieldName = '') {
+        if (element instanceof Function) {
+            element = element();
+        }
+
+        element.invoke('text').then((textFound) => {
+            let actualText = textFound || '';
+            let expectedText = text || '';
+
+            let normalizedText = actualText;
+            let normalizedExpected = expectedText.toString();
+
+            if (fieldName.toLowerCase() !== 'Guid') {
+                normalizedText = actualText.replace(/\s+/g, ' ').trim();
+                normalizedExpected = normalizedExpected.replace(/\s+/g, ' ').trim();
+            }
+
+            if (normalizedExpected === '') {
+                expect(normalizedText).to.eq('');
+            } else {
+                expect(normalizedText).to.contain(normalizedExpected);
+            }
+        });
+    }
+
+
 
     check_value(element, value) {
         if (element instanceof Function) {
@@ -773,6 +802,23 @@ export default class BasePage {
             })
         } else {
             self.check_text(element, expectedText)
+        }
+        return this;
+    };
+
+    //this method is added because of add-user spec -> we have different behavior on dev and pentest related to verifying empty ' '
+    verify_text_2(element, expectedText) {
+        let self = this
+        if (this.isObject(expectedText)) {
+            for (let property in expectedText) {
+                self.check_text(element, expectedText[property])
+            }
+        } else if (Array.isArray(expectedText)) {
+            expectedText.forEach(function (value) {
+                self.check_text(element, value)
+            })
+        } else {
+            self.check_text_2(element, expectedText)
         }
         return this;
     };
