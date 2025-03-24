@@ -678,7 +678,8 @@ D.getCustomFormData = function () {
         custom_user_or_group_names: [S.userAccounts.basicUser.name],
         custom_userId: S.userAccounts.basicUser.id,
         custom_userGuid: S.userAccounts.basicUser.guid,
-        custom_person: S.selectedEnvironment.person.name,
+        custom_person: S.selectedEnvironment.person.email,
+        custom_personName: S.selectedEnvironment.person.name,
         custom_personGuid: S.selectedEnvironment.person.guid,
         custom_personId: S.selectedEnvironment.person.id
     }

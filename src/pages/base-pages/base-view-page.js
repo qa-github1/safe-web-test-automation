@@ -250,7 +250,7 @@ export default class BaseViewPage extends BasePage {
                 [passwordOnCustomForm, dataObject.custom_password],
                 [textareaOnCustomForm, dataObject.custom_textarea],
                 [dropdownTypeaheadOnCustomForm, dataObject.custom_dropdownTypeaheadOption],
-                [personOnCustomForm, dataObject.custom_person],
+                [personOnCustomForm, dataObject.custom_personName],
                 [dateOnCustomForm, dataObject.custom_dateEditMode],
             ]);
 

@@ -57,7 +57,7 @@ describe('Add User', function () {
             api.users.deactivate_previously_created_user();
         });
 
-        it.only('1.1.2. add user with required fields only', function () {
+        it('1.1.2. add user with required fields only', function () {
             ui.app.log_title(this);
 
             api.auth.get_tokens(orgAdmin);
