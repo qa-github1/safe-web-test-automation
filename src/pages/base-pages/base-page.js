@@ -516,7 +516,6 @@ export default class BasePage {
 
             if (stack[1]) {
                 if (stack[2]) {
-                    // stack[0]().clear().type(stack[1])
                     stack[0]().type(stack[1])
                     if (stack[3]) {
                         self.wait_response_from_API_call(stack[3])
@@ -531,6 +530,9 @@ export default class BasePage {
         })
         return this;
     };
+
+
+
 
     verify_value_if_provided(element, value) {
         if (value) {
@@ -2274,7 +2276,7 @@ export default class BasePage {
                 [passwordOnCustomForm, dataObject.custom_password],
                 [textareaOnCustomForm, dataObject.custom_textarea],
                 [dropdownTypeaheadOnCustomForm, dataObject.custom_dropdownTypeaheadOption, dropdownTypeaheadOption],
-                [personOnCustomForm, dataObject.custom_person, dropdownTypeaheadOption],
+                [personOnCustomForm, dataObject.custom_personEmail, dropdownTypeaheadOption],
                 [dateOnCustomForm, dataObject.custom_date],
             ]);
 

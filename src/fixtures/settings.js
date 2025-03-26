@@ -80,6 +80,10 @@ S.DEV = {
             expectedReturnDate: 41,
             actualDisposedDate: 42,
             releasedTo: 47,
+            publicFacingDescription: 46,
+            dispositionAuthorizationStatus: 44,
+            latestTransactionNotes: 48,
+            checkInNotes: 43,
         },
         person: {
             businessName: 9,

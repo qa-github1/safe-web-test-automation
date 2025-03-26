@@ -349,7 +349,7 @@ D.getEditedItemData = function (specificCaseObject, locationObject, newPerson) {
         peopleIds: [Person_2.id],
         peopleGuids: [Person_2.guid],
         peopleNames: [Person_2.fullName],
-        itemBelongsTo: [Person_2.email],
+        itemBelongsTo: [Person_2.name],
         itemBelongsToOnHistory: [Person_2.name],
         itemBelongsToGuid: [Person_2.guid],
         additionalBarcodes: [randomNo + 2],
@@ -678,8 +678,8 @@ D.getCustomFormData = function () {
         custom_user_or_group_names: [S.userAccounts.basicUser.name],
         custom_userId: S.userAccounts.basicUser.id,
         custom_userGuid: S.userAccounts.basicUser.guid,
-        custom_person: S.selectedEnvironment.person.email,
-        custom_personName: S.selectedEnvironment.person.name,
+        custom_person: S.selectedEnvironment.person.name,
+        custom_personEmail: S.selectedEnvironment.person.email,
         custom_personGuid: S.selectedEnvironment.person.guid,
         custom_personId: S.selectedEnvironment.person.id
     }

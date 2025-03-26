@@ -544,7 +544,7 @@ exports.generate_request_payload_for_disabling_Item_fields = function (fieldsToE
             "recordType": 1
         })
     }
-    
+
 
     if (!shouldFieldBeEnabled(fieldsToEnable, C.itemFields.dispositionStatus)) {
         body.push({
@@ -553,7 +553,7 @@ exports.generate_request_payload_for_disabling_Item_fields = function (fieldsToE
             "name": "DISPO_AUTH_STATUS",
             "recordType": 1
         })
-    }
+     }
 
     return body;
 };
