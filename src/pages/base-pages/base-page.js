@@ -774,8 +774,6 @@ export default class BasePage {
         });
     }
 
-
-
     check_value(element, value) {
         if (element instanceof Function) {
             if (value === '') {
@@ -824,6 +822,9 @@ export default class BasePage {
         }
         return this;
     };
+
+
+
 
     verify_value(element, expectedText) {
         let self = this
@@ -1685,35 +1686,66 @@ export default class BasePage {
         return this;
     };
 
+    // verify_content_of_first_table_row_by_provided_column_title_and_value(columnTitle, cellContent, headerCellTag = 'th') {
+    //     let self = this
+    //     if (Array.isArray(cellContent)) {
+    //         resultsTableHeader().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
+    //             tableStriped().find('td').eq(i).invoke('text').then(function (textFound) {
+    //                 cellContent.forEach(function (value) {
+    //                     if (value === '') {
+    //                         tableStriped().find('td').eq(i).invoke('text').should('eq', value.toString().trim())
+    //                     } else if (value) {
+    //                         tableStriped().find('td').eq(i).should('contain.text', value.toString().trim())
+    //                     }
+    //                     // if (value === '') {
+    //                     //     assert.equal(textFound.toString().trim(), value.toString().trim());
+    //                     // } else if (value) {
+    //                     //     assert.include(textFound, value);
+    //                     // }
+    //                 })
+    //             });
+    //         });
+    //     } else {
+    //         resultsTableHeader().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
+    //             tableStriped().find('td').eq(i).invoke('text').then(function (textFound) {
+    //                 self.verify_text(tableStriped().find('td').eq(i), cellContent)
+    //             })
+    //         });
+    //     }
+    //     return this;
+    // };
+
     verify_content_of_first_table_row_by_provided_column_title_and_value(columnTitle, cellContent, headerCellTag = 'th') {
-        let self = this
+        let self = this;
+        let currentEnvironment = Cypress.env('environment');
+
         if (Array.isArray(cellContent)) {
             resultsTableHeader().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
                 tableStriped().find('td').eq(i).invoke('text').then(function (textFound) {
                     cellContent.forEach(function (value) {
                         if (value === '') {
-                            tableStriped().find('td').eq(i).invoke('text').should('eq', value.toString().trim())
+                            tableStriped().find('td').eq(i).invoke('text').should('eq', value.toString().trim());
                         } else if (value) {
-                            tableStriped().find('td').eq(i).should('contain.text', value.toString().trim())
+                            tableStriped().find('td').eq(i).should('contain.text', value.toString().trim());
                         }
-                        // if (value === '') {
-                        //     assert.equal(textFound.toString().trim(), value.toString().trim());
-                        // } else if (value) {
-                        //     assert.include(textFound, value);
-                        // }
-                    })
+                    });
                 });
             });
         } else {
             resultsTableHeader().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
                 tableStriped().find('td').eq(i).invoke('text').then(function (textFound) {
-                    self.verify_text(tableStriped().find('td').eq(i), cellContent)
-                })
+                    if (currentEnvironment === 'pentest') {
+                        self.verify_text(tableStriped().find('td').eq(i), cellContent);
+                    } else if (currentEnvironment === 'dev') {
+                        self.verify_text_2(tableStriped().find('td').eq(i), cellContent);
+                    }
+                });
             });
         }
         return this;
-    };
-    
+    }
+
+
     verify_content_of_first_row_in_results_table_on_active_tab(content) {
         if (Array.isArray(content)) {
             content.forEach(value =>
