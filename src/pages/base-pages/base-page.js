@@ -1737,7 +1737,11 @@ export default class BasePage {
                     if (currentEnvironment === 'pentest') {
                         self.verify_text(tableStriped().find('td').eq(i), cellContent);
                     } else if (currentEnvironment === 'dev') {
-                        self.verify_text_2(tableStriped().find('td').eq(i), cellContent);
+                        if (columnTitle.toLowerCase() === 'guid') {
+                            self.verify_text(tableStriped().find('td').eq(i), cellContent);
+                        } else {
+                            self.verify_text_2(tableStriped().find('td').eq(i), cellContent);
+                        }
                     }
                 });
             });
