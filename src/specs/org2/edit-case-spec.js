@@ -155,7 +155,8 @@ describe('Edit Case', function () {
             .click(C.buttons.edit)
             .verify_values_on_Edit_form(D.editedCase)
         ui.caseView.enter_Case_Number('?<>')
-            // .verify_text_is_present_on_main_container("Please enter a valid character based on guidelines below:")
+             //.verify_text_is_present_on_main_container("Please enter a valid character based on guidelines below:")
+            //we need to check this test, it works fine on pentest but on dev it fails on clearing field
             // .verify_text_is_present_on_main_container("Format examples: 'officeFormat_")
             // .select_Offense_Type(D.newCase.offenseType)
             // .verify_Save_button_is_disabled()
