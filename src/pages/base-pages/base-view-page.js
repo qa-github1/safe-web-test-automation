@@ -226,21 +226,33 @@ export default class BaseViewPage extends BasePage {
     }
 
 
-    verify_edited_or_old_text_on_multi_select_field(labelsOfEditedFields, label, fieldSelector, editedValue, initialValue, oldValueOverwritten = false) {
-        if (labelsOfEditedFields.includes(label) && editedValue !== null) {
-            this.verify_text(fieldSelector, editedValue);
-            // if (oldValueOverwritten) {
-            //     this.verify_element_does_NOT_contain_text(fieldSelector, initialValue);
-            // }
-           //  else {
-           //     this.verify_text(fieldSelector, initialValue);
-           // }
-        }
-        else if (initialValue) {
-            this.verify_text(fieldSelector, initialValue);
-        }
+    // verify_edited_or_old_text_on_multi_select_field(labelsOfEditedFields, label, fieldSelector, editedValue, initialValue, oldValueOverwritten = false) {
+    //     if (labelsOfEditedFields.includes(label) && editedValue !== null) {
+    //         this.verify_text(fieldSelector, editedValue);
+    //         // if (oldValueOverwritten) {
+    //         //     this.verify_element_does_NOT_contain_text(fieldSelector, initialValue);
+    //         // }
+    //        //  else {
+    //        //     this.verify_text(fieldSelector, initialValue);
+    //        // }
+    //     }
+    //     else if (initialValue) {
+    //         this.verify_text(fieldSelector, initialValue);
+    //     }
+    //
+    // }
 
+    verify_edited_or_old_text_on_multi_select_field(labelsOfEditedFields, label, fieldSelector, editedValue, initialValue, oldValueOverwritten = false) {
+        const isPentest = Cypress.env('env') === 'pentest';
+        const verifyMethod = isPentest ? this.verify_text : this.verify_text_2;
+
+        if (labelsOfEditedFields.includes(label) && editedValue !== null) {
+            verifyMethod.call(this, fieldSelector, editedValue);
+        } else if (initialValue) {
+            verifyMethod.call(this, fieldSelector, initialValue);
+        }
     }
+
 
 
 

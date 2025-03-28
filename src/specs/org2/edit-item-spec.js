@@ -30,17 +30,17 @@ describe('Edit Item', function () {
        ui.app.click_Edit();
        ui.itemView.verify_values_on_Edit_form(D.newItem, false)
            .remove_specific_values_on_multi_select_fields([itemBelongsToCurrently, currentTag])
-            .remove_existing_values_on_Additional_Barcodes_field()
-            .edit_all_values(D.editedItem)
-            .click_Save()
-            .verify_toast_message(C.toastMsgs.saved)
-            .reload_page()
-            .verify_edited_and_not_edited_values_on_Item_View_form(C.itemFields.allEditableFieldsArray, D.editedItem, D.newItem, true)
-            .click_Edit()
-            .verify_edited_and_not_edited_values_on_Item_Edit_form(C.itemFields.allEditableFieldsArray, D.editedItem, D.newItem, true)
-             .open_last_history_record(0)
-             .verify_all_values_on_history(D.editedItem, D.newItem)
-             .verify_red_highlighted_history_records(C.itemFields.allEditableFieldsArray)
+           .remove_existing_values_on_Additional_Barcodes_field()
+           .edit_all_values(D.editedItem)
+             .click_Save()
+             .verify_toast_message(C.toastMsgs.saved)
+             .reload_page()
+             .verify_edited_and_not_edited_values_on_Item_View_form(C.itemFields.allEditableFieldsArray, D.editedItem, D.newItem, true)
+             .click_Edit()
+             .verify_edited_and_not_edited_values_on_Item_Edit_form(C.itemFields.allEditableFieldsArray, D.editedItem, D.newItem, true)
+              .open_last_history_record(0)
+              .verify_all_values_on_history(D.editedItem, D.newItem)
+              .verify_red_highlighted_history_records(C.itemFields.allEditableFieldsArray)
     });
 
     it('2. Edit and verify all values on Item View page -- keep the previous values in multiselect fields  - Tags & Item Belongs To;' +
@@ -113,9 +113,9 @@ describe('Edit Item', function () {
             .verify_edited_and_not_edited_values_on_Item_View_form(allEditedFieldsArray, editedItem, D.newItem, true)
             .click_Edit()
             .verify_edited_and_not_edited_values_on_Item_Edit_form(allEditedFieldsArray, editedItem, D.newItem, true)
-            .open_last_history_record(0)
-            .verify_all_values_on_history(editedItem, D.newItem)
-            .verify_red_highlighted_history_records(allEditedFieldsArray)
+             .open_last_history_record(0)
+             .verify_all_values_on_history(editedItem, D.newItem)
+             .verify_red_highlighted_history_records(allEditedFieldsArray)
     });
 
     it('4. Edit and verify reduced number of values on Item View page ', function () {
