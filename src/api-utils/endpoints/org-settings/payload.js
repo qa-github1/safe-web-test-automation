@@ -438,6 +438,12 @@ exports.generate_request_payload_for_disabling_Item_fields = function (fieldsToE
             "name": "ITEM.EXPECTED_RETURN_DATE",
             "recordType": 1
         },
+        {
+            "orgFieldId": S.selectedEnvironment.fieldIds.item.custodyReason,
+            "entityType": 1,
+            "name": "ITEM_CUSTODY_REASON",
+            "recordType": 1
+        },
     ];
 
     if (!shouldFieldBeEnabled(fieldsToEnable, C.itemFields.tags)) {
@@ -539,14 +545,6 @@ exports.generate_request_payload_for_disabling_Item_fields = function (fieldsToE
         })
     }
 
-    if (!shouldFieldBeEnabled(fieldsToEnable, C.itemFields.custodyReason)) {
-        body.push({
-            "orgFieldId": S.selectedEnvironment.fieldIds.item.custodyReason,
-            "entityType": 1,
-            "name": "ITEM_CUSTODY_REASON",
-            "recordType": 1
-        })
-    }
 
     if (!shouldFieldBeEnabled(fieldsToEnable, C.itemFields.dispositionStatus)) {
         body.push({
@@ -555,7 +553,7 @@ exports.generate_request_payload_for_disabling_Item_fields = function (fieldsToE
             "name": "DISPO_AUTH_STATUS",
             "recordType": 1
         })
-    }
+     }
 
     return body;
 };

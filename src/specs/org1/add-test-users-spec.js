@@ -12,7 +12,7 @@ let permissionGroup_officeAdmin = S.selectedEnvironment.admin_permissionGroup;
 
 describe('Add User', function () {
 
-     for (let i =0; i<100; i++){
+  //   for (let i =0; i<100; i++){
 
     // before(function () {
     //     api.auth.get_tokens(orgAdmin)
@@ -30,10 +30,10 @@ describe('Add User', function () {
         D.generateNewDataSet(false, false, true);
 
          api.users.add_new_user('newUser', D.newUser)
-        api.permissions.assign_Org_Admin_permissions_to_user('newUser')
-        ui.userAdmin.complete_verification_and_set_password_for_new_user_account(D.newUser)
-        ui.menu.click_Log_Out()
-        ui.login.click_Login_button()
+         api.permissions.assign_Org_Admin_permissions_to_user('newUser')
+         ui.userAdmin.complete_verification_and_set_password_for_new_user_account(D.newUser)
+         ui.menu.click_Log_Out()
+         ui.login.click_Login_button()
 
     });
 
@@ -53,6 +53,6 @@ describe('Add User', function () {
     // });
 
 
-      }
+     // }
 
 });

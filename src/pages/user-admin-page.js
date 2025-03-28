@@ -220,8 +220,8 @@ export default class UserAdminPage extends BasePage {
         authApi.get_tokens(D.newUser)
     }
 
-    verify_user_data_on_grid(userObject, customFormName, enableFields = true) {
-        if (customFormName) this.enable_columns_for_specific__Custom_Form_on_the_grid(customFormName);
+    verify_user_data_on_grid(userObject, customFormName, enableFields = true, count) {
+        if (customFormName) this.enable_columns_for_specific__Custom_Form_on_the_grid(customFormName, count);
 
         if (enableFields) {
             this.enable_all_standard_columns_on_the_grid(C.pages.userAdmin)
@@ -289,6 +289,8 @@ export default class UserAdminPage extends BasePage {
         }
         return this;
     }
+
+
 
     verify_user_is_not_shown_up_on_grid() {
         this.verify_items_count_on_grid(0);

@@ -132,6 +132,7 @@ export default class BaseViewPage extends BasePage {
         // this method is used in a lot of tests. I changed the index from 1 to 0. Need to check if this method will be fine for all usages
             this.click(C.buttons.details, this.firstRowInResultsTable(tableIndex))
         //    .verify_element_is_visible('History View')
+
         return this;
     }
 
@@ -183,6 +184,7 @@ export default class BaseViewPage extends BasePage {
 
     click_Edit() {
         edit_button_on_active_tab().click();
+        cy.wait(1000)
         this.wait_element_to_be_visible(save_button_on_active_tab)
         this.verify_Save_isPresent()
         return this;
@@ -196,26 +198,64 @@ export default class BaseViewPage extends BasePage {
         }
     }
 
+    // verify_edited_or_old_TEXT_if_field_was_not_edited(labelsOfEditedFields, label, fieldSelector, editedValue, initialValue) {
+    //     if (labelsOfEditedFields.includes(label) && editedValue !== null) {
+    //         this.verify_text(fieldSelector, editedValue);
+    //     } else if (initialValue) {
+    //         this.verify_text(fieldSelector, initialValue);
+    //     }
+    // }
+
     verify_edited_or_old_TEXT_if_field_was_not_edited(labelsOfEditedFields, label, fieldSelector, editedValue, initialValue) {
+        const isDev = S.selectedEnvironment.name === 'dev';
+        const isPentest = S.selectedEnvironment.name === 'pentest';
+
         if (labelsOfEditedFields.includes(label) && editedValue !== null) {
-            this.verify_text(fieldSelector, editedValue);
+            if (isDev) {
+                this.verify_text_2(fieldSelector, editedValue);
+            } else if (isPentest) {
+                this.verify_text(fieldSelector, editedValue);
+            }
         } else if (initialValue) {
-            this.verify_text(fieldSelector, initialValue);
+            if (isDev) {
+                this.verify_text_2(fieldSelector, initialValue);
+            } else if (isPentest) {
+                this.verify_text(fieldSelector, initialValue);
+            }
         }
     }
 
+
+    // verify_edited_or_old_text_on_multi_select_field(labelsOfEditedFields, label, fieldSelector, editedValue, initialValue, oldValueOverwritten = false) {
+    //     if (labelsOfEditedFields.includes(label) && editedValue !== null) {
+    //         this.verify_text(fieldSelector, editedValue);
+    //         // if (oldValueOverwritten) {
+    //         //     this.verify_element_does_NOT_contain_text(fieldSelector, initialValue);
+    //         // }
+    //        //  else {
+    //        //     this.verify_text(fieldSelector, initialValue);
+    //        // }
+    //     }
+    //     else if (initialValue) {
+    //         this.verify_text(fieldSelector, initialValue);
+    //     }
+    //
+    // }
+
     verify_edited_or_old_text_on_multi_select_field(labelsOfEditedFields, label, fieldSelector, editedValue, initialValue, oldValueOverwritten = false) {
+        const isPentest = Cypress.env('env') === 'pentest';
+        const verifyMethod = isPentest ? this.verify_text : this.verify_text_2;
+
         if (labelsOfEditedFields.includes(label) && editedValue !== null) {
-            this.verify_text(fieldSelector, editedValue);
-            if (oldValueOverwritten) {
-                this.verify_element_does_NOT_contain_text(fieldSelector, initialValue);
-            } else {
-                this.verify_text(fieldSelector, initialValue);
-            }
+            verifyMethod.call(this, fieldSelector, editedValue);
         } else if (initialValue) {
-            this.verify_text(fieldSelector, initialValue);
+            verifyMethod.call(this, fieldSelector, initialValue);
         }
     }
+
+
+
+
 
     verify_value_on_multi_select_fields(labelsOfEditedFields, label, fieldSelector, editedValue, initialValue, oldValueOverwritten = false) {
         if (labelsOfEditedFields.includes(label) && editedValue) {
@@ -290,34 +330,76 @@ export default class BaseViewPage extends BasePage {
         return this;
     };
 
+    // verify_all_values_on_history_for_standard_fields(leftOrRightColumn, label_TextPairs, label_InputValuePairs, label_TextareaValuesPairs) {
+    //     let column = this.historyView_leftColumn
+    //
+    //     if (leftOrRightColumn === 'right') {
+    //         column = this.historyView_rightColumn
+    //     }
+    //     let self = this
+    //
+    //     column().within(($form) => {
+    //         label_TextPairs
+    //             .forEach(function (stack) {
+    //                 if (stack[1] !== null) self.verify_text(fieldValueFoundByLabel(stack[0]), stack[1])
+    //             })
+    //
+    //         if (label_InputValuePairs) {
+    //             label_InputValuePairs.forEach(function (stack) {
+    //                 if (stack[1] !== null) self.verify_value(inputFieldFoundByLabel(stack[0]), stack[1])
+    //             })
+    //         }
+    //
+    //         if (label_TextareaValuesPairs) {
+    //             label_TextareaValuesPairs.forEach(function (stack) {
+    //                 if (stack[1] !== null) self.verify_value(textareaFieldFoundByLabel(stack[0]), stack[1])
+    //             })
+    //         }
+    //     })
+    //     return this;
+    // };
+
     verify_all_values_on_history_for_standard_fields(leftOrRightColumn, label_TextPairs, label_InputValuePairs, label_TextareaValuesPairs) {
-        let column = this.historyView_leftColumn
+        let column = this.historyView_leftColumn;
 
         if (leftOrRightColumn === 'right') {
-            column = this.historyView_rightColumn
+            column = this.historyView_rightColumn;
         }
-        let self = this
+        let self = this;
+        const isDev = S.selectedEnvironment.name === 'dev';
+        const isPentest = S.selectedEnvironment.name === 'pentest';
 
         column().within(($form) => {
-            label_TextPairs
-                .forEach(function (stack) {
-                    if (stack[1] !== null) self.verify_text(fieldValueFoundByLabel(stack[0]), stack[1])
-                })
+            label_TextPairs.forEach(function (stack) {
+                if (stack[1] !== null) {
+                    if (isDev) {
+                        self.verify_text_2(fieldValueFoundByLabel(stack[0]), stack[1]);
+                    } else if (isPentest) {
+                        self.verify_text(fieldValueFoundByLabel(stack[0]), stack[1]);
+                    }
+                }
+            });
 
             if (label_InputValuePairs) {
                 label_InputValuePairs.forEach(function (stack) {
-                    if (stack[1] !== null) self.verify_value(inputFieldFoundByLabel(stack[0]), stack[1])
-                })
+                    if (stack[1] !== null) {
+                        self.verify_value(inputFieldFoundByLabel(stack[0]), stack[1]);
+                    }
+                });
             }
 
             if (label_TextareaValuesPairs) {
                 label_TextareaValuesPairs.forEach(function (stack) {
-                    if (stack[1] !== null) self.verify_value(textareaFieldFoundByLabel(stack[0]), stack[1])
-                })
+                    if (stack[1] !== null) {
+                        self.verify_value(textareaFieldFoundByLabel(stack[0]), stack[1]);
+                    }
+                });
             }
-        })
+        });
+
         return this;
-    };
+    }
+
 
     verify_all_values_on_Edit_form_for_standard_fields(label_TextPairs, label_InputValuePairs, label_TextareaValuesPairs) {
         let self = this

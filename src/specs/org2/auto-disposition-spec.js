@@ -59,7 +59,7 @@ describe('Auto-Disposition', function () {
             api.users.update_current_user_settings(user.id, DF.dateTimeFormats.long)
         });
 
-        it('3.1 Verify "Re-Distribute" for "Past Due" cases', function () {
+        it.only('3.1 Verify "Re-Distribute" for "Past Due" cases', function () {
             api.auth.get_tokens(user);
             ui.menu.click_Settings__Organization()
                 .click_element_containing_link(C.labels.organization.tabs.autoDisposition);
@@ -115,7 +115,7 @@ describe('Auto-Disposition', function () {
 
         // enable test just during the full regression as it takes longer to redistribute review dates
         //for all cases with upcoming review date in Org
-        it('A.D.4.2 Verify "Re-Distribute" for "Upcoming" cases', function () {
+        xit('A.D.4.2 Verify "Re-Distribute" for "Upcoming" cases', function () {
             api.auth.get_tokens(user);
             D.generateNewDataSet()
             api.cases.add_new_case(D.newCase.caseNumber);

@@ -237,7 +237,7 @@ describe('Add User', function () {
                 .click_button(C.buttons.save)
                 .verify_toast_message(C.toastMsgs.saved)
                 .search_for_user(D.newUser.email)
-                 ui.userAdmin.verify_user_data_on_grid(D.newUser, C.customForms.usersFormWithRequiredFields_2)
+                 ui.userAdmin.verify_user_data_on_grid(D.newUser, C.customForms.usersFormWithRequiredFields_2, true, 13)
 
              ui.userAdmin.verify_email_content_(D.newUser.email, C.users.emailTemplates.welcomeToSafe, D.newUser)
              api.users.deactivate_previously_created_user();

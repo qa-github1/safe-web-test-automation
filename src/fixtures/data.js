@@ -183,10 +183,10 @@ D.getNewItemData = function (specificCaseObject, locationObject, newPerson) {
         location: locationObject.name,
         locationGuid: locationObject.guid,
         recoveryDate: helper.setDateAndTime(C.currentDateTimeFormat, 2024, 3, 5, 17, 27),
-        recoveryDate_withoutTime: helper.setDate(C.currentDateTimeFormat.dateOnly, 2020, 3, 5),
-        recoveryDate_withoutTime_editMode: helper.setDate(C.currentDateTimeFormat.dateOnly.editMode, 2020, 3, 5),
-        recoveryDateEditMode: helper.setDateAndTime(C.currentDateTimeFormat.editMode, 2020, 3, 5, 17, 27),
-        recoveryDateInIsoFormat: helper.setIsoDateAndTime(2020, 3, 5, 17, 27),
+        recoveryDate_withoutTime: helper.setDate(C.currentDateTimeFormat.dateOnly, 2024, 3, 5),
+        recoveryDate_withoutTime_editMode: helper.setDate(C.currentDateTimeFormat.dateOnly.editMode, 2024, 3, 5),
+        recoveryDateEditMode: helper.setDateAndTime(C.currentDateTimeFormat.editMode, 2024, 3, 5, 17, 27),
+        recoveryDateInIsoFormat: helper.setIsoDateAndTime(2024, 3, 5, 17, 27),
         createdDate: helper.setDateAndTime(C.currentDateTimeFormat),
         officeGuid: S.selectedEnvironment.office_1.guid,
         officeName: S.selectedEnvironment.office_1.name,
@@ -679,6 +679,7 @@ D.getCustomFormData = function () {
         custom_userId: S.userAccounts.basicUser.id,
         custom_userGuid: S.userAccounts.basicUser.guid,
         custom_person: S.selectedEnvironment.person.name,
+        custom_personEmail: S.selectedEnvironment.person.email,
         custom_personGuid: S.selectedEnvironment.person.guid,
         custom_personId: S.selectedEnvironment.person.id
     }

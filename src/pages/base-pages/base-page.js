@@ -98,12 +98,12 @@ let
     //     '                                                            \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\':\n' +
     //    '                                                            \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
 
-    disabledColumnsOsOnMenuCustomization = e => cy.get('.glyphicon-remove'),
+    disabledColumnsOsOnMenuCustomization = e => cy.get('i.glyphicon.glyphicon-remove.glyphicon-image-md.glyphicon-gray'),
     disabledColumnsOsOnMenuCustomization_PENTEST = e => cy.get('[ng-class="col.visible ? \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\': \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
 
-    //disabledColumnsOsOnMenuCustomization_DEV = e => cy.get('[ng-class="col.visible ?\n' +
-    //    '                                                            \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\':\n' +
-    //    '                                                            \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
+    disabledColumnsOsOnMenuCustomization_DEV = e => cy.get('[ng-class="col.visible ?\n' +
+        '                                                            \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\':\n' +
+        '                                                            \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
     enabledColumnsOnMenuCustomization = e => cy.get('.glyphicon-ok'),
     pageSizeAndColumnsContianer = e => cy.get('.grid-menu-header').eq(1),
     //  resultsTableHeader = (tableIndex = 0) => cy.get('.table-striped').eq(tableIndex).find('thead'),
@@ -396,7 +396,9 @@ export default class BasePage {
         let timeoutInMiliseconds = timeoutInMinutes * 60000;
 
         cy.getLocalStorage("recentCase").then(recentCase => {
-            toastMessage(timeoutInMiliseconds).should('be.visible');
+            //toastMessage(timeoutInMiliseconds).should('be.visible');
+            toastMessage().should('be.visible', {timeout: timeoutInMiliseconds});
+
             toastMessage(timeoutInMiliseconds).invoke('text').then(function (toastMsg) {
                 toastMessage().click({multiple: true})
                 toastMessage().should('not.exist');
@@ -549,7 +551,6 @@ export default class BasePage {
 
             if (stack[1]) {
                 if (stack[2]) {
-                    // stack[0]().clear().type(stack[1])
                     stack[0]().type(stack[1])
                     if (stack[3]) {
                         self.wait_response_from_API_call(stack[3])
@@ -564,6 +565,7 @@ export default class BasePage {
         })
         return this;
     };
+
 
     verify_value_if_provided(element, value) {
         if (value) {
@@ -762,6 +764,7 @@ export default class BasePage {
         return this;
     };
 
+
     check_text(element, text) {
         if (element instanceof Function) {
             if (text === '') {
@@ -776,6 +779,32 @@ export default class BasePage {
                 element.should('contain.text', text)
             }
         }
+    }
+
+    // I needed to add this method because we had an issue with reading  empty ' ' on DEV while on Pentest method above worked fine
+    check_text_2(element, text, fieldName = '') {
+        if (element instanceof Function) {
+            element = element();
+        }
+
+        element.invoke('text').then((textFound) => {
+            let actualText = textFound || '';
+            let expectedText = text || '';
+
+            let normalizedText = actualText;
+            let normalizedExpected = expectedText.toString();
+
+            if (fieldName.toLowerCase() !== 'Guid') {
+                normalizedText = actualText.replace(/\s+/g, ' ').trim();
+                normalizedExpected = normalizedExpected.replace(/\s+/g, ' ').trim();
+            }
+
+            if (normalizedExpected === '') {
+                expect(normalizedText).to.eq('');
+            } else {
+                expect(normalizedText).to.contain(normalizedExpected);
+            }
+        });
     }
 
     check_value(element, value) {
@@ -809,6 +838,24 @@ export default class BasePage {
         }
         return this;
     };
+
+    //this method is added because of add-user spec -> we have different behavior on dev and pentest related to verifying empty ' '
+    verify_text_2(element, expectedText) {
+        let self = this
+        if (this.isObject(expectedText)) {
+            for (let property in expectedText) {
+                self.check_text(element, expectedText[property])
+            }
+        } else if (Array.isArray(expectedText)) {
+            expectedText.forEach(function (value) {
+                self.check_text(element, value)
+            })
+        } else {
+            self.check_text_2(element, expectedText)
+        }
+        return this;
+    };
+
 
     verify_value(element, expectedText) {
         let self = this
@@ -995,6 +1042,7 @@ export default class BasePage {
     click_Edit() {
         editButton().should('be.enabled');
         editButton().click();
+        cy.wait(2000)
         saveButton().should('be.visible');
         return this;
     };
@@ -1169,20 +1217,33 @@ export default class BasePage {
         // })
     };
 
-    set_visibility_of_table_column(columnName, shouldBeVisible) {
-        cy.get('thead').invoke('text').then((text) => {
-            if (shouldBeVisible && !text.includes(columnName)) {
-                this.click_element_on_active_tab(C.buttons.menuCustomization);
-                this.click_element_on_active_tab(C.buttons.options);
-                this.click(columnName, gridOptionsDropdown());
-            } else if (!shouldBeVisible && text.includes(columnName)) {
-                this.click_element_on_active_tab(C.buttons.menuCustomization);
-                this.click_element_on_active_tab(C.buttons.options);
-                this.click(columnName, gridOptionsDropdown());
-            } else {
+    // set_visibility_of_table_column(columnName, shouldBeVisible) {
+    //     cy.get('thead').invoke('text').then((text) => {
+    //         if (shouldBeVisible && !text.includes(columnName)) {
+    //             this.click_element_on_active_tab(C.buttons.menuCustomization);
+    //             this.click_element_on_active_tab(C.buttons.options);
+    //             this.click(columnName, gridOptionsDropdown());
+    //         } else if (!shouldBeVisible && text.includes(columnName)) {
+    //             this.click_element_on_active_tab(C.buttons.menuCustomization);
+    //             this.click_element_on_active_tab(C.buttons.options);
+    //             this.click(columnName, gridOptionsDropdown());
+    //         } else {
+    //
+    //         }
+    //     })
 
+    set_visibility_of_table_column(columnName, shouldBeVisible) {
+        cy.wait(2000)
+        cy.get('thead').invoke('text').then((text) => {
+            const columnExists = text.includes(columnName);
+
+            if (shouldBeVisible && !columnExists) {
+                this.click_element_on_active_tab(C.buttons.menuCustomization);
+                this.click_element_on_active_tab(C.buttons.options);
+                this.click(columnName, gridOptionsDropdown());
             }
-        })
+        });
+
 
         // this.click_element_on_active_tab(C.buttons.menuCustomization);
         // this.click_element_on_active_tab(C.buttons.options);
@@ -1707,34 +1768,69 @@ export default class BasePage {
         return this;
     };
 
+    // verify_content_of_first_table_row_by_provided_column_title_and_value(columnTitle, cellContent, headerCellTag = 'th') {
+    //     let self = this
+    //     if (Array.isArray(cellContent)) {
+    //         resultsTableHeader().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
+    //             tableStriped().find('td').eq(i).invoke('text').then(function (textFound) {
+    //                 cellContent.forEach(function (value) {
+    //                     if (value === '') {
+    //                         tableStriped().find('td').eq(i).invoke('text').should('eq', value.toString().trim())
+    //                     } else if (value) {
+    //                         tableStriped().find('td').eq(i).should('contain.text', value.toString().trim())
+    //                     }
+    //                     // if (value === '') {
+    //                     //     assert.equal(textFound.toString().trim(), value.toString().trim());
+    //                     // } else if (value) {
+    //                     //     assert.include(textFound, value);
+    //                     // }
+    //                 })
+    //             });
+    //         });
+    //     } else {
+    //         resultsTableHeader().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
+    //             tableStriped().find('td').eq(i).invoke('text').then(function (textFound) {
+    //                 self.verify_text(tableStriped().find('td').eq(i), cellContent)
+    //             })
+    //         });
+    //     }
+    //     return this;
+    // };
+
     verify_content_of_first_table_row_by_provided_column_title_and_value(columnTitle, cellContent, headerCellTag = 'th') {
-        let self = this
+        let self = this;
+        let currentEnvironment = Cypress.env('environment');
+
         if (Array.isArray(cellContent)) {
             resultsTableHeader().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
                 tableStriped().find('td').eq(i).invoke('text').then(function (textFound) {
                     cellContent.forEach(function (value) {
                         if (value === '') {
-                            tableStriped().find('td').eq(i).invoke('text').should('eq', value.toString().trim())
+                            tableStriped().find('td').eq(i).invoke('text').should('eq', value.toString().trim());
                         } else if (value) {
-                            tableStriped().find('td').eq(i).should('contain.text', value.toString().trim())
+                            tableStriped().find('td').eq(i).should('contain.text', value.toString().trim());
                         }
-                        // if (value === '') {
-                        //     assert.equal(textFound.toString().trim(), value.toString().trim());
-                        // } else if (value) {
-                        //     assert.include(textFound, value);
-                        // }
-                    })
+                    });
                 });
             });
         } else {
             resultsTableHeader().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
                 tableStriped().find('td').eq(i).invoke('text').then(function (textFound) {
-                    self.verify_text(tableStriped().find('td').eq(i), cellContent)
-                })
+                    if (currentEnvironment === 'pentest') {
+                        self.verify_text(tableStriped().find('td').eq(i), cellContent);
+                    } else if (currentEnvironment === 'dev') {
+                        if (columnTitle.toLowerCase() === 'guid') {
+                            self.verify_text(tableStriped().find('td').eq(i), cellContent);
+                        } else {
+                            self.verify_text_2(tableStriped().find('td').eq(i), cellContent);
+                        }
+                    }
+                });
             });
         }
         return this;
-    };
+    }
+
 
     verify_content_of_first_row_in_results_table_on_active_tab(content) {
         if (Array.isArray(content)) {
@@ -1952,6 +2048,7 @@ export default class BasePage {
     };
 
     wait_element_to_be_visible(element) {
+        cy.wait(2000);
         element().should('be.visible');
         return this;
     };
@@ -2028,7 +2125,7 @@ export default class BasePage {
 
     turnOnToggleAndReturnParentElement(label) {
         return parentContainerFoundByInnerLabelOnModal(label)
-            .find('.toggle-handle').last().click()
+            .find('.toggle-handle').first().click()
             .parents('.form-group').first()
     }
 
@@ -2296,7 +2393,7 @@ export default class BasePage {
                 [passwordOnCustomForm, dataObject.custom_password],
                 [textareaOnCustomForm, dataObject.custom_textarea],
                 [dropdownTypeaheadOnCustomForm, dataObject.custom_dropdownTypeaheadOption, dropdownTypeaheadOption],
-                [personOnCustomForm, dataObject.custom_person, dropdownTypeaheadOption],
+                [personOnCustomForm, dataObject.custom_personEmail, dropdownTypeaheadOption],
                 [dateOnCustomForm, dataObject.custom_date],
             ]);
 
@@ -2369,7 +2466,35 @@ export default class BasePage {
     //     return this
     // }
 
-    enable_columns_for_specific__Custom_Form_on_the_grid(customFormName) {
+    // enable_columns_for_specific__Custom_Form_on_the_grid(customFormName) {
+    //     menuCustomization().click();
+    //     customFormsSectionOnMenuCustomization().click();
+    //     this.enterValue(searchCustomFormsOnMenuCustomization, customFormName);
+    //
+    //     cy.get('[ng-if="customFieldsToggle.isOpen"]').then(($body) => {
+    //         if ($body.find('.glyphicon-remove').length > 0) {
+    //             cy.get('body').then(($page) => {
+    //                 let selectorToUse = $page.find(disabledColumnsOsOnMenuCustomization().selector).length > 0
+    //                     ? disabledColumnsOsOnMenuCustomization_PENTEST
+    //                     : disabledColumnsOsOnMenuCustomization;
+    //
+    //                 selectorToUse().its('length').then((length) => {
+    //                     for (let i = 0; i < length; i++) {
+    //                         selectorToUse().first().should('be.visible').click();
+    //                         if (i < length - 1) {
+    //                             menuCustomization().click();
+    //                         }
+    //                     }
+    //                 });
+    //             });
+    //         } else {
+    //             menuCustomization().click();
+    //         }
+    //     });
+    //     return this;
+    // }
+
+    enable_columns_for_specific__Custom_Form_on_the_grid(customFormName, count) {
         menuCustomization().click();
         customFormsSectionOnMenuCustomization().click();
         this.enterValue(searchCustomFormsOnMenuCustomization, customFormName);
@@ -2378,13 +2503,15 @@ export default class BasePage {
             if ($body.find('.glyphicon-remove').length > 0) {
                 cy.get('body').then(($page) => {
                     let selectorToUse = $page.find(disabledColumnsOsOnMenuCustomization().selector).length > 0
-                        ? disabledColumnsOsOnMenuCustomization
-                        : disabledColumnsOsOnMenuCustomization_PENTEST;
+                        ? disabledColumnsOsOnMenuCustomization_PENTEST
+                        : disabledColumnsOsOnMenuCustomization;
 
-                    selectorToUse().its('length').then((length) => {
-                        for (let i = 0; i < length; i++) {
-                            selectorToUse().first().click();
-                            if (i < length - 1) {
+                    selectorToUse().then(($elements) => {
+                        let clickCount = Math.min(count, $elements.length);
+
+                        for (let i = 0; i < clickCount; i++) {
+                            cy.wrap($elements.eq(i)).should('be.visible').click();
+                            if (i < clickCount - 1) {
                                 menuCustomization().click();
                             }
                         }

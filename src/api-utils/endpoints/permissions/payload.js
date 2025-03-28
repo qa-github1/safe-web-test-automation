@@ -756,21 +756,39 @@ exports.generate_POST_request_payload_for_assigning_office_based_permissions = f
         "OfficeToGroups": [
             {
                 "officeId": office1_ID,
-                "groupIds": [group1_ID]
+               // "groupIds": [group1_ID]
             }
         ],
         "isOrgAdmin": isOrgAdmin,
         "ExternalUserIdsForRemoval": []
     };
 
+    if (group1_ID) {
+        body.OfficeToGroups[0].groupIds = [group1_ID];
+    }
+// this commented part is an old method and test was failing, so I changed this with a new one
+    // if (office2_ID) {
+    //     body.OfficeToGroups[1].officeId = office2_ID
+    //     body.OfficeToGroups[1].groupIds = [group2_ID]
+    // }
+    //
+    // if (office3_ID) {
+    //     body.OfficeToGroups[1].officeId = office3_ID
+    //     body.OfficeToGroups[1].groupIds = [group3_ID]
+    // }
+
     if (office2_ID) {
-        body.OfficeToGroups[1].officeId = office2_ID
-        body.OfficeToGroups[1].groupIds = [group2_ID]
+        body.OfficeToGroups.push({
+            officeId: office2_ID,
+            ...(group2_ID ? { groupIds: [group2_ID] } : {})
+        });
     }
 
     if (office3_ID) {
-        body.OfficeToGroups[1].officeId = office3_ID
-        body.OfficeToGroups[1].groupIds = [group3_ID]
+        body.OfficeToGroups.push({
+            officeId: office3_ID,
+            ...(group3_ID ? { groupIds: [group3_ID] } : {})
+        });
     }
 
     return body;

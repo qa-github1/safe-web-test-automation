@@ -60,8 +60,14 @@ export default class ImportPage extends BasePage {
         if (importType === C.importTypes.items) {
             clientSourceDropdown().select(sourceField);
             targetSourceDropdown().select('Barcode');
-            this.map_the_field_from_excel_to_system_field(sourceField, '- Do not import -')
-        } else {
+           // this.exclude_Excel_field_on_mapping_list('ItemBarcode')
+        } else if (importType === C.importTypes.cases) {
+            clientSourceDropdown().select(sourceField);
+            targetSourceDropdown().select('Case Number');
+           // this.exclude_Excel_field_on_mapping_list('Case Number')
+
+        }
+        else {
             clientSourceDropdown().select(sourceField);
             targetSourceDropdown().select(sourceField);
         }
@@ -223,7 +229,7 @@ export default class ImportPage extends BasePage {
         this.upload_file_and_verify_toast_msg(fileName + '.xlsx', C.toastMsgs.uploadComplete)
             .save_import_type_and_name(importType, true)
             .click_button(C.buttons.next)
-            .wait_Map_Fields_section_to_be_loaded(importType)
+            .wait_Map_Fields_section_to_be_loaded(importType, true)
             .map_source_fields(importType, sourceField)
             .click_button(C.buttons.nextSave)
             .click_button(C.buttons.precheckOnly);

@@ -34,7 +34,7 @@ describe('Add Item', function () {
             D.getNewItemData(D.newCase);
              api.org_settings.update_org_settings(true, true);
             api.org_settings.enable_all_Item_fields();
-            D.newItem.itemBelongsTo = [S.selectedEnvironment.person.name, S.selectedEnvironment.person_2.name]
+            D.newItem.itemBelongsTo = [S.selectedEnvironment.person.email, S.selectedEnvironment.person_2.email]
 
             ui.app.open_newly_created_case_via_direct_link()
             ui.menu.click_Add__Item()
@@ -50,7 +50,7 @@ describe('Add Item', function () {
              ui.addItem.verify_Case_Number_is_populated_on_enabled_input_field(D.newItem.caseNumber)
         });
 
-        xit('1.2. Optional fields disabled -- redirect to View Added Item ' +
+        it('1.2. Optional fields disabled -- redirect to View Added Item ' +
             '-- Item Belongs To Shows All People" turned OFF in Org Settings -- multiple values selected for "Item Belongs to" and Tags', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
@@ -73,7 +73,7 @@ describe('Add Item', function () {
             ui.addItem.select_tab(C.tabs.items)
                 .click_element_on_active_tab(C.buttons.addItem)
                 .verify_Add_Item_page_is_open()
-                .populate_all_fields_on_both_forms(D.newItem, false, false )
+                .populate_all_fields_on_both_forms(D.newItem, false, true )
                  .select_post_save_action(C.postSaveActions.viewAddedItem)
                  .click_Save(D.newItem)
                  .verify_toast_message_(oldCase)

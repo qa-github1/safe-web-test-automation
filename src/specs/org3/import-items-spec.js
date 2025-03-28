@@ -52,7 +52,7 @@ describe('Import Items', function () {
             .verify_title_on_active_tab(1)
     });
 
-    it.only('2. Item with all fields - Disposed Status', function () {
+    it('2. Item with all fields - Disposed Status', function () {
         ui.app.log_title(this);
         let fileName = 'ItemImport_allFields_Disposed_' + S.domain;
         api.auth.get_tokens(orgAdmin);

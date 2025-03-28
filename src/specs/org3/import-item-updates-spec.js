@@ -47,7 +47,7 @@ describe('Import Item Updates', function () {
         });
     });
 
-    it('2. Import update for item status (Check Out transaction)', function () {
+    it.only('2. Import update for item status (Check Out transaction)', function () {
         ui.app.log_title(this);
         let fileName = 'ItemUpdatesImport_CheckOut_' + S.domain;
 

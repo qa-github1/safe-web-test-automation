@@ -15,7 +15,7 @@ describe('Import Case Updates', function () {
         api.auto_disposition.edit(true);
     });
 
-    it.only('I.C.U_1. Import Case Updates - all fields -- user and user group in Case Officer(s) field', function () {
+    it('I.C.U_1. Import Case Updates - all fields -- user and user group in Case Officer(s) field', function () {
         ui.app.log_title(this);
         let fileName = 'CaseUpdatesImport_allFields_' + S.domain;
 
@@ -84,7 +84,7 @@ describe('Import Case Updates', function () {
         cy.generate_excel_file(fileName, E.caseImportDataWithAllFields);
 
         ui.menu.click_Tools__Data_Import();
-        ui.importer.upload_then_Map_and_Submit_file_for_updates_precheck(fileName, C.importTypes.cases, 'CaseNumber')
+        ui.importer.upload_then_Map_and_Submit_file_for_updates_precheck(fileName, C.importTypes.cases, 'Case Number')
             .verify_toast_message([
                 C.toastMsgs.precheckComplete,
                 1 + C.toastMsgs.recordsPrechecked])

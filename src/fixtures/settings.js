@@ -80,6 +80,10 @@ S.DEV = {
             expectedReturnDate: 41,
             actualDisposedDate: 42,
             releasedTo: 47,
+            publicFacingDescription: 46,
+            dispositionAuthorizationStatus: 44,
+            latestTransactionNotes: 48,
+            checkInNotes: 43,
         },
         person: {
             businessName: 9,
@@ -483,7 +487,8 @@ S.DEV_2 = {
     },
     office_2: {
         id: 11091,
-        name: "Cypress Office 2"
+        name: "Cypress Office 2",
+        orgAndOfficeName: "Web Test Automation #2 - Cypress Office 2"
     },
     org2: {
         office_1: {
@@ -557,8 +562,8 @@ S.DEV_2 = {
         }
     },
     forms: {
-        userFormWithRequiredFields: 2542,
-        userFormWithOptionalFields: 2546,
+        userFormWithRequiredFields: 22208,
+        userFormWithOptionalFields: 22209,
         taskFormWithRequiredFields: 2547,
         taskFormWithOptionalFields: 2548
     },
@@ -3362,7 +3367,7 @@ S.chainOfCustody = {
         },
         move: (itemObject) => {
             return {
-                type: 'move',
+                type: 'Move',
                 date: itemObject.moveDate,
                 issuedFrom: itemObject.movedBy_name,
                 issuedTo: itemObject.movedBy_name,
