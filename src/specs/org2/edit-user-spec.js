@@ -13,8 +13,11 @@ describe('Edit User', function () {
             api.auth.get_tokens(orgAdmin);
             D.getUserData();
             api.users.add_new_user()
+            api.org_settings.update_org_settings_by_specifying_property_and_value('addUserSupervisor', true)
+            api.org_settings.update_org_settings_by_specifying_property_and_value('isDivisionsAndUnitsEnabled', true)
 
-            ui.menu.click_Settings__User_Admin()
+
+        ui.menu.click_Settings__User_Admin()
             ui.userAdmin.search_for_user(D.newUser.email)
                 .verify_user_data_on_grid(D.newUser)
                 .scroll_and_click(C.buttons.edit)
@@ -37,6 +40,8 @@ describe('Edit User', function () {
             api.auth.get_tokens(orgAdmin);
             D.getNewUserData();
             api.users.add_new_user()
+            api.org_settings.update_org_settings_by_specifying_property_and_value('addUserSupervisor', true)
+            api.org_settings.update_org_settings_by_specifying_property_and_value('isDivisionsAndUnitsEnabled', true)
 
             let userAssignedToGroup = Object.assign({}, D.newUser, {
                 userGroups: S.selectedEnvironment.admin_userGroup.name

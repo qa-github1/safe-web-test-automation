@@ -562,8 +562,8 @@ S.DEV_2 = {
         }
     },
     forms: {
-        userFormWithRequiredFields: 2542,
-        userFormWithOptionalFields: 2546,
+        userFormWithRequiredFields: 22208,
+        userFormWithOptionalFields: 22209,
         taskFormWithRequiredFields: 2547,
         taskFormWithOptionalFields: 2548
     },

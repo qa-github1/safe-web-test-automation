@@ -97,12 +97,12 @@ let
     //     '                                                            \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\':\n' +
     //    '                                                            \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
 
-    disabledColumnsOsOnMenuCustomization = e => cy.get('.glyphicon-remove'),
+    disabledColumnsOsOnMenuCustomization = e => cy.get('i.glyphicon.glyphicon-remove.glyphicon-image-md.glyphicon-gray'),
     disabledColumnsOsOnMenuCustomization_PENTEST = e => cy.get('[ng-class="col.visible ? \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\': \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
 
-    //disabledColumnsOsOnMenuCustomization_DEV = e => cy.get('[ng-class="col.visible ?\n' +
-    //    '                                                            \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\':\n' +
-    //    '                                                            \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
+    disabledColumnsOsOnMenuCustomization_DEV = e => cy.get('[ng-class="col.visible ?\n' +
+        '                                                            \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\':\n' +
+        '                                                            \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
     enabledColumnsOnMenuCustomization = e => cy.get('.glyphicon-ok'),
     pageSizeAndColumnsContianer = e => cy.get('.grid-menu-header').eq(1),
     //  resultsTableHeader = (tableIndex = 0) => cy.get('.table-striped').eq(tableIndex).find('thead'),
@@ -1010,6 +1010,7 @@ export default class BasePage {
     click_Edit() {
         editButton().should('be.enabled');
         editButton().click();
+        cy.wait(2000)
         saveButton().should('be.visible');
         return this;
     };
@@ -1185,22 +1186,38 @@ export default class BasePage {
         // })
     };
 
+    // set_visibility_of_table_column(columnName, shouldBeVisible) {
+    //     cy.get('thead').invoke('text').then((text) => {
+    //         if (shouldBeVisible && !text.includes(columnName)) {
+    //             this.click_element_on_active_tab(C.buttons.menuCustomization);
+    //             this.click_element_on_active_tab(C.buttons.options);
+    //             this.click(columnName, gridOptionsDropdown());
+    //         } else if (!shouldBeVisible && text.includes(columnName)) {
+    //             this.click_element_on_active_tab(C.buttons.menuCustomization);
+    //             this.click_element_on_active_tab(C.buttons.options);
+    //             this.click(columnName, gridOptionsDropdown());
+    //         } else {
+    //
+    //         }
+    //     })
+
     set_visibility_of_table_column(columnName, shouldBeVisible) {
+        cy.wait(2000)
         cy.get('thead').invoke('text').then((text) => {
-            if (shouldBeVisible && !text.includes(columnName)) {
-                this.click_element_on_active_tab(C.buttons.menuCustomization);
-                this.click_element_on_active_tab(C.buttons.options);
-                this.click(columnName, gridOptionsDropdown());
-            } else if (!shouldBeVisible && text.includes(columnName)) {
-                this.click_element_on_active_tab(C.buttons.menuCustomization);
-                this.click_element_on_active_tab(C.buttons.options);
-                this.click(columnName, gridOptionsDropdown());
-            } else {
+            const columnExists = text.includes(columnName);
 
+            if (shouldBeVisible && !columnExists) {
+                this.click_element_on_active_tab(C.buttons.menuCustomization);
+                this.click_element_on_active_tab(C.buttons.options);
+                this.click(columnName, gridOptionsDropdown());
             }
-        })
+        });
 
-        // this.click_element_on_active_tab(C.buttons.menuCustomization);
+
+
+
+
+    // this.click_element_on_active_tab(C.buttons.menuCustomization);
         // this.click_element_on_active_tab(C.buttons.options);
         //
         // columnVisibilityIndicatorOnOptionsDropdown(columnName).invoke('attr', 'class').then((classNames) => {
@@ -1966,6 +1983,7 @@ export default class BasePage {
     };
 
     wait_element_to_be_visible(element) {
+        cy.wait(2000);
         element().should('be.visible');
         return this;
     };
@@ -2385,7 +2403,35 @@ export default class BasePage {
     //     return this
     // }
 
-    enable_columns_for_specific__Custom_Form_on_the_grid(customFormName) {
+    // enable_columns_for_specific__Custom_Form_on_the_grid(customFormName) {
+    //     menuCustomization().click();
+    //     customFormsSectionOnMenuCustomization().click();
+    //     this.enterValue(searchCustomFormsOnMenuCustomization, customFormName);
+    //
+    //     cy.get('[ng-if="customFieldsToggle.isOpen"]').then(($body) => {
+    //         if ($body.find('.glyphicon-remove').length > 0) {
+    //             cy.get('body').then(($page) => {
+    //                 let selectorToUse = $page.find(disabledColumnsOsOnMenuCustomization().selector).length > 0
+    //                     ? disabledColumnsOsOnMenuCustomization_PENTEST
+    //                     : disabledColumnsOsOnMenuCustomization;
+    //
+    //                 selectorToUse().its('length').then((length) => {
+    //                     for (let i = 0; i < length; i++) {
+    //                         selectorToUse().first().should('be.visible').click();
+    //                         if (i < length - 1) {
+    //                             menuCustomization().click();
+    //                         }
+    //                     }
+    //                 });
+    //             });
+    //         } else {
+    //             menuCustomization().click();
+    //         }
+    //     });
+    //     return this;
+    // }
+
+    enable_columns_for_specific__Custom_Form_on_the_grid(customFormName, count) {
         menuCustomization().click();
         customFormsSectionOnMenuCustomization().click();
         this.enterValue(searchCustomFormsOnMenuCustomization, customFormName);
@@ -2394,13 +2440,15 @@ export default class BasePage {
             if ($body.find('.glyphicon-remove').length > 0) {
                 cy.get('body').then(($page) => {
                     let selectorToUse = $page.find(disabledColumnsOsOnMenuCustomization().selector).length > 0
-                        ? disabledColumnsOsOnMenuCustomization
-                        : disabledColumnsOsOnMenuCustomization_PENTEST;
+                        ? disabledColumnsOsOnMenuCustomization_PENTEST
+                        : disabledColumnsOsOnMenuCustomization;
 
-                    selectorToUse().its('length').then((length) => {
-                        for (let i = 0; i < length; i++) {
-                            selectorToUse().first().click();
-                            if (i < length - 1) {
+                    selectorToUse().then(($elements) => {
+                        let clickCount = Math.min(count, $elements.length);
+
+                        for (let i = 0; i < clickCount; i++) {
+                            cy.wrap($elements.eq(i)).should('be.visible').click();
+                            if (i < clickCount - 1) {
                                 menuCustomization().click();
                             }
                         }
@@ -2412,6 +2460,7 @@ export default class BasePage {
         });
         return this;
     }
+
 
 
     enterValue(element, arrayOrString) {
