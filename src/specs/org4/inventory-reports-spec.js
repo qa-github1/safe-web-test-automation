@@ -416,7 +416,7 @@ describe('Inventory Reports', function () {
                     C.toastMsgs.importComplete,
                     numberOfRecords + C.toastMsgs.recordsImported], false, 2)
 
-            api.cases.fetch_current_case_data(D.newCase.caseNumber)
+            api.cases.quick_case_search(D.newCase.caseNumber)
             api.items.get_items_from_specific_case(D.newCase.caseNumber, 2)
 
             let reportName = D.getCurrentDateAndRandomNumber(4);

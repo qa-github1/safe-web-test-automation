@@ -82,7 +82,7 @@ exports.get_old_case_data = function (oldClosedCaseId) {
         'oldClosedCase')
 };
 
-exports.fetch_current_case_data = function (caseNumber) {
+exports.quick_case_search = function (caseNumber) {
         generic_request.GET(
             '/api/cases/typeahead?allOffices=true&hideOverlay=true&search=' + caseNumber,
             'Getting the current case data via API',

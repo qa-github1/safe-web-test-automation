@@ -1,6 +1,7 @@
 const S = require('../../../fixtures/settings');
 const D = require('../../../fixtures/data');
 const generic_request = require('../../generic-api-requests');
+const cases = require('../cases/collection');
 const body = require('./payload');
 const ui = require("../../../pages/ui-spec");
 
@@ -96,6 +97,8 @@ exports.get_item_data = function (itemId) {
 
 exports.get_items_from_specific_case = function (caseNumber, numberOfPagesWith1000Items = 1, storeAllItemsToLocalStorage = false) {
     let barcodes = []
+
+    cases.quick_case_search(caseNumber)
     cy.getLocalStorage("currentCase").then(caseData => {
         for (let i = 1; i < numberOfPagesWith1000Items + 1; i++) {
 
@@ -118,7 +121,7 @@ exports.get_items_from_specific_case = function (caseNumber, numberOfPagesWith10
 
                     for (let i = 0; i<caseItemsObjects.length; i++){
                         barcodes.push(caseItemsObjects[i].barcode)
-                        if (storeAllItemsToLocalStorage) cy.setLocalStorage("item" + i, caseItemsObjects[i]);
+                        if (storeAllItemsToLocalStorage) cy.setLocalStorage("item" + i, JSON.stringify(caseItemsObjects[i]));
                     }
                 });
             });

@@ -58,6 +58,7 @@ let
     elementOnActiveTab = elementTitle => active_tab().contains(elementTitle),
     optionsDropdownUnderMenuCustomization = e => cy.get('[is-open="optionsToggle.isOpen"]'),
     pageSizesUnderMenuCustomization = e => cy.get('[ng-if="optionsToggle.isOpen"]'),
+    largeView = e => cy.get('[tp-tooltip="GENERAL.LARGE_VIEW"]'),
     elementOnGridContainer = elementTitle => cy.get('.bs-grid').contains(elementTitle),
     parentContainerFoundByInnerLabel = (innerLabel, parentElementTag = 'div') => cy.contains(innerLabel).parent(parentElementTag),
     parentContainerFoundByInnerLabelOnModal = (innerLabel, parentElementTag = 'div') => modal().contains(innerLabel).parents(parentElementTag),
@@ -119,7 +120,8 @@ let
     checkboxOnFirstTableRow = e => resultsTable().find('.bg-grid-checkbox').first(),
     checkboxToSelectAll = e => cy.get('[ng-model="options.selectAllToggle"]').first(),
     locationPin = name => cy.contains(name).parent('div'),
-    checkboxOnSpecificTableRow = rowNumber => resultsTable().find('.bg-grid-checkbox', { timeout: 0 }).eq(rowNumber - 1),
+    firstCheckboxOnTableBody = e => cy.get('.bg-grid-checkbox').first(),
+    checkboxOnSpecificTableRow = rowNumber => resultsTable().find('.bg-grid-checkbox', {timeout: 0}).eq(rowNumber - 1),
     checkboxOnTableRowOnModal = rowNumber => tableOnModal().find('.bg-grid-checkbox').eq(rowNumber - 1),
     checkboxOnTableHeader = e => resultsTableHeader().find('[type="checkbox"]'),
     caseNumberOnTypeahead = e => cy.get('[ng-repeat="match in matches track by $index"]').first(),
@@ -429,6 +431,39 @@ export default class BasePage {
         cy.contains('Menu Customization').click()
         optionsDropdownUnderMenuCustomization().click()
         pageSizesUnderMenuCustomization().contains(pageSize).click()
+        return this;
+    }
+
+    click_number_on_pagination(pageNumber) {
+        this.wait_until_spinner_disappears()
+        cy.get('.pagination-sm').first().findByText(pageNumber).click()
+        return this;
+    }
+
+    set_large_view() {
+        this.wait_until_spinner_disappears()
+        largeView().should('be.enabled')
+        this.pause(2)
+        largeView().click();
+        this.verify_element_has_class(largeView, 'btn-multi')
+        this.wait_until_spinner_disappears()
+        this.pause(1)
+        return this;
+    }
+
+    reset_large_view() {
+        this.wait_until_spinner_disappears()
+        this.verify_element_has_class(largeView, 'btn-multi')
+        largeView().should('be.enabled')
+        this.pause(2)
+        largeView().click();
+        this.verify_element_does_not_have_class(largeView, 'btn-multi')
+        this.wait_until_spinner_disappears()
+        this.pause(1)
+        largeView().should('be.enabled')
+        this.pause(2)
+        largeView().click();
+        this.verify_element_has_class(largeView, 'btn-multi')
         return this;
     }
 
@@ -834,7 +869,7 @@ export default class BasePage {
         });
     };
 
-    click_element_if_has_a_class_= function (element, className) {
+    click_element_if_has_a_class_ = function (element, className) {
         element().then(($el) => {
             if ($el.hasClass(className)) {
                 element().click();
@@ -848,6 +883,7 @@ export default class BasePage {
                 element.click();
             }
         });
+        return this
     };
 
     verify_selected_option_on_Checkbox_list(parentContainer, selectedOptionLabel, checkboxListLabel = 'Checkbox List') {
@@ -942,7 +978,7 @@ export default class BasePage {
                 authApi.get_tokens_without_page_reload(S.userAccounts.orgAdmin)
             }
         })
-        casesApi.fetch_current_case_data(caseNumber);
+        casesApi.quick_case_search(caseNumber);
         orgSettingsApi.get_current_org_settings();
 
         cy.getLocalStorage("orgSettings").then(orgSettings => {
@@ -1075,8 +1111,7 @@ export default class BasePage {
             })
             cy.wait('@all_GET_Requests')
             this.wait_response_from_API_call(partOfRequestUrl)
-        }
-        else{
+        } else {
             cy.visit(urlToOpen);
             this.wait_until_spinner_disappears()
         }
@@ -1346,14 +1381,51 @@ export default class BasePage {
         return this;
     };
 
+    press_shift_and_click_row(rowNumber) {
+        cy.get("body").type("{shift}", {release: false});
+        checkboxOnSpecificTableRow(rowNumber).click();
+        cy.get("body").type("{shift}");
+        return this;
+    };
+
+    check_and_uncheck_all_rows() {
+        checkboxToSelectAll().click({force: true})
+        this.pause(0.3)
+        checkboxToSelectAll().click({force: true})
+        this.pause(0.7)
+        return this;
+    };
+
+    check_all_rows() {
+        checkboxToSelectAll().click({force: true})
+        this.click_element_if_has_a_class_(checkboxToSelectAll, 'ng-empty')
+        checkboxToSelectAll().should('have.class', 'ng-not-empty')
+        return this;
+    };
+
+    uncheck_all_rows() {
+        checkboxToSelectAll().scrollIntoView()
+        checkboxToSelectAll().click()
+        this.pause(1)
+        this.click_element_if_has_a_class_(checkboxToSelectAll, 'ng-not-empty')
+        checkboxToSelectAll().should('have.class', 'ng-empty')
+        return this;
+    };
+
+    click_checkbox_to_select_specific_row(rowNumber) {
+        this.wait_until_spinner_disappears()
+        this.pause(1)
+        firstCheckboxOnTableBody().should('be.visible')
+        checkboxOnSpecificTableRow(rowNumber).scrollIntoView()
+        checkboxOnSpecificTableRow(rowNumber).click();
+        return this;
+    };
+
     click_checkbox_to_select_specific_rows(rowNumbers) {
         this.wait_until_spinner_disappears()
         this.pause(1)
 
-        checkboxToSelectAll().click({force:true})
-        this.pause(0.3)
-        checkboxToSelectAll().click({force:true})
-
+        this.check_and_uncheck_all_rows()
         rowNumbers.forEach(row => {
             // checkboxOnSpecificTableRow(row).should('be.enabled');
             checkboxOnSpecificTableRow(row).click();
@@ -1570,41 +1642,41 @@ export default class BasePage {
         return this;
     };
 
- //need a review for this replaced method -> old one is above
- //    verify_content_of_specific_cell_in_first_table_row(columnTitle, cellContent, headerCellTag = 'th') {
- //        firstRowInResultsTable().within(($list) => {
- //            if (cellContent) {
- //                if (this.isObject(cellContent)) {
- //                    for (let property in cellContent) {
- //                        resultsTableHeaderFromRoot().contains(headerCellTag, columnTitle).invoke('index').then((i) => {
- //                            cy.get('td').eq(i).should(($cell) => {
- //                                expect($cell.text()).to.include(cellContent[property]);
- //                            });
- //                        });
- //                    }
- //                } else if (Array.isArray(cellContent)) {
- //                    cellContent.forEach(function (value) {
- //                        resultsTableHeaderFromRoot().contains(headerCellTag, columnTitle).invoke('index').then((i) => {
- //                            cy.get('td').eq(i).should(($cell) => {
- //                                expect($cell.text()).to.include(value);
- //                            });
- //                        });
- //                    });
- //                } else {
- //                    resultsTableHeaderFromRoot().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
- //                        cy.get('td').eq(i).should(($cell) => {
- //                            expect($cell.text().trim()).to.include(cellContent.toString().trim());
- //                        });
- //                    });
- //                }
- //            }
- //        });
- //        return this;
- //    };
+    //need a review for this replaced method -> old one is above
+    //    verify_content_of_specific_cell_in_first_table_row(columnTitle, cellContent, headerCellTag = 'th') {
+    //        firstRowInResultsTable().within(($list) => {
+    //            if (cellContent) {
+    //                if (this.isObject(cellContent)) {
+    //                    for (let property in cellContent) {
+    //                        resultsTableHeaderFromRoot().contains(headerCellTag, columnTitle).invoke('index').then((i) => {
+    //                            cy.get('td').eq(i).should(($cell) => {
+    //                                expect($cell.text()).to.include(cellContent[property]);
+    //                            });
+    //                        });
+    //                    }
+    //                } else if (Array.isArray(cellContent)) {
+    //                    cellContent.forEach(function (value) {
+    //                        resultsTableHeaderFromRoot().contains(headerCellTag, columnTitle).invoke('index').then((i) => {
+    //                            cy.get('td').eq(i).should(($cell) => {
+    //                                expect($cell.text()).to.include(value);
+    //                            });
+    //                        });
+    //                    });
+    //                } else {
+    //                    resultsTableHeaderFromRoot().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
+    //                        cy.get('td').eq(i).should(($cell) => {
+    //                            expect($cell.text().trim()).to.include(cellContent.toString().trim());
+    //                        });
+    //                    });
+    //                }
+    //            }
+    //        });
+    //        return this;
+    //    };
 
     verify_content_of_specified_cell_in_specified_table_row(rowNumber, columnTitle, cellContent, headerCellTag = 'th') {
 
-        specificRowInResultsTable(rowNumber-1).within(($list) => {
+        specificRowInResultsTable(rowNumber - 1).within(($list) => {
             if (cellContent) {
                 if (this.isObject(cellContent)) {
                     for (let property in cellContent) {
@@ -1663,7 +1735,7 @@ export default class BasePage {
         }
         return this;
     };
-    
+
     verify_content_of_first_row_in_results_table_on_active_tab(content) {
         if (Array.isArray(content)) {
             content.forEach(value =>
@@ -2061,8 +2133,8 @@ export default class BasePage {
             let label = labelsArray[i]
             let value = valuesArray[i]
 
-             if (['Offense Type', ''].some(v => label === v)) {
-                 this.turnOnToggleAndSelectDropdownOption(label, value)
+            if (['Offense Type', ''].some(v => label === v)) {
+                this.turnOnToggleAndSelectDropdownOption(label, value)
 
             } else if (['Tags'].some(v => label === v)) {
                 this.turnOnToggleEnterValueAndWaitApiRequestToFinish(label, value, 'tagTypeahead')
@@ -2080,13 +2152,11 @@ export default class BasePage {
             } else if (['Case Officer(s)'].some(v => label === v)) {
                 this.turnOnToggleAndSelectTypeaheadOptionsOnMultiSelectField(label, value)
             } else {
-                  this.turnOnToggleEnterValueAndPressEnter(label, value)
+                this.turnOnToggleEnterValueAndPressEnter(label, value)
             }
         }
         return this
     }
-
-
 
 
     enter_values_to_all_fields_on_modal(labelsArray, valuesArray) {

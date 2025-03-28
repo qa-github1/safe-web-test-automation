@@ -1,10 +1,15 @@
+import ui from "./ui-spec";
+
 let C = require('../fixtures/constants')
 let S = require('../fixtures/settings')
 import BasePage from "./base-pages/base-page";
+import Menu from "../pages/menu";
+const menu = new Menu();
 
 //************************************ ELEMENTS ***************************************//
 
 let
+    playIconInTheFirstRow = e => cy.get('.fa-play').first(),
     importNameInput = e => cy.get('[ng-model="flatImport.name"]'),
     importTypeDropdown = e => cy.get('[ng-model="flatImport.importType"]'),
     mapFieldsSection = e => cy.get('[title="Map Fields"]'),
@@ -140,6 +145,15 @@ export default class ImportPage extends BasePage {
             .click_button(C.buttons.nextSave)
             .check_validation_messages(validationMessagesAfterNextButton)
             .click_button(C.buttons.import);
+        return this;
+    };
+
+    import_data(fileName, importType, specificMapping, isLinkedToCase, timeoutInMinutes, validationMessagesAfterNextButton) {
+        menu.click_Tools__Data_Import();
+        this.upload_file_and_verify_toast_msg(fileName + '.xlsx', C.toastMsgs.uploadComplete, timeoutInMinutes)
+            .save_import_type_and_name(importType)
+            .click_element_if_does_NOT_have_a_class(playIconInTheFirstRow(), 'fa-gray-inactive')
+            .verify_toast_message([C.toastMsgs.importComplete]);
         return this;
     };
 

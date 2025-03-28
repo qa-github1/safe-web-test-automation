@@ -147,10 +147,5 @@ export default class BaseSearchPage extends BasePage {
         return this;
     };
 
-    click_number_on_pagination(pageNumber) {
-        cy.get('.pagination-sm').first().findByText(pageNumber).click()
-        return this;
-    }
-    ;
 
 }

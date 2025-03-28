@@ -381,7 +381,7 @@ D.getNewPersonData = function (caseObject) {
         firstName: 'F' + randomValue,
         middleName: 'M',
         lastName: 'L' + randomValue,
-        alias: 'A' + randomValue,
+        alias: 'A', //+ randomValue,
         mobilePhone: '+1 434-345-4355',
         otherPhone: '+1 434-345-4356',
         email: 'qa+' + randomValue + '@trackerproducts.com',

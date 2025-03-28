@@ -9,6 +9,7 @@ import BaseViewPage from "../base-pages/base-view-page";
 
 let
     noteInput = e => cy.get('[ng-model="vm.newTaskNote"]'),
+    actionsButton = e => cy.get('[title="Select an item or items for which you would like to perform Action."]'),
     dispositionAuthorizationActionOnModal = e => cy.get('[ng-model="itemsActions.actionId"]'),
     isIndefiniteRetentionCheckbox = e => cy.get('[name="isIndefiniteRetention"]'),
     holdDays = e => cy.get('#holdDays'),
@@ -23,8 +24,9 @@ let
     addThisPersonAsClaimantButton = e => cy.get('[translate="DISPO.AUTH.ADD_THIS_PERSON_AS_CLAIMANT"]'),
     claimantFieldOnApproveForReleaseModal = e => cy.get('#claimantId'),
     okButtonOnModal = e => cy.get('[translate="GENERAL.BUTTON_OK"]'),
+    dispoAuthJobStatus = e => cy.get('[ng-if="job.status !== jobStatusEnum.error"]'),
     claimantInputFieldOnApproveForReleaseModal = e => cy.get('input[placeholder="Select person linked to the case or search for any other person"]'),
-    specificClaimantOnTypeahead = personName => cy.get('.ui-select-choices-row-inner').contains(personName),
+    specificClaimantOnTypeahead = personName => cy.get('[ng-repeat="person in $select.items"]').contains(personName),
     resultsTable = (tableIndex = 0) => cy.get('.table-striped').eq(tableIndex).find('tbody'),
     checkboxOnFirstTableRow = e => resultsTable().find('.bg-grid-checkbox').first()
 
@@ -50,6 +52,7 @@ export default class TaskViewPage extends BaseViewPage {
     }
 
     select_Action_on_modal(action) {
+        dispositionAuthorizationActionOnModal().should('be.visible')
         dispositionAuthorizationActionOnModal().select(action)
         return this;
     }
@@ -60,43 +63,75 @@ export default class TaskViewPage extends BaseViewPage {
             .click_option_on_expanded_menu('Disposition Authorization Action')
             .select_Action_on_modal('Hold')
 
-            if (isIndefinite){
-                isIndefiniteRetentionCheckbox().click()
-            }
-            else{
-                this.enterValue(holdDays, days)
-            }
-            holdReasonDropdown().select(holdReason)
-            this.click_button_on_modal('Ok')
+        if (isIndefinite) {
+            isIndefiniteRetentionCheckbox().click()
+        } else {
+            this.enterValue(holdDays, days)
+        }
+        holdReasonDropdown().select(holdReason)
+        this.click_button_on_modal('Ok')
             .verify_toast_message('Saved')
         return this;
     };
 
-    set_Action___Approve_for_Disposal(rowNumbers) {
-        this.click_checkbox_to_select_specific_rows(rowNumbers)
+    click_Actions() {
+        this.pause(1)
+        this.wait_until_modal_disappears()
+        this.wait_until_spinner_disappears()
+        //cy.contains('Actions').click()
+        actionsButton().click()
+        return this;
+    };
+
+    set_Action___Approve_for_Disposal(rowNumberRange) {
+        this.uncheck_all_rows()
+            .click_checkbox_to_select_specific_row(rowNumberRange[0])
+            .press_shift_and_click_row(rowNumberRange[1])
             .click_Actions()
             .click_option_on_expanded_menu('Disposition Authorization Action')
             .select_Action_on_modal('Approve for Disposal')
             .click_button_on_modal('Ok')
-            .verify_toast_message('Saved')
+
+        const numberOfItemsProcessed = rowNumberRange[1] - rowNumberRange[0] + 1
+        const expectedMessage = numberOfItemsProcessed > 50
+            ? 'Processing...'
+            : 'Saved';
+
+        this.verify_toast_message(expectedMessage)
+        if (numberOfItemsProcessed > 50) {
+            this.verify_text(dispoAuthJobStatus, 'Complete')
+        }
         return this;
     };
 
-    set_Action___Timed_Disposal(rowNumbers, timeShortcut) {
-        this.click_checkbox_to_select_specific_rows(rowNumbers)
+    set_Action___Timed_Disposal(rowNumberRange, timeShortcut) {
+        this.uncheck_all_rows()
+            .click_checkbox_to_select_specific_row(rowNumberRange[0])
+            .press_shift_and_click_row(rowNumberRange[1])
             .click_Actions()
             .click_option_on_expanded_menu('Disposition Authorization Action')
             .select_Action_on_modal('Timed Disposal')
             .enterValue(disposeAfterDate, timeShortcut)
             .click_button_on_modal('Ok')
-            .verify_toast_message('Saved')
+
+        const numberOfItemsProcessed = rowNumberRange[1] - rowNumberRange[0] + 1
+        const expectedMessage = numberOfItemsProcessed > 50
+            ? 'Processing...'
+            : 'Saved';
+
+        this.verify_toast_message(expectedMessage)
+        if (numberOfItemsProcessed > 50) {
+            this.verify_text(dispoAuthJobStatus, 'Complete')
+        }
         return this;
     };
 
-    set_Action___Approve_for_Release(rowNumbers, personObject, addressObject, isExistingPerson, isPersonLinkedToCase, personHasAddress, isDelayedRelease, duplicateDetected, useDuplicatePerson) {
+    set_Action___Approve_for_Release(rowNumberRange, personObject, addressObject, isExistingPerson, isPersonLinkedToCase, personHasAddress, isDelayedRelease, duplicateDetected, useDuplicatePerson) {
         let personName = personObject.firstName
-        this.click_checkbox_to_select_specific_rows(rowNumbers)
-            .click_Actions()
+        this.uncheck_all_rows()
+        this.click_checkbox_to_select_specific_row(rowNumberRange[0])
+        if (rowNumberRange[1]) this.press_shift_and_click_row(rowNumberRange[1])
+        this.click_Actions()
             .click_option_on_expanded_menu('Disposition Authorization Action')
             .select_Action_on_modal('Approve for Release')
 
@@ -106,60 +141,65 @@ export default class TaskViewPage extends BaseViewPage {
             this.press_ENTER(releaseAfterDate)
         }
 
-        if (isExistingPerson){
+        if (isExistingPerson) {
+            this.pause(0.5)
             claimantFieldOnApproveForReleaseModal().click()
             this.pause(0.5)
 
             if (isPersonLinkedToCase) {
                 specificClaimantOnTypeahead(personName).click()
             } else {
-                this.pause(1)
+                claimantInputFieldOnApproveForReleaseModal().clear()
                 claimantInputFieldOnApproveForReleaseModal().type(personName)
-                this.pause(1)
-                this.firstTypeaheadOption().click()
+                claimantInputFieldOnApproveForReleaseModal().should('have.class', 'ng-not-empty')
+                cy.contains(personName).click()
                 personTypeOnModal().select(personObject.personType)
             }
-        }
-        else {
+        } else {
             existingNewPersonToggle().click()
             addPersonPage.populate_all_fields(personObject)
 
-                if (duplicateDetected){
-                    addPersonPage
+            if (duplicateDetected) {
+                addPersonPage
                     //     .verify_number_of_warnings_for_potential_duplicates
                     // (4, true, true, true, true)
-                        .potentialDuplicatePersonLink().first().click()
+                    .potentialDuplicatePersonLink().first().click()
 
-                    if (useDuplicatePerson){
-                        addThisPersonAsClaimantButton().click()
-                    }
-                    else {
-                        addPersonPage.proceedAnywayButton().click()
-                    }
+                if (useDuplicatePerson) {
+                    addThisPersonAsClaimantButton().click()
+                } else {
+                    addPersonPage.proceedAnywayButton().click()
                 }
+            }
         }
 
         if ((!personHasAddress || !isExistingPerson) && addressObject.addressType) {
             addressTypeOnModal().select(addressObject.addressType)
             this.enterValue(address1OnModal, addressObject.line1)
-        }
-        else if (personHasAddress){
+        } else if (personHasAddress) {
             this.verify_text_is_NOT_present_on_main_container('Address 1')
         }
 
         okButtonOnModal().click()
 
-        if (!isExistingPerson && !useDuplicatePerson){
-            this.verify_toast_message('A new person created as a Claimant. Person ID is ')
+        const numberOfItemsProcessed = rowNumberRange[1] - rowNumberRange[0] + 1
+
+        const expectedMessage = !isExistingPerson && !useDuplicatePerson
+            ? 'A new person created as a Claimant. Person ID is'
+            : numberOfItemsProcessed > 50
+                ? 'Processing...'
+                : 'Saved';
+
+        this.verify_toast_message(expectedMessage)
+        if (numberOfItemsProcessed > 50) {
+            this.verify_text(dispoAuthJobStatus, 'Complete')
         }
-        else{
-            this.verify_toast_message('Saved')
-        }
+        
         return this;
     };
 
-    set_Action___Delayed_Release(rowNumbers, personObject, addressObject, isExistingPerson, isPersonLinkedToCase, personHasAddress) {
-        this.set_Action___Approve_for_Release(rowNumbers, personObject, addressObject, isExistingPerson, isPersonLinkedToCase, personHasAddress, true)
+    set_Action___Delayed_Release(rowNumberRange, personObject, addressObject, isExistingPerson, isPersonLinkedToCase, personHasAddress) {
+        this.set_Action___Approve_for_Release(rowNumberRange, personObject, addressObject, isExistingPerson, isPersonLinkedToCase, personHasAddress, true)
         return this;
     };
 
@@ -167,17 +207,16 @@ export default class TaskViewPage extends BaseViewPage {
         arrayOfArrays_rowNumberAndStatusInEach.forEach(array => {
 
             // array[0] --> as first element in each array represents the ROW NUMBER which can be single number or again array of row numbers
-            if (Array.isArray(array[0])){
+            if (Array.isArray(array[0])) {
                 array[0].forEach(row => {
                     // array[1] --> as second element in each array represents THE VALUE that we expect for 'Disposition Status' column in that row number
                     this.verify_content_of_specified_cell_in_specified_table_row(row, 'Disposition Status', array[1])
                 })
-            }
-            else{
+            } else {
                 this.verify_content_of_specified_cell_in_specified_table_row(array[0], 'Disposition Status', array[1])
             }
         })
-       return this;
+        return this;
     };
 
 

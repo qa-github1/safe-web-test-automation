@@ -99,7 +99,7 @@ export default class AddItemPage extends BaseAddPage {
                 authApi.get_tokens_without_page_reload(S.userAccounts.orgAdmin)
             }
         })
-        casesApi.fetch_current_case_data(caseNumber);
+        casesApi.quick_case_search(caseNumber);
         orgSettingsApi.get_current_org_settings();
 
         cy.getLocalStorage("orgSettings").then(orgSettings => {
