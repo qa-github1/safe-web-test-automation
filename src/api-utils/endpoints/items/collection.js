@@ -5,7 +5,7 @@ const cases = require('../cases/collection');
 const body = require('./payload');
 const ui = require("../../../pages/ui-spec");
 
-exports.add_new_item = function (toNewCase = true, locationSuffix = null, propertyToSave = 'newItem') {
+exports.add_new_item = function (toNewCase = true, locationSuffix = null, propertyToSave = 'newItem', itemObject) {
     cy.getLocalStorage("newCase").then(newCase => {
         cy.getLocalStorage("newPerson").then(newPerson => {
             cy.getLocalStorage(locationSuffix).then(location => {
@@ -23,7 +23,7 @@ exports.add_new_item = function (toNewCase = true, locationSuffix = null, proper
 
                 generic_request.POST(
                     '/api/items',
-                    body.generate_POST_request_payload_for_creating_new_item(caseObject, locationObject, newPerson),
+                    body.generate_POST_request_payload_for_creating_new_item(itemObject, caseObject, locationObject, newPerson),
                     "New ITEM created via API with ID_______",
                     propertyToSave,
                 )
