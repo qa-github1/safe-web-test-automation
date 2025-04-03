@@ -46,7 +46,7 @@ let
     noteCategory = e => cy.get('[ui-view="notes"]').find('select'),
     caseNumberInput = e => cy.get('#tpCaseTypeAheadId'),
     addingItemLabel = e => cy.get('[translate="ITEM.ADDING"]').first(),
-    selectedTagOrUser_ByText = text => active_form().contains(text).parents('ng-transclude'),
+    selectedTagOrUser_ByText = text => active_form().contains('span', text).parents('[ng-repeat="$item in $select.selected"]'),
     xButton_onselectedTagOrUser_ByText = text => selectedTagOrUser_ByText(text).find('.ui-select-match-close'),
     xButtons_onTagOrUserBoxes_byFieldLabel = label => active_form().contains(label).parent().find('[ng-click="$selectMultiple.removeChoice($index)"]'),
     xButtons_onTagOrUserBoxes = text => active_form().find('[ng-click="$selectMultiple.removeChoice($index)"]'),

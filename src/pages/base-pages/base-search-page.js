@@ -147,5 +147,11 @@ export default class BaseSearchPage extends BasePage {
         return this;
     };
 
+    expand_search_criteria() {
+        this.searchParametersAccordion().scrollIntoView()
+        this.searchParametersAccordion().click()
+        return this;
+    };
+
 
 }

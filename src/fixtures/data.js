@@ -105,6 +105,7 @@ D.getEditedCaseData = function (caseNumber, autoDispoOff = false) {
         closedDate: helper.setDateAndTime(C.currentDateTimeFormat, 2022, 5, 5, 16, 26),
         closedDateIsoFormat: helper.setIsoDateAndTime(2022, 5, 5, 16, 26),
         closedDateEditMode: helper.setDateAndTime(C.currentDateTimeFormat.editMode, 2022, 5, 5, 16, 26),
+        createdBy: S.userAccounts.orgAdmin.name,
         updateMadeBy: S.userAccounts.orgAdmin.name,
         submittedById: S.userAccounts.orgAdmin.id,
         submittedByName: `${S.userAccounts.orgAdmin.firstName} ${S.userAccounts.orgAdmin.lastName}`,
@@ -137,6 +138,8 @@ D.getEditedCaseData = function (caseNumber, autoDispoOff = false) {
         caseOfficerLName: S.userAccounts.powerUser.lastName,
         offenseLocation: 'Kentucky, USA',
         userGuid: S.userAccounts.powerUser.guid,
+        mediaCount: 0,
+        formsCount: 0
     });
 
     if (autoDispoOff) {
@@ -203,6 +206,7 @@ D.getNewItemData = function (specificCaseObject, locationObject, newPerson) {
         custodyReason: S.selectedEnvironment.custodyReason.name,
         peopleIds: [person.id],
         itemBelongsTo: [person.name],
+        itemBelongsToFirstLastName: [person.fullName],
         itemBelongsToOnHistory: [person.name],
         itemBelongsToGuid: [person.guid],
         barcodes: [{id: 0, value: randomNo}],

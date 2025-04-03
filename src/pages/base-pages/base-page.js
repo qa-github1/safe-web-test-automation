@@ -40,6 +40,7 @@ let
     firstTypeaheadOption = e => cy.get('.ui-select-choices-row').first(),
     //highlightedOptionOnTypeahead = e => cy.get('.ui-select-choices-row-inner').last(),
     highlightedOptionOnTypeahead = e => cy.get('.ui-select-highlight').last(),
+    firstPersonOnItemBelongsToTypeahead = e => cy.get('[ng-repeat="person in $select.items"]').first(),
     caseOfficersOverwrite = e => cy.get('[ng-model="toggle.caseOfficersOverwrite"]'),
     tagsOverwrite = e => cy.get('[ng-model="toggle.tagsOverwrite"]'),
     tagsTypeaheadList = e => cy.get('[repeat="tagModel in allTagModels | filter: $select.search"]'),
@@ -78,7 +79,7 @@ let
     toastMessage = (timeout = 50000) => cy.get('.toast', {timeout: timeout}),
     toastContainer = (timeout = 50000) => cy.get('#toast-container', {timeout: timeout}),
     toastTitle = (timeout = 50000) => cy.get('.toast-title', {timeout: timeout}),
-    searchParametersAccordion = e => cy.get('[class="panel-collapse collapse in"]'),
+    searchParametersAccordion = e => cy.get('#accordionSearchForm'),
     resultsTable = (tableIndex = 0) => cy.get('.table-striped').eq(tableIndex).find('tbody'),
     tableStriped = (tableIndex = 0) => cy.get('.table-striped').eq(tableIndex),
     dataGrid = (tableIndex = 0) => cy.get('.table-striped[tp-fixed-table-header-scrollable="scrollable-area"]').eq(tableIndex).find('tbody'),
@@ -416,7 +417,6 @@ export default class BasePage {
         return this;
     };
 
-
     verify_toast_title(title) {
         toastTitle().should('be.visible');
         toastTitle().should('contain', title);
@@ -491,6 +491,7 @@ export default class BasePage {
     };
 
     click_button(buttonTitle) {
+        buttonByTitle(buttonTitle).scrollIntoView()
         buttonByTitle(buttonTitle).should('be.visible');
         buttonByTitle(buttonTitle).should('be.enabled');
         buttonByTitle(buttonTitle).click('bottom');
@@ -609,6 +610,11 @@ export default class BasePage {
                     this.define_API_request_to_be_awaited('GET',
                         '/api/userGroups/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + LabelValueArray[1][i].replace(/\s+/g, '%20'),
                         "getUserGroupInTypeahead")
+                } else if (["people", "peopleCF"].includes(LabelValueArray[2])) {
+                    this.define_API_request_to_be_awaited('GET',
+                        '/api/people/typeahead',
+                        "getPeopleInTypeahead")
+
                 }
 
                 if (typeof LabelValueArray[0] === 'string' || LabelValueArray[0] instanceof String) {
@@ -620,6 +626,8 @@ export default class BasePage {
                 if (["users/groups", "usersCF"].includes(LabelValueArray[2])) {
                     this.wait_response_from_API_call("getUserInTypeahead")
                     this.wait_response_from_API_call("getUserGroupInTypeahead")
+                } else if (["people", "peopleCF"].includes(LabelValueArray[2])) {
+                    this.wait_response_from_API_call("getPeopleInTypeahead")
                 }
 
                 cy.wait(200)
@@ -638,6 +646,30 @@ export default class BasePage {
             // for some optional fields it might be null -- e.g. D.generateNewDataSet(true) --> with 'setNullForDisabledFields'
             that.enter_values_on_single_multi_select_typeahead_field(stack)
         });
+        return this;
+    };
+
+    enter_values_on_Item_Belongs_To_typeahead_field(LabelValueArray) {
+        let that = this
+        if (LabelValueArray[1]) {
+            // if there are multiple values in array, repeat the same action to enter all of them
+            for (let i = 0; i < LabelValueArray[1].length; i++) {
+                this.define_API_request_to_be_awaited('GET',
+                    '/api/people/typeahead',
+                    "getPeopleInTypeahead")
+
+                if (typeof LabelValueArray[0] === 'string' || LabelValueArray[0] instanceof String) {
+                    typeaheadInputField(LabelValueArray[0]).clear().invoke('val', LabelValueArray[1][i]).trigger('input')
+                } else {
+                    LabelValueArray[0]().clear().invoke('val', LabelValueArray[1][i]).trigger('input')
+                }
+                this.wait_response_from_API_call("getPeopleInTypeahead")
+
+                cy.wait(200)
+                firstPersonOnItemBelongsToTypeahead().click()
+                cy.wait(200)
+            }
+        }
         return this;
     };
 
@@ -792,7 +824,7 @@ export default class BasePage {
             let expectedText = text || '';
 
             let normalizedText = actualText;
-            let normalizedExpected = expectedText.toString();
+            let normalizedExpected = (Number.isFinite(actualText)) ? actualText : actualText.toString()
 
             if (fieldName.toLowerCase() !== 'Guid') {
                 normalizedText = actualText.replace(/\s+/g, ' ').trim();
@@ -1443,9 +1475,11 @@ export default class BasePage {
     };
 
     press_shift_and_click_row(rowNumber) {
-        cy.get("body").type("{shift}", {release: false});
-        checkboxOnSpecificTableRow(rowNumber).click();
-        cy.get("body").type("{shift}");
+        if (rowNumber) {
+            cy.get("body").type("{shift}", {release: false});
+            checkboxOnSpecificTableRow(rowNumber).click();
+            cy.get("body").type("{shift}");
+        }
         return this;
     };
 
@@ -2124,8 +2158,9 @@ export default class BasePage {
     }
 
     turnOnToggleAndReturnParentElement(label) {
-        return parentContainerFoundByInnerLabelOnModal(label)
-            .find('.toggle-handle').first().click()
+        return parentContainerFoundByInnerLabelOnModal(label, 'tp-modal-field')
+          //  .find('.toggle-handle').first().click({force: true})
+            .find('[ng-click="onSwitch($event)"]').first().click()
             .parents('.form-group').first()
     }
 
@@ -2133,6 +2168,7 @@ export default class BasePage {
         this.turnOnToggleAndReturnParentElement(label)
             .find('select').first()
             .select(value)
+        this.pause(0.3)
     }
 
     turnOnToggleAndSelectTypeaheadOption(label, value) {

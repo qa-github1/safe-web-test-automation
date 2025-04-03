@@ -68,7 +68,7 @@ export default class SearchCasePage extends BaseSearchPage {
 
     enter_Case_Number(searchCriteria, caseNo) {
         caseNumberSearchCriteria().select(searchCriteria);
-        caseNumberInput().type(caseNo);
+        caseNumberInput().clear().type(caseNo);
         caseNumberInput().should('have.value', caseNo);
         return this;
     };

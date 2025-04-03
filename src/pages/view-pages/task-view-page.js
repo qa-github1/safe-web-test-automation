@@ -57,8 +57,10 @@ export default class TaskViewPage extends BaseViewPage {
         return this;
     }
 
-    set_Action___Hold(rowNumbers, holdReason, isIndefinite = false, days) {
-        this.click_checkbox_to_select_specific_rows(rowNumbers)
+    set_Action___Hold(rowNumberRange, holdReason, isIndefinite = false, days) {
+        this.uncheck_all_rows()
+            .click_checkbox_to_select_specific_row(rowNumberRange[0])
+            .press_shift_and_click_row(rowNumberRange[1])
             .click_Actions()
             .click_option_on_expanded_menu('Disposition Authorization Action')
             .select_Action_on_modal('Hold')
@@ -129,9 +131,9 @@ export default class TaskViewPage extends BaseViewPage {
     set_Action___Approve_for_Release(rowNumberRange, personObject, addressObject, isExistingPerson, isPersonLinkedToCase, personHasAddress, isDelayedRelease, duplicateDetected, useDuplicatePerson) {
         let personName = personObject.firstName
         this.uncheck_all_rows()
-        this.click_checkbox_to_select_specific_row(rowNumberRange[0])
-        if (rowNumberRange[1]) this.press_shift_and_click_row(rowNumberRange[1])
-        this.click_Actions()
+            .click_checkbox_to_select_specific_row(rowNumberRange[0])
+            .press_shift_and_click_row(rowNumberRange[1])
+            .click_Actions()
             .click_option_on_expanded_menu('Disposition Authorization Action')
             .select_Action_on_modal('Approve for Release')
 
@@ -142,7 +144,7 @@ export default class TaskViewPage extends BaseViewPage {
         }
 
         if (isExistingPerson) {
-            this.pause(0.5)
+            this.pause(1)
             claimantFieldOnApproveForReleaseModal().click()
             this.pause(0.5)
 
@@ -194,7 +196,7 @@ export default class TaskViewPage extends BaseViewPage {
         if (numberOfItemsProcessed > 50) {
             this.verify_text(dispoAuthJobStatus, 'Complete')
         }
-        
+
         return this;
     };
 

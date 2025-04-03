@@ -180,11 +180,7 @@ export default class AddItemPage extends BaseAddPage {
         }
 
         if (!skipItemBelongsTo) {
-            this.enter_values_on_several_multi_select_typeahead_fields(
-                [
-                    [itemBelongsTo, itemObject.itemBelongsTo]
-                ]
-            );
+            this.enter_values_on_Item_Belongs_To_typeahead_field([itemBelongsTo, itemObject.itemBelongsToFirstLastName]);
         }
 
 

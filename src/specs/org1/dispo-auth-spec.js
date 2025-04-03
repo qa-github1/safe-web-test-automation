@@ -1,9 +1,9 @@
-const C = require('../../fixtures/constants');
-const S = require('../../fixtures/settings');
-const D = require('../../fixtures/data');
+const C = require('../fixtures/constants');
+const S = require('../fixtures/settings');
+const D = require('../fixtures/data');
 const api = require('../../api-utils/api-spec');
-const ui = require('../../pages/ui-spec');
-const E = require("../../fixtures/files/excel-data");
+const ui = require('../pages/ui-spec');
+const E = require("../fixtures/files/excel-data");
 describe('Dispo Auth', function () {
 
     it('Add Dispo Task with 50 items and assign to Power User, ' +
@@ -62,7 +62,7 @@ describe('Dispo Auth', function () {
     });
 
 
-    it('Add Dispo Task with 11 1DA items and assign to Org Admin, ' +
+    it.only('Add Dispo Task with 11 1DA items and assign to Org Admin, ' +
         '--set different actions for item using all variations' +
         '--using Actions menu and grid, ' +
         '--check statuses and notes upon submission', function () {
@@ -122,7 +122,7 @@ describe('Dispo Auth', function () {
         ui.taskView
             .open_newly_created_task_via_direct_link()
             .select_tab('Items')
-            .set_Action___Approve_for_Disposal([1, 2])
+            .set_Action___Approve_for_Disposal([1])
             .set_Action___Approve_for_Release([3], person1, {}, false, false, false, false, true, true)
             .set_Action___Approve_for_Release([4], person2, address2, false, false, false, false, true, false)
             .set_Action___Approve_for_Release([5], person3, address3, false, false, false, false, false, false)
@@ -150,7 +150,7 @@ describe('Dispo Auth', function () {
 
     });
 
-    it.only('Add Dispo Task with 255 3DA items to trigger Dispo Auth Service', function () {
+    it('Add Dispo Task with 255 3DA items to trigger Dispo Auth Service', function () {
 
         let user = S.getUserData(S.userAccounts.orgAdmin);
         ui.app.log_title(this);
@@ -178,7 +178,6 @@ describe('Dispo Auth', function () {
         api.items.get_items_from_specific_case(D.newCase.caseNumber, 1, true);
         api.tasks.add_new_task(D.newTask, 255);
 
-
         ui.taskView
            // .open_url_and_wait_all_GET_requests_to_finish('https://dev.trackerproducts.com/#/view-task/635372')
             .open_newly_created_task_via_direct_link()
@@ -192,7 +191,7 @@ describe('Dispo Auth', function () {
             .reset_large_view() // we should remove all instances of this method once the issue in card XXX gets fixed
             .set_Action___Delayed_Release([154, 204], person1, address1, true, true, false, true)
             .reset_large_view() // we should remove all instances of this method once the issue in card XXX gets fixed
-            .set_Action___Hold([205, 255], 'Pending Investigation', false, 30)
+            .set_Action___Hold([205, 255], 'Active Investigation', false, 30)
             .click('Submit For Disposition')
             .verify_toast_message('Submitted for Disposition')
             .wait_until_spinner_disappears()

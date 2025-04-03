@@ -61,8 +61,8 @@ exports.get_tokens = function (selectedUser, arrayOfPropertiesToRetain) {
         .then(() => {
             cy.visit(S.base_url).then(() => {
                 ui.app.wait_all_dashboard_GET_requests();
-                cy.get('.alert-dismissable').eq(0).invoke('remove');
-                cy.get('.alert-dismissable').eq(0).invoke('remove');
+                // cy.get('.alert-dismissable').eq(0).invoke('remove');
+                // cy.get('.alert-dismissable').eq(0).invoke('remove');
                 cy.getLocalStorage("token").should("not.equal", null).then(() => {
                     cy.saveLocalStorage().then(() => {
 

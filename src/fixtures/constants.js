@@ -200,6 +200,17 @@ C = {
             'Review Date',
             'Review Date Notes'
         ],
+        massUpdateModal: [
+            'Offense Type',
+            'Case Officer(s)',
+            'Offense Location',
+            'Offense Description',
+            'Offense Date',
+            'Tags',
+            'Status',
+            'Review Date',
+            'Review Date Notes'
+        ],
         active: "Active",
         caseNumber: "Case Number",
         caseOfficers: "Case Officer(s)",

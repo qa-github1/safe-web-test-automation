@@ -13,17 +13,7 @@ describe('Mass Update Cases', function () {
         api.auto_disposition.edit(true);
     });
 
-    let allFieldsLabels = [
-        'Offense Type',
-        'Case Officer(s)',
-        'Offense Location',
-        'Offense Description',
-        'Offense Date',
-        'Tags',
-        'Status',
-        'Review Date',
-        'Review Date Notes'
-    ]
+    let allFieldsLabels = C.caseFields.massUpdateModal
 
     let requiredFieldsLabels = [
         'Offense Type',
@@ -59,22 +49,22 @@ describe('Mass Update Cases', function () {
             api.cases.add_new_case(D.newCase.caseNumber + ' _2')
 
             ui.menu.click_Search__Case()
-            ui.searchCase.enter_Case_Number('equals', D.newCase.caseNumber, C.searchCriteria.inputFields.textSearch)
+           ui.searchCase.enter_Case_Number('equals', D.newCase.caseNumber, C.searchCriteria.inputFields.textSearch)
                 .click_Search()
                 .select_checkbox_on_specific_table_row(1)
                 .select_checkbox_on_specific_table_row(2)
                 .click_button(C.buttons.actions)
                 .click_option_on_expanded_menu(C.dropdowns.caseActions.massUpdate)
                  .turn_on_and_enter_values_to_all_fields_on_modal(allFieldsLabels, allValues)
-            //     .verify_text_above_modal_footer('Mass updating 2  cases')
-            //     .click_Ok()
-            //     .verify_toast_message(C.toastMsgs.saved)
-            //     .quick_search_for_case(D.newCase.caseNumber + ' _1')
-            //     .click_Edit()
-            // ui.caseView.verify_edited_and_not_edited_values_on_Case_Edit_form(allFieldsLabels, D.editedCase, D.newCase)
-            //     .quick_search_for_case(D.newCase.caseNumber + ' _2')
-            //     .click_Edit()
-            //     .verify_edited_and_not_edited_values_on_Case_Edit_form(allFieldsLabels, D.editedCase, D.newCase)
+               .verify_text_above_modal_footer('\n        Mass updating\n         2 \n        \n        cases\n    ')
+               .click_Ok()
+               .verify_toast_message(C.toastMsgs.saved)
+               .quick_search_for_case(D.newCase.caseNumber + ' _1')
+               .click_Edit()
+            ui.caseView.verify_edited_and_not_edited_values_on_Case_Edit_form(allFieldsLabels, D.editedCase, D.newCase)
+                .quick_search_for_case(D.newCase.caseNumber + ' _2')
+                .click_Edit()
+                .verify_edited_and_not_edited_values_on_Case_Edit_form(allFieldsLabels, D.editedCase, D.newCase)
         });
 
         it('1.2 all fields turned on and edited, "overwrite existing values" turned ON', function () {
