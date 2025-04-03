@@ -16,8 +16,8 @@ let
     saveAutoDispoButton = e => cy.get('[id="saveAutoDispo"]').contains('Save'),
     editButton = e => cy.get('[translate="GENERAL.EDIT"]').contains('Edit'),
     deleteButton = e => cy.get('[translate="GENERAL.DELETE"]').parent('li'),
-    //actionsButton = e => cy.get('[title="Select an item or items for which you would like to perform Action."]'),
-    actionsButton = e => cy.get('[translate="GENERAL.ACTIONS"]'),
+    actionsButton = e => cy.get('[title="Select an item or items for which you would like to perform Action."]'),
+    //actionsButton = e => cy.get('[translate="GENERAL.ACTIONS"]'),
     actionsButtonOnSearchPage = e => cy.get('[class="grid-buttons inline"]').eq(1),
     actionsButtonOnSearchPage2 = e => cy.get('[class="grid-buttons inline"]').eq(3),
     uploadFileInput = e => cy.get('input[type=file]'),
@@ -35,12 +35,14 @@ let
     modal = e => cy.get('.modal-content'),
     modal__ = e => cy.get('.modal-content'),
     modalBodySectionAboveFooter = e => cy.get('.modal-body').children('div').last(),
+    itemCategoryOnMassUpdate = e => cy.get('[ng-model="item.categoryId"]'),
     sweetAlert = e => cy.get('[data-animation="pop"]'),
     typeaheadList = e => cy.get('.ui-select-choices'),
     firstTypeaheadOption = e => cy.get('.ui-select-choices-row').first(),
     //highlightedOptionOnTypeahead = e => cy.get('.ui-select-choices-row-inner').last(),
     highlightedOptionOnTypeahead = e => cy.get('.ui-select-highlight').last(),
     firstPersonOnItemBelongsToTypeahead = e => cy.get('[ng-repeat="person in $select.items"]').first(),
+    firstMatchOnTypeahead = e => cy.get('[ng-repeat="match in matches track by $index"]').first(),
     caseOfficersOverwrite = e => cy.get('[ng-model="toggle.caseOfficersOverwrite"]'),
     tagsOverwrite = e => cy.get('[ng-model="toggle.tagsOverwrite"]'),
     tagsTypeaheadList = e => cy.get('[repeat="tagModel in allTagModels | filter: $select.search"]'),
@@ -80,6 +82,7 @@ let
     toastContainer = (timeout = 50000) => cy.get('#toast-container', {timeout: timeout}),
     toastTitle = (timeout = 50000) => cy.get('.toast-title', {timeout: timeout}),
     searchParametersAccordion = e => cy.get('#accordionSearchForm'),
+    searchParametersExpandedPanel = e => cy.get('[class="panel-collapse collapse in"]'),
     resultsTable = (tableIndex = 0) => cy.get('.table-striped').eq(tableIndex).find('tbody'),
     tableStriped = (tableIndex = 0) => cy.get('.table-striped').eq(tableIndex),
     dataGrid = (tableIndex = 0) => cy.get('.table-striped[tp-fixed-table-header-scrollable="scrollable-area"]').eq(tableIndex).find('tbody'),
@@ -210,6 +213,7 @@ export default class BasePage {
 
     constructor() {
         this.searchParametersAccordion = searchParametersAccordion;
+        this.searchParametersExpandedPanel = searchParametersExpandedPanel;
         this.itemsCountOnSearchGrid = itemsCountOnSearchGrid;
         this.caseNumberOnTypeahead = caseNumberOnTypeahead;
         this.offenseTypeOnTypeahead = offenseTypeOnTypeahead;
@@ -1533,6 +1537,13 @@ export default class BasePage {
         return this;
     };
 
+    select_checkboxes_on_specific_table_rows(rowNumberRange) {
+        this.uncheck_all_rows()
+            .click_checkbox_to_select_specific_row(rowNumberRange[0])
+            .press_shift_and_click_row(rowNumberRange[1])
+        return this;
+    };
+
     select_checkbox_on_specific_table_row_on_modal(rowNumber) {
         modal().should('be.visible');
         firstRowInResultsTableOnModal().should('be.visible');
@@ -1552,7 +1563,9 @@ export default class BasePage {
     };
 
     click_option_on_expanded_menu(option) {
+        this.pause(0.7)
         optionOnExpandedMenu(option).should('be.visible');
+        this.pause(0.3)
         optionOnExpandedMenu(option).click();
         this.wait_until_spinner_disappears();
         return this;
@@ -1958,7 +1971,7 @@ export default class BasePage {
         let url = `${S.base_url}/#/items/${existingItemId.toString()}/view`;
         //cy.log('Opening Item URL: ' + url);
         cy.visit(url);
-
+        this.wait_until_spinner_disappears()
         return this;
     };
 
@@ -2157,9 +2170,13 @@ export default class BasePage {
         return this;
     }
 
+    turnOnToggle(label) {
+        return parentContainerFoundByInnerLabelOnModal(label, 'tp-modal-field')
+            .find('[ng-click="onSwitch($event)"]').first().click()
+    }
+
     turnOnToggleAndReturnParentElement(label) {
         return parentContainerFoundByInnerLabelOnModal(label, 'tp-modal-field')
-          //  .find('.toggle-handle').first().click({force: true})
             .find('[ng-click="onSwitch($event)"]').first().click()
             .parents('.form-group').first()
     }
@@ -2210,7 +2227,13 @@ export default class BasePage {
             .clear()
             .invoke('val', value).trigger('input')
         this.wait_response_from_API_call(partOfApiRequest)
-        orgTagIconOnTagsTypeaheadList().click()
+    }
+
+    turnOnToggleAndEnterValueToInputField(label, value) {
+        this.turnOnToggleAndReturnParentElement(label)
+            .find('input').first()
+            .clear()
+            .invoke('val', value).trigger('input')
     }
 
     findElementByLabelAndSelectDropdownOption(label, value) {
@@ -2266,11 +2289,24 @@ export default class BasePage {
             let label = labelsArray[i]
             let value = valuesArray[i]
 
-            if (['Offense Type', ''].some(v => label === v)) {
+            if (['Offense Type', 'Custody Reason'].some(v => label === v)) {
                 this.turnOnToggleAndSelectDropdownOption(label, value)
+
+            } else if (['Category'].some(v => label === v)) {
+                this.turnOnToggle(label)
+                if (S.isDispoStatusEnabled()) this.click('Confirm')
+
+                // parentContainerFoundByInnerLabelOnModal(label, 'tp-modal-field')
+                //     .find('[ng-click="onSwitch($event)"]').first()
+                //     .parents('.form-group').first()
+                //     .find('input').first().click()
+
+                cy.get('[category-name="item.categoryName"]').click()
+                cy.get('[repeat="category in data.categories | filter: { name: $select.search }"]').contains(value).click();
 
             } else if (['Tags'].some(v => label === v)) {
                 this.turnOnToggleEnterValueAndWaitApiRequestToFinish(label, value, 'tagTypeahead')
+                orgTagIconOnTagsTypeaheadList().click()
 
             } else if (['Status'].some(v => label === v)) {
                 this.turnOnToggleAndReturnParentElement(label)
@@ -2284,6 +2320,15 @@ export default class BasePage {
 
             } else if (['Case Officer(s)'].some(v => label === v)) {
                 this.turnOnToggleAndSelectTypeaheadOptionsOnMultiSelectField(label, value)
+
+            } else if (['Recovered By', 'Submitted By'].some(v => label === v)) {
+                this.turnOnToggleAndEnterValueToInputField(label, value)
+                firstMatchOnTypeahead().click()
+
+            } else if (['Item Belongs to'].some(v => label === v)) {
+                this.turnOnToggleAndEnterValueToInputField(label, value)
+                firstPersonOnItemBelongsToTypeahead().click()
+
             } else {
                 this.turnOnToggleEnterValueAndPressEnter(label, value)
             }

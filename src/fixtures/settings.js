@@ -3447,5 +3447,9 @@ S.getCurrentUrl = function () {
     return S.currentUrl;
 };
 
+S.isDispoStatusEnabled  = function () {
+    return S.selectedEnvironment.dispoStatusEnabled
+}
+
 
 module.exports = S;
