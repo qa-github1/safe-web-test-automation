@@ -359,21 +359,30 @@ S.DEV_1 = {
         offenseDate: '05/15/2009',
         reviewDate: '01/18/2023'
     },
-    taskTemplate: {
-        taskTypeId: {
-            errorCorrection: 1106,
-
+    taskTemplates: {
+        dispoAuth: {
+            templateId: 4308,
+            type: 'Disposition Authorization',
+            subtype: '',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 5,
+            useDispositionAuthorizationActions: true,
+            title: 'Disposition Authorization',
         },
-        taskSubTypeId: {
-            packagingAndLabeling: 2902,
-
+        other: {
+            templateId: 3386,
+            type: 'Other',
+            subtype: '',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 10,
+            useDispositionAuthorizationActions: true,
+            title: 'Title--forAutomatedTests',
+            message: 'Message-forAutomatedTests'
         },
-        taskActionId: {
-            packageMustBeSealed: 1667,
-            mustBeRenderedSafe: 533,
-
-        },
-        otherTaskTemplateId: 3605,
     },
     recentCase: {
         id: 5446732,

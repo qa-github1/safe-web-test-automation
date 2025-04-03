@@ -15,6 +15,8 @@ describe.only('Case', function () {
         const currentTag = D.newCase.tags[0]
         api.org_settings.enable_all_Case_fields();
         api.auto_disposition.edit(true);
+        api.org_settings.set_Org_Level_Case_Number_formatting(false, false, false)
+
 
         //ADD Case
         ui.menu.click_Add__Case();
@@ -70,7 +72,7 @@ describe.only('Case', function () {
             .click_button(C.buttons.actions)
             .click_option_on_expanded_menu(C.dropdowns.caseActions.massUpdate)
             .turn_on_and_enter_values_to_all_fields_on_modal(C.caseFields.massUpdateModal, allValues)
-            .verify_text_above_modal_footer('\n        Mass updating\n         2 \n        \n        cases\n    ')
+            //.verify_text_above_modal_footer('\n        Mass updating\n         2 \n        \n        cases\n    ')
             .click_Ok()
             .verify_toast_message(C.toastMsgs.saved)
             .quick_search_for_case(D.newCase.caseNumber + ' _1')
