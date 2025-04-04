@@ -8,11 +8,11 @@ const menu = new Menu();
 let
     businessNameSearchCriteria = e => cy.get('[translate="GENERAL.BUSINESSNAME"]').parent().find('[ng-model="field.searchCriteria"]'),
     businessNameInput = e => cy.get('[translate="GENERAL.BUSINESSNAME"]').parent().find('[ng-model="field.model"]'),
-    firstNameInput = e =>  cy.contains('First Name').parent().find('input').first(),
+    firstNameInput = e => cy.contains('First Name').parent().find('input').first(),
     firstNameSearchCriteria = e => cy.contains('First Name').parent().find('[ng-model="field.searchCriteria"]')
 
 
-    export default class SearchPeoplePage extends BaseSearchPage {
+export default class SearchPeoplePage extends BaseSearchPage {
 
     constructor() {
         super();
@@ -35,6 +35,13 @@ let
         }
         firstNameInput().type(firstName);
         firstNameInput().should('have.value', firstName);
+        return this;
+    };
+
+    run_search_by_Business_Name(businessName, searchOperator = C.searchCriteria.inputFields.textSearch) {
+        menu.click_Search__People();
+        this.enter_Business_Name(businessName, searchOperator);
+        super.click_Search();
         return this;
     };
 }

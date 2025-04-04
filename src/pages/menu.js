@@ -14,6 +14,7 @@ let
     addCaseHeader = e => cy.get('[translate="CASES.ADD.MODAL_HEADING"]'),
     addPersonHeader = e => cy.get('[translate="PEOPLE.HEADING_ADD"]'),
     person = e => sideMenu().find('[translate="NAV.ADD.PERSON"]'),
+    searchParent = e => sideMenu().find('[translate="NAV.ADVANCED_SEARCH"]').parents('li'),
     search = e => sideMenu().find('[translate="NAV.ADVANCED_SEARCH"]'),
     cases = e => sideMenu().find('[translate="NAV.CASES"]'),
     items = e => sideMenu().find('[translate="NAV.ITEMS"]'),
@@ -97,78 +98,83 @@ export default class Menu extends BasePage {
     };
 
     click_Search__Case () {
-        search().click();
+       this.click_element_if_does_NOT_have_a_class(searchParent(), 'active')
         cases().click();
-        this.wait_search_criteria_to_be_visible();
         this.wait_until_spinner_disappears();
+        cy.url().should('include', '/cases/search');
+        this.wait_search_criteria_to_be_visible();
         return this;
     };
 
     click_Search__Item () {
-        search().click();
+         this.click_element_if_does_NOT_have_a_class(searchParent(), 'active')
         items().click();
+        cy.url().should('include', '/items/search');
         this.wait_search_criteria_to_be_visible();
         return this;
     };
 
     click_Search__People () {
-        search().click();
+         this.click_element_if_does_NOT_have_a_class(searchParent(), 'active')
         people().click();
+        cy.url().should('include', '/people/search');
         this.wait_search_criteria_to_be_visible();
         return this;
     };
 
     click_Search__Disposals () {
-        search().click();
+         this.click_element_if_does_NOT_have_a_class(searchParent(), 'active')
         disposals().click();
         this.wait_search_criteria_to_be_visible();
         return this;
     };
 
     click_Search__Checkins () {
-        search().click();
+         this.click_element_if_does_NOT_have_a_class(searchParent(), 'active')
         checkins().click();
         this.wait_search_criteria_to_be_visible();
         return this;
     };
 
     click_Search__Checkouts () {
-        search().click();
+         this.click_element_if_does_NOT_have_a_class(searchParent(), 'active')
         checkouts().should('be.visible').and('not.be.disabled').click();
         this.wait_search_criteria_to_be_visible();
         return this;
     };
 
     click_Search__Moves () {
-        search().click();
+         this.click_element_if_does_NOT_have_a_class(searchParent(), 'active')
         moves().click();
         this.wait_search_criteria_to_be_visible();
         return this;
     };
 
     click_Search__Transfers () {
-        search().click();
+         this.click_element_if_does_NOT_have_a_class(searchParent(), 'active')
         transfers().click();
         this.wait_search_criteria_to_be_visible();
         return this;
     };
 
     click_Search__Notes () {
-        search().click();
+         this.click_element_if_does_NOT_have_a_class(searchParent(), 'active')
         notes().click();
+        cy.url().should('include', '/notes/search');
         this.wait_search_criteria_to_be_visible();
         return this;
     };
 
     click_Search__Media () {
-        search().click();
+         this.click_element_if_does_NOT_have_a_class(searchParent(), 'active')
         media().click();
+        cy.url().should('include', '/media/search');
         this.wait_search_criteria_to_be_visible();
         return this;
     };
 
     click_Search__Tasks () {
-        search().click();
+         this.click_element_if_does_NOT_have_a_class(searchParent(), 'active')
         tasks().click();
         this.wait_search_criteria_to_be_visible();
         return this;

@@ -11,6 +11,8 @@ let casesApi = require('../../api-utils/endpoints/cases/collection')
 let
     bodyContainer = e => cy.get('body'),
     tableBody = e => cy.get('.table-striped').find('tbody'),
+    pencilIcon = e => cy.get('.fa-pencil').first(),
+    descriptionOnGrid = e => cy.get('[class="bs-grid-text-input ng-scope"]').find('input'),
     okButton = e => cy.findAllByText('Ok').last(),
     saveButton = e => cy.get('[button-text="\'GENERAL.BUTTON_SAVE\'"]').contains('Save'),
     saveAutoDispoButton = e => cy.get('[id="saveAutoDispo"]').contains('Save'),
@@ -358,11 +360,11 @@ export default class BasePage {
         return this;
     };
 
-    verify_items_count_on_grid(firstPageTotal, totalCount = firstPageTotal) {
+    verify_records_count_on_grid(firstPageTotal, totalCount = firstPageTotal) {
         if (firstPageTotal === 0) {
-            cy.contains(`Showing 0 to 0 of 0 items`).should('be.visible');
+            cy.contains(`Showing 0 to 0 of 0 `).should('be.visible');
         } else {
-            cy.contains(`Showing 1 to ${firstPageTotal} of ${totalCount} items`).should('be.visible');
+            cy.contains(`Showing 1 to ${firstPageTotal} of ${totalCount} `).should('be.visible');
         }
         return this;
     };
@@ -478,6 +480,7 @@ export default class BasePage {
         this.click(C.buttons.search, mainContainer());
         cy.wait('@search')
         this.wait_until_spinner_disappears()
+        this.pause(0.5)
         return this;
     };
 
@@ -2121,6 +2124,14 @@ export default class BasePage {
         return this;
     };
 
+    edit_Description_on_first_row_on_grid(value) {
+        pencilIcon().click()
+        this.enterValue(descriptionOnGrid, value)
+        this.press_ENTER(descriptionOnGrid)
+        this.verify_toast_message('Saved')
+        return this;
+    };
+
     wait_until_spinner_disappears() {
         bodyContainer().should('have.class', 'pace-done');
         return this;
@@ -2522,7 +2533,6 @@ export default class BasePage {
         })
         return this
     }
-
 
     // enable_columns_for_specific__Custom_Form_on_the_grid(customFormName) {
     //     menuCustomization().click()

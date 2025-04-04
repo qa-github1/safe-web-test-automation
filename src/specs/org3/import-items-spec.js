@@ -238,6 +238,6 @@ describe('Import Items', function () {
                 1 + C.toastMsgs.recordsPrechecked]);
 
         ui.searchItem.run_search_by_Item_Description(D.newItem.description)
-            .verify_items_count_on_grid(0)
+            .verify_records_count_on_grid(0)
     });
 });

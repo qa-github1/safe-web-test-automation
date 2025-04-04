@@ -49,7 +49,7 @@ describe('Search Item', function () {
                 .enter_Created_By(user.email)
                 .click_button(C.buttons.search)
                 .verify_content_of_first_row_in_results_table(itemDescription)
-                .verify_items_count_on_grid(2)
+                .verify_records_count_on_grid(2)
         });
 
         it('S.I_2.2 Created Date', function () {

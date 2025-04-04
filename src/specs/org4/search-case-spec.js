@@ -335,7 +335,7 @@ describe('Cases Search', function () {
                 let caseNo = D.case0.caseNumber;
                 api.auth.get_tokens(orgAdmin);
                 ui.searchCase.run_search_by_Case_Number(equals, caseNo)
-                    .verify_items_count_on_grid(1)
+                    .verify_records_count_on_grid(1)
                     .verify_data_on_the_grid(D.case0)
             });
 
