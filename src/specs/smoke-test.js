@@ -344,17 +344,18 @@ describe('Person', function () {
         });
 });
 
-describe('Task', function () {
+// describe('Task', function () {
+//
+//     it('Add/Edit/Search Task', function () {
+//
+//
+//     });
+//
+// });
 
-    it('Add/Edit/Search Task', function () {
+describe('Services', function () {
 
-
-    });
-
-});
-
-describe.only('Services', function () {
-
+    let powerUser = S.userAccounts.powerUser
     it('Workflow', function () {
         api.auth.get_tokens(S.userAccounts.orgAdmin);
         D.generateNewDataSet();
@@ -377,6 +378,6 @@ describe.only('Services', function () {
         // ui.app.open_newly_created_case_via_direct_link()
         //     .select_tab('Tasks')
         //     .get_text_from_grid_and_save_in_local_storage('Task #', 'taskNumber', 'td')
-
+        ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.caseCreated, D.newCase, null, 1, false)
     })
 })
