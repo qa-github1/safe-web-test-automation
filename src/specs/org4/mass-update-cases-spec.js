@@ -27,7 +27,7 @@ describe('Mass Update Cases', function () {
     ]
 
     context('1. all fields enabled in Org Settings', function () {
-        it.only('1.1 all fields turned on and edited, "overwrite existing values" turned OFF', function () {
+        it('1.1 all fields turned on and edited, "overwrite existing values" turned OFF', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(user);
             D.generateNewDataSet();

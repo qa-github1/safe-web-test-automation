@@ -10,7 +10,7 @@ let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
 
 describe('Dispo Auth', function () {
 
-    it('All Dispo Actions', function () {
+    it.only('All Dispo Actions', function () {
 
         ui.app.log_title(this);
         api.auth.get_tokens(orgAdmin);

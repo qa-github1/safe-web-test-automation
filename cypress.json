@@ -15,7 +15,7 @@
   "chromeWebSecurity": true,
   "pageLoadTimeout": 90000,
   "watchForFileChanges": false,
-  "video": true,
+  "video": false,
   "env" : {
     "allure": true,
     "CYPRESS_VERIFY_TIMEOUT": 60000

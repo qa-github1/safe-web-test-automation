@@ -96,7 +96,7 @@ describe('Edit Case', function () {
             .verify_red_highlighted_history_records(C.caseFields.reducedEditableFieldsArray)
     });
 
-    it.only('4.  Case Number Formatting at Org level -- old case that was saved without formatting can be edited without changing Case Number or changing it with proper format', function () {
+    it('4.  Case Number Formatting at Org level -- old case that was saved without formatting can be edited without changing Case Number or changing it with proper format', function () {
         ui.app.log_title(this);
 
         api.auth.get_tokens(orgAdmin);
