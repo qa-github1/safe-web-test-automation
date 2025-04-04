@@ -356,7 +356,8 @@ describe('Person', function () {
 describe('Services', function () {
 
     let powerUser = S.userAccounts.powerUser
-    it('Workflow', function () {
+
+    it('Workflow Service', function () {
         api.auth.get_tokens(S.userAccounts.orgAdmin);
         D.generateNewDataSet();
         api.workflows.delete_all_workflows();
@@ -380,4 +381,48 @@ describe('Services', function () {
         //     .get_text_from_grid_and_save_in_local_storage('Task #', 'taskNumber', 'td')
         ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.caseCreated, D.newCase, null, 1, false)
     })
+
+    it.only('Importer', function () {
+        let fileName = 'CaseImport_allFields_' + S.domain;
+        api.auth.get_tokens(S.userAccounts.orgAdmin);
+
+        D.generateNewDataSet();
+        D.getNewItemData(D.newCase);
+        D.newCase.caseOfficers_importFormat =
+            S.userAccounts.orgAdmin.email + ';' +
+            S.selectedEnvironment.admin_userGroup.name
+        D.newCase.caseOfficers = [S.userAccounts.orgAdmin.name, S.selectedEnvironment.admin_userGroup.name]
+
+        E.generateDataFor_CASES_Importer([D.newCase]);
+
+        ui.app.generate_excel_file(fileName, E.caseImportDataWithAllFields);
+        api.org_settings.enable_all_Case_fields();
+        api.org_settings.enable_all_Item_fields();
+        api.org_settings.update_org_settings(true, true);
+        api.auto_disposition.edit(true);
+
+        ui.menu.click_Tools__Data_Import();
+        ui.importer.upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.cases)
+            .verify_toast_message([
+                C.toastMsgs.importComplete,
+                1 + C.toastMsgs.recordsImported])
+            .quick_search_for_case(D.newCase.caseNumber);
+
+        ui.caseView.verify_Case_View_page_is_open(D.newCase.caseNumber)
+            .click_button_on_active_tab(C.buttons.edit)
+            .verify_values_on_Edit_form(D.newCase)
+            .open_last_history_record()
+            .verify_all_values_on_history(D.newCase)
+            .click_button_on_modal(C.buttons.cancel)
+            .verify_title_on_active_tab(1)
+
+        D.newItem.caseNumber = D.newCase.caseNumber
+        ui.menu.click_Add__Item();
+        ui.addItem.enter_Case_Number_and_select_on_typeahead(D.newCase.caseNumber)
+            .populate_all_fields_on_both_forms(D.newItem, false)
+            .select_post_save_action(C.postSaveActions.viewAddedItem)
+            .click_Save(D.newItem)
+            .verify_Error_toast_message_is_NOT_visible();
+        ui.itemView.verify_Item_View_page_is_open(D.newCase.caseNumber)
+ })
 })
