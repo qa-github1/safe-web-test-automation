@@ -475,6 +475,15 @@ export default class BasePage {
         return this;
     }
 
+    disable_large_view() {
+        this.wait_until_spinner_disappears()
+        this.click_element_if_has_a_class_(largeView, 'btn-multi')
+        this.verify_element_does_not_have_class(largeView, 'btn-multi')
+        this.pause(1)
+        this.wait_until_spinner_disappears()
+        return this;
+    }
+
     click_Search() {
         cy.intercept('POST', '**/search').as('search')
         this.click(C.buttons.search, mainContainer());
@@ -1508,8 +1517,9 @@ export default class BasePage {
     uncheck_all_rows() {
         checkboxToSelectAll().scrollIntoView()
         checkboxToSelectAll().click()
-        this.pause(1)
+        this.pause(1.5)
         this.click_element_if_has_a_class_(checkboxToSelectAll, 'ng-not-empty')
+        this.pause(1)
         checkboxToSelectAll().should('have.class', 'ng-empty')
         return this;
     };

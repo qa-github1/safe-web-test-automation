@@ -7,6 +7,73 @@ const E = require("../fixtures/files/excel-data");
 const searchMedia = require("../pages/ui-spec");
 
 let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
+
+describe('Dispo Auth', function () {
+
+    it('All Dispo Actions', function () {
+
+        ui.app.log_title(this);
+        api.auth.get_tokens(orgAdmin);
+        api.org_settings.enable_all_Item_fields()
+        api.org_settings.enable_all_Person_fields()
+
+        let selectedTemplate = S.selectedEnvironment.taskTemplates.dispoAuth
+        D.getNewTaskData()
+        D.generateNewDataSet()
+        D.newTask = Object.assign(D.newTask, selectedTemplate)
+        D.newTask.creatorId = S.userAccounts.orgAdmin.id
+        D.newTask.assignedUserIds = [S.userAccounts.orgAdmin.id]
+        api.cases.add_new_case()
+
+        // For "Approve for Release" to New Person --> use detected duplicate person, keep address blank
+        let person1 = Object.assign({}, D.getNewPersonData())
+        person1.firstName = 'Person_1'
+        api.people.add_new_person(false, null, person1)
+        let address1 = {}
+
+        // For "Approve for Release" to New Person, --> add an address
+        D.newPerson = D.getNewPersonData()
+        let person2 = Object.assign({}, {firstName: D.newPerson.firstName, lastName: D.newPerson.lastName, personType: S.selectedEnvironment.personType.name})
+        person2.firstName = person2.firstName + '_P_2'
+        let address2 = Object.assign({}, D.getNewPersonAddressData())
+
+        // For "Approve for Release" to Existing Person, already linked to the case, WITH an address
+        let person3 = Object.assign({}, D.getNewPersonData())
+        person3.firstName = person3.firstName + '_P_3'
+        api.people.add_new_person(true, D.newCase, person3)
+        let address3 = Object.assign({}, D.getNewPersonAddressData())
+
+        for (let i = 0; i < 8; i++) {
+            api.items.add_new_item(true, null, 'item' + i)
+        }
+        api.tasks.add_new_task(D.newTask, 8)
+
+        ui.taskView
+            .open_newly_created_task_via_direct_link()
+            .select_tab('Items')
+            .set_Action___Approve_for_Disposal([1])
+            .set_Action___Approve_for_Release([2], person1, {}, false, false, false, false, true, true)
+            .set_Action___Approve_for_Release([3], person2, address2, false, false, false, false, false, false)
+            .set_Action___Approve_for_Release([4], person3, address3, true, true, true, false)
+            .set_Action___Delayed_Release([5], person3, address3, true, true, true, true)
+            .set_Action___Hold([6],  'Case Active', false, 10)
+            .set_Action___Hold([7],  'Active Warrant', true)
+            .set_Action___Timed_Disposal([8], '3y' )
+            .click('Submit For Disposition')
+            .verify_toast_message('Submitted for Disposition')
+            .wait_until_spinner_disappears()
+            .verify_Disposition_Statuses_on_the_grid
+            ([
+                [[1], 'Approved for Disposal'],
+                [[2, 3, 4], 'Approved for Release'],
+                [[5],'Delayed Release'],
+                [6,'Hold'],
+                [7,'Indefinite Retention'],
+                [8,'Delayed Disposal']])
+            .select_tab('Basic Info')
+            .verify_text_is_present_on_main_container('Closed')
+    });
+});
 describe('Case', function () {
 
     it(
@@ -264,7 +331,6 @@ describe('Item', function () {
             })
         });
 });
-
 describe('Person', function () {
 
     it(
@@ -382,7 +448,7 @@ describe('Services', function () {
         ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.caseCreated, D.newCase, null, 1, false)
     })
 
-    it.only('Importer', function () {
+    it('Importer', function () {
         let fileName = 'CaseImport_allFields_' + S.domain;
         api.auth.get_tokens(S.userAccounts.orgAdmin);
 
@@ -424,5 +490,47 @@ describe('Services', function () {
             .click_Save(D.newItem)
             .verify_Error_toast_message_is_NOT_visible();
         ui.itemView.verify_Item_View_page_is_open(D.newCase.caseNumber)
- })
+    })
+
+    it('Dispo Auth Service', function () {
+
+        ui.app.log_title(this);
+        api.auth.get_tokens(orgAdmin);
+
+        D.getNewCaseData();
+        D.getNewItemData(D.newCase);
+        api.cases.add_new_case();
+
+        api.org_settings.enable_all_Item_fields();
+        var numberOfRecords = 51;
+        let selectedTemplate = S.selectedEnvironment.taskTemplates.dispoAuth;
+        D.getNewTaskData();
+        D.newTask = Object.assign(D.newTask, selectedTemplate);
+        D.newTask.creatorId = S.userAccounts.orgAdmin.id;
+        D.newTask.assignedUserIds = [S.userAccounts.orgAdmin.id];
+
+        E.generateDataFor_ITEMS_Importer([D.newItem], null, null, numberOfRecords);
+        cy.generate_excel_file('Items_forTestingDispoActionsService', E.itemImportDataWithAllFields);
+        ui.importer.import_data('Items_forTestingDispoActionsService', C.importTypes.items)
+
+        api.items.get_items_from_specific_case(D.newCase.caseNumber, 1, true);
+        api.tasks.add_new_task(D.newTask, 51);
+
+        ui.taskView
+            .open_newly_created_task_via_direct_link()
+            .select_tab('Items')
+            .set_large_view()
+            .set_Action___Approve_for_Disposal([1, 51])
+            .click('Submit For Disposition')
+            .verify_toast_message('Processing...')
+            .verify_Dispo_Auth_Job_Status('Complete')
+            .wait_until_spinner_disappears()
+            .disable_large_view()
+            .reload_page()
+            //.verify_text_is_present_on_main_container('Closed')
+            .select_tab('Items')
+            .verify_Disposition_Statuses_on_the_grid([
+                [[...Array(51).keys()], 'Approved for Disposal']])
+    });
+
 })
