@@ -212,7 +212,7 @@ describe('Item', function () {
             ui.app.open_newly_created_case_via_direct_link()
             ui.menu.click_Add__Item()
             ui.addItem.verify_Case_Number_is_populated_on_enabled_input_field(D.newItem.caseNumber)
-                .populate_all_fields_on_both_forms(D.newItem)
+                .populate_all_fields_on_both_forms(D.newItem, false, false)
                 .select_post_save_action(C.postSaveActions.viewAddedItem)
                 .click_Save(D.newItem)
                 .verify_toast_message_(D.newCase);
