@@ -26,7 +26,10 @@ let
     addItem = e => cy.get('[translate="CASES.LIST.BUTTON_ADD_ITEM"]'),
     active_tab = e => cy.get('[class="tab-pane ng-scope active"]'),
     quickSearch = e => cy.get('[name="navbarSearchField"]'),
-
+    tableColumn_header = columnTitle => cy.get('thead').contains(columnTitle),
+    tableColumn_header_arrowUp = columnTitle => cy.get('thead').contains(columnTitle).parent().find('.order'),
+    tableColumn_header_sortingArrow = columnTitle => cy.get('thead').contains(columnTitle).parent().find('.order'),
+    sortingArrow = columnTitle => cy.get('.order').first(),
     quickSearchCaseTypeahead = e => cy.get('[ng-repeat="match in matches track by $index"]'),
     quickSearchCaseTypeahead_FirstOption = e => cy.get('[ng-repeat="match in matches track by $index"]').eq(0),
     //quickSearchCaseTypeahead = e => cy.get('[ng-repeat="match in matches track by $index"]'),
@@ -342,6 +345,28 @@ export default class BasePage {
         this.verify_text(mainContainer, text)
         return this;
     };
+
+    verify_text_is_present_and_check_X_more_times_after_waiting_for_30_seconds(text, numberOfTimesToCheck) {
+        const tryFindingText = (attempt = 1) => {
+            cy.log(`🔍 Attempt #${attempt} to find "${text}"`);
+
+            return cy.document().then((doc) => {
+                const found = doc.body.innerText.includes(text);
+
+                if (found) {
+                    cy.log(`✅ Found "${text}" on attempt #${attempt}`);
+                } else if (attempt < numberOfTimesToCheck) {
+                    cy.log(`❌ "${text}" not found on attempt #${attempt}, retrying...`);
+                    return cy.wait(30000).then(() => tryFindingText(attempt + 1));
+                } else {
+                    throw new Error(`❌ Text "${text}" not found after ${numberOfTimesToCheck} attempts`);
+                }
+            });
+        };
+
+        return tryFindingText();
+    }
+
 
     verify_url_contains_some_value(partOfUrl) {
         cy.url().should('include', partOfUrl)
@@ -1902,6 +1927,34 @@ export default class BasePage {
         return this;
     };
 
+    sort_by_descending_order(columnTitle) {
+        sortingArrow().parents('th').invoke('text').then((text) => {
+            //cy.log('Data is sorted by  '+ text)
+            if (!text.includes(columnTitle)) {
+                tableColumn_header(columnTitle).click()
+            }
+            this.pause(1)
+            this.click_element_if_has_a_class(tableColumn_header_sortingArrow(columnTitle), 'dropup')
+            tableColumn_header_sortingArrow(columnTitle).should('not.have.class', 'dropup')
+
+        });
+        return this;
+    };
+
+    sort_by_ascending_order(columnTitle) {
+        sortingArrow().parents('th').invoke('text').then((text) => {
+            //cy.log('Data is sorted by  '+ text)
+            if (!text.includes(columnTitle)) {
+                tableColumn_header(columnTitle).click()
+            }
+            this.pause(1)
+            this.click_element_if_does_NOT_have_a_class(tableColumn_header_sortingArrow(columnTitle), 'dropup')
+            tableColumn_header_sortingArrow(columnTitle).should('have.class', 'dropup')
+
+        });
+        return this;
+    };
+
     select_row_on_the_grid_that_contains_specific_value(value) {
         tableBody().within(($tableBody) => {
             cy.contains('td', value).parent('tr').invoke('index').then((i) => {
@@ -2485,6 +2538,7 @@ export default class BasePage {
         cy.wait(numberOfSeconds * 1000)
         return this
     }
+
 
     populate_all_fields_on_Custom_Form(dataObject) {
         this.type_if_values_provided(

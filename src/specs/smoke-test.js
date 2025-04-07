@@ -7,10 +7,11 @@ const E = require("../fixtures/files/excel-data");
 const searchMedia = require("../pages/ui-spec");
 
 let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
+let approvedForReleaseItem = {}
 
 describe('Dispo Auth', function () {
 
-    it('All Dispo Actions', function () {
+    it('All Dispo Actions for 8 items -- no service involved', function () {
 
         ui.app.log_title(this);
         api.auth.get_tokens(orgAdmin);
@@ -19,11 +20,11 @@ describe('Dispo Auth', function () {
 
         let selectedTemplate = S.selectedEnvironment.taskTemplates.dispoAuth
         D.getNewTaskData()
-        D.generateNewDataSet()
+         D.generateNewDataSet()
         D.newTask = Object.assign(D.newTask, selectedTemplate)
         D.newTask.creatorId = S.userAccounts.orgAdmin.id
         D.newTask.assignedUserIds = [S.userAccounts.orgAdmin.id]
-        api.cases.add_new_case()
+         api.cases.add_new_case()
 
         // For "Approve for Release" to New Person --> use detected duplicate person, keep address blank
         let person1 = Object.assign({}, D.getNewPersonData())
@@ -44,9 +45,15 @@ describe('Dispo Auth', function () {
         let address3 = Object.assign({}, D.getNewPersonAddressData())
 
         for (let i = 0; i < 8; i++) {
-            api.items.add_new_item(true, null, 'item' + i)
+            D['newitem_' + i] = Object.assign({}, D.newItem)
+            D['newitem_' + i].description = i + '__ ' + D.newItem.description
+            api.items.add_new_item(true, null, 'item' + i, D['newitem_' + i])
+            cy.getLocalStorage('item2').then(item => {
+                approvedForReleaseItem = JSON.parse(item)
+            })
         }
-        api.tasks.add_new_task(D.newTask, 8)
+
+       api.tasks.add_new_task(D.newTask, 8)
 
         ui.taskView
             .open_newly_created_task_via_direct_link()
@@ -531,6 +538,16 @@ describe('Services', function () {
             .select_tab('Items')
             .verify_Disposition_Statuses_on_the_grid([
                 [[...Array(51).keys()], 'Approved for Disposal']])
+    });
+
+    it('Auto Reports - Release Letters', function () {
+
+        ui.app.log_title(this);
+        api.auth.get_tokens(orgAdmin);
+
+        ui.menu.click_Tools__Auto_Reports()
+        ui.app.sort_by_descending_order('Delivery Time')
+            .verify_text_is_present_and_check_X_more_times_after_waiting_for_30_seconds(approvedForReleaseItem.description, 10)
     });
 
 })

@@ -236,7 +236,7 @@ export default class Menu extends BasePage {
     click_Tools__Auto_Reports () {
         tools().click();
         autoReports().click();
-        this.verify_text_is_present_on_main_container(C.labels.InventoryReports.title);
+        this.verify_text_is_present_on_main_container(C.labels.autoReports.itemReturnLetters.alert);
         this.verify_Error_toast_message_is_NOT_visible()
         return this;
     };

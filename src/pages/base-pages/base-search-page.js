@@ -17,12 +17,7 @@ let searchCriteriaBasedOnFieldLabel = fieldLabel => cy.contains(fieldLabel).pare
     inputField = fieldLabel => cy.contains(fieldLabel).parent('div').find('input').eq(0),
     textareaField = fieldLabel => cy.contains(fieldLabel).parent('div').find('textarea').eq(0),
     typeaheadOption = fieldLabel => cy.contains(fieldLabel).parent('div').find('ul').find('li').eq(0),
-    resultsItemsCount = e => cy.get('[translate="BSGRID.DISPLAY_STATS_ROWS"]'),
-    tableColumn_header = columnTitle => cy.get('thead').contains(columnTitle),
-    tableColumn_header_arrowUp = columnTitle => cy.get('thead').contains(columnTitle).parent().find('.order'),
-    tableColumn_header_sortingArrow = columnTitle => cy.get('thead').contains(columnTitle).parent().find('.order'),
-    sortingArrow = columnTitle => cy.get('.order').first()
-
+    resultsItemsCount = e => cy.get('[translate="BSGRID.DISPLAY_STATS_ROWS"]')
 
 export default class BaseSearchPage extends BasePage {
 
@@ -119,33 +114,6 @@ export default class BaseSearchPage extends BasePage {
         return this;
     };
 
-    sort_by_descending_order(columnTitle) {
-        sortingArrow().parents('th').invoke('text').then((text) => {
-           //cy.log('Data is sorted by  '+ text)
-            if (!text.includes(columnTitle)) {
-                tableColumn_header(columnTitle).click()
-            }
-            this.pause(1)
-            this.click_element_if_has_a_class(tableColumn_header_sortingArrow(columnTitle), 'dropup')
-            tableColumn_header_sortingArrow(columnTitle).should('not.have.class', 'dropup')
-
-        });
-        return this;
-    };
-
-    sort_by_ascending_order(columnTitle) {
-        sortingArrow().parents('th').invoke('text').then((text) => {
-           //cy.log('Data is sorted by  '+ text)
-            if (!text.includes(columnTitle)) {
-                tableColumn_header(columnTitle).click()
-            }
-            this.pause(1)
-            this.click_element_if_does_NOT_have_a_class(tableColumn_header_sortingArrow(columnTitle), 'dropup')
-            tableColumn_header_sortingArrow(columnTitle).should('have.class', 'dropup')
-
-        });
-        return this;
-    };
 
     expand_search_criteria() {
         this.searchParametersAccordion().scrollIntoView()

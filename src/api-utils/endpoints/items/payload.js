@@ -15,6 +15,7 @@ exports.generate_POST_request_payload_for_creating_new_item = function (itemObje
     let body = {
         caseNumber: caseNumber,
         description: itemData.description,
+        publicFacingDescription: itemData.description,
         active: itemData.active,
         categoryId: itemData.categoryId,
         recoveredById: person.id,
