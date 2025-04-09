@@ -15,6 +15,7 @@ let permissionGroup_officeAdmin = S.selectedEnvironment.admin_permissionGroup;
 
 before(function () {
     api.auth.get_tokens(orgAdmin);
+    api.org_settings.update_org_settings(false, true, null, "~person.firstName~ ~person.lastName~");
     D.generateNewDataSet();
     api.cases.add_new_case(D.newCase.caseNumber);
     api.org_settings.enable_all_Person_fields();
@@ -22,7 +23,7 @@ before(function () {
     api.users.update_current_user_settings(orgAdmin.id, C.currentDateTimeFormat)
     api.auth.get_tokens(powerUser);
     api.users.update_current_user_settings(powerUser.id, C.currentDateTimeFormat)
-});
+ });
 
 describe('Add Item', function () {
 

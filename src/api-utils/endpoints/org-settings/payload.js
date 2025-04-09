@@ -678,6 +678,7 @@ exports.generate_request_payload_for_editing_Org = function (
     useCLP = true,
     itemBelongsToShowsAllPeople = true,
     touchScreenSignature = false,
+    personFormattingString = ''
 ) {
     let body = Object.assign({}, orgSettings)
 
@@ -690,8 +691,8 @@ exports.generate_request_payload_for_editing_Org = function (
     body.signatureConfiguration.defaultSignatureDevice = defaultSignatureDevice;
     body.signatureConfiguration.noSignatureDeviceSelected = noSignature;
     body.signatureConfiguration.topazSignatureDeviceSelected = false;
-    body.signatureConfiguration.touchScreenSignatureDeviceSelected = touchScreenSignature;
-    body.personViewConfiguration.formattingString = '';
+    body.signatureConfiguration.touchScreenSignatureDeviceSelected = touchScreenSignature? touchScreenSignature : false;
+    body.personViewConfiguration.formattingString = personFormattingString;
 
     return body
 };
