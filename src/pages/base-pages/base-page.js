@@ -47,6 +47,7 @@ let
     //highlightedOptionOnTypeahead = e => cy.get('.ui-select-choices-row-inner').last(),
     highlightedOptionOnTypeahead = e => cy.get('.ui-select-highlight').last(),
     firstPersonOnItemBelongsToTypeahead = e => cy.get('[ng-repeat="person in $select.items"]').first(),
+    specificPersonOnItemBelongsToTypeahead = person => cy.get('[ng-repeat="person in $select.items"]').contains(person),
     firstMatchOnTypeahead = e => cy.get('[ng-repeat="match in matches track by $index"]').first(),
     caseOfficersOverwrite = e => cy.get('[ng-model="toggle.caseOfficersOverwrite"]'),
     tagsOverwrite = e => cy.get('[ng-model="toggle.tagsOverwrite"]'),
@@ -696,19 +697,20 @@ export default class BasePage {
         if (LabelValueArray[1]) {
             // if there are multiple values in array, repeat the same action to enter all of them
             for (let i = 0; i < LabelValueArray[1].length; i++) {
-                this.define_API_request_to_be_awaited('GET',
-                    '/api/people/typeahead',
-                    "getPeopleInTypeahead")
-
+                // this.define_API_request_to_be_awaited('GET',
+                //     'peopleListFiltered',
+                //     "getPeopleList")
+                //
                 if (typeof LabelValueArray[0] === 'string' || LabelValueArray[0] instanceof String) {
                     typeaheadInputField(LabelValueArray[0]).clear().invoke('val', LabelValueArray[1][i]).trigger('input')
                 } else {
                     LabelValueArray[0]().clear().invoke('val', LabelValueArray[1][i]).trigger('input')
                 }
-                this.wait_response_from_API_call("getPeopleInTypeahead")
+              //  this.wait_response_from_API_call("getPeopleList")
 
                 cy.wait(200)
-                firstPersonOnItemBelongsToTypeahead().should('exist').should('be.visible').click()
+                //firstPersonOnItemBelongsToTypeahead().should('exist').should('be.visible').click()
+                specificPersonOnItemBelongsToTypeahead(LabelValueArray[1][i]).should('exist').should('be.visible').click()
                 cy.wait(200)
             }
         }

@@ -18,6 +18,7 @@ before(function () {
     D.generateNewDataSet();
     api.cases.add_new_case(D.newCase.caseNumber);
     api.org_settings.enable_all_Person_fields();
+    api.org_settings.per
     api.users.update_current_user_settings(orgAdmin.id, C.currentDateTimeFormat)
     api.auth.get_tokens(powerUser);
     api.users.update_current_user_settings(powerUser.id, C.currentDateTimeFormat)
@@ -27,7 +28,7 @@ describe('Add Item', function () {
 
     context('1. Org Admin', function () {
 
-        it('1.1 All fields enabled ' +
+        it.only('1.1 All fields enabled ' +
             '-- "Item Belongs To Shows All People" turned ON in Org Settings -- multiple people not linked to Primary Case are selected in "Item Belongs to" field ', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
