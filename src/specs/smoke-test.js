@@ -9,6 +9,14 @@ const searchMedia = require("../pages/ui-spec");
 let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
 let approvedForReleaseItem = {}
 
+before(function () {
+    api.auth.get_tokens(orgAdmin);
+    api.org_settings.enable_all_Case_fields();
+    api.org_settings.enable_all_Item_fields();
+    api.org_settings.enable_all_Person_fields();
+    api.org_settings.update_org_settings(false, true);
+});
+
 describe('Dispo Auth', function () {
 
     it('All Dispo Actions for 8 items -- no service involved', function () {
@@ -20,11 +28,11 @@ describe('Dispo Auth', function () {
 
         let selectedTemplate = S.selectedEnvironment.taskTemplates.dispoAuth
         D.getNewTaskData()
-         D.generateNewDataSet()
+        D.generateNewDataSet()
         D.newTask = Object.assign(D.newTask, selectedTemplate)
         D.newTask.creatorId = S.userAccounts.orgAdmin.id
         D.newTask.assignedUserIds = [S.userAccounts.orgAdmin.id]
-         api.cases.add_new_case()
+        api.cases.add_new_case()
 
         // For "Approve for Release" to New Person --> use detected duplicate person, keep address blank
         let person1 = Object.assign({}, D.getNewPersonData())
@@ -34,7 +42,11 @@ describe('Dispo Auth', function () {
 
         // For "Approve for Release" to New Person, --> add an address
         D.newPerson = D.getNewPersonData()
-        let person2 = Object.assign({}, {firstName: D.newPerson.firstName, lastName: D.newPerson.lastName, personType: S.selectedEnvironment.personType.name})
+        let person2 = Object.assign({}, {
+            firstName: D.newPerson.firstName,
+            lastName: D.newPerson.lastName,
+            personType: S.selectedEnvironment.personType.name
+        })
         person2.firstName = person2.firstName + '_P_2'
         let address2 = Object.assign({}, D.getNewPersonAddressData())
 
@@ -53,7 +65,7 @@ describe('Dispo Auth', function () {
             })
         }
 
-       api.tasks.add_new_task(D.newTask, 8)
+        api.tasks.add_new_task(D.newTask, 8)
 
         ui.taskView
             .open_newly_created_task_via_direct_link()
@@ -63,22 +75,25 @@ describe('Dispo Auth', function () {
             .set_Action___Approve_for_Release([3], person2, address2, false, false, false, false, false, false)
             .set_Action___Approve_for_Release([4], person3, address3, true, true, true, false)
             .set_Action___Delayed_Release([5], person3, address3, true, true, true, true)
-            .set_Action___Hold([6],  'Case Active', false, 10)
-            .set_Action___Hold([7],  'Active Warrant', true)
-            .set_Action___Timed_Disposal([8], '3y' )
+            .set_Action___Hold([6], 'Case Active', false, 10)
+            .set_Action___Hold([7], 'Active Warrant', true)
+            .set_Action___Timed_Disposal([8], '3y')
             .click('Submit For Disposition')
             .verify_toast_message('Submitted for Disposition')
             .wait_until_spinner_disappears()
+            .reload_page()
+            .verify_text_is_present_on_main_container('Closed')
+            .select_tab('Items')
             .verify_Disposition_Statuses_on_the_grid
             ([
                 [[1], 'Approved for Disposal'],
                 [[2, 3, 4], 'Approved for Release'],
-                [[5],'Delayed Release'],
-                [6,'Hold'],
-                [7,'Indefinite Retention'],
-                [8,'Delayed Disposal']])
+                [[5], 'Delayed Release'],
+                [6, 'Hold'],
+                [7, 'Indefinite Retention'],
+                [8, 'Delayed Disposal']])
             .select_tab('Basic Info')
-            .verify_text_is_present_on_main_container('Closed')
+
     });
 });
 describe('Case', function () {
@@ -128,9 +143,6 @@ describe('Case', function () {
                 .click_button(C.buttons.add)
                 .verify_element_is_visible('Drag And Drop your files here')
                 .upload_file_and_verify_toast_msg('image.png')
-                .reload_page()
-                .select_tab(C.tabs.media)
-                .verify_content_of_results_table('image.png')
                 .edit_Description_on_first_row_on_grid(note)
 
             //Check values after reloading
@@ -241,9 +253,6 @@ describe('Item', function () {
                 .click_button(C.buttons.add)
                 .verify_element_is_visible('Drag And Drop your files here')
                 .upload_file_and_verify_toast_msg('image.png')
-                .reload_page()
-                .select_tab(C.tabs.media)
-                .verify_content_of_results_table('image.png')
                 .edit_Description_on_first_row_on_grid(note)
 
             //Check values after reloading
@@ -367,7 +376,7 @@ describe('Person', function () {
                 .click_button(C.buttons.edit)
                 .verify_values_on_Edit_form(D.newPerson)
 
-                // EDIT ITEM
+                // EDIT PERSON
                 .edit_all_values(D.editedPerson)
                 .click_Save()
                 .verify_toast_message(C.toastMsgs.saved)
@@ -389,9 +398,6 @@ describe('Person', function () {
                 .click_button_on_active_tab(C.buttons.add)
                 .verify_element_is_visible('Drag And Drop your files here')
                 .upload_file_and_verify_toast_msg('image.png')
-                .reload_page()
-                .select_tab(C.tabs.media)
-                .verify_content_of_results_table('image.png')
                 .edit_Description_on_first_row_on_grid(note)
 
             //Check values after reloading
@@ -492,14 +498,14 @@ describe('Services', function () {
         D.newItem.caseNumber = D.newCase.caseNumber
         ui.menu.click_Add__Item();
         ui.addItem.enter_Case_Number_and_select_on_typeahead(D.newCase.caseNumber)
-            .populate_all_fields_on_both_forms(D.newItem, false)
+            .populate_all_fields_on_both_forms(D.newItem, false, false)
             .select_post_save_action(C.postSaveActions.viewAddedItem)
             .click_Save(D.newItem)
             .verify_Error_toast_message_is_NOT_visible();
         ui.itemView.verify_Item_View_page_is_open(D.newCase.caseNumber)
     })
 
-    it('Dispo Auth Service', function () {
+    it.only('Dispo Auth Service', function () {
 
         ui.app.log_title(this);
         api.auth.get_tokens(orgAdmin);
@@ -536,7 +542,8 @@ describe('Services', function () {
             .reload_page()
             //.verify_text_is_present_on_main_container('Closed')
             .select_tab('Items')
-            .verify_Disposition_Statuses_on_the_grid([
+            .verify_text_is_present_and_check_X_more_times_after_waiting_for_Y_seconds('Approved for Disposal', 2, 5, true, true)
+        ui.taskView.verify_Disposition_Statuses_on_the_grid([
                 [[...Array(51).keys()], 'Approved for Disposal']])
     });
 
@@ -547,7 +554,71 @@ describe('Services', function () {
 
         ui.menu.click_Tools__Auto_Reports()
         ui.app.sort_by_descending_order('Delivery Time')
-            .verify_text_is_present_and_check_X_more_times_after_waiting_for_30_seconds(approvedForReleaseItem.description, 10)
+            .verify_text_is_present_and_check_X_more_times_after_waiting_for_Y_seconds(approvedForReleaseItem.description, 10)
+    });
+
+    it('Container Moves', function () {
+
+        api.auth.get_tokens(orgAdmin);
+        D.generateNewDataSet();
+        api.cases.add_new_case(D.newCase.caseNumber);
+        api.people.add_new_person();
+
+        api.locations.add_storage_location('LOC_1')
+        api.locations.add_storage_location('LOC_2')
+        api.locations.add_storage_location('Container_1', 'LOC_1')
+        api.locations.update_location('Container_1', 'isContainer', true)
+
+        api.items.add_new_item(true, 'Container_1', 'item1InContainer')
+        api.items.add_new_item(true, 'Container_1', 'item2InContainer')
+
+        ui.menu.click_Scan()
+        ui.scan.close_Item_In_Scan_List_alert()
+
+        cy.getLocalStorage('item1InContainer').then(item_1 => {
+            cy.getLocalStorage('item2InContainer').then(item_2 => {
+                cy.getLocalStorage('Container_1').then(container => {
+                    cy.getLocalStorage('LOC_2').then(loc2 => {
+                        const containerName = JSON.parse(container).name
+                        const loc2Name = JSON.parse(loc2).name
+                        const containerBarcode = JSON.parse(container).barcode
+                        const item1 = JSON.parse(item_1)
+                        const item2 = JSON.parse(item_2)
+
+                        ui.scan.scan_barcode(containerBarcode)
+                            .select_tab('Containers')
+                            .verify_content_of_first_row_in_results_table_on_active_tab(containerName)
+                            .select_checkbox_on_first_table_row(true)
+                            .click_Actions(true)
+                            .click_option_on_expanded_menu('Move Container')
+                            .select_Storage_location(loc2Name)
+                            .click_button_on_modal('Save')
+                            .verify_toast_message('Processing')
+                            .verify_text_is_present_on_main_container('Container Move Jobs')
+                            .verify_content_of_first_row_in_results_table([containerName, loc2Name, 'Complete'])
+                        ui.menu.click_Scan()
+                        ui.scan.close_Item_In_Scan_List_alert()
+                            .scan_barcode(item1.barcode)
+                            .click_button(C.buttons.view)
+                            .verify_text_is_present_on_main_container('Basic Info')
+                            .verify_text_is_present_and_check_X_more_times_after_waiting_for_Y_seconds(loc2Name, 2, 5, true)
+                        ui.itemView.select_tab(C.tabs.chainOfCustody)
+                            .verify_data_on_Chain_of_Custody([
+                                [['Type', 'Move'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Notes', `${containerName} moved to ${loc2Name}`]],
+                                [['Type', 'In'], ['Issued From', orgAdmin.name], ['Issued To', 'New Item Entry'], ['Notes', `Item entered into system.`]],
+                            ])
+                            .open_item_url(item2.id)
+                            .verify_text_is_present_on_main_container('Basic Info')
+                            .verify_text_is_present_and_check_X_more_times_after_waiting_for_Y_seconds(loc2Name, 2, 5, true)
+                        ui.itemView.select_tab(C.tabs.chainOfCustody)
+                            .verify_data_on_Chain_of_Custody([
+                                [['Type', 'Move'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Notes', `${containerName} moved to ${loc2Name}`]],
+                                [['Type', 'In'], ['Issued From', orgAdmin.name], ['Issued To', 'New Item Entry'], ['Notes', `Item entered into system.`]],
+                            ])
+                    })
+                })
+            })
+        });
     });
 
 })

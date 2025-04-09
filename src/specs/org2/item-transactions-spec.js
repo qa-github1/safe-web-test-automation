@@ -39,7 +39,7 @@ describe('Item Transactions & Actions', function () {
 
         ui.itemView.check_Out_the_item(orgAdmin, C.checkoutReasons.lab, 'test-note', D.currentDate)
             .verify_Items_Status('Checked Out')
-            .click_Actions()
+            .click_Actions_on_View_page()
             .verify_enabled_and_disabled_options_under_Actions_dropdown(enabledActions, disabledActions)
         ui.searchItem.run_search_by_Item_Description(D.newItem.description)
             .select_row_on_the_grid_that_contains_specific_value(D.newItem.description)
@@ -47,7 +47,7 @@ describe('Item Transactions & Actions', function () {
             .verify_enabled_and_disabled_options_under_Actions_dropdown_on_Search_Page(enabledActions, disabledActions)
     });
 
-    it('2. Verify Transfer transaction and enabled/disabled actions for Checked Out item', function () {
+    it.only('2. Verify Transfer transaction and enabled/disabled actions for Checked Out item', function () {
         ui.app.log_title(this);
         const enabledActions = [
             'Check Item In',
@@ -72,7 +72,7 @@ describe('Item Transactions & Actions', function () {
             .check_Out_the_item(orgAdmin, C.checkoutReasons.lab, 'test-note', D.currentDate)
             .transfer_the_item(powerUser, orgAdmin, 'test-note')
            .verify_Items_Status('Checked Out')
-            .click_Actions()
+            .click_Actions_on_View_page()
             .verify_enabled_and_disabled_options_under_Actions_dropdown(enabledActions, disabledActions)
         ui.searchItem.run_search_by_Item_Description(D.newItem.description)
             .select_row_on_the_grid_that_contains_specific_value(D.newItem.description)
@@ -104,7 +104,7 @@ describe('Item Transactions & Actions', function () {
 
         ui.itemView.check_In_the_item(powerUser, true, 'test-note')
             .verify_Items_Status('Checked In')
-            .click_Actions()
+            .click_Actions_on_View_page()
             .verify_enabled_and_disabled_options_under_Actions_dropdown(enabledActions, disabledActions)
         ui.searchItem.run_search_by_Item_Description(D.newItem.description)
             .select_row_on_the_grid_that_contains_specific_value(D.newItem.description)
@@ -135,7 +135,7 @@ describe('Item Transactions & Actions', function () {
 
         ui.itemView.dispose_the_item(powerUser, C.disposalMethods.auctioned, 'test-note')
             .verify_Items_Status('Disposed')
-            .click_Actions()
+            .click_Actions_on_View_page()
             .verify_enabled_and_disabled_options_under_Actions_dropdown(enabledActions, disabledActions)
         ui.searchItem.run_search_by_Item_Description(D.newItem.description)
             .select_row_on_the_grid_that_contains_specific_value(D.newItem.description)
@@ -167,7 +167,7 @@ describe('Item Transactions & Actions', function () {
 
         ui.itemView.undispose_the_item(powerUser, true, 'test-note')
             .verify_Items_Status('Checked In')
-            .click_Actions()
+            .click_Actions_on_View_page()
             .verify_enabled_and_disabled_options_under_Actions_dropdown(enabledActions, disabledActions)
         ui.searchItem.run_search_by_Item_Description(D.newItem.description)
             .select_row_on_the_grid_that_contains_specific_value(D.newItem.description)

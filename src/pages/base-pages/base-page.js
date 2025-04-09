@@ -14,12 +14,15 @@ let
     pencilIcon = e => cy.get('.fa-pencil').first(),
     descriptionOnGrid = e => cy.get('[class="bs-grid-text-input ng-scope"]').find('input'),
     okButton = e => cy.findAllByText('Ok').last(),
+    // saveButton = e => cy.get('[button-text="\'GENERAL.BUTTON_SAVE\'"]').contains('Save'),
     saveButton = e => cy.get('[button-text="\'GENERAL.BUTTON_SAVE\'"]').contains('Save'),
+    // saveButton = e => cy.get('.btn-group').contains('Save'),
     saveAutoDispoButton = e => cy.get('[id="saveAutoDispo"]').contains('Save'),
     editButton = e => cy.get('[translate="GENERAL.EDIT"]').contains('Edit'),
     deleteButton = e => cy.get('[translate="GENERAL.DELETE"]').parent('li'),
-    actionsButton = e => cy.get('[title="Select an item or items for which you would like to perform Action."]'),
-    //actionsButton = e => cy.get('[translate="GENERAL.ACTIONS"]'),
+    actionsButtonOnViewPage = e => cy.get('[translate="GENERAL.ACTIONS"]'),
+    actionsButton = e => cy.get('.grid-buttons').find('[title="Select an item or items for which you would like to perform Action."]'),
+    actionsButtonOnActiveTab = e => active_tab().find('.grid-buttons').contains('Actions'),
     actionsButtonOnSearchPage = e => cy.get('[class="grid-buttons inline"]').eq(1),
     actionsButtonOnSearchPage2 = e => cy.get('[class="grid-buttons inline"]').eq(3),
     uploadFileInput = e => cy.get('input[type=file]'),
@@ -61,7 +64,6 @@ let
     checkboxFieldFoundByLabel = label => cy.contains(label).parent('div').find('[type="checkbox"]').first(),
     buttonOnModal = buttonTitle => modal().children().contains(buttonTitle),
     buttonOnSweetAlert = buttonTitle => sweetAlert().children().contains(buttonTitle),
-    buttonsContainerOnModal = e => modal().find('.col-md-offset-8'),
     buttonOnActiveTab = buttonTitle => active_tab().find('button').contains(buttonTitle),
     elementOnActiveTab = elementTitle => active_tab().contains(elementTitle),
     optionsDropdownUnderMenuCustomization = e => cy.get('[is-open="optionsToggle.isOpen"]'),
@@ -203,7 +205,18 @@ let
     dropdownField = fieldLabel => cy.findByLabelText(fieldLabel).parent().find('select').eq(0),
     inputField = fieldLabel => cy.findByLabelText(fieldLabel).parent().find('input').eq(0),
     textareaField = fieldLabel => cy.contains('span', fieldLabel).parents('label').parent('div').find('textarea').eq(0),
-    typeaheadOption = fieldLabel => cy.contains(fieldLabel).parent().find('ul').find('li').eq(0)
+    typeaheadOption = fieldLabel => cy.contains(fieldLabel).parent().find('ul').find('li').eq(0),
+    storageLocationInput = fieldLabel => cy.get('[placeholder="type ‘/‘ or start typing a location name"]'),
+    takenByInput = e => cy.get('[ng-model="person.text"]'),
+    transferFrom = e => cy.get('[name="transferredFrom"]'),
+    transferTo = e => cy.get('[name="transferredTo"]'),
+    expectedReturnDateInput = e => cy.get('[ng-class="{invalidFutureDate: futureDateViolated, datePickerOnly: isDatePickerOnly}"]'),
+    returnedByInput = e => cy.get('[ng-model="person.text"]'),
+    transferToInput = e => cy.get('[ng-model="person.text"]'),
+    locationInputOnModal = e => cy.get('.modal-content').find('.locationInput'),
+    disposalWitnessInput = e => cy.get('span[ng-model="disposal.witnessId"]').find('input'),
+    usePreviousLocationCheckbox = e => cy.get('.icheckbox_square-blue').find('ins'),
+    checkoutReason = e => cy.get('[ng-options="r.id as r.name for r in data.checkoutReasons"]')
 
 let dashboardGetRequests = [
     '/api/users/currentuser?groups=true',
@@ -346,7 +359,7 @@ export default class BasePage {
         return this;
     };
 
-    verify_text_is_present_and_check_X_more_times_after_waiting_for_30_seconds(text, numberOfTimesToCheck) {
+    verify_text_is_present_and_check_X_more_times_after_waiting_for_Y_seconds(text, numberOfTimesToCheck, secondsToWait = 30, reloadBetweenAttempts, selectItemsTabAfterReload = false) {
         const tryFindingText = (attempt = 1) => {
             cy.log(`🔍 Attempt #${attempt} to find "${text}"`);
 
@@ -356,17 +369,22 @@ export default class BasePage {
                 if (found) {
                     cy.log(`✅ Found "${text}" on attempt #${attempt}`);
                 } else if (attempt < numberOfTimesToCheck) {
+                    if (reloadBetweenAttempts) {
+                        cy.reload();
+                        if (selectItemsTabAfterReload) this.select_tab('Items')
+                        cy.wait(2000)
+                        this.wait_until_spinner_disappears()
+                    }
                     cy.log(`❌ "${text}" not found on attempt #${attempt}, retrying...`);
-                    return cy.wait(30000).then(() => tryFindingText(attempt + 1));
+                    return cy.wait(secondsToWait * 1000).then(() => tryFindingText(attempt + 1));
                 } else {
                     throw new Error(`❌ Text "${text}" not found after ${numberOfTimesToCheck} attempts`);
                 }
             });
         };
-
-        return tryFindingText();
+       return  tryFindingText();
+       // return this
     }
-
 
     verify_url_contains_some_value(partOfUrl) {
         cy.url().should('include', partOfUrl)
@@ -519,7 +537,7 @@ export default class BasePage {
     };
 
     click_button_on_modal(buttonTitle) {
-        buttonsContainerOnModal().scrollIntoView();
+        buttonOnModal(buttonTitle).scrollIntoView();
         buttonOnModal(buttonTitle).should('be.visible');
         buttonOnModal(buttonTitle).click();
         return this;
@@ -740,9 +758,21 @@ export default class BasePage {
         var self = this;
         headerValuePairs.forEach(function (pair) {
             if (pair[1] !== null) {
-                self.verify_content_of_first_table_row_by_provided_column_title_and_value(pair[0], pair[1])
+                self.verify_content_of_first_table_row_by_provided_column_title_and_value(pair[0], pair[1], 'th')
             }
         });
+        return this;
+    };
+
+    verify_values_on_multiple_rows_on_the_grid(headerValuePairs, isCoCTable) {
+        var self = this;
+        for (let i = 0; i < headerValuePairs.length; i++) {
+            headerValuePairs[i].forEach(function (pair) {
+                if (pair[1] !== null) {
+                    self.verify_content_of_specific_table_row_by_provided_column_title_and_value(i, pair[0], pair[1], 'th', true)
+                }
+            });
+        }
         return this;
     };
 
@@ -1125,12 +1155,24 @@ export default class BasePage {
         return this;
     };
 
-    click_Actions() {
+    click_Actions(useTableOnActiveTab) {
         this.pause(1)
         this.wait_until_modal_disappears()
         this.wait_until_spinner_disappears()
-        //cy.contains('Actions').click()
-        actionsButton().click()
+
+        if (useTableOnActiveTab) {
+            actionsButtonOnActiveTab().click()
+        } else {
+            actionsButton().click()
+        }
+        return this;
+    };
+
+    click_Actions_on_View_page() {
+        this.pause(1)
+        this.wait_until_modal_disappears()
+        this.wait_until_spinner_disappears()
+        actionsButtonOnViewPage().click()
         return this;
     };
 
@@ -1484,6 +1526,7 @@ export default class BasePage {
         tab(tabTitle).should('be.visible');
         tab(tabTitle).click();
         tab(tabTitle).should('have.class', 'active');
+        this.pause(0.5)
         return this;
     };
 
@@ -1492,7 +1535,7 @@ export default class BasePage {
         return this;
     }
 
-    select_location(el, name) {
+    select_location_from_Google_Address_Lookup(el, name) {
         if (name) {
             el().type(name.substr(0, 6))
             locationPin(name).click();
@@ -1500,10 +1543,21 @@ export default class BasePage {
         return this;
     };
 
-    select_checkbox_on_first_table_row() {
+    select_Storage_location(value) {
+        this.enterValue(storageLocationInput, value)
+        this.firstLocationOnTypeahead().click()
+
+        return this;
+    };
+
+    select_checkbox_on_first_table_row(useTableOnActiveTab) {
         this.wait_until_spinner_disappears()
-        checkboxOnFirstTableRow().should('be.enabled');
-        checkboxOnFirstTableRow().click();
+
+        if (useTableOnActiveTab) {
+            checkboxOnFirstRowInResultsTableOnActiveTab().should('be.enabled').click()
+        } else {
+            checkboxOnFirstTableRow().should('be.enabled').click()
+        }
         return this;
     };
 
@@ -1853,38 +1907,39 @@ export default class BasePage {
         return this;
     };
 
-    // verify_content_of_first_table_row_by_provided_column_title_and_value(columnTitle, cellContent, headerCellTag = 'th') {
-    //     let self = this
-    //     if (Array.isArray(cellContent)) {
-    //         resultsTableHeader().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
-    //             tableStriped().find('td').eq(i).invoke('text').then(function (textFound) {
-    //                 cellContent.forEach(function (value) {
-    //                     if (value === '') {
-    //                         tableStriped().find('td').eq(i).invoke('text').should('eq', value.toString().trim())
-    //                     } else if (value) {
-    //                         tableStriped().find('td').eq(i).should('contain.text', value.toString().trim())
-    //                     }
-    //                     // if (value === '') {
-    //                     //     assert.equal(textFound.toString().trim(), value.toString().trim());
-    //                     // } else if (value) {
-    //                     //     assert.include(textFound, value);
-    //                     // }
-    //                 })
-    //             });
-    //         });
-    //     } else {
-    //         resultsTableHeader().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
-    //             tableStriped().find('td').eq(i).invoke('text').then(function (textFound) {
-    //                 self.verify_text(tableStriped().find('td').eq(i), cellContent)
-    //             })
-    //         });
-    //     }
-    //     return this;
-    // };
-
-    verify_content_of_first_table_row_by_provided_column_title_and_value(columnTitle, cellContent, headerCellTag = 'th') {
+    verify_content_of_specific_table_row_by_provided_column_title_and_value(rowNumber, columnTitle, cellContent, headerCellTag = 'th', isCoCTable = false) {
         let self = this;
         let currentEnvironment = Cypress.env('environment');
+
+        if (isCoCTable) {
+            resultsTableHeader = (tableIndex = 0) => cy.get('.cocTable').find('thead')
+            tableStriped = (tableIndex = 0) => cy.get('.cocTable')
+        }
+
+        if (Array.isArray(cellContent)) {
+            resultsTableHeader().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
+                cellContent.forEach(function (value) {
+                    self.verify_text(specificRowInResultsTable(rowNumber).find('td').eq(i), value);
+                });
+            });
+        } else {
+            resultsTableHeader().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
+                specificRowInResultsTable(rowNumber).find('td').eq(i).invoke('text').then(function (textFound) {
+                    self.verify_text(specificRowInResultsTable(rowNumber).find('td').eq(i), cellContent);
+                });
+            });
+        }
+        return this;
+    }
+
+    verify_content_of_first_table_row_by_provided_column_title_and_value(columnTitle, cellContent, headerCellTag = 'th', isCoCTable = false) {
+        let self = this;
+        let currentEnvironment = Cypress.env('environment');
+
+        if (isCoCTable) {
+            resultsTableHeader = cy.get('.cocTable').find('thead')
+            tableStriped = cy.get('.cocTable')
+        }
 
         if (Array.isArray(cellContent)) {
             resultsTableHeader().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
@@ -2288,6 +2343,7 @@ export default class BasePage {
     turnOnToggleEnterValueAndPressEnter(label, value) {
         this.turnOnToggleAndReturnParentElement(label)
             .find('input').first()
+            .should('be.enabled')
             .clear()
             //    .type(value)
             .invoke('val', value).trigger('input')
@@ -2716,6 +2772,108 @@ export default class BasePage {
             }
         });
 
+        return this;
+    }
+
+    populate_CheckIn_form(returnedBy, usePreviousLocation, note) {
+        takenByInput().type(returnedBy.email);
+        this.click_option_on_typeahead(returnedBy.email);
+        if (usePreviousLocation) {
+            usePreviousLocationCheckbox().click();
+        }
+        this.enter_note_on_modal(note);
+        return this;
+    }
+
+    populate_CheckOut_form(takenBy_personOrUserObject, checkoutReason, notes, expectedReturnDate) {
+        takenByInput().type(takenBy_personOrUserObject.email);
+        this.click_option_on_typeahead(takenBy_personOrUserObject.email);
+        this.select_dropdown_option_on_modal(checkoutReason);
+        this.enter_notes_on_modal(notes);
+
+        if (expectedReturnDate) {
+            expectedReturnDateInput().type(expectedReturnDate);
+        }
+        return this;
+    }
+
+    populate_Transfer_form(transferTo_user, transferFrom_user, notes) {
+        transferTo().type(transferTo_user.email);
+        this.click_option_on_typeahead(transferTo_user.email);
+        transferFrom().type(transferFrom_user.email)
+        this.click_option_on_typeahead(transferFrom_user.email)
+        this.enter_notes_on_modal(notes);
+        return this;
+    }
+
+    populate_Move_form(location, notes) {
+        locationInputOnModal().type('/');
+        this.click_option_on_typeahead(location.name);
+        this.enter_notes_on_modal(notes);
+        return this;
+    }
+
+    populate_disposal_form(disposalWitness_user, method, notes) {
+        disposalWitnessInput().type(disposalWitness_user.email);
+        this.click_option_on_typeahead(disposalWitness_user.email);
+        this.select_dropdown_option_on_modal(method);
+        this.enter_notes_on_modal(notes);
+        return this;
+    }
+
+    check_In_the_item(returnedBy_userObject, usePreviousLocation, note) {
+        this.click_button_on_active_tab(C.buttons.actions)
+            .click_option_on_expanded_menu(C.dropdowns.itemActions.checkItemIn)
+            .populate_CheckIn_form(returnedBy_userObject, usePreviousLocation, note)
+            .click_button_on_modal(C.buttons.ok)
+            .verify_toast_message('Saved');
+        return this;
+    }
+
+    undispose_the_item(returnedBy_userObject, usePreviousLocation, note) {
+        this.click_button_on_active_tab(C.buttons.actions)
+            .click_option_on_expanded_menu(C.dropdowns.itemActions.undisposeItem)
+            .populate_CheckIn_form(returnedBy_userObject, usePreviousLocation, note)
+            .click_button_on_modal(C.buttons.ok)
+            .verify_toast_message('Saved');
+        return this;
+    }
+
+    check_Out_the_item(takenBy_personOrUserObject, checkOutReason, notes, expectedReturnDate) {
+        this.click_button_on_active_tab(C.buttons.actions)
+            .click_option_on_expanded_menu(C.dropdowns.itemActions.checkItemOut)
+            .populate_CheckOut_form(takenBy_personOrUserObject, checkOutReason, notes, expectedReturnDate)
+            .click_button_on_modal(C.buttons.ok)
+            .verify_toast_message('Saved');
+        return this;
+    }
+
+    transfer_the_item(transferTo_userObject, transferFrom_userObject, notes) {
+        this.define_API_request_to_be_awaited('POST', 'api/transfers/V2')
+        this.click_button_on_active_tab(C.buttons.actions)
+            .click_option_on_expanded_menu(C.dropdowns.itemActions.transferItem)
+            .populate_Transfer_form(transferTo_userObject, transferFrom_userObject, notes)
+            .click_button_on_modal(C.buttons.ok)
+            .wait_response_from_API_call('api/transfers/V2')
+            .verify_toast_message('Saved');
+        return this;
+    }
+
+    move_the_item(location, notes) {
+        this.click_button_on_active_tab(C.buttons.actions)
+            .click_option_on_expanded_menu(C.dropdowns.itemActions.moveItem)
+            .populate_Move_form(location, notes)
+            .click_button_on_modal(C.buttons.ok)
+            .verify_toast_message('Saved');
+        return this;
+    }
+
+    dispose_the_item(witness_userObject, method, notes) {
+        this.click_button_on_active_tab(C.buttons.actions)
+            .click_option_on_expanded_menu(C.dropdowns.itemActions.disposeItem)
+            .populate_disposal_form(witness_userObject, method, notes)
+            .click_button_on_modal(C.buttons.ok)
+            .verify_toast_message('Saved');
         return this;
     }
 

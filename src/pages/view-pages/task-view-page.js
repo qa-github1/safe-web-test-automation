@@ -80,7 +80,6 @@ export default class TaskViewPage extends BaseViewPage {
         this.pause(1)
         this.wait_until_modal_disappears()
         this.wait_until_spinner_disappears()
-        //cy.contains('Actions').click()
         actionsButton().click()
         return this;
     };

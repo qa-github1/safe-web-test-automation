@@ -43,7 +43,7 @@ export default class AddCasePage extends BaseAddPage {
 
     populate_all_fields_on_second_form(caseObject) {
 
-        this.select_location(offenseLocationInput, caseObject.offenseLocation)
+        this.select_location_from_Google_Address_Lookup(offenseLocationInput, caseObject.offenseLocation)
 
         this.type_if_values_provided(
             [
