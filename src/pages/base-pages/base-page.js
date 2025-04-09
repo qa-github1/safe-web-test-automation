@@ -692,6 +692,7 @@ export default class BasePage {
 
     enter_values_on_Item_Belongs_To_typeahead_field(LabelValueArray) {
         let that = this
+
         if (LabelValueArray[1]) {
             // if there are multiple values in array, repeat the same action to enter all of them
             for (let i = 0; i < LabelValueArray[1].length; i++) {
@@ -707,7 +708,7 @@ export default class BasePage {
                 this.wait_response_from_API_call("getPeopleInTypeahead")
 
                 cy.wait(200)
-                firstPersonOnItemBelongsToTypeahead().click()
+                firstPersonOnItemBelongsToTypeahead().should('exist').should('be.visible').click()
                 cy.wait(200)
             }
         }

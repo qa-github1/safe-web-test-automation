@@ -152,7 +152,8 @@ describe('Add Case', function () {
                 .check_if_Review_Date_and_Notes_fields_are_present(false)
                 .click_Edit()
                 .check_if_Review_Date_and_Notes_fields_are_present(false)
-                .verify_values_on_Edit_form(D.newCase)
+                cy.wait(2000)
+                ui.caseView.verify_values_on_Edit_form(D.newCase)
 
 
             api.auth.get_tokens(orgAdmin);

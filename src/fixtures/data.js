@@ -206,6 +206,7 @@ D.getNewItemData = function (specificCaseObject, locationObject, newPerson) {
         custodyReason: S.selectedEnvironment.custodyReason.name,
         peopleIds: [person.id],
         itemBelongsTo: [person.name],
+        itemBelongsToEmail: [person.email],
         itemBelongsToFirstLastName: [person.fullName],
         itemBelongsToOnHistory: [person.name],
         itemBelongsToGuid: [person.guid],
