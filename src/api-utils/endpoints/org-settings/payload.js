@@ -678,7 +678,7 @@ exports.generate_request_payload_for_editing_Org = function (
     useCLP = true,
     itemBelongsToShowsAllPeople = true,
     touchScreenSignature = false,
-    personFormattingString = ''
+    personFormattingString = "~person.firstName~ ~person.lastName~"
 ) {
     let body = Object.assign({}, orgSettings)
 
