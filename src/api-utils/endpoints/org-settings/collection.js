@@ -33,7 +33,7 @@ exports.update_org_settings_by_specifying_property_and_value = function (propert
     return this
 };
 
-exports.update_org_settings = function (useCLP, itemBelongsToShowsAllPeople, touchScreenSignature) {
+exports.update_org_settings = function (useCLP, itemBelongsToShowsAllPeople, touchScreenSignature, personFormattingString) {
     exports.get_current_org_settings();
 
     cy.getLocalStorage("orgSettings").then(orgSettings => {
@@ -42,7 +42,7 @@ exports.update_org_settings = function (useCLP, itemBelongsToShowsAllPeople, tou
 
         generic_request.PUT(
             '/api/organizations/' + orgSettings.id,
-            body.generate_request_payload_for_editing_Org(orgSettings, useCLP, itemBelongsToShowsAllPeople, touchScreenSignature),
+            body.generate_request_payload_for_editing_Org(orgSettings, useCLP, itemBelongsToShowsAllPeople, touchScreenSignature, personFormattingString),
             "Org Settings updated via API",
             'orgSettings');
     });

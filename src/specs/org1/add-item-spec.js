@@ -15,19 +15,21 @@ let permissionGroup_officeAdmin = S.selectedEnvironment.admin_permissionGroup;
 
 before(function () {
     api.auth.get_tokens(orgAdmin);
+    api.org_settings.update_org_settings(false, true, null, "~person.firstName~ ~person.lastName~");
     D.generateNewDataSet();
     api.cases.add_new_case(D.newCase.caseNumber);
     api.org_settings.enable_all_Person_fields();
+    api.org_settings.per
     api.users.update_current_user_settings(orgAdmin.id, C.currentDateTimeFormat)
     api.auth.get_tokens(powerUser);
     api.users.update_current_user_settings(powerUser.id, C.currentDateTimeFormat)
-});
+ });
 
 describe('Add Item', function () {
 
     context('1. Org Admin', function () {
 
-        it('1.1 All fields enabled ' +
+        it.only('1.1 All fields enabled ' +
             '-- "Item Belongs To Shows All People" turned ON in Org Settings -- multiple people not linked to Primary Case are selected in "Item Belongs to" field ', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
@@ -50,14 +52,14 @@ describe('Add Item', function () {
              ui.addItem.verify_Case_Number_is_populated_on_enabled_input_field(D.newItem.caseNumber)
         });
 
-        it('1.2. Optional fields disabled -- redirect to View Added Item ' +
+        it.only('1.2. Optional fields disabled -- redirect to View Added Item ' +
             '-- Item Belongs To Shows All People" turned OFF in Org Settings -- multiple values selected for "Item Belongs to" and Tags', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
             D.getItemDataWithReducedFields(D.newCase);
             api.org_settings.update_org_settings(true, false);
             api.org_settings.disable_Item_fields([C.itemFields.itemBelongsTo, C.itemFields.tags]);
-            D.newItem.itemBelongsTo = [S.selectedEnvironment.person.name, S.selectedEnvironment.person_2.name]
+            D.newItem.itemBelongsToFirstLastName = [S.selectedEnvironment.person.name, S.selectedEnvironment.person_2.name]
             D.newItem.tags = [S.selectedEnvironment.orgTag1.name, S.selectedEnvironment.orgTag2.name]
             api.auth.get_tokens(orgAdmin);
 

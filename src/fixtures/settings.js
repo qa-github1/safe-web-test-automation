@@ -324,8 +324,8 @@ S.DEV_1 = {
     },
     locations: [
         {
-            id: 476096,
-            guid: '67d3a4e4-8c55-4ee4-ab66-e225b114dc35',
+            id: 531860,
+            guid: 'c8792633-0a0e-4bc7-a67c-5b8c72175a86',
             name: "CypressLocation1"
         },
         {

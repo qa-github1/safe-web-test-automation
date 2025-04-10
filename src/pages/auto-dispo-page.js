@@ -13,6 +13,8 @@ let
     viewCasesWithoutTasks = e => cy.get('[ng-click="viewCasesWithoutTasks()"]'),
     closedDateInput = e => cy.get('[close-text="Save"]'),
     reviewDateNotes = e => cy.get('[ng-model="update.notes"]'),
+    reviewDateNotesToggleButton = e => cy.get('[ng-model="update.canUpdateReviewNotes"]'),
+    orderByOffenseDateToggleButton = e => cy.get('[ng-model="update.isOrdered"]'),
     minRedistributeDate = e => cy.get('input[name="fromDate"]'),
     maxRedistributeDate = e => cy.get('input[name="toDate"]'),
     casesWithNoReviewDate = e => cy.get('[ng-bind-html="openCasesSubWarningFirstMessage"]'),
@@ -91,7 +93,10 @@ export default class AutoDispoPage extends BasePage {
     populate_Update_Cases_modal(minDate, maxDate, note) {
         this.enterValue(minRedistributeDate, minDate)
         this.enterValue(maxRedistributeDate, maxDate)
+        reviewDateNotesToggleButton().click();
         this.enterValue(reviewDateNotes, note)
+        orderByOffenseDateToggleButton().click();
+
         return this;
     };
 
