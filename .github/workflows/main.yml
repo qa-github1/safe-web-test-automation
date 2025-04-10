@@ -20,7 +20,7 @@ jobs:
       - name: Install dependencies
         run: npm i
       - name: Run tests
-        run: npm run tests-org1
+        run: npm run dev-smoke-test
       - name: Deploy report to temp-reports branch
         if: always()
         uses: peaceiris/actions-gh-pages@v2
