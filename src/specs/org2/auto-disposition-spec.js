@@ -61,10 +61,12 @@ describe('Auto-Disposition', function () {
 
         it.only('3.1 Verify "Re-Distribute" for "Past Due" cases', function () {
             api.auth.get_tokens(user);
+           // api.users.update_current_user_settings(user.id)
             ui.menu.click_Settings__Organization()
                 .click_element_containing_link(C.labels.organization.tabs.autoDisposition);
             ui.autoDispo.click_disposition_Configuration_For_Case_Offense_Types();
             ui.autoDispo.verify_Redistribute_Case_Review_Date_labels(true)
+
 
             D.generateNewDataSet()
             D.getDataForMultipleCases(3)

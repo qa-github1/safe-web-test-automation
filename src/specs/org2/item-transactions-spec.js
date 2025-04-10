@@ -14,6 +14,8 @@ describe('Item Transactions & Actions', function () {
         api.users.update_current_user_settings(orgAdmin.id)
         api.org_settings.disable_Item_fields(['Description']);
         api.org_settings.enable_all_Person_fields()
+        api.org_settings.update_org_settings(false, true, false, " ")
+
     });
 
     it('1. Verify Check Out transaction and enabled/disabled actions for Checked Out item', function () {

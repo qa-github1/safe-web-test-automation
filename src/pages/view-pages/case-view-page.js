@@ -69,8 +69,8 @@ export default class CaseViewPage extends BaseViewPage {
 
     enter_Case_Number(caseNo) {
         caseNumberInput_enabled().clear();
-//        caseNumberInput_enabled().should('have.class', 'ng-empty');
-  //      caseNumberInput_enabled().type(caseNo);
+        caseNumberInput_enabled().should('have.class', 'ng-empty');
+        caseNumberInput_enabled().type(caseNo);
         return this;
     }
 
