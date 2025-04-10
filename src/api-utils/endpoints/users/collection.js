@@ -114,6 +114,7 @@ exports.update_current_user_settings = function (userObjectFromLocalStorageOrUse
                 userSettings = JSON.parse(userSettings);
                 orgSettings = JSON.parse(orgSettings);
 
+
                 userSettings.dateFormat = dateFormat.name || dateFormat;
                 userSettings.dateTimeFormat = dateTimeFormat.name || dateTimeFormat;
 

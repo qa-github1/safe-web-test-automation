@@ -19,7 +19,7 @@ let
     editButton = e => cy.get('[translate="GENERAL.EDIT"]').contains('Edit'),
     deleteButton = e => cy.get('[translate="GENERAL.DELETE"]').parent('li'),
     actionsButton = e => cy.get('[title="Select an item or items for which you would like to perform Action."]'),
-    //actionsButton = e => cy.get('[translate="GENERAL.ACTIONS"]'),
+    actionsButton2 = e => cy.get('[translate="GENERAL.ACTIONS"]'),
     actionsButtonOnSearchPage = e => cy.get('[class="grid-buttons inline"]').eq(1),
     actionsButtonOnSearchPage2 = e => cy.get('[class="grid-buttons inline"]').eq(3),
     uploadFileInput = e => cy.get('input[type=file]'),
@@ -1128,14 +1128,33 @@ export default class BasePage {
         return this;
     };
 
+    // click_Actions() {
+    //     this.pause(1)
+    //     this.wait_until_modal_disappears()
+    //     this.wait_until_spinner_disappears()
+    //     //cy.contains('Actions').click()
+    //     actionsButton().click()
+    //     return this;
+    // };
+
     click_Actions() {
         this.pause(1)
         this.wait_until_modal_disappears()
         this.wait_until_spinner_disappears()
-        //cy.contains('Actions').click()
-        actionsButton().click()
+
+        cy.get('body').then($body => {
+            if ($body.find('[title="Select an item or items for which you would like to perform Action."]').length) {
+                actionsButton().click()
+            } else if ($body.find('[translate="GENERAL.ACTIONS"]').length) {
+                actionsButton2().click()
+            } else {
+                throw new Error('Actions button not found.')
+            }
+        })
+
         return this;
-    };
+    }
+
 
     click_Actions_on_Search_Page() {
         this.pause(1)
