@@ -380,6 +380,8 @@ describe('Person', function () {
                 .edit_all_values(D.editedPerson)
                 .click_Save()
                 .verify_toast_message(C.toastMsgs.saved)
+                .pause(1)
+                .wait_until_spinner_disappears()
                 .open_last_history_record(1)
                 .verify_all_values_on_history(D.editedPerson, D.newPerson)
                 //-- uncomment method in the next line and remove the one below that when bug gets fixed in #13328
@@ -505,7 +507,7 @@ describe('Services', function () {
         ui.itemView.verify_Item_View_page_is_open(D.newCase.caseNumber)
     })
 
-    it.only('Dispo Auth Service', function () {
+    it('Dispo Auth Service', function () {
 
         ui.app.log_title(this);
         api.auth.get_tokens(orgAdmin);

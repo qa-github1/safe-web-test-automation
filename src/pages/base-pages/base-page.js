@@ -131,6 +131,8 @@ let
     checkboxOnFirstRowInResultsTableOnActiveTab = e => active_tab().find('tbody').children('tr').first().find('.bg-grid-checkbox'),
     checkboxOnFirstTableRow = e => resultsTable().find('.bg-grid-checkbox').first(),
     checkboxToSelectAll = e => cy.get('[ng-model="options.selectAllToggle"]').first(),
+    statisticsBlock = e => cy.get('.statistic-block').first(),
+    selectedItems = e => cy.get('[ng-if="options.selectedItems.length != 0"]').first(),
     locationPin = name => cy.contains(name).parent('div'),
     firstCheckboxOnTableBody = e => cy.get('.bg-grid-checkbox').first(),
     checkboxOnSpecificTableRow = rowNumber => resultsTable().find('.bg-grid-checkbox', {timeout: 0}).eq(rowNumber - 1),
@@ -383,8 +385,8 @@ export default class BasePage {
                 }
             });
         };
-       return  tryFindingText();
-       // return this
+        return tryFindingText();
+        // return this
     }
 
     verify_url_contains_some_value(partOfUrl) {
@@ -724,7 +726,7 @@ export default class BasePage {
                 } else {
                     LabelValueArray[0]().clear().invoke('val', LabelValueArray[1][i]).trigger('input')
                 }
-              //  this.wait_response_from_API_call("getPeopleList")
+                //  this.wait_response_from_API_call("getPeopleList")
 
                 cy.wait(200)
                 //firstPersonOnItemBelongsToTypeahead().should('exist').should('be.visible').click()
@@ -1024,6 +1026,7 @@ export default class BasePage {
 
     click_element_if_has_a_class_ = function (element, className) {
         element().then(($el) => {
+            cy.wait(500)
             if ($el.hasClass(className)) {
                 element().click();
             }
@@ -1590,19 +1593,25 @@ export default class BasePage {
     };
 
     check_all_rows() {
-        checkboxToSelectAll().click({force: true})
-        this.click_element_if_has_a_class_(checkboxToSelectAll, 'ng-empty')
+        this.uncheck_all_rows()
+        checkboxToSelectAll().click()
         checkboxToSelectAll().should('have.class', 'ng-not-empty')
         return this;
     };
 
     uncheck_all_rows() {
         checkboxToSelectAll().scrollIntoView()
-        checkboxToSelectAll().click()
-        this.pause(1.5)
-        this.click_element_if_has_a_class_(checkboxToSelectAll, 'ng-not-empty')
-        this.pause(1)
-        checkboxToSelectAll().should('have.class', 'ng-empty')
+        statisticsBlock().invoke('text').then(function (text) {
+            if (text.includes('Selected')) {
+                checkboxToSelectAll().click();
+                statisticsBlock().invoke('text').then(function (text) {
+                    if (text.includes('Selected')) {
+                        checkboxToSelectAll().click();
+                    }
+                })
+                checkboxToSelectAll().should('have.class', 'ng-empty');
+            }
+        })
         return this;
     };
 
