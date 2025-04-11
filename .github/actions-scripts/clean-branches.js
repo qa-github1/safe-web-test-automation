@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { exec } from "child_process";
 import path from "path";
 import { fileURLToPath } from "url";
+import fs from "fs";
 
 dotenv.config();
 
@@ -23,7 +24,7 @@ const day = today.getDate().toString().padStart(2, '0'); // Current day of the m
 
 const repoName = `report_${currentMonthName}_${day}`;
 
-async function cleanupGhPagesBranch() {
+async function cleanupBranch(branchName) {
     try {
         // Check if the repo exists first
         const repo = await octokit.request('GET /repos/{owner}/{repo}', {
@@ -34,9 +35,18 @@ async function cleanupGhPagesBranch() {
         if (repo) {
             console.log(`🛠 Found repo: ${repoName}`);
 
-            // Clone the repository to clean the gh-pages branch
-            const cloneUrl = `https://github.com/${org}/${repoName}.git`;
+            // Path for the local clone directory
             const localRepoDir = path.join(__dirname, repoName);
+
+            // Remove the existing directory if it exists
+            if (fs.existsSync(localRepoDir)) {
+                console.log(`❌ Directory ${localRepoDir} already exists. Removing it...`);
+                fs.rmSync(localRepoDir, { recursive: true, force: true });
+                console.log(`✅ Removed existing directory: ${localRepoDir}`);
+            }
+
+            // Clone the repository to clean the specified branch
+            const cloneUrl = `https://github.com/${org}/${repoName}.git`;
 
             exec(`git clone ${cloneUrl} ${localRepoDir}`, (error, stdout, stderr) => {
                 if (error) {
@@ -50,43 +60,43 @@ async function cleanupGhPagesBranch() {
                 // Change directory to the cloned repo
                 process.chdir(localRepoDir);
 
-                // Checkout gh-pages branch
-                exec('git checkout gh-pages', (error, stdout, stderr) => {
+                // Checkout the specified branch (either gh-pages or main)
+                exec(`git checkout ${branchName}`, (error, stdout, stderr) => {
                     if (error) {
-                        console.error(`Error checking out gh-pages branch: ${error}`);
+                        console.error(`Error checking out ${branchName} branch: ${error}`);
                         return;
                     }
 
                     console.log(stdout);
 
-                    // Remove all files in the gh-pages branch
+                    // Remove all files in the specified branch
                     exec('rm -rf *', (error, stdout, stderr) => {
                         if (error) {
-                            console.error(`Error removing files: ${error}`);
+                            console.error(`Error removing files from ${branchName}: ${error}`);
                             return;
                         }
 
                         console.log(stdout);
-                        console.log(`✅ Removed all content from gh-pages in ${repoName}`);
+                        console.log(`✅ Removed all content from ${branchName} in ${repoName}`);
 
                         // Commit the changes
-                        exec('git commit -am "Delete all content from gh-pages branch"', (error, stdout, stderr) => {
+                        exec('git commit -am "Delete all content from branch"', (error, stdout, stderr) => {
                             if (error) {
-                                console.error(`Error committing changes: ${error}`);
+                                console.error(`Error committing changes to ${branchName}: ${error}`);
                                 return;
                             }
 
                             console.log(stdout);
 
-                            // Push the changes to the gh-pages branch
-                            exec('git push origin gh-pages', (error, stdout, stderr) => {
+                            // Push the changes to the specified branch
+                            exec(`git push origin ${branchName}`, (error, stdout, stderr) => {
                                 if (error) {
-                                    console.error(`Error pushing to gh-pages: ${error}`);
+                                    console.error(`Error pushing to ${branchName}: ${error}`);
                                     return;
                                 }
 
                                 console.log(stdout);
-                                console.log(`✅ Content deleted from gh-pages branch for repo: ${repoName}`);
+                                console.log(`✅ Content deleted from ${branchName} branch for repo: ${repoName}`);
                             });
                         });
                     });
@@ -97,13 +107,16 @@ async function cleanupGhPagesBranch() {
         if (error.status === 404) {
             console.log(`❌ Repo ${repoName} not found`);
         } else {
-            console.error(`❌ Error cleaning up gh-pages for ${repoName}:`, error);
+            console.error(`❌ Error cleaning up ${branchName} for ${repoName}:`, error);
         }
     }
 }
 
-// Main function to clean up the gh-pages branch
+// Main function to clean up both gh-pages and main branches
 (async () => {
-    // Clean up the gh-pages branch of the current day's report
-    await cleanupGhPagesBranch();
+    // Clean up the gh-pages branch
+    await cleanupBranch('gh-pages');
+
+    // Clean up the main branch
+    await cleanupBranch('main');
 })();
