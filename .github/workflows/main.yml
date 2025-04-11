@@ -78,9 +78,10 @@ jobs:
     if: always() # Always send notification, even if previous jobs fail
     steps:
       - name: Send Slack Notification
-        uses: rtCamp/action-slack-notify@v2
+          uses: rtCamp/action-slack-notify@v2
+          env:
+            SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         with:
-          slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
           slack_token: ${{ secrets.SLACK_BOT_TOKEN }}
           slack_channel: '#auto-test-reports'
           text: |
