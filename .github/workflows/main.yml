@@ -86,6 +86,6 @@
           env:
             SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
             SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
-            SLACK_MESSAGE: 'Report URL: https://safe-qa.github.io/report_ ${{ env.NOW }}'
+            SLACK_MESSAGE: 'Report URL: https://safe-qa.github.io/report_${{ env.NOW }}'
             SLACK_TITLE: Cypress Test Results
             SLACK_USERNAME: Cypress_Tests
