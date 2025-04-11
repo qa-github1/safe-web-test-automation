@@ -81,14 +81,7 @@
           uses: rtCamp/action-slack-notify@v2
           env:
             SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-          with:
-            slack_token: ${{ secrets.SLACK_BOT_TOKEN }}
-            slack_channel: '#auto-test-reports'
-            text: |
-              :tada: **Cypress Test Workflow Status**
-              - **Test Status**: ${{ job.status }}
-              - **Repository**: ${{ github.repository }}
-              - **Branch**: ${{ github.ref }}
-              - **Commit**: ${{ github.sha }}
-              - **Job**: ${{ job.name }}
-              - **Run**: ${{ github.run_id }}
+            SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
+            SLACK_MESSAGE: 'Report URL: https://safe-qa.github.io/report_ ${{ env.NOW }}'
+            SLACK_TITLE: Cypress Test Results
+            SLACK_USERNAME: Cypress_Tests
