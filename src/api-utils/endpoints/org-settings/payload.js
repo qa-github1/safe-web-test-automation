@@ -332,6 +332,14 @@ exports.generate_request_payload_for_setting_visible_and_required_Item_fields = 
                 "recordType": 1
             })
     }
+    if (!shouldFieldBeEnabled(fieldsToDisable, C.itemFields.dispositionStatus)) {
+        body.push({
+            "orgFieldId": S.selectedEnvironment.fieldIds.item.dispositionStatus,
+            "entityType": 1,
+            "name": "DISPO_AUTH_STATUS",
+            "recordType": 1
+        })
+    }
 
     // Setting optional fields
     if (shouldFieldBeOptional(optionalFields, C.itemFields.description)) {
@@ -378,6 +386,8 @@ exports.generate_request_payload_for_setting_visible_and_required_Item_fields = 
             "recordType": 0
         })
     }
+
+
 
     return body;
 };
@@ -442,6 +452,12 @@ exports.generate_request_payload_for_disabling_Item_fields = function (fieldsToE
             "orgFieldId": S.selectedEnvironment.fieldIds.item.custodyReason,
             "entityType": 1,
             "name": "ITEM_CUSTODY_REASON",
+            "recordType": 1
+        },
+        {
+            "orgFieldId": S.selectedEnvironment.fieldIds.item.dispositionAuthorizationStatus,
+            "entityType": 1,
+            "name": "DISPO_AUTH_STATUS",
             "recordType": 1
         },
     ];
@@ -546,14 +562,14 @@ exports.generate_request_payload_for_disabling_Item_fields = function (fieldsToE
     }
 
 
-    if (!shouldFieldBeEnabled(fieldsToEnable, C.itemFields.dispositionStatus)) {
-        body.push({
-            "orgFieldId": S.selectedEnvironment.fieldIds.item.dispositionAuthorizationStatus,
-            "entityType": 1,
-            "name": "DISPO_AUTH_STATUS",
-            "recordType": 1
-        })
-     }
+    // if (!shouldFieldBeEnabled(fieldsToEnable, C.itemFields.dispositionStatus)) {
+    //     body.push({
+    //         "orgFieldId": S.selectedEnvironment.fieldIds.item.dispositionAuthorizationStatus,
+    //         "entityType": 1,
+    //         "name": "DISPO_AUTH_STATUS",
+    //         "recordType": 1
+    //     })
+    //  }
 
     return body;
 };

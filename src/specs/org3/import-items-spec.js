@@ -147,7 +147,7 @@ describe('Import Items', function () {
 
         ui.menu.click_Search__Item();
         ui.searchItem.enter_Created_Date(D.newItem.createdDate, C.searchCriteria.dates.exactly)
-            .enter_Description(D.newItem.description)
+             .enter_Description(C.searchCriteria.inputFields.equals, D.newItem.description)
             .click_button(C.buttons.search)
             .sort_by_descending_order(C.itemFields.orgNo)
             .click_View_on_first_table_row();

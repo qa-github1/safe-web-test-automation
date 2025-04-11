@@ -342,7 +342,7 @@ C = {
             lastYear: 'Last year',
         },
         inputFields: {
-            equals: 'equals',
+            equals: 'number:0',
             notEquals: 'not equals',
             startsWith: 'starts with',
             contains: 'contains',

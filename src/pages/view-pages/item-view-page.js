@@ -335,6 +335,7 @@ export default class ItemViewPage extends BaseViewPage {
             ],
             [['Update Made By', dataObject.updateMadeBy]],
             [['Description', dataObject.description]]
+            [['Public Facing Description', dataObject.publicFacingDescription]]
         )
 
         if (customFormName) {

@@ -2140,7 +2140,7 @@ S.PENTEST = {
             expectedReturnDate: 41,
             actualDisposedDate: 42,
             publicFacingDescription: 46,
-            dispositionAuthorizationStatus: 44,
+            dispositionStatus: 44,
             latestTransactionNotes: 48,
             checkInNotes: 43,
         },
@@ -3365,7 +3365,7 @@ S.chainOfCustody = {
         },
         checkin: (itemObject) => {
             return {
-                type: 'in',
+                type: 'In',
                 date: itemObject.checkInDate,
                 issuedFrom: itemObject.returnedByName_name,
                 issuedTo: itemObject.returnedByName_name,
@@ -3387,7 +3387,7 @@ S.chainOfCustody = {
         },
         checkout: (itemObject) => {
             return {
-                type: 'out',
+                type: 'Out',
                 date: itemObject.checkoutDate,
                 issuedFrom: itemObject.checkedOutBy_name,
                 issuedTo: itemObject.checkedOutTo_name,

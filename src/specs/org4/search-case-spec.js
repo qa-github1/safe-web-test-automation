@@ -877,7 +877,7 @@ describe('Cases Search', function () {
 
         context('1.9 Active', function () {
 
-            it('1.9.1 equals', function () {
+            it.only('1.9.1 equals', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();

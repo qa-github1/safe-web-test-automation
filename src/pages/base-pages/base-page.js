@@ -857,6 +857,9 @@ export default class BasePage {
         }
     }
 
+
+
+
     // I needed to add this method because we had an issue with reading  empty ' ' on DEV while on Pentest method above worked fine
     check_text_2(element, text, fieldName = '') {
         if (element instanceof Function) {

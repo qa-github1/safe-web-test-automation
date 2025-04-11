@@ -26,6 +26,7 @@ let
     offenseDateInput = e => cy.get('[translate="CASE_OFFENSE_DATE"]').parent().find('[ng-model="ngModel"]'),
     offenseDescriptionInput = e => cy.get('[translate="CASE_OFFENSE_DESCRIPTION"]').parent().find('[ng-model="field.model"]'),
     activeDropdown = e => cy.get('[translate="CASE_ACTIVE"]').parent().find('select').eq(1),
+    //activeDropdown = e => cy.get('[translate="CASE_ACTIVE"]').parent().next().find('select'),
     tagsInput = e => cy.get('[translate="NAV.TAGS"]').parent().find('[ng-model="$select.search"]'),
     tagsOptionOnTypeahead = e => cy.get('[repeat="tag in tags | filter: $select.search"]').find('.ui-select-choices-row-inner').last(),
     officesInput = e => cy.get('[translate="SEARCH.OFFICE_SELECTION"]').parent().find('[ng-model="$select.search"]'),
@@ -48,7 +49,8 @@ let
     offenseLocationSearchCriteria = e => cy.contains('Offense Location').parent().find('[ng-model="field.searchCriteria"]'),
     offenseDateSearchCriteria = e => cy.contains('Offense Date').parent().find('[ng-model="field.searchCriteria"]'),
     offenseDescriptionSearchCriteria = e => cy.contains('Offense Description').parent().find('[ng-model="field.searchCriteria"]'),
-    activeSearchCriteria = e => cy.contains('Active').parent().find('[ng-model="field.searchCriteria"]'),
+    //activeSearchCriteria = e => cy.contains('Active').parent().find('[ng-model="field.searchCriteria"]'),
+    activeSearchCriteria = e => cy.contains('label', 'Active').parent().next().find('[ng-model="field.searchCriteria"]'),
     tagsSearchCriteria = e => cy.contains('Tags').parent().find('[ng-model="field.searchCriteria"]'),
     savedSearchesOfItemsSearchCriteria = e => cy.contains('Saved Searches of Items').parent().find('[ng-model="field.searchCriteria"]'),
 
@@ -129,7 +131,7 @@ export default class SearchCasePage extends BaseSearchPage {
     }
 
     select_option_on_Active_dropdown(searchCriteria, isActive) {
-        activeSearchCriteria().select(searchCriteria);
+        activeSearchCriteria().should('be.visible').should('contain', searchCriteria).select(searchCriteria);
         if (isActive) {
             activeDropdown().select('True');
         } else {
