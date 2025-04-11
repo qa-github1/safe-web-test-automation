@@ -55,13 +55,13 @@ jobs:
         with:
           ref: gh-pages
 
-      - name: Install dependencies
+      - name: Install dependencies and move allure results
         run: |
           npm init --yes
           npm i allure-commandline --save-dev
           mkdir allure-results
-          mv allure-results-1/* allure-results 
-          mv allure-results-2/* allure-results 
+          [ -d "allure-results-1" ] && mv allure-results-1/* allure-results || echo "No allure-results-1 directory"
+          [ -d "allure-results-2" ] && mv allure-results-2/* allure-results || echo "No allure-results-2 directory"
 
       - name: Set up environment variable
         id: set_date
@@ -91,7 +91,7 @@ jobs:
   slack-notification:
     runs-on: ubuntu-latest
     needs: [ cypress-org1, merge-and-deploy-final-report ]
-    if: always()  # Always send notification, even if previous jobs fail
+    if: always()
     steps:
       - name: Set up environment variable
         id: set_date
