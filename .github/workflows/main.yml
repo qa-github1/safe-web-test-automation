@@ -1,6 +1,6 @@
 name: Cypress Tests
 
-on: [ push ]
+on: [push]
 
 permissions: write-all
 
@@ -15,7 +15,6 @@ jobs:
     strategy:
       fail-fast: false
     steps:
-
       - uses: actions/checkout@v2
       - name: Install dependencies
         run: npm i
@@ -59,24 +58,35 @@ jobs:
           java-version: '17'
       - name: Generate Allure Report
         if: always()
-        run: node_modules/allure-commandline/dist/bin/allure generate  allure-results -o report
+        run: node_modules/allure-commandline/dist/bin/allure generate allure-results -o report
 
       - name: Deploy to external repository
         uses: cpina/github-action-push-to-another-repository@main
         env:
-          # 🏗️ <internal repository>, run GitHub Action.
-          # 🎁 <external repository>, receiving Artifacts.
-          # @see https://cpina.github.io/push-to-another-repository-docs/setup-using-personal-access-token.html#setup-personal-access-token
-          # 1.1 Generate Personal Access Token: <external repository>/<Avatar>/Settings/Developer settings/Personal access tokens/Generate new token
-          #     Select `No expiration` and Check `✅️ repo    Full control of private repositories`, Generate and then Copy the Token
-          # 1.2 Then make the token available to the GitHub Action: <internal repository>/Settings/Secrets/Actions/New repository secret
-          #     Name: EXTERNAL_REPOSITORY_PERSONAL_ACCESS_TOKEN, Value Paste the Token
           API_TOKEN_GITHUB: ${{ secrets.TOKEN }}
           NOW: ${{ env.NOW }}
         with:
-          # GitHub Action output files
           source-directory: report
           destination-github-username: 'Safe-QA'
           destination-repository-name: 'report_${{ env.NOW }}'
           user-email: 'qa+github1@trackerproducts.com'
           target-branch: "gh-pages"
+
+  slack-notification:
+    runs-on: ubuntu-latest
+    needs: [cypress-org1, merge-and-deploy-final-report]
+    if: always() # Always send notification, even if previous jobs fail
+    steps:
+      - name: Send Slack Notification
+        uses: rtCamp/action-slack-notify@v2
+        with:
+          slack_token: ${{ secrets.SLACK_BOT_TOKEN }}
+          channel: '#auto-test-reports'
+          text: |
+            :tada: **Cypress Test Workflow Status**
+            - **Test Status**: ${{ job.status }}
+            - **Repository**: ${{ github.repository }}
+            - **Branch**: ${{ github.ref }}
+            - **Commit**: ${{ github.sha }}
+            - **Job**: ${{ job.name }}
+            - **Run**: ${{ github.run_id }}
