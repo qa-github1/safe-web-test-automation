@@ -18,15 +18,13 @@ const org = 'Safe-QA';
 // Get current date info
 const today = new Date();
 const currentMonthName = today.toLocaleString('default', { month: 'long' }); // e.g., April
-const year = today.getFullYear();
-const currentMonthIndex = today.getMonth(); // 0-based index
 const day = today.getDate().toString().padStart(2, '0'); // Current day of the month
 
 const repoName = `report_${currentMonthName}_${day}`;
 
 async function cleanupBranch(branchName) {
     try {
-        // Check if the repo exists
+        // Check if the repo exists first
         const repo = await octokit.request('GET /repos/{owner}/{repo}', {
             owner: org,
             repo: repoName
@@ -37,74 +35,74 @@ async function cleanupBranch(branchName) {
 
             const localRepoDir = path.join(__dirname, repoName);
 
-            // Clean up existing local directory if exists
+            // Remove existing local repo dir if it exists
             if (fs.existsSync(localRepoDir)) {
                 console.log(`❌ Directory ${localRepoDir} already exists. Removing it...`);
                 fs.rmSync(localRepoDir, { recursive: true, force: true });
                 console.log(`✅ Removed existing directory: ${localRepoDir}`);
             }
 
+            // Clone the repo
             const cloneUrl = `https://github.com/${org}/${repoName}.git`;
 
-            exec(`git clone ${cloneUrl} ${localRepoDir}`, (error, stdout, stderr) => {
-                if (error) {
-                    console.error(`Error cloning repository: ${error}`);
+            exec(`git clone ${cloneUrl} ${localRepoDir}`, (cloneErr, cloneOut) => {
+                if (cloneErr) {
+                    console.error(`❌ Error cloning repository: ${cloneErr}`);
                     return;
                 }
 
-                console.log(stdout);
-                console.log(`Cloned repository ${repoName}`);
+                console.log(cloneOut);
+                console.log(`📥 Cloned repository ${repoName}`);
 
+                // Change into repo dir
                 process.chdir(localRepoDir);
 
-                // Checkout the desired branch
-                exec(`git checkout ${branchName}`, (error, stdout, stderr) => {
-                    if (error) {
-                        console.error(`Error checking out ${branchName} branch: ${error}`);
+                // Checkout the branch
+                exec(`git checkout ${branchName}`, (checkoutErr, checkoutOut) => {
+                    if (checkoutErr) {
+                        console.error(`❌ Error checking out ${branchName} branch: ${checkoutErr}`);
                         return;
                     }
 
-                    console.log(stdout);
+                    console.log(checkoutOut);
 
-                    // Remove all files in the branch
-                    exec('rm -rf *', (error, stdout, stderr) => {
-                        if (error) {
-                            console.error(`Error removing files from ${branchName}: ${error}`);
+                    // Delete all tracked and untracked files
+                    exec('git rm -r --cached . && rm -rf *', (rmErr, rmOut) => {
+                        if (rmErr) {
+                            console.error(`❌ Error removing files: ${rmErr}`);
                             return;
                         }
 
-                        console.log(stdout);
-                        console.log(`✅ Removed all content from ${branchName} in ${repoName}`);
+                        console.log(rmOut);
+                        console.log(`🧹 Files removed from ${branchName}`);
 
-                        // Create a placeholder file (optional for main, necessary for gh-pages)
-                        const placeholderContent = `<!DOCTYPE html><html><head><title>Cleaned</title></head><body><h1>Branch '${branchName}' cleaned</h1></body></html>`;
-                        fs.writeFileSync('index.html', placeholderContent);
-
-                        // Stage files
-                        exec('git add .', (error, stdout, stderr) => {
-                            if (error) {
-                                console.error(`Error adding files: ${error}`);
+                        // Stage deletions
+                        exec('git add -A', (addErr, addOut) => {
+                            if (addErr) {
+                                console.error(`❌ Error staging deletions: ${addErr}`);
                                 return;
                             }
 
+                            console.log(addOut);
+
                             // Commit changes
-                            exec('git commit -m "Clean branch and add placeholder index.html"', (error, stdout, stderr) => {
-                                if (error) {
-                                    console.error(`Error committing changes to ${branchName}: ${error}`);
+                            exec(`git commit -m "Clean ${branchName} content for fresh deploy"`, (commitErr, commitOut) => {
+                                if (commitErr) {
+                                    console.error(`❌ Error committing changes: ${commitErr}`);
                                     return;
                                 }
 
-                                console.log(stdout);
+                                console.log(commitOut);
 
-                                // Push changes
-                                exec(`git push origin ${branchName} --force`, (error, stdout, stderr) => {
-                                    if (error) {
-                                        console.error(`Error pushing to ${branchName}: ${error}`);
+                                // Push the changes
+                                exec(`git push origin ${branchName}`, (pushErr, pushOut) => {
+                                    if (pushErr) {
+                                        console.error(`❌ Error pushing to ${branchName}: ${pushErr}`);
                                         return;
                                     }
 
-                                    console.log(stdout);
-                                    console.log(`✅ ${branchName} branch cleaned and updated for repo: ${repoName}`);
+                                    console.log(pushOut);
+                                    console.log(`✅ Successfully cleaned ${branchName} in ${repoName}`);
                                 });
                             });
                         });
@@ -121,7 +119,7 @@ async function cleanupBranch(branchName) {
     }
 }
 
-// Main function to clean up both branches
+// Clean both gh-pages and main
 (async () => {
     await cleanupBranch('gh-pages');
     await cleanupBranch('main');
