@@ -81,7 +81,7 @@ jobs:
         uses: rtCamp/action-slack-notify@v2
         with:
           slack_token: ${{ secrets.SLACK_BOT_TOKEN }}
-          channel: '#auto-test-reports'
+          slack_channel: '#auto-test-reports'
           text: |
             :tada: **Cypress Test Workflow Status**
             - **Test Status**: ${{ job.status }}
