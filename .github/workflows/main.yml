@@ -27,7 +27,7 @@ jobs:
         with:
           keepFiles: true
         env:
-          PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PERSONAL_TOKEN: ${{ secrets.TOKEN }}
           PUBLISH_BRANCH: gh-pages
           PUBLISH_DIR: report
 
@@ -71,7 +71,7 @@ jobs:
           #     Select `No expiration` and Check `✅️ repo    Full control of private repositories`, Generate and then Copy the Token
           # 1.2 Then make the token available to the GitHub Action: <internal repository>/Settings/Secrets/Actions/New repository secret
           #     Name: EXTERNAL_REPOSITORY_PERSONAL_ACCESS_TOKEN, Value Paste the Token
-          API_TOKEN_GITHUB: ${{ secrets.EXTERNAL_REPOSITORY_PERSONAL_ACCESS_TOKEN }}
+          API_TOKEN_GITHUB: ${{ secrets.TOKEN }}
           NOW: ${{ env.NOW }}
         with:
           # GitHub Action output files
