@@ -13,6 +13,7 @@ describe('Add Notes', function () {
         ui.app.log_title(this);
 
         api.auth.get_tokens(user);
+        ui.caseView.verify_toast_message('TRIGGER ERROR FOR DEBUGGING REPORTS')
         D.generateNewDataSet();
         api.cases.add_new_case(D.newCase.caseNumber);
 
