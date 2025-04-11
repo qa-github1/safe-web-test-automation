@@ -1,5 +1,6 @@
 slack-notification:
   runs-on: ubuntu-latest
+  on: push
   needs: [cypress-org1, merge-and-deploy-final-report]
   if: always()  # Always send notification, even if previous jobs fail
   steps:
