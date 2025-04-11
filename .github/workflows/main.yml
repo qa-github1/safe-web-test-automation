@@ -5,6 +5,7 @@ on: [push]
 permissions: write-all
 
 jobs:
+
   cypress-org1:
     runs-on: ubuntu-latest
     timeout-minutes: 250
@@ -22,6 +23,17 @@ jobs:
       - name: Run tests
         run: npm run dev-smoke-test
 
+      - name: Clean gh-pages branch in this repository
+        run: |
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "github-actions"
+          git clone --branch gh-pages https://x-access-token:${{ secrets.TOKEN }}@github.com/${{ github.repository }}.git temp-gh-pages
+          cd temp-gh-pages
+          git rm -r * || echo "Nothing to delete"
+          git commit -am "Clean gh-pages before redeploy"
+          git push origin gh-pages
+        if: always()
+
       - name: Deploy report to temp-reports branch
         if: always()
         uses: peaceiris/actions-gh-pages@v2
@@ -37,28 +49,24 @@ jobs:
     timeout-minutes: 250
     needs: [cypress-org1]
     if: always()
+    strategy:
+      fail-fast: false
     steps:
-      - name: Set up environment variable
-        id: set_date
-        run: echo "NOW=$(date +'%B_%d')" >> $GITHUB_ENV
-
-      - name: Clean gh-pages branch in target repo
-        run: |
-          REPO="report_${NOW}"
-          git clone --branch gh-pages https://x-access-token:${{ secrets.TOKEN }}@github.com/Safe-QA/${REPO}.git temp-clean-repo
-          cd temp-clean-repo
-          git rm -r * || echo "Nothing to delete"
-          echo "Wiped gh-pages branch"
-          git commit -am "Cleaned gh-pages before redeploy"
-          git push origin gh-pages
+      - uses: actions/checkout@v2
+        with:
+          ref: gh-pages
 
       - name: Install dependencies
         run: |
           npm init --yes
           npm i allure-commandline --save-dev
           mkdir allure-results
-          mv allure-results-1/* allure-results
-          mv allure-results-2/* allure-results
+          mv allure-results-1/* allure-results 
+          mv allure-results-2/* allure-results 
+
+      - name: Set up environment variable
+        id: set_date
+        run: echo "NOW=$(date +'%B_%d')" >> $GITHUB_ENV
 
       - uses: actions/setup-java@v3
         with:
@@ -83,8 +91,8 @@ jobs:
 
   slack-notification:
     runs-on: ubuntu-latest
-    needs: [cypress-org1, merge-and-deploy-final-report]
-    if: always()
+    needs: [ cypress-org1, merge-and-deploy-final-report ]
+    if: always()  # Always send notification, even if previous jobs fail
     steps:
       - name: Set up environment variable
         id: set_date
