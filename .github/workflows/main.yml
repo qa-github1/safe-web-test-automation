@@ -1,94 +1,20 @@
-name: Cypress Tests
-
-on: [push]
-
-permissions: write-all
-
-jobs:
-
-  cypress-org1:
-    runs-on: ubuntu-latest
-    timeout-minutes: 250
-    container:
-      image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
-      options: --user 1001
-    strategy:
-      fail-fast: false
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install dependencies
-        run: npm i
-      - name: Run tests
-        run: npm run dev-smoke-test
-      - name: Deploy report to temp-reports branch
-        if: always()
-        uses: peaceiris/actions-gh-pages@v2
-        with:
-          keepFiles: true
-        env:
-          PERSONAL_TOKEN: ${{ secrets.TOKEN }}
-          PUBLISH_BRANCH: gh-pages
-          PUBLISH_DIR: report
-
-  merge-and-deploy-final-report:
-    runs-on: ubuntu-latest
-    timeout-minutes: 250
-    needs: [cypress-org1]
-    if: always()
-    strategy:
-      fail-fast: false
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          ref: gh-pages
-      - name: Install dependencies
-        run: |
-          npm init --yes
-          npm i allure-commandline --save-dev
-          mkdir allure-results
-          mv allure-results-1/* allure-results 
-
-      - name: Set up environment variable
-        id: set_date
-        run: echo "NOW=$(date +'%B_%d')" >> $GITHUB_ENV
-
-      - uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-      - name: Generate Allure Report
-        if: always()
-        run: node_modules/allure-commandline/dist/bin/allure generate allure-results -o report
-
-      - name: Deploy to external repository
-        uses: cpina/github-action-push-to-another-repository@main
-        env:
-          API_TOKEN_GITHUB: ${{ secrets.TOKEN }}
-          NOW: ${{ env.NOW }}
-        with:
-          source-directory: report
-          destination-github-username: 'Safe-QA'
-          destination-repository-name: 'report_${{ env.NOW }}'
-          user-email: 'qa+github1@trackerproducts.com'
-          target-branch: "gh-pages"
-
-  slack-notification:
-    runs-on: ubuntu-latest
-    needs: [cypress-org1, merge-and-deploy-final-report]
-    if: always() # Always send notification, even if previous jobs fail
-    steps:
-      - name: Send Slack Notification
-          uses: rtCamp/action-slack-notify@v2
-          env:
-            SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-        with:
-          slack_token: ${{ secrets.SLACK_BOT_TOKEN }}
-          slack_channel: '#auto-test-reports'
-          text: |
-            :tada: **Cypress Test Workflow Status**
-            - **Test Status**: ${{ job.status }}
-            - **Repository**: ${{ github.repository }}
-            - **Branch**: ${{ github.ref }}
-            - **Commit**: ${{ github.sha }}
-            - **Job**: ${{ job.name }}
-            - **Run**: ${{ github.run_id }}
+slack-notification:
+  runs-on: ubuntu-latest
+  needs: [cypress-org1, merge-and-deploy-final-report]
+  if: always()  # Always send notification, even if previous jobs fail
+  steps:
+    - name: Send Slack Notification
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      with:
+        slack_token: ${{ secrets.SLACK_BOT_TOKEN }}
+        slack_channel: '#auto-test-reports'
+        text: |
+          :tada: **Cypress Test Workflow Status**
+          - **Test Status**: ${{ job.status }}
+          - **Repository**: ${{ github.repository }}
+          - **Branch**: ${{ github.ref }}
+          - **Commit**: ${{ github.sha }}
+          - **Job**: ${{ job.name }}
+          - **Run**: ${{ github.run_id }}
