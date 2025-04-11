@@ -2528,7 +2528,7 @@ S.PENTEST_1 = {
     },
     taskTemplates: {
         dispoAuth: {
-            templateId: 3769,
+            templateId: 3747,
             type: 'Disposition Authorization',
             subtype: '',
             active: true,
