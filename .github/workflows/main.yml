@@ -80,6 +80,7 @@ jobs:
       - name: Send Slack Notification
         uses: rtCamp/action-slack-notify@v2
         with:
+          slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
           slack_token: ${{ secrets.SLACK_BOT_TOKEN }}
           slack_channel: '#auto-test-reports'
           text: |
