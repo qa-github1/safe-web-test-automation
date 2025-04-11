@@ -53,6 +53,7 @@
     "xvfb": "^0.4.0"
   },
   "dependencies": {
-    "@octokit/rest": "^19.0.11"
+    "@octokit/rest": "^19.0.11",
+    "dotenv": "^16.5.0"
   }
 }

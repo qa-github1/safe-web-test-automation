@@ -9,3 +9,5 @@ src/.DS_Store
 cypress/logs/*
 src/fixtures/files/*.xlsx
 main--1.yml
+.github/actions-scripts/.env
+cypress.json

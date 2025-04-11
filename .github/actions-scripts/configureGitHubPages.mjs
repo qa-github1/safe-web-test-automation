@@ -1,125 +1,96 @@
-import {Octokit} from "@octokit/rest";
+import { Octokit } from "@octokit/rest";
+import dotenv from "dotenv";
 
-// const octokit = new Octokit({
-//     auth: process.env.TOKEN,
-// });
+dotenv.config();
 
+const octokit = new Octokit({ auth: process.env.TOKEN });
 
-const octokit = new Octokit({
-    auth: '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'
-})
+const org = 'Safe-QA';
 
-//const owner = 'qa-github1'
-const owner = 'Safe-QA'
-const repo = 'safe-web-test-automation'
-const env = 'github-pages'
-const dateAndTime = new Date();
-const currentDayInMonth = new Date().getDate().toLocaleString();
-let newRepo = 'repo_' + currentDayInMonth
-const newBranch = 'branch_' + dateAndTime.toLocaleString().replace(/[&\/\\#,+()$~%.'":*?<>{}-]/g, "_").replace(/ /g, "_").slice(0, -13)
-//const newRepo = 'repo_' + dateAndTime.toLocaleString().replace(/[&\/\\#,+()$~%.'":*?<>{}-]/g,"_").replace(/ /g,"_").slice(0, -13)
-const source = {
-    branch: newBranch,
-    path: '/'
-}
+// Get current date info
+const today = new Date();
+const currentMonthName = today.toLocaleString('default', { month: 'long' }); // e.g., April
+const year = today.getFullYear();
+const currentMonthIndex = today.getMonth(); // 0-based index
 
-try {
+// Get the previous month's name and number of days
+const prevMonthIndex = (currentMonthIndex - 1 + 12) % 12; // Handles January -> December wrap
+const prevMonthName = new Date(year, prevMonthIndex).toLocaleString('default', { month: 'long' });
 
+const daysInCurrentMonth = new Date(year, currentMonthIndex + 1, 0).getDate();
+const daysInPreviousMonth = new Date(year, prevMonthIndex + 1, 0).getDate();
 
-    //// delete all repositories
-    // for (let i = 1; i < 32; i++) {
-    //     let month = i < 10 ? '0' + i : i;
-    //  //   newRepo = 'report_June_' + month
-    //     await octokit.request('DELETE /repos/{owner}/{repo}', {
-    //         owner: 'Safe-QA',
-    //         repo:  'report_June_' + month,
-    //         headers: {
-    //             'X-GitHub-Api-Version': '2022-11-28'
-    //         }
-    //     })
-    // }
+// Function to delete previous month's repos
+async function deletePreviousMonthRepos() {
+    for (let i = 1; i <= daysInPreviousMonth; i++) {
+        const day = i.toString().padStart(2, '0');
+        const repoName = `report_${prevMonthName}_${day}`;
 
+        try {
+            // Check if the repo exists first
+            const repo = await octokit.request('GET /repos/{owner}/{repo}', {
+                owner: org,
+                repo: repoName
+            });
 
-    for (let i = 1; i<32; i++){
-        let  month = i < 10? '0' + i : i;
-        newRepo = 'report_June_' + month
-
-        // make 31 repositories -- 1 repo for each day in the month
-        await octokit.request('POST /orgs/{org}/repos', {
-            org: 'Safe-QA',
-            name: newRepo,
-            description: 'Test Reports ',
-            homepage: 'https://github.com',
-            'private': false,
-            has_issues: true,
-            has_projects: true,
-            has_wiki: true,
-            auto_init: true,
-            headers: {
-                'X-GitHub-Api-Version': '2022-11-28'
+            if (repo) {
+                console.log(`🛠 Deleting repo: ${repoName}`);
+                // Delete the repo
+                await octokit.request('DELETE /repos/{owner}/{repo}', {
+                    owner: org,
+                    repo: repoName
+                });
+                console.log(`✅ Deleted: ${repoName}`);
             }
-        })
-
-        // enable GItHub pages on all newly created repositories
-          await octokit.request('POST /repos/{owner}/{repo}/pages', {
-              owner,
-              repo : newRepo,
-              source: {
-                  branch: 'main',
-                  path: '/'
-              },
-              headers: {
-                  'X-GitHub-Api-Version': '2022-11-28'
-              }
-          })
+        } catch (error) {
+            if (error.status === 404) {
+                console.log(`❌ Repo ${repoName} not found`);
+            } else {
+                console.error(`❌ Error deleting ${repoName}:`, error);
+            }
+        }
     }
-
-
-
-    //// list commits
-    // const response = await octokit.rest.repos.listCommits({
-    //      owner,
-    //      repo : newRepo,
-    //  });
-
-    //// make a new branch
-    // const response =
-    //       await octokit.request('POST /repos/{owner}/{repo}/git/refs', {
-    //           owner,
-    //           repo : newRepo,
-    //           ref: 'refs/heads/' + newBranch,
-    //           sha: response.data[0].sha,
-    //           headers: {
-    //               'X-GitHub-Api-Version': '2022-11-28'
-    //           }
-    //       })
-    //
-    //   await octokit.request('POST /repos/{owner}/{repo}/pages', {
-    //       owner,
-    //       repo : newRepo,
-    //       source: source,
-    //       headers: {
-    //           'X-GitHub-Api-Version': '2022-11-28'
-    //       }
-    //   })
-
-    // changes the settings for gitHUb pages to point to a newly created branch
-    //  const response =
-    //        await octokit.request('PUT /repos/{owner}/{repo}/pages', {
-    //            owner,
-    //            repo : newRepo,
-    //            source: source,
-    //            headers: {
-    //                'X-GitHub-Api-Version': '2022-11-28'
-    //            }
-    //        })
-
-
-    //console.log(response)
-
-} catch (error) {
-    if (error.response) {
-        console.error(`Error! Status: ${error.response.status}. Message: ${error.response.data.message}`)
-    }
-    console.error(error)
 }
+
+// Function to create current month's repos
+async function createCurrentMonthRepos() {
+    for (let i = 1; i <= daysInCurrentMonth; i++) {
+        const day = i.toString().padStart(2, '0');
+        const newRepo = `report_${currentMonthName}_${day}`;
+        console.log(`🛠 Creating repo: ${newRepo}`);
+
+        try {
+            await octokit.request('POST /orgs/{org}/repos', {
+                org: org,
+                name: newRepo,
+                description: 'Test Reports',
+                homepage: 'https://github.com',
+                private: false,
+                has_issues: true,
+                has_projects: true,
+                has_wiki: true,
+                auto_init: true,
+                headers: {
+                    'X-GitHub-Api-Version': '2022-11-28'
+                }
+            });
+
+            console.log(`✅ Created: ${newRepo}`);
+        } catch (error) {
+            if (error.response) {
+                console.error(`❌ Error creating ${newRepo}: ${error.response.status} - ${error.response.data.message}`);
+            } else {
+                console.error(`❌ Unexpected error for ${newRepo}:`, error);
+            }
+        }
+    }
+}
+
+// Main function to delete and create repos
+(async () => {
+    // Delete previous month's reports
+    await deletePreviousMonthRepos();
+
+    // Create current month's reports
+    await createCurrentMonthRepos();
+})();
