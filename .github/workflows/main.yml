@@ -77,6 +77,10 @@
       needs: [ cypress-org1, merge-and-deploy-final-report ]
       if: always()  # Always send notification, even if previous jobs fail
       steps:
+        - name: Set up environment variable
+          id: set_date
+          run: echo "NOW=$(date +'%B_%d')" >> $GITHUB_ENV
+
         - name: Send Slack Notification
           uses: rtCamp/action-slack-notify@v2
           env:
