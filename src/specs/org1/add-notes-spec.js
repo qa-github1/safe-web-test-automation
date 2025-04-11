@@ -9,7 +9,7 @@ describe('Add Notes', function () {
     let user = S.getUserData(S.userAccounts.orgAdmin);
     let note = D.getRandomNo() + '_note';
 
-    it('A.N_1. Add Note to Case', function () {
+    it.only('A.N_1. Add Note to Case', function () {
         ui.app.log_title(this);
 
         api.auth.get_tokens(user);
@@ -19,7 +19,8 @@ describe('Add Notes', function () {
         ui.app.open_newly_created_case_via_direct_link();
         ui.caseView.select_tab(C.tabs.notes)
             .enter_note_and_category(note, C.noteCategories.sensitive)
-            .verify_toast_message(C.toastMsgs.saved)
+           // .verify_toast_message(C.toastMsgs.saved)
+            .verify_toast_message('TRIGGER ERROR FOR DEBUGGING REPORTS')
             .reload_page()
             .select_tab(C.tabs.notes)
             .verify_content_of_results_table(note)
