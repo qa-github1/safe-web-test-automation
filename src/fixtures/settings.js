@@ -2526,6 +2526,32 @@ S.PENTEST_1 = {
         name: 'Cypress ReadOnly Group',
         id: 2541
     },
+    taskTemplates: {
+        dispoAuth: {
+            templateId: 3769,
+            type: 'Disposition Authorization',
+            subtype: '',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 5,
+            useDispositionAuthorizationActions: true,
+            title: 'Disposition Authorization',
+            message: 'Message-forAutomatedTests'
+        },
+        other: {
+            templateId: 3381,
+            type: 'Other',
+            subtype: '',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 10,
+            useDispositionAuthorizationActions: true,
+            title: 'Title--forAutomatedTests',
+            message: 'Message-forAutomatedTests'
+        },
+    },
     orgTag1: {tagModelId: 6548, name: 'sensitive information', color: "#ad2355", tagUsedBy: 1},
     orgTag2: {tagModelId: 6714, name: 'eligible for disposal', color: "#4b9b62", tagUsedBy: 1},
     tagA: {tagModelId: 16806, name: 'Tag_A__', color: "#4b9b62", tagUsedBy: 1},
@@ -2801,7 +2827,6 @@ S.PENTEST_2 = {
         name: 'Cypress ReadOnly Group',
         id: 2898
     },
-
     taskTemplates: {
         dispoAuth: {
             templateId: 3511,
@@ -2815,7 +2840,6 @@ S.PENTEST_2 = {
             title: 'Disposition Authorization',
             message: 'Message-forAutomatedTests'
         },
-
         other: {
             templateId: 3381,
             type: 'Other',
