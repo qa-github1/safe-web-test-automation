@@ -64,7 +64,7 @@ let
     inputFieldFoundByLabel = label => cy.contains(label).parent('div').find('input').first(),
     checkboxFieldFoundByLabel = label => cy.contains(label).parent('div').find('[type="checkbox"]').first(),
     buttonOnModal = buttonTitle => modal().children().contains(buttonTitle),
-    buttonOnSweetAlert = buttonTitle => sweetAlert().children().contains(buttonTitle),
+    buttonOnSweetAlert = buttonTitle => sweetAlert().children().contains('button', buttonTitle),
     buttonOnActiveTab = buttonTitle => active_tab().find('button').contains(buttonTitle),
     elementOnActiveTab = elementTitle => active_tab().contains(elementTitle),
     optionsDropdownUnderMenuCustomization = e => cy.get('[is-open="optionsToggle.isOpen"]'),
@@ -1175,10 +1175,8 @@ export default class BasePage {
         } else {
             cy.get('body').then($body => {
                 if ($body.find('[title="Select an item or items for which you would like to perform Action."]').length > 0) {
-                    cy.log('Clicking actionsButton')
                     actionsButton().click()
                 } else if ($body.find('[translate="GENERAL.ACTIONS"]').length > 0) {
-                    cy.log('Clicking actionsButton2')
                     actionsButton2().click()
                 } else {
                     cy.log('No action button found')
@@ -2104,7 +2102,7 @@ export default class BasePage {
         let url = `${S.base_url}/#/cases/${existingCaseId.toString()}/view`;
 
         this.open_url_and_wait_all_GET_requests_to_finish(url, `/cases/${existingCaseId.toString()}`);
-        //cy.log('Opening Case URL: ' + url);
+        this.verify_url_contains_some_value(`/#/cases/${existingCaseId.toString()}/view`)
         return this;
     };
 
@@ -2112,6 +2110,7 @@ export default class BasePage {
         let url = `${S.base_url}/#/items/${existingItemId.toString()}/view`;
         //cy.log('Opening Item URL: ' + url);
         cy.visit(url);
+        this.verify_url_contains_some_value(`/#/items/${existingItemId.toString()}/view`)
         this.wait_until_spinner_disappears()
         return this;
     };

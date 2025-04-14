@@ -539,8 +539,8 @@ describe('Item Transactions', function () {
                 ])
             .click_Actions()
             .click_View_on_first_table_row()
-         ui.itemView.verify_Item_View_page_is_open(D.newCase.caseNumber)
-             .verify_edited_and_not_edited_values('view', ["Status", "Storage Location"], D.editedItem, D.newItem)
+        ui.itemView.verify_Item_View_page_is_open(D.newCase.caseNumber)
+            .verify_edited_and_not_edited_values('view', ["Status", "Storage Location"], D.editedItem, D.newItem)
 
             //DISPOSAL
             .click_Actions()
@@ -594,32 +594,40 @@ describe('Item Transactions', function () {
 
 describe('Services', function () {
 
-    let powerUser = S.userAccounts.powerUser
+    before(function () {
+        api.auth.get_tokens(orgAdmin);
+        D.generateNewDataSet()
+        api.cases.add_new_case()
+        api.items.add_new_item()
+    });
 
-    it('Workflow Service', function () {
+    it('Reporter', function () {
+
         api.auth.get_tokens(S.userAccounts.orgAdmin);
-        D.generateNewDataSet();
-        api.workflows.delete_all_workflows();
-        ui.app.clear_gmail_inbox(S.gmailAccount);
+        cy.window().then((win) => {
+            cy.stub(win, 'open').as('windowOpen');
+        });
+        ui.app.open_newly_created_case_via_direct_link()
+            .select_tab(C.tabs.items)
+            .select_checkbox_for_all_records()
+            .click_element_on_active_tab(C.buttons.reports)
+            .click_option_on_expanded_menu(C.reports.primaryLabel4x3)
+        cy.get('@windowOpen').should('have.been.called');
+        cy.get('@windowOpen').should('have.been.calledWithMatch', /Report.*\.pdf/);
+        ui.app.verify_toast_message(C.toastMsgs.reportRunning);
+    });
 
-        ui.menu.click_Settings__Workflows();
-        ui.workflows.click_(C.buttons.add)
-            .set_up_workflow(
-                'workflow' + D.randomNo,
-                C.workflows.types.cases,
-                powerUser.name,
-                ['Email',
-                    //'Create new Task'
-                ],
-                C.workflows.executeWhen.created)
-            .click_Save()
+    it('Exporter', function () {
 
-        api.cases.add_new_case();
-        // ui.app.open_newly_created_case_via_direct_link()
-        //     .select_tab('Tasks')
-        //     .get_text_from_grid_and_save_in_local_storage('Task #', 'taskNumber', 'td')
-        ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.caseCreated, D.newCase, null, 1, false)
-    })
+        api.auth.get_tokens(S.userAccounts.orgAdmin);
+        ui.app.open_newly_created_case_via_direct_link()
+            .select_tab(C.tabs.items)
+            .select_checkbox_for_all_records()
+            .click_element_on_active_tab(C.buttons.export)
+            .click_option_on_expanded_menu('All - Excel')
+        ui.app.verify_url_contains_some_value('export-jobs')
+            .verify_content_of_first_row_in_results_table('Download')
+    });
 
     it('Importer', function () {
         let fileName = 'CaseImport_allFields_' + S.domain;
@@ -663,6 +671,31 @@ describe('Services', function () {
             .click_Save(D.newItem)
             .verify_Error_toast_message_is_NOT_visible();
         ui.itemView.verify_Item_View_page_is_open(D.newCase.caseNumber)
+    })
+
+    it('Workflow Service', function () {
+        api.auth.get_tokens(S.userAccounts.orgAdmin);
+        D.generateNewDataSet();
+        api.workflows.delete_all_workflows();
+        ui.app.clear_gmail_inbox(S.gmailAccount);
+
+        ui.menu.click_Settings__Workflows();
+        ui.workflows.click_(C.buttons.add)
+            .set_up_workflow(
+                'workflow' + D.randomNo,
+                C.workflows.types.cases,
+                powerUser.name,
+                ['Email',
+                    //'Create new Task'
+                ],
+                C.workflows.executeWhen.created)
+            .click_Save()
+
+        api.cases.add_new_case();
+        // ui.app.open_newly_created_case_via_direct_link()
+        //     .select_tab('Tasks')
+        //     .get_text_from_grid_and_save_in_local_storage('Task #', 'taskNumber', 'td')
+        ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.caseCreated, D.newCase, null, 1, false)
     })
 
     it('Dispo Auth Service', function () {

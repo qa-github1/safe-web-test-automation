@@ -207,7 +207,7 @@ describe('Workflows', function () {
             ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.itemCreated, D.newItem)
         });
 
-        it('2.2 Email notification - when Item edited - matching records with "Description equals ..."', function () {
+        it.only('2.2 Email notification - when Item edited - matching records with "Description equals ..."', function () {
 
             ui.menu.click_Settings__Workflows();
             ui.workflows.click_(C.buttons.add)
@@ -228,7 +228,7 @@ describe('Workflows', function () {
             api.org_settings.enable_all_Item_fields();
             api.cases.add_new_case()
             api.items.add_new_item()
-                .edit_newly_added_item();
+                .edit_newly_added_item(false);
             ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.itemEdited, D.editedItem)
         });
 
