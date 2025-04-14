@@ -176,6 +176,7 @@ D.getNewItemData = function (specificCaseObject, locationObject, newPerson) {
         recoveredByName: person.name,
         recoveredByGuid: person.guid,
         custodianGuid: person.guid,
+        custodian: person.fullName,
         custodianEmail: person.email,
         submittedByEmail: S.userAccounts.orgAdmin.email,
         submittedByGuid: S.userAccounts.orgAdmin.guid,

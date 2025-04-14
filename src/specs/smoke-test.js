@@ -7,6 +7,7 @@ const E = require("../fixtures/files/excel-data");
 const searchMedia = require("../pages/ui-spec");
 
 let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
+let powerUser = S.getUserData(S.userAccounts.powerUser);
 let approvedForReleaseItem = {}
 
 before(function () {
@@ -424,6 +425,163 @@ describe('Person', function () {
 
         });
 });
+describe('User', function () {
+
+    it('Add User -- Assign Permissions -- Log in with newly created user', function () {
+        ui.app.log_title(this);
+        D.generateNewDataSet();
+        D.newUser.permissionGroups = [S.selectedEnvironment.admin_permissionGroup.name]
+
+        api.auth.get_tokens(orgAdmin);
+        api.org_settings.set_required_User_forms([])
+        ui.app.clear_gmail_inbox(S.gmailAccount);
+
+        api.org_settings.update_org_settings_by_specifying_property_and_value('addUserSupervisor', true)
+        api.org_settings.update_org_settings_by_specifying_property_and_value('isDivisionsAndUnitsEnabled', true)
+        ui.menu.click_Settings__User_Admin()
+            .click_button(C.buttons.add)
+        ui.userAdmin.enter_all_values(D.newUser)
+            .scroll_and_click(C.buttons.ok)
+            .verify_toast_message(C.toastMsgs.saved)
+            .select_permission_group_per_office(S.selectedEnvironment.admin_permissionGroup.name, D.newUser.office)
+            .click_button(C.buttons.save)
+            .verify_toast_message(C.toastMsgs.saved)
+            .search_for_user(D.newUser.email)
+        ui.userAdmin.verify_user_data_on_grid(D.newUser)
+        ui.menu.click_Log_Out()
+
+        ui.userAdmin.verify_email_content_(D.newUser.email, C.users.emailTemplates.welcomeToSafe, D.newUser, ' ')
+            .open_verification_link_from_email()
+            .set_password(D.newUser.password)
+            .scroll_and_click(C.buttons.setPassword)
+            .verify_confirmation_message_for_setting_Password(C.users.setPassword.confirmationMsg)
+            .click_button(C.buttons.login);
+        ui.login.enter_credentials(D.newUser.email, D.newUser.password)
+            .click_Login_button()
+            .verify_text_is_present_on_main_container(C.labels.dashboard.title)
+        ui.userAdmin.save_current_user_profile_to_local_storage()
+
+        api.auth.get_tokens(orgAdmin);
+        api.users.deactivate_previously_created_user();
+    });
+
+});
+describe('Item Transactions', function () {
+
+    it('Verify all transactions, data changes and enabled/disabled actions based on Item status', function () {
+        ui.app.log_title(this);
+
+        api.auth.get_tokens(orgAdmin);
+        api.org_settings.enable_all_Item_fields(C.itemFields.dispositionStatus);
+        D.generateNewDataSet()
+        api.cases.add_new_case()
+        api.items.add_new_item();
+        api.locations.add_storage_location('Box_2')
+
+        ui.app.open_newly_created_item_via_direct_link();
+        ui.itemView
+            //CHECK OUT
+            .click_Actions()
+            .perform_Item_Check_Out_transaction(orgAdmin, C.checkoutReasons.lab, 'test-note', D.currentDate)
+            .verify_edited_and_not_edited_values('view', ["Status", "Storage Location"], D.editedItem, D.newItem)
+            .click_Actions()
+            .verify_enabled_and_disabled_options_under_Actions_dropdown(
+                [
+                    'Check Item In',
+                    'Transfer Item',
+                    'Dispose Item',
+                    'Duplicate',
+                    'Split',
+                    'Manage Cases'],
+                [
+                    'Check Item Out',
+                    'Move Item',
+                    'Undispose Item',
+                ])
+
+            //TRANSFER
+            .perform_Item_Transfer_transaction(powerUser, orgAdmin, 'test-note')
+            .verify_edited_and_not_edited_values('view', ["Custodian"], D.editedItem, D.newItem)
+            .click_Actions()
+            .verify_enabled_and_disabled_options_under_Actions_dropdown(
+                [
+                    'Check Item In',
+                    'Transfer Item',
+                    'Dispose Item',
+                    'Duplicate',
+                    'Split',
+                    'Manage Cases'],
+                [
+                    'Check Item Out',
+                    'Move Item',
+                    'Undispose Item',
+                ])
+
+        //CHECK IN
+        ui.searchItem
+            .run_search_by_Item_Description(D.newItem.description)
+            .select_row_on_the_grid_that_contains_specific_value(D.newItem.description)
+            .click_Actions()
+            .perform_Item_CheckIn_transaction(powerUser, false, D['newLocationBox_2'][0].name, 'test-note')
+            .click_Actions()
+            .verify_enabled_and_disabled_options_under_Actions_dropdown_on_Search_Page(
+                [
+                    'Check Item Out',
+                    'Move Item',
+                    'Dispose Item',
+                    'Duplicate',
+                    'Split',
+                    'Manage Cases'],
+                [
+                    'Check Item In',
+                    'Transfer Item',
+                    'Undispose Item'
+                ])
+            .click_Actions()
+            .click_View_on_first_table_row()
+         ui.itemView.verify_Item_View_page_is_open(D.newCase.caseNumber)
+             .verify_edited_and_not_edited_values('view', ["Status", "Storage Location"], D.editedItem, D.newItem)
+
+            //DISPOSAL
+            .click_Actions()
+            .perform_Item_Disposal_transaction(powerUser, C.disposalMethods.auctioned, 'test-note')
+            .verify_edited_and_not_edited_values('view', ["Status", "Storage Location"], D.editedItem, D.newItem)
+            .click_Actions()
+            .verify_enabled_and_disabled_options_under_Actions_dropdown(
+                [
+                    'Undispose Item',
+                    'Duplicate',
+                    'Manage Cases'],
+                [
+                    'Check Item In',
+                    'Check Item Out',
+                    'Move Item',
+                    'Transfer Item',
+                    'Dispose Item',
+                    // 'Split' // uncomment this when bugs gets fixed -- card  #14841 /#20
+                ])
+
+            //UNDISPOSAL
+            .perform_Item_Undisposal_transaction(powerUser, true, D['newLocationBox_2'][0].name, 'test-note')
+            .verify_edited_and_not_edited_values('view', ["Status", "Storage Location"], D.editedItem, D.newItem)
+            .click_Actions()
+            .verify_enabled_and_disabled_options_under_Actions_dropdown([
+                'Check Item Out',
+                'Move Item',
+                'Dispose Item',
+                'Duplicate',
+                'Split',
+                'Manage Cases'], [
+                'Check Item In',
+                'Transfer Item',
+                'Undispose Item'
+            ])
+
+        api.locations.get_and_save_any_location_data_to_local_storage('root')
+        api.locations.move_location('Box_2', 'root')
+
+    });
+});
 
 // describe('Task', function () {
 //
@@ -545,7 +703,7 @@ describe('Services', function () {
             .disable_large_view()
             .verify_text_is_present_and_check_X_more_times_after_waiting_for_Y_seconds('Approved for Disposal', 2, 5, true, true)
         ui.taskView.verify_Disposition_Statuses_on_the_grid([
-                [[...Array(51).keys()], 'Approved for Disposal']])
+            [[...Array(51).keys()], 'Approved for Disposal']])
     });
 
     it('Auto Reports - Release Letters', function () {

@@ -258,6 +258,17 @@ exports.generate_request_payload_for_setting_visible_and_required_Item_fields = 
         )
     }
 
+    if (shouldFieldBeDisabled(fieldsToDisable, C.itemFields.dispositionStatus)) {
+        body.push(
+            {
+                "orgFieldId": S.selectedEnvironment.fieldIds.item.dispositionAuthorizationStatus,
+                "entityType": 1,
+                "name": "DISPO_AUTH_STATUS",
+                "recordType": 1
+            }
+        )
+    }
+
     if (shouldFieldBeDisabled(fieldsToDisable, C.itemFields.publicFacingDescription)) {
         body.push(
             {
@@ -406,6 +417,12 @@ exports.generate_request_payload_for_disabling_Item_fields = function (fieldsToE
             "orgFieldId": S.selectedEnvironment.fieldIds.item.barcodes,
             "entityType": 1,
             "name": "ITEM_BARCODES",
+            "recordType": 1
+        },
+        {
+            "orgFieldId": S.selectedEnvironment.fieldIds.item.dispositionAuthorizationStatus,
+            "entityType": 1,
+            "name": "DISPO_AUTH_STATUS",
             "recordType": 1
         },
         {
