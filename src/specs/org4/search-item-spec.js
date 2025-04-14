@@ -9,6 +9,8 @@ let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
 describe('Search Item', function () {
 
     let user = S.getUserData(S.userAccounts.orgAdmin);
+    let equals = C.searchCriteria.inputFields.equals;
+
 
     before(function () {
         api.auth.get_tokens(user);
@@ -45,7 +47,7 @@ describe('Search Item', function () {
             api.items.add_new_item(true);
 
             ui.menu.click_Search__Item();
-            ui.searchItem.enter_Description(itemDescription)
+            ui.searchItem.enter_Description(equals, itemDescription)
                 .enter_Created_By(user.email)
                 .click_button(C.buttons.search)
                 .verify_content_of_first_row_in_results_table(itemDescription)
@@ -56,10 +58,11 @@ describe('Search Item', function () {
             ui.app.log_title(this);
             let currentDate = ui.app.getCurrentDate();
             let itemDescription = D.newItem.description;
+            let exactly = C.searchCriteria.dates.exactly
 
             ui.menu.click_Search__Item();
-            ui.searchItem.enter_Description(itemDescription)
-                .enter_Created_Date(currentDate)
+            ui.searchItem.enter_Description(equals, itemDescription)
+                .enter_Created_Date(currentDate, exactly)
                 .click_button(C.buttons.search)
                 .verify_content_of_first_row_in_results_table(itemDescription);
         });
@@ -70,7 +73,7 @@ describe('Search Item', function () {
             let itemDescription = D.newItem.description;
 
             ui.menu.click_Search__Item();
-            ui.searchItem.enter_Description(itemDescription)
+            ui.searchItem.enter_Description(equals, itemDescription)
                 .select_Custody_Reason(D.newItem.custodyReason)
                 .click_button(C.buttons.search)
                 .verify_content_of_first_row_in_results_table(itemDescription);
@@ -81,7 +84,7 @@ describe('Search Item', function () {
             let itemDescription = D.newItem.description;
 
             ui.menu.click_Search__Item();
-            ui.searchItem.enter_Description(itemDescription)
+            ui.searchItem.enter_Description(equals, itemDescription)
                 .enter_Recovery_Date(D.newItem.recoveryDate)
                 .click_button(C.buttons.search)
                 .verify_content_of_first_row_in_results_table(itemDescription);
@@ -92,7 +95,7 @@ describe('Search Item', function () {
             let itemDescription = D.newItem.description;
 
             ui.menu.click_Search__Item();
-            ui.searchItem.enter_Description(itemDescription)
+            ui.searchItem.enter_Description(equals, itemDescription)
                 .enter_Recovered_At(D.newItem.recoveryLocation)
                 .click_button(C.buttons.search)
                 .verify_content_of_first_row_in_results_table(itemDescription);
@@ -103,7 +106,7 @@ describe('Search Item', function () {
             let itemDescription = D.newItem.description;
 
             ui.menu.click_Search__Item();
-            ui.searchItem.enter_Description(itemDescription)
+            ui.searchItem.enter_Description(equals, itemDescription)
                 .select_Status(D.newItem.status)
                 .click_button(C.buttons.search)
                 .verify_content_of_first_row_in_results_table(itemDescription);
@@ -114,7 +117,7 @@ describe('Search Item', function () {
             let itemDescription = D.newItem.description;
 
             ui.menu.click_Search__Item();
-            ui.searchItem.enter_Description(itemDescription)
+            ui.searchItem.enter_Description(equals, itemDescription)
                 .enter_Recovered_By(D.newItem.recoveredBy)
                 .click_button(C.buttons.search)
                 .verify_content_of_first_row_in_results_table(itemDescription);
@@ -125,7 +128,7 @@ describe('Search Item', function () {
             let itemDescription = D.newItem.description;
 
             ui.menu.click_Search__Item();
-            ui.searchItem.enter_Description(itemDescription)
+            ui.searchItem.enter_Description(equals, itemDescription)
                 .enter_Storage_Location(D.newItem.location)
                 .click_button(C.buttons.search)
                 .verify_content_of_first_row_in_results_table(itemDescription);
@@ -136,7 +139,7 @@ describe('Search Item', function () {
             let itemDescription = D.newItem.description;
 
             ui.menu.click_Search__Item();
-            ui.searchItem.enter_Description(itemDescription)
+            ui.searchItem.enter_Description(equals, itemDescription)
                 .select_Category(D.newItem.category)
                 .click_button(C.buttons.search)
                 .verify_content_of_first_row_in_results_table(itemDescription);
@@ -147,7 +150,7 @@ describe('Search Item', function () {
             let itemDescription = D.newItem.description;
 
             ui.menu.click_Search__Item();
-            ui.searchItem.enter_Description(itemDescription)
+            ui.searchItem.enter_Description(equals, itemDescription)
                 .enter_Make(D.newItem.make)
                 .click_button(C.buttons.search)
                 .verify_content_of_first_row_in_results_table(itemDescription);
@@ -158,7 +161,7 @@ describe('Search Item', function () {
             let itemDescription = D.newItem.description;
 
             ui.menu.click_Search__Item();
-            ui.searchItem.enter_Description(itemDescription)
+            ui.searchItem.enter_Description(equals, itemDescription)
                 .enter_Model(D.newItem.model)
                 .click_button(C.buttons.search)
                 .verify_content_of_first_row_in_results_table(itemDescription);
@@ -169,7 +172,7 @@ describe('Search Item', function () {
             let itemDescription = D.newItem.description;
 
             ui.menu.click_Search__Item();
-            ui.searchItem.enter_Description(itemDescription)
+            ui.searchItem.enter_Description(equals, itemDescription)
                 .enter_Serial_Number(D.newItem.serialNumber)
                 .click_button(C.buttons.search)
                 .verify_content_of_first_row_in_results_table(itemDescription);
