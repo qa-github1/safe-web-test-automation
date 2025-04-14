@@ -222,6 +222,7 @@ export default class TaskViewPage extends BaseViewPage {
 
     verify_Dispo_Auth_Job_Status(status) {
         this.verify_text(dispoAuthJobStatus, status)
+        this.pause(1)
         return this;
     };
 

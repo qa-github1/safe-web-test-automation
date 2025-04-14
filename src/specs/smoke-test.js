@@ -491,9 +491,9 @@ describe('Services', function () {
 
         ui.caseView.verify_Case_View_page_is_open(D.newCase.caseNumber)
             .click_button_on_active_tab(C.buttons.edit)
-            .verify_values_on_Edit_form(D.newCase)
+            .verify_values_on_Edit_form(D.case1)
             .open_last_history_record()
-            .verify_all_values_on_history(D.newCase)
+            .verify_all_values_on_history(D.case1)
             .click_button_on_modal(C.buttons.cancel)
             .verify_title_on_active_tab(1)
 
@@ -539,11 +539,10 @@ describe('Services', function () {
             .click('Submit For Disposition')
             .verify_toast_message('Processing...')
             .verify_Dispo_Auth_Job_Status('Complete')
-            .wait_until_spinner_disappears()
-            .disable_large_view()
             .reload_page()
             //.verify_text_is_present_on_main_container('Closed')
             .select_tab('Items')
+            .disable_large_view()
             .verify_text_is_present_and_check_X_more_times_after_waiting_for_Y_seconds('Approved for Disposal', 2, 5, true, true)
         ui.taskView.verify_Disposition_Statuses_on_the_grid([
                 [[...Array(51).keys()], 'Approved for Disposal']])
@@ -599,7 +598,7 @@ describe('Services', function () {
                             .verify_text_is_present_on_main_container('Container Move Jobs')
                             .verify_content_of_first_row_in_results_table([containerName, loc2Name, 'Complete'])
                         ui.menu.click_Scan()
-                        ui.scan.close_Item_In_Scan_List_alert()
+                        ui.scan.close_Item_In_Scan_List_alert(false)
                             .scan_barcode(item1.barcode)
                             .click_button(C.buttons.view)
                             .verify_text_is_present_on_main_container('Basic Info')

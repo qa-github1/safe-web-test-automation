@@ -22,6 +22,7 @@ export default class ScanPage extends BasePage {
     };
 
     scan_barcode(value) {
+        this.wait_until_spinner_disappears()
         this.enterValue(barcodeInput, value)
         this.press_ENTER(barcodeInput)
         return this;
