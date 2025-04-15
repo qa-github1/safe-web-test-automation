@@ -49,7 +49,6 @@ jobs:
           fi
 
           rm -rf *
-
           cp -r ../report/allure-results-${{ matrix.org_number }}/* ./
 
           git add .
@@ -82,14 +81,19 @@ jobs:
 
       - name: Merge report-1 into allure-results
         run: |
-          cd merged-repo
-          git fetch origin report-1
-          git checkout -b temp-report-1 origin/report-1
+          mkdir temp-clone
+          cd temp-clone
+          
+          git clone https://x-access-token:${{ secrets.TOKEN }}@github.com/Safe-QA/report_${{ env.NOW }}.git .
+          git checkout report-1
 
           mkdir -p ../merged-repo/allure-results/org-1
           cp -r allure-results/* ../merged-repo/allure-results/org-1/
 
-          cd ../merged-repo
+          cd ..
+          rm -rf temp-clone
+
+          cd merged-repo
           git checkout gh-pages
           git add allure-results
           git commit -m "Add report-1 to allure-results/org-1" || echo "No changes"
@@ -97,14 +101,19 @@ jobs:
 
       - name: Merge report-2 into allure-results
         run: |
-          cd merged-repo
-          git fetch origin report-2
-          git checkout -b temp-report-2 origin/report-2
+          mkdir temp-clone
+          cd temp-clone
+          
+          git clone https://x-access-token:${{ secrets.TOKEN }}@github.com/Safe-QA/report_${{ env.NOW }}.git .
+          git checkout report-2
 
           mkdir -p ../merged-repo/allure-results/org-2
           cp -r allure-results/* ../merged-repo/allure-results/org-2/
 
-          cd ../merged-repo
+          cd ..
+          rm -rf temp-clone
+
+          cd merged-repo
           git checkout gh-pages
           git add allure-results
           git commit -m "Add report-2 to allure-results/org-2" || echo "No changes"
