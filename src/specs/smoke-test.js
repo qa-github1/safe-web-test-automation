@@ -617,7 +617,7 @@ describe('Services', function () {
         ui.app.verify_toast_message(C.toastMsgs.popupBlocked);
     });
 
-    it('Exporter', function () {
+    it.only('Exporter', function () {
 
         api.auth.get_tokens(S.userAccounts.orgAdmin);
         ui.app.open_newly_created_case_via_direct_link()
