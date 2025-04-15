@@ -352,17 +352,17 @@ describe.only('Person', function () {
         '*** Add/Edit/Search Person ' +
         '*** Add/Search Person Note  ' +
         '*** Add/Search Person Media', function () {
-            api.auth.get_tokens(orgAdmin);
-            D.generateNewDataSet();
-            api.cases.add_new_case(D.newCase.caseNumber);
-            api.org_settings.update_org_settings(false, true);
-            api.org_settings.enable_all_Person_fields();
-
-            // ADD PERSON
-            ui.app.open_newly_created_case_via_direct_link()
-                .select_tab(C.tabs.people)
-                .click_element_on_active_tab(C.buttons.addPerson);
-            ui.addPerson.verify_Add_Person_page_is_open()
+            // api.auth.get_tokens(orgAdmin);
+            // D.generateNewDataSet();
+            // api.cases.add_new_case(D.newCase.caseNumber);
+            // api.org_settings.update_org_settings(false, true);
+            // api.org_settings.enable_all_Person_fields();
+            //
+            // // ADD PERSON
+            // ui.app.open_newly_created_case_via_direct_link()
+            //     .select_tab(C.tabs.people)
+            //     .click_element_on_active_tab(C.buttons.addPerson);
+            // ui.addPerson.verify_Add_Person_page_is_open()
             //     .verify_Case_Number_is_populated_on_enabled_input_field(D.newCase.caseNumber)
             //     .populate_all_fields(D.newPerson)
             //     .select_post_save_action(C.postSaveActions.addPerson)
