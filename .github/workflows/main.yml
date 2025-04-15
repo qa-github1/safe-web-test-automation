@@ -35,33 +35,32 @@ jobs:
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "github-actions"
+
           REPORT_BRANCH=report-${{ matrix.org_number }}
           NOW=$(date +'%B_%d')
 
-          # Clone main repo
-          git clone --single-branch --branch main https://x-access-token:${{ secrets.TOKEN }}@github.com/${{ github.repository }}.git main-repo
-
-          # Clone external repo
+          # Clone the external repo without checking out any branch yet
           git clone https://x-access-token:${{ secrets.TOKEN }}@github.com/Safe-QA/report_${NOW}.git external-repo
           cd external-repo
 
-          # Fetch all branches to check existence
-          git fetch origin
-
-          # Check if branch exists on remote
-          if git ls-remote --exit-code --heads origin $REPORT_BRANCH; then
+          # Create the branch if it doesn't exist, or check it out if it does
+          if git ls-remote --heads origin $REPORT_BRANCH | grep $REPORT_BRANCH; then
             git checkout $REPORT_BRANCH
           else
             git checkout -b $REPORT_BRANCH
-            git push origin $REPORT_BRANCH
           fi
 
-          # Deploy report contents
+          # Clean previous contents of the branch (optional: if you want to fully replace)
           rm -rf *
-          cp -r ../main-repo/report/allure-results-${{ matrix.org_number }}/* .
+
+          # Copy the report folder from current repo
+          cp -r ../report/allure-results-${{ matrix.org_number }}/* ./
+
           git add .
-          git commit -m "Allure results for org-${{ matrix.org_number }}"
+          git commit -m "Allure results for org-${{ matrix.org_number }}" || echo "No changes to commit"
           git push origin $REPORT_BRANCH
+
+
 
   merge-and-deploy-final-report:
     runs-on: ubuntu-latest
