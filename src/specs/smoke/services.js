@@ -9,13 +9,13 @@ let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
 let powerUser = S.getUserData(S.userAccounts.powerUser);
 let approvedForReleaseItem = {}
 
-before(function () {
-    api.auth.get_tokens(orgAdmin);
-    api.org_settings.enable_all_Case_fields();
-    api.org_settings.enable_all_Item_fields();
-    api.org_settings.enable_all_Person_fields();
-    api.org_settings.update_org_settings(false, true);
-});
+// before(function () {
+//     api.auth.get_tokens(orgAdmin);
+//     api.org_settings.enable_all_Case_fields();
+//     api.org_settings.enable_all_Item_fields();
+//     api.org_settings.enable_all_Person_fields();
+//     api.org_settings.update_org_settings(false, true);
+// });
 
 describe('Services', function () {
 
