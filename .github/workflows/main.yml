@@ -17,8 +17,6 @@ jobs:
         spec_group:
           - src/specs/smoke/main-actions.js
           - src/specs/smoke/services.js
-        container: [1, 2] # Adjust the number of parallel containers
-
     steps:
       - uses: actions/checkout@v2
 
