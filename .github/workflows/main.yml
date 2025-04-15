@@ -4,12 +4,26 @@ on: [push]
 permissions: write-all
 
 jobs:
+  clean-gh-pages:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clean gh-pages branch in this repository
+        run: |
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "github-actions"
+          git clone --branch gh-pages https://x-access-token:${{ secrets.TOKEN }}@github.com/${{ github.repository }}.git temp-gh-pages
+          cd temp-gh-pages
+          git rm -r * || echo "Nothing to delete"
+          git commit -am "Clean gh-pages before redeploy"
+          git push origin gh-pages
+
   cypress-tests:
     runs-on: ubuntu-latest
     timeout-minutes: 250
     container:
       image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
       options: --user 1001
+    needs: clean-gh-pages
     strategy:
       fail-fast: false
       matrix:
@@ -30,17 +44,6 @@ jobs:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           CI: true
 
-      - name: Clean gh-pages branch in this repository
-        run: |
-          git config --global user.email "github-actions@github.com"
-          git config --global user.name "github-actions"
-          git clone --branch gh-pages https://x-access-token:${{ secrets.TOKEN }}@github.com/${{ github.repository }}.git temp-gh-pages
-          cd temp-gh-pages
-          git rm -r * || echo "Nothing to delete"
-          git commit -am "Clean gh-pages before redeploy"
-          git push origin gh-pages
-        if: always()
-
       - name: Deploy report to temp-reports branch
         if: always()
         uses: peaceiris/actions-gh-pages@v2
@@ -50,7 +53,6 @@ jobs:
           PERSONAL_TOKEN: ${{ secrets.TOKEN }}
           PUBLISH_BRANCH: gh-pages
           PUBLISH_DIR: allure-results-${{ matrix.org_number }}
-
 
   merge-and-deploy-final-report:
     runs-on: ubuntu-latest
@@ -76,13 +78,12 @@ jobs:
         id: set_date
         run: echo "NOW=$(date +'%B_%d')" >> $GITHUB_ENV
 
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@v2
         with:
           distribution: 'temurin'
           java-version: '17'
 
       - name: Generate Allure Report
-        if: always()
         run: node_modules/allure-commandline/dist/bin/allure generate allure-results -o report
 
       - name: Deploy to external repository
