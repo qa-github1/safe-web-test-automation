@@ -18,7 +18,7 @@ before(function () {
     api.org_settings.update_org_settings(false, true);
 });
 
-describe.only('Dispo Auth', function () {
+describe('Dispo Auth', function () {
 
     it('All Dispo Actions for 8 items -- no service involved', function () {
 
@@ -601,7 +601,7 @@ describe('Services', function () {
         api.items.add_new_item()
     });
 
-    it('Reporter', function () {
+    it.only('Reporter', function () {
 
         api.auth.get_tokens(S.userAccounts.orgAdmin);
         cy.window().then((win) => {
