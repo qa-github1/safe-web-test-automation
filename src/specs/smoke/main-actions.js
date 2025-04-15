@@ -346,7 +346,7 @@ describe('Item', function () {
             })
         });
 });
-describe.only('Person', function () {
+describe('Person', function () {
 
     it(
         '*** Add/Edit/Search Person ' +
