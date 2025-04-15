@@ -117,14 +117,13 @@ jobs:
 
       - name: Generate Final Allure Report
         run: |
-          cd merged-repo
-          mkdir -p merged-results
-          cp -r ./* merged-results/ || echo "No individual reports to merge"
-          allure generate merged-results -o . --clean
+          mkdir -p allure-results
+          mv *.json allure-results/
+          allure generate allure-results -o allure-report
 
       - name: Push Final Allure Report
         run: |
-          cd merged-repo
+          cd allure-report
           git add .
           git commit -m "Final Allure Report generated from all org reports" || echo "No changes"
           git push origin gh-pages
