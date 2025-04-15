@@ -119,7 +119,7 @@ jobs:
         run: |
           cd merged-repo
           mkdir -p merged-results
-          cp -r allure-results/org-*/* merged-results/ || echo "No individual reports to merge"
+          cp -r ./* merged-results/ || echo "No individual reports to merge"
           allure generate merged-results -o . --clean
 
       - name: Push Final Allure Report
