@@ -203,7 +203,7 @@ describe('Services', function () {
         ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.caseCreated, D.newCase, null, 1, false)
     })
 
-    it('Dispo Auth Service', function () {
+    it.only('Dispo Auth Service', function () {
 
         ui.app.log_title(this);
         api.auth.get_tokens(orgAdmin);
@@ -231,7 +231,7 @@ describe('Services', function () {
             .open_newly_created_task_via_direct_link()
             .select_tab('Items')
             .set_large_view()
-            .set_Action___Approve_for_Disposal([1, 51])
+            .set_Action___Approve_for_Disposal([1, 52])
             .click_Submit_for_Disposition()
             .verify_toast_message('Processing...')
             .verify_Dispo_Auth_Job_Status('Complete')

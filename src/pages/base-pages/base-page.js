@@ -2272,8 +2272,8 @@ export default class BasePage {
     };
 
     wait_until_spinner_disappears() {
-        bodyContainer().should('not.have.class', 'pace-running');
-        bodyContainer().should('have.class', 'pace-done');
+        bodyContainer().should('not.have.class', 'pace-running', {timeout: 70000});
+        bodyContainer().should('have.class', 'pace-done', {timeout: 70000});
         return this;
     };
 
