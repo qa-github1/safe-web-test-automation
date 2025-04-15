@@ -13,8 +13,9 @@ jobs:
           git config --global user.name "github-actions"
           git clone --branch gh-pages https://x-access-token:${{ secrets.TOKEN }}@github.com/${{ github.repository }}.git temp-gh-pages
           cd temp-gh-pages
-          # Only remove files if the directory isn't empty
-          if [ "$(ls -A)" ]; then
+          # Check if any files exist in the gh-pages branch
+          if git ls-files | grep -q .; then
+            # Files exist, remove them
             git rm -r * || echo "Nothing to delete"
             git commit -am "Clean gh-pages before redeploy"
             git push origin gh-pages
