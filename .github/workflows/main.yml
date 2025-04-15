@@ -49,7 +49,9 @@ jobs:
           fi
 
           rm -rf *
-          cp -r ../report/allure-results-${{ matrix.org_number }}/* ./
+
+          mkdir -p allure-results
+          cp -r ../report/allure-results-${{ matrix.org_number }}/* ./allure-results/
 
           git add .
           git commit -m "Allure results for org-${{ matrix.org_number }}" || echo "No changes to commit"
@@ -88,7 +90,7 @@ jobs:
           git checkout report-1
 
           mkdir -p ../merged-repo/allure-results/org-1
-          cp -r allure-results/* ../merged-repo/allure-results/org-1/
+          cp -r * ../merged-repo/allure-results/org-1/
 
           cd ..
           rm -rf temp-clone
@@ -108,7 +110,7 @@ jobs:
           git checkout report-2
 
           mkdir -p ../merged-repo/allure-results/org-2
-          cp -r allure-results/* ../merged-repo/allure-results/org-2/
+          cp -r * ../merged-repo/allure-results/org-2/
 
           cd ..
           rm -rf temp-clone
