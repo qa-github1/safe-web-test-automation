@@ -14,9 +14,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        spec_group:
-          - src/specs/smoke/main-actions.js
-          - src/specs/smoke/services.js
+        include:
+          - spec_group: src/specs/smoke/main-actions.js
+            org_number: 1
+          - spec_group: src/specs/smoke/services.js
+            org_number: 2
     steps:
       - uses: actions/checkout@v2
 
@@ -24,7 +26,7 @@ jobs:
         run: npm ci
 
       - name: Run Cypress tests in parallel
-        run: npm run dev-smoke-test -- --spec ${{ matrix.spec_group }}
+        run: npm run dev-smoke-test -- --spec ${{ matrix.spec_group }} --env environment=dev,orgNum==${{ matrix.org_number }}
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           CI: true
