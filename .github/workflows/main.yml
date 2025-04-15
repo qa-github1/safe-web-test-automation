@@ -117,8 +117,17 @@ jobs:
 
       - name: Generate Final Allure Report
         run: |
+          # Ensure allure-results directory exists
           mkdir -p allure-results
-          mv *.json allure-results/
+
+          # List files in the current directory to debug
+          echo "Listing files in the current directory:"
+          ls -l
+
+          # Move .json files to allure-results (if they exist)
+          mv *.json allure-results/ || echo "No .json files to move"
+
+          # Generate Allure report
           allure generate allure-results -o allure-report
 
       - name: Push Final Allure Report
