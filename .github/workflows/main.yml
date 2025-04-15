@@ -39,23 +39,17 @@ jobs:
           REPORT_BRANCH=report-${{ matrix.org_number }}
           NOW=$(date +'%B_%d')
 
-          # Clone the external repo without checking out any branch yet
           git clone https://x-access-token:${{ secrets.TOKEN }}@github.com/Safe-QA/report_${NOW}.git external-repo
           cd external-repo
 
-          # Create the branch if it doesn't exist, or check it out if it does
           if git ls-remote --heads origin $REPORT_BRANCH | grep $REPORT_BRANCH; then
             git checkout $REPORT_BRANCH
           else
             git checkout -b $REPORT_BRANCH
           fi
 
-          # Clean previous contents of the branch (optional: if you want to fully replace)
           rm -rf *
-
-          # Copy the report folder from current repo
           cp -r ../report/allure-results-${{ matrix.org_number }}/* ./
-
           git add .
           git commit -m "Allure results for org-${{ matrix.org_number }}" || echo "No changes to commit"
           git push origin $REPORT_BRANCH
@@ -66,30 +60,65 @@ jobs:
     needs: [cypress-tests]
     if: always()
     steps:
-      - name: Set up environment variable
+      - name: Set environment variable
         id: set_date
         run: echo "NOW=$(date +'%B_%d')" >> $GITHUB_ENV
 
-      - name: Clone and merge report branches in external repo
+      - name: Clone and prepare gh-pages
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "github-actions"
 
-          # Clone the external repository
           git clone https://x-access-token:${{ secrets.TOKEN }}@github.com/Safe-QA/report_${{ env.NOW }}.git merged-repo
           cd merged-repo
-
-          # Checkout the gh-pages branch
           git checkout gh-pages
 
-          # Fetch and merge report branches (allow unrelated histories)
+          # Clean up gh-pages and prepare allure-results folder
+          rm -rf *
+          mkdir -p allure-results
+          git add .
+          git commit -m "Clean up gh-pages before merge" || echo "Nothing to commit"
+          git push origin gh-pages
+
+      - name: Merge report-1 into allure-results
+        run: |
+          cd merged-repo
           git fetch origin report-1
-          git merge origin/report-1 --allow-unrelated-histories --no-ff -m "Merge report-1 into gh-pages"
+          git checkout report-1
+          mkdir -p ../merged-repo/allure-results
+          cp -r * ../merged-repo/allure-results/
+          cd ../merged-repo
+          git checkout gh-pages
+          git add allure-results
+          git commit -m "Merged report-1 into allure-results" || echo "No changes"
+          git push origin gh-pages
 
+      - name: Merge report-2 into allure-results
+        run: |
+          cd merged-repo
           git fetch origin report-2
-          git merge origin/report-2 --allow-unrelated-histories --no-ff -m "Merge report-2 into gh-pages"
+          git checkout report-2
+          mkdir -p ../merged-repo/allure-results
+          cp -r * ../merged-repo/allure-results/
+          cd ../merged-repo
+          git checkout gh-pages
+          git add allure-results
+          git commit -m "Merged report-2 into allure-results" || echo "No changes"
+          git push origin gh-pages
 
-          # Push changes to gh-pages
+      - name: Install Allure CLI
+        run: npm install -g allure-commandline
+
+      - name: Generate Allure Report
+        run: |
+          cd merged-repo
+          allure generate allure-results -o .
+
+      - name: Push final Allure Report to gh-pages
+        run: |
+          cd merged-repo
+          git add .
+          git commit -m "Generated final Allure report" || echo "No changes"
           git push origin gh-pages
 
   slack-notification:
