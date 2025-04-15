@@ -60,7 +60,7 @@ jobs:
           # Create the report-${{ matrix.org_number }} branch if it doesn't exist
           git checkout -b report-${{ matrix.org_number }} || git checkout report-${{ matrix.org_number }}
           # Deploy the results
-          cp -r allure-results-${{ matrix.org_number }}/* ./
+          cp -r report/allure-results-${{ matrix.org_number }}/* ./
           git add .
           git commit -m "Deploy allure results for org-${{ matrix.org_number }}"
           git push origin report-${{ matrix.org_number }}
