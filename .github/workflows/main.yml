@@ -19,6 +19,7 @@ jobs:
             org_number: 1
           - spec_group: src/specs/smoke/services.js
             org_number: 2
+
     steps:
       - uses: actions/checkout@v2
 
@@ -31,55 +32,50 @@ jobs:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           CI: true
 
-      - name: Clean gh-pages branch in this repository
-        run: |
-          git config --global user.email "github-actions@github.com"
-          git config --global user.name "github-actions"
-          git clone --branch gh-pages https://x-access-token:${{ secrets.TOKEN }}@github.com/${{ github.repository }}.git temp-gh-pages
-          cd temp-gh-pages
-          git rm -r * || echo "Nothing to delete"
-          git commit -am "Clean gh-pages before redeploy"
-          git push origin gh-pages
+      - name: Upload Allure Results
         if: always()
-
-      - name: Deploy report to temp-reports branch
-        if: always()
-        uses: peaceiris/actions-gh-pages@v2
+        uses: actions/upload-artifact@v3
         with:
-          keepFiles: true
-        env:
-          PERSONAL_TOKEN: ${{ secrets.TOKEN }}
-          PUBLISH_BRANCH: gh-pages
-          PUBLISH_DIR: report
+          name: allure-results-${{ matrix.org_number }}
+          path: allure-results
+
 
   merge-and-deploy-final-report:
     runs-on: ubuntu-latest
     timeout-minutes: 250
     needs: [cypress-tests]
     if: always()
-    strategy:
-      fail-fast: false
     steps:
       - uses: actions/checkout@v2
         with:
           ref: gh-pages
 
-      - name: Install dependencies and move allure results
-        run: |
-          npm init --yes
-          npm i allure-commandline --save-dev
-          mkdir allure-results
-          [ -d "allure-results-1" ] && mv allure-results-1/* allure-results || echo "No allure-results-1 directory"
-          [ -d "allure-results-2" ] && mv allure-results-2/* allure-results || echo "No allure-results-2 directory"
-
       - name: Set up environment variable
         id: set_date
         run: echo "NOW=$(date +'%B_%d')" >> $GITHUB_ENV
+
+      - name: Download Allure Results Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: artifacts
+
+      - name: Install Allure CLI
+        run: |
+          npm init --yes
+          npm i allure-commandline --save-dev
+
+      - name: Combine Allure Results
+        run: |
+          mkdir -p allure-results
+          cp -r artifacts/allure-results-*/* allure-results || echo "No allure results found"
 
       - uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '17'
+
+      - name: Clean old report files
+        run: rm -rf report
 
       - name: Generate Allure Report
         if: always()
@@ -96,6 +92,7 @@ jobs:
           destination-repository-name: 'report_${{ env.NOW }}'
           user-email: 'qa+github1@trackerproducts.com'
           target-branch: "gh-pages"
+
 
   slack-notification:
     runs-on: ubuntu-latest
