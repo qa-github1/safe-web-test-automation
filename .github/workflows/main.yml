@@ -36,14 +36,27 @@ jobs:
           git config --global user.email "github-actions@github.com"
           git config --global user.name "github-actions"
           REPORT_BRANCH=report-${{ matrix.org_number }}
+          NOW=$(date +'%B_%d')
 
+          # Clone main repo
           git clone --single-branch --branch main https://x-access-token:${{ secrets.TOKEN }}@github.com/${{ github.repository }}.git main-repo
-          cd main-repo
 
-          git clone https://x-access-token:${{ secrets.TOKEN }}@github.com/Safe-QA/report_${{ github.run_id }}.git external-repo
+          # Clone external repo
+          git clone https://x-access-token:${{ secrets.TOKEN }}@github.com/Safe-QA/report_${NOW}.git external-repo
           cd external-repo
 
-          git checkout -b $REPORT_BRANCH || git checkout $REPORT_BRANCH
+          # Fetch all branches to check existence
+          git fetch origin
+
+          # Check if branch exists on remote
+          if git ls-remote --exit-code --heads origin $REPORT_BRANCH; then
+            git checkout $REPORT_BRANCH
+          else
+            git checkout -b $REPORT_BRANCH
+            git push origin $REPORT_BRANCH
+          fi
+
+          # Deploy report contents
           rm -rf *
           cp -r ../main-repo/report/allure-results-${{ matrix.org_number }}/* .
           git add .
