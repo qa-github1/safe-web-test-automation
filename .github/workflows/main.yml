@@ -26,7 +26,7 @@ jobs:
         run: npm ci
 
       - name: Run Cypress tests in parallel
-        run: npm run dev-smoke-test-parallel -- --spec ${{ matrix.spec_group }} --env environment=dev,orgNum==${{ matrix.org_number }}
+        run: npm run dev-smoke-test-parallel -- --spec ${{ matrix.spec_group }} --env environment=dev,orgNum=${{ matrix.org_number }}
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           CI: true
