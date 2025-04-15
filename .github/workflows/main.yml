@@ -145,12 +145,20 @@ jobs:
           echo "Listing files after generating Allure report:"
           ls -l allure-report
 
+          # Move index.html and other generated files to the root directory
+          mv allure-report/* ./
+
+          # Verify that the files are moved correctly
+          echo "Listing files after moving report to root directory:"
+          ls -l
+
       - name: Push Final Allure Report
         run: |
-          cd merged-repo/allure-report
+          cd merged-repo
           git add .
           git commit -m "Final Allure Report generated from all org reports" || echo "No changes"
           git push origin gh-pages
+
 
   slack-notification:
     runs-on: ubuntu-latest
