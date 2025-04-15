@@ -50,15 +50,20 @@ jobs:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           CI: true
 
-      - name: Deploy report to temp-reports branch
+      - name: Deploy report to report-${{ matrix.org_number }} branch
         if: always()
-        uses: peaceiris/actions-gh-pages@v2
-        with:
-          keepFiles: true
-        env:
-          PERSONAL_TOKEN: ${{ secrets.TOKEN }}
-          PUBLISH_BRANCH: gh-pages
-          PUBLISH_DIR: allure-results-${{ matrix.org_number }}
+        run: |
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "github-actions"
+          git clone --branch gh-pages https://x-access-token:${{ secrets.TOKEN }}@github.com/${{ github.repository }}.git temp-gh-pages-${{ matrix.org_number }}
+          cd temp-gh-pages-${{ matrix.org_number }}
+          # Create the report-${{ matrix.org_number }} branch if it doesn't exist
+          git checkout -b report-${{ matrix.org_number }} || git checkout report-${{ matrix.org_number }}
+          # Deploy the results
+          cp -r allure-results-${{ matrix.org_number }}/* ./
+          git add .
+          git commit -m "Deploy allure results for org-${{ matrix.org_number }}"
+          git push origin report-${{ matrix.org_number }}
 
   merge-and-deploy-final-report:
     runs-on: ubuntu-latest
@@ -72,53 +77,18 @@ jobs:
         with:
           ref: gh-pages
 
-      - name: Clean gh-pages branch in the external repository
+      - name: Merge report-1 and report-2 branches into gh-pages
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "github-actions"
-          git clone --branch gh-pages https://x-access-token:${{ secrets.TOKEN }}@github.com/Safe-QA/report_${{ env.NOW }}.git temp-gh-pages
-          cd temp-gh-pages
-          # Check if any files exist in the gh-pages branch
-          if git ls-files | grep -q .; then
-            # Files exist, remove them
-            git rm -r * || echo "Nothing to delete"
-            git commit -am "Clean gh-pages before redeploy"
-            git push origin gh-pages
-          else
-            echo "No files to delete in gh-pages branch."
-          fi
-
-      - name: Install dependencies and move allure results
-        run: |
-          npm init --yes
-          npm i allure-commandline --save-dev
-          mkdir allure-results
-          [ -d "allure-results-1" ] && mv allure-results-1/* allure-results || echo "No allure-results-1 directory"
-          [ -d "allure-results-2" ] && mv allure-results-2/* allure-results || echo "No allure-results-2 directory"
-
-      - name: Set up environment variable
-        id: set_date
-        run: echo "NOW=$(date +'%B_%d')" >> $GITHUB_ENV
-
-      - uses: actions/setup-java@v2
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-
-      - name: Generate Allure Report
-        run: node_modules/allure-commandline/dist/bin/allure generate allure-results -o report
-
-      - name: Deploy to external repository
-        uses: cpina/github-action-push-to-another-repository@main
-        env:
-          API_TOKEN_GITHUB: ${{ secrets.TOKEN }}
-          NOW: ${{ env.NOW }}
-        with:
-          source-directory: report
-          destination-github-username: 'Safe-QA'
-          destination-repository-name: 'report_${{ env.NOW }}'
-          user-email: 'qa+github1@trackerproducts.com'
-          target-branch: "gh-pages"
+          # Merge report-1 branch
+          git fetch origin report-1
+          git merge origin/report-1 --no-ff --commit -m "Merge report-1 into gh-pages"
+          # Merge report-2 branch
+          git fetch origin report-2
+          git merge origin/report-2 --no-ff --commit -m "Merge report-2 into gh-pages"
+          # Push merged changes to gh-pages
+          git push origin gh-pages
 
   slack-notification:
     runs-on: ubuntu-latest
