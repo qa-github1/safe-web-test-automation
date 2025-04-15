@@ -99,6 +99,15 @@ jobs:
       - name: Install Allure CLI
         run: npm install -g allure-commandline
 
+      - name: Move test results to allure-results
+        run: |
+          cd merged-repo
+          # Create the allure-results directory if it doesn't exist
+          mkdir -p allure-results
+          
+          # Move all files from the root directory into allure-results/
+          mv *.json allure-results/ || echo "No JSON result files found"
+
       - name: Generate Final Allure Report
         run: |
           cd merged-repo
