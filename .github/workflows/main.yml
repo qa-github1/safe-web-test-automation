@@ -117,6 +117,10 @@ jobs:
 
       - name: Generate Final Allure Report
         run: |
+          # Checkout the gh-pages branch and pull the latest changes
+          git checkout gh-pages
+          git pull origin gh-pages
+          
           # Ensure allure-results directory exists
           mkdir -p allure-results
 
