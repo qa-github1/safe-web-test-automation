@@ -87,6 +87,7 @@ let
     mainContainer = e => cy.get('.ui-view-main'),
     textOnMainContainer = text => cy.get('.ui-view-main').contains(text),
     toastMessage = (timeout = 50000) => cy.get('.toast', {timeout: timeout}),
+    firstToastMessage = (timeout = 50000) => cy.get('.toast', {timeout: timeout}).first(),
     toastContainer = (timeout = 50000) => cy.get('#toast-container', {timeout: timeout}),
     toastTitle = (timeout = 50000) => cy.get('.toast-title', {timeout: timeout}),
     searchParametersAccordion = e => cy.get('#accordionSearchForm'),
@@ -456,7 +457,8 @@ export default class BasePage {
             toastMessage().should('be.visible', {timeout: timeoutInMiliseconds});
 
             toastMessage(timeoutInMiliseconds).invoke('text').then(function (toastMsg) {
-                toastMessage().click({multiple: true})
+              //  toastMessage().click({multiple: true})
+                firstToastMessage().click()
                 toastMessage().should('not.exist');
                 if (text instanceof Array) {
                     text.forEach(element =>
@@ -2270,6 +2272,7 @@ export default class BasePage {
     };
 
     wait_until_spinner_disappears() {
+        bodyContainer().should('not.have.class', 'pace-running');
         bodyContainer().should('have.class', 'pace-done');
         return this;
     };

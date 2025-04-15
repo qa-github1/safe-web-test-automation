@@ -8,6 +8,7 @@ import BaseViewPage from "../base-pages/base-view-page";
 //************************************ ELEMENTS ***************************************//
 
 let
+    submitForDisposition = e => cy.get('[ng-click="submitForDisposition()"]'),
     noteInput = e => cy.get('[ng-model="vm.newTaskNote"]'),
     actionsButton = e => cy.get('[title="Select an item or items for which you would like to perform Action."]'),
     dispositionAuthorizationActionOnModal = e => cy.get('[ng-model="itemsActions.actionId"]'),
@@ -41,6 +42,13 @@ export default class TaskViewPage extends BaseViewPage {
     verify_Task_View_page_is_open() {
         this.toastMessage().should('not.exist');
         noteInput().should('be.visible');
+        return this;
+    };
+
+    click_Submit_for_Disposition() {
+        submitForDisposition().scrollIntoView()
+        submitForDisposition().should('be.visible');
+        submitForDisposition().click()
         return this;
     };
 

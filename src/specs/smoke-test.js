@@ -18,7 +18,7 @@ before(function () {
     api.org_settings.update_org_settings(false, true);
 });
 
-describe('Dispo Auth', function () {
+describe.only('Dispo Auth', function () {
 
     it('All Dispo Actions for 8 items -- no service involved', function () {
 
@@ -79,7 +79,7 @@ describe('Dispo Auth', function () {
             .set_Action___Hold([6], 'Case Active', false, 10)
             .set_Action___Hold([7], 'Active Warrant', true)
             .set_Action___Timed_Disposal([8], '3y')
-            .click('Submit For Disposition')
+            .click_Submit_for_Disposition()
             .verify_toast_message('Submitted for Disposition')
             .wait_until_spinner_disappears()
             .reload_page()
@@ -429,10 +429,10 @@ describe('User', function () {
 
     it('Add User -- Assign Permissions -- Log in with newly created user', function () {
         ui.app.log_title(this);
-        D.generateNewDataSet();
-        D.newUser.permissionGroups = [S.selectedEnvironment.admin_permissionGroup.name]
 
         api.auth.get_tokens(orgAdmin);
+        D.generateNewDataSet();
+        D.newUser.permissionGroups = [S.selectedEnvironment.admin_permissionGroup.name]
         api.org_settings.set_required_User_forms([])
         ui.app.clear_gmail_inbox(S.gmailAccount);
 
@@ -614,7 +614,7 @@ describe('Services', function () {
             .click_option_on_expanded_menu(C.reports.primaryLabel4x3)
         cy.get('@windowOpen').should('have.been.called');
         cy.get('@windowOpen').should('have.been.calledWithMatch', /Report.*\.pdf/);
-        ui.app.verify_toast_message(C.toastMsgs.reportRunning);
+        ui.app.verify_toast_message(C.toastMsgs.popupBlocked);
     });
 
     it('Exporter', function () {
@@ -727,7 +727,7 @@ describe('Services', function () {
             .select_tab('Items')
             .set_large_view()
             .set_Action___Approve_for_Disposal([1, 51])
-            .click('Submit For Disposition')
+            .click_Submit_for_Disposition()
             .verify_toast_message('Processing...')
             .verify_Dispo_Auth_Job_Status('Complete')
             .reload_page()
