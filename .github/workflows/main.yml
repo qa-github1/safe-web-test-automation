@@ -4,6 +4,7 @@ on: [push]
 permissions: write-all
 
 jobs:
+
   cypress-tests:
     runs-on: ubuntu-latest
     timeout-minutes: 250
@@ -19,7 +20,7 @@ jobs:
           - spec_group: src/specs/smoke/services.js
             org_number: 2
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Install dependencies
         run: npm ci
@@ -30,63 +31,55 @@ jobs:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           CI: true
 
-      - name: Archive Allure Results (if exists)
-        if: always()
-        run: |
-          if [ -d "allure-results" ]; then
-            echo "Allure results found, archiving..."
-            tar -czf allure-results-${{ matrix.org_number }}.tgz allure-results
-          else
-            echo "No Allure results found for org ${{ matrix.org_number }}"
-            mkdir empty-dir && tar -czf allure-results-${{ matrix.org_number }}.tgz empty-dir
-          fi
-
-      - name: Upload Allure Artifact
+      - name: Upload Allure results
         if: always()
         uses: actions/upload-artifact@v3
         with:
           name: allure-results-${{ matrix.org_number }}
-          path: allure-results-${{ matrix.org_number }}.tgz
+          path: |
+            allure-results
 
   merge-and-deploy-final-report:
     runs-on: ubuntu-latest
     needs: [cypress-tests]
     if: always()
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - name: Set up environment variable
-        id: set_date
-        run: echo "NOW=$(date +'%B_%d')" >> $GITHUB_ENV
-
-      - name: Download Allure Artifacts
+      - name: Download all allure-results artifacts
         uses: actions/download-artifact@v3
         with:
           path: artifacts
 
-      - name: Install Java & Allure CLI
-        uses: actions/setup-java@v3
+      - name: Install dependencies and merge Allure results
+        run: |
+          npm init -y
+          npm i allure-commandline --save-dev
+          mkdir merged-allure-results
+
+          for dir in artifacts/allure-results-*; do
+            cp -r "$dir"/* merged-allure-results/ || true
+          done
+
+      - name: Set date for deployment
+        run: echo "NOW=$(date +'%B_%d')" >> $GITHUB_ENV
+
+      - uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Install Allure CLI
-        run: |
-          npm init -y
-          npm install -D allure-commandline
-
-      - name: Extract Allure Artifacts
-        run: |
-          mkdir -p allure-results
-          for archive in artifacts/allure-results-*/allure-results-*.tgz; do
-            echo "Extracting $archive..."
-            tar -xzf "$archive" -C allure-results --strip-components=1 || true
-          done
-
       - name: Generate Allure Report
-        if: always()
-        run: |
-          node_modules/.bin/allure generate allure-results -o report || echo "No report generated"
+        run: npx allure generate merged-allure-results -o report
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: report
+          user_name: github-actions
+          user_email: github-actions@github.com
 
       - name: Deploy to external repository
         uses: cpina/github-action-push-to-another-repository@main
@@ -105,8 +98,7 @@ jobs:
     needs: [cypress-tests, merge-and-deploy-final-report]
     if: always()
     steps:
-      - name: Set up environment variable
-        id: set_date
+      - name: Set date for report
         run: echo "NOW=$(date +'%B_%d')" >> $GITHUB_ENV
 
       - name: Send Slack Notification
