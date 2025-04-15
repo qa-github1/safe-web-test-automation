@@ -9,13 +9,13 @@ let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
 let powerUser = S.getUserData(S.userAccounts.powerUser);
 let approvedForReleaseItem = {}
 
-// before(function () {
-//     api.auth.get_tokens(orgAdmin);
-//     api.org_settings.enable_all_Case_fields();
-//     api.org_settings.enable_all_Item_fields();
-//     api.org_settings.enable_all_Person_fields();
-//     api.org_settings.update_org_settings(false, true);
-// });
+before(function () {
+    api.auth.get_tokens(orgAdmin);
+    api.org_settings.enable_all_Case_fields();
+    api.org_settings.enable_all_Item_fields();
+    api.org_settings.enable_all_Person_fields();
+    api.org_settings.update_org_settings(false, true);
+});
 
 describe('Services', function () {
 
@@ -26,20 +26,20 @@ describe('Services', function () {
         api.items.add_new_item()
     });
 
-    it.only('Reporter', function () {
+    it('Reporter', function () {
 
-        // api.auth.get_tokens(S.userAccounts.orgAdmin);
-        // cy.window().then((win) => {
-        //     cy.stub(win, 'open').as('windowOpen');
-        // });
-        // ui.app.open_newly_created_case_via_direct_link()
-        //     .select_tab(C.tabs.items)
-        //     .select_checkbox_for_all_records()
-        //     .click_element_on_active_tab(C.buttons.reports)
-        //     .click_option_on_expanded_menu(C.reports.primaryLabel4x3)
-        // cy.get('@windowOpen').should('have.been.called');
-        // cy.get('@windowOpen').should('have.been.calledWithMatch', /Report.*\.pdf/);
-        // ui.app.verify_toast_message(C.toastMsgs.popupBlocked);
+        api.auth.get_tokens(S.userAccounts.orgAdmin);
+        cy.window().then((win) => {
+            cy.stub(win, 'open').as('windowOpen');
+        });
+        ui.app.open_newly_created_case_via_direct_link()
+            .select_tab(C.tabs.items)
+            .select_checkbox_for_all_records()
+            .click_element_on_active_tab(C.buttons.reports)
+            .click_option_on_expanded_menu(C.reports.primaryLabel4x3)
+        cy.get('@windowOpen').should('have.been.called');
+        cy.get('@windowOpen').should('have.been.calledWithMatch', /Report.*\.pdf/);
+        ui.app.verify_toast_message(C.toastMsgs.popupBlocked);
     });
 
     it('Exporter', function () {

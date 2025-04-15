@@ -63,8 +63,7 @@ jobs:
     if: always()
     steps:
       - name: Set environment variable
-        run: echo "NOW=$(date +'%B_%d')" >> $GITHUB_ENV
-
+        run: echo "NOW=$(date +'%B_%d')" >> $GITHUB_ENV]
       - name: Clone and prepare gh-pages
         run: |
           git config --global user.email "github-actions@github.com"
@@ -114,7 +113,6 @@ jobs:
 
       - name: Install Allure CLI
         run: npm install -g allure-commandline
-
       - name: Generate Final Allure Report
         run: |
           # Ensure you're in the correct directory and on the gh-pages branch

@@ -8,13 +8,13 @@ let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
 let powerUser = S.getUserData(S.userAccounts.powerUser);
 let approvedForReleaseItem = {}
 
-// before(function () {
-//     api.auth.get_tokens(orgAdmin);
-//     api.org_settings.enable_all_Case_fields();
-//     api.org_settings.enable_all_Item_fields();
-//     api.org_settings.enable_all_Person_fields();
-//     api.org_settings.update_org_settings(false, true);
-// });
+before(function () {
+    api.auth.get_tokens(orgAdmin);
+    api.org_settings.enable_all_Case_fields();
+    api.org_settings.enable_all_Item_fields();
+    api.org_settings.enable_all_Person_fields();
+    api.org_settings.update_org_settings(false, true);
+});
 
 describe('Dispo Auth', function () {
 
@@ -352,74 +352,74 @@ describe.only('Person', function () {
         '*** Add/Edit/Search Person ' +
         '*** Add/Search Person Note  ' +
         '*** Add/Search Person Media', function () {
-            // api.auth.get_tokens(orgAdmin);
-            // D.generateNewDataSet();
-            // api.cases.add_new_case(D.newCase.caseNumber);
-            // api.org_settings.update_org_settings(false, true);
-            // api.org_settings.enable_all_Person_fields();
-            //
-            // // ADD PERSON
-            // ui.app.open_newly_created_case_via_direct_link()
-            //     .select_tab(C.tabs.people)
-            //     .click_element_on_active_tab(C.buttons.addPerson);
-            // ui.addPerson.verify_Add_Person_page_is_open()
-            //     .verify_Case_Number_is_populated_on_enabled_input_field(D.newCase.caseNumber)
-            //     .populate_all_fields(D.newPerson)
-            //     .select_post_save_action(C.postSaveActions.addPerson)
-            //     .click_Save()
-            //     .verify_toast_message_(C.toastMsgs.saved)
-            //     .verify_text_is_present_on_main_container(C.labels.addPerson.title)
-            //     .verify_Case_Number_is_populated_on_enabled_input_field(D.newCase.caseNumber)
-            //     .open_newly_created_person_via_direct_link()
-            // ui.personView.verify_Person_View_page_is_open()
-            //     .click_button(C.buttons.edit)
-            //     .verify_values_on_Edit_form(D.newPerson)
-            //
-            //     // EDIT PERSON
-            //     .edit_all_values(D.editedPerson)
-            //     .click_Save()
-            //     .verify_toast_message(C.toastMsgs.saved)
-            //     .pause(1)
-            //     .wait_until_spinner_disappears()
-            //     .open_last_history_record(1)
-            //     .verify_all_values_on_history(D.editedPerson, D.newPerson)
-            //     //-- uncomment method in the next line and remove the one below that when bug gets fixed in #13328
-            //     // .verify_red_highlighted_history_records(C.personFields.allEditableFieldsArray)
-            //     .verify_red_highlighted_history_records(ui.app.getArrayWithoutSpecificValue(C.personFields.allEditableFieldsArray, ['Deceased', 'Juvenile']))
-            //     .click_button('Cancel')
-            //
-            // //ADD NOTE
-            // let note = D.getRandomNo() + '_note';
-            // ui.personView.select_tab(C.tabs.notes)
-            //     .enter_note_and_category(note, C.noteCategories.sensitive)
-            //     .verify_toast_message(C.toastMsgs.saved)
-            //
-            // //ADD MEDIA
-            // ui.personView.select_tab(C.tabs.media)
-            //     .click_button_on_active_tab(C.buttons.add)
-            //     .verify_element_is_visible('Drag And Drop your files here')
-            //     .upload_file_and_verify_toast_msg('image.png')
-            //     .edit_Description_on_first_row_on_grid(note)
-            //
-            // //Check values after reloading
-            // ui.personView.reload_page()
-            //     .verify_edited_and_not_edited_values_on_Person_View_form(C.personFields.allEditableFieldsArray, D.editedPerson, D.newPerson)
-            //     .select_tab(C.tabs.notes)
-            //     .verify_content_of_results_table(note)
-            //     .select_tab(C.tabs.media)
-            //     .verify_content_of_results_table('image.png')
-            //
-            // // SEARCH FOR NOTE
-            // ui.searchNotes.run_search_by_Text(note)
-            //     .verify_records_count_on_grid(1)
-            //
-            // //SEARCH FOR MEDIA
-            // ui.searchMedia.run_search_by_Description(note)
-            //     .verify_records_count_on_grid(1)
-            //
-            // // SEARCH FOR PERSON
-            // ui.searchPeople.run_search_by_Business_Name(D.editedPerson.businessName)
-            //     .verify_content_of_first_row_in_results_table(D.editedPerson.businessName);
+            api.auth.get_tokens(orgAdmin);
+            D.generateNewDataSet();
+            api.cases.add_new_case(D.newCase.caseNumber);
+            api.org_settings.update_org_settings(false, true);
+            api.org_settings.enable_all_Person_fields();
+
+            // ADD PERSON
+            ui.app.open_newly_created_case_via_direct_link()
+                .select_tab(C.tabs.people)
+                .click_element_on_active_tab(C.buttons.addPerson);
+            ui.addPerson.verify_Add_Person_page_is_open()
+                .verify_Case_Number_is_populated_on_enabled_input_field(D.newCase.caseNumber)
+                .populate_all_fields(D.newPerson)
+                .select_post_save_action(C.postSaveActions.addPerson)
+                .click_Save()
+                .verify_toast_message_(C.toastMsgs.saved)
+                .verify_text_is_present_on_main_container(C.labels.addPerson.title)
+                .verify_Case_Number_is_populated_on_enabled_input_field(D.newCase.caseNumber)
+                .open_newly_created_person_via_direct_link()
+            ui.personView.verify_Person_View_page_is_open()
+                .click_button(C.buttons.edit)
+                .verify_values_on_Edit_form(D.newPerson)
+
+                // EDIT PERSON
+                .edit_all_values(D.editedPerson)
+                .click_Save()
+                .verify_toast_message(C.toastMsgs.saved)
+                .pause(1)
+                .wait_until_spinner_disappears()
+                .open_last_history_record(1)
+                .verify_all_values_on_history(D.editedPerson, D.newPerson)
+                //-- uncomment method in the next line and remove the one below that when bug gets fixed in #13328
+                // .verify_red_highlighted_history_records(C.personFields.allEditableFieldsArray)
+                .verify_red_highlighted_history_records(ui.app.getArrayWithoutSpecificValue(C.personFields.allEditableFieldsArray, ['Deceased', 'Juvenile']))
+                .click_button('Cancel')
+
+            //ADD NOTE
+            let note = D.getRandomNo() + '_note';
+            ui.personView.select_tab(C.tabs.notes)
+                .enter_note_and_category(note, C.noteCategories.sensitive)
+                .verify_toast_message(C.toastMsgs.saved)
+
+            //ADD MEDIA
+            ui.personView.select_tab(C.tabs.media)
+                .click_button_on_active_tab(C.buttons.add)
+                .verify_element_is_visible('Drag And Drop your files here')
+                .upload_file_and_verify_toast_msg('image.png')
+                .edit_Description_on_first_row_on_grid(note)
+
+            //Check values after reloading
+            ui.personView.reload_page()
+                .verify_edited_and_not_edited_values_on_Person_View_form(C.personFields.allEditableFieldsArray, D.editedPerson, D.newPerson)
+                .select_tab(C.tabs.notes)
+                .verify_content_of_results_table(note)
+                .select_tab(C.tabs.media)
+                .verify_content_of_results_table('image.png')
+
+            // SEARCH FOR NOTE
+            ui.searchNotes.run_search_by_Text(note)
+                .verify_records_count_on_grid(1)
+
+            //SEARCH FOR MEDIA
+            ui.searchMedia.run_search_by_Description(note)
+                .verify_records_count_on_grid(1)
+
+            // SEARCH FOR PERSON
+            ui.searchPeople.run_search_by_Business_Name(D.editedPerson.businessName)
+                .verify_content_of_first_row_in_results_table(D.editedPerson.businessName);
 
         });
 });
