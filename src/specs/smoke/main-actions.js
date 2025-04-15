@@ -18,6 +18,14 @@ before(function () {
 
 describe('Case', function () {
 
+    it.only(
+        'test allure report- with failure', function () {
+            api.auth.get_tokens(orgAdmin);
+
+            ui.menu.click_Add__Case();
+            ui.addCase.verify_url_contains_some_value('testttt')
+
+        });
     it(
         '*** Add/Edit/Search/MassUpdate Case ' +
         '*** Add/Search Case Note  ' +

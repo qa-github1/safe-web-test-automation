@@ -135,6 +135,7 @@ jobs:
 
           # Move .json files to allure-results (if they exist)
           mv *.json allure-results/ || echo "No .json files to move"
+           mv *.png allure-results/ || echo "No .png files to move"
 
           # Generate Allure report
           allure generate allure-results -o allure-report

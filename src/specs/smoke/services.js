@@ -20,6 +20,10 @@ before(function () {
 
 describe('Dispo Auth', function () {
 
+    it.only('test allure report - successful', function () {
+
+    })
+
     it('All Dispo Actions for 8 items -- no service involved', function () {
 
         ui.app.log_title(this);
