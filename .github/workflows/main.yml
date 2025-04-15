@@ -4,21 +4,6 @@ on: [push]
 permissions: write-all
 
 jobs:
-  clean-gh-pages:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Clean gh-pages branch in this repository
-        run: |
-          git config --global user.email "github-actions@github.com"
-          git config --global user.name "github-actions"
-          git clone --branch gh-pages https://x-access-token:${{ secrets.TOKEN }}@github.com/${{ github.repository }}.git temp-gh-pages
-          cd temp-gh-pages
-          if git ls-files | grep -q .; then
-            git rm -r * || echo "Nothing to delete"
-            git commit -am "Clean gh-pages before redeploy"
-            git push origin gh-pages
-          else
-            echo "No files to delete in gh-pages branch."
 
   cypress-tests:
     runs-on: ubuntu-latest
