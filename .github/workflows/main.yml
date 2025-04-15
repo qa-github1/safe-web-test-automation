@@ -60,8 +60,6 @@ jobs:
           git commit -m "Allure results for org-${{ matrix.org_number }}" || echo "No changes to commit"
           git push origin $REPORT_BRANCH
 
-
-
   merge-and-deploy-final-report:
     runs-on: ubuntu-latest
     timeout-minutes: 250
@@ -77,16 +75,21 @@ jobs:
           git config --global user.email "github-actions@github.com"
           git config --global user.name "github-actions"
 
+          # Clone the external repository
           git clone https://x-access-token:${{ secrets.TOKEN }}@github.com/Safe-QA/report_${{ env.NOW }}.git merged-repo
           cd merged-repo
+
+          # Checkout the gh-pages branch
           git checkout gh-pages
 
+          # Fetch and merge report branches (allow unrelated histories)
           git fetch origin report-1
-          git merge origin/report-1 --no-ff -m "Merge report-1 into gh-pages"
+          git merge origin/report-1 --allow-unrelated-histories --no-ff -m "Merge report-1 into gh-pages"
 
           git fetch origin report-2
-          git merge origin/report-2 --no-ff -m "Merge report-2 into gh-pages"
+          git merge origin/report-2 --allow-unrelated-histories --no-ff -m "Merge report-2 into gh-pages"
 
+          # Push changes to gh-pages
           git push origin gh-pages
 
   slack-notification:
