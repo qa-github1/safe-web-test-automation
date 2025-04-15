@@ -4,12 +4,29 @@ on: [push]
 permissions: write-all
 
 jobs:
+  clean-gh-pages:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clean gh-pages branch in this repository
+        run: |
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "github-actions"
+          git clone --branch gh-pages https://x-access-token:${{ secrets.TOKEN }}@github.com/${{ github.repository }}.git temp-gh-pages
+          cd temp-gh-pages
+          if git ls-files | grep -q .; then
+            git rm -r * || echo "Nothing to delete"
+            git commit -am "Clean gh-pages before redeploy"
+            git push origin gh-pages
+          else
+            echo "No files to delete in gh-pages branch."
+
   cypress-tests:
     runs-on: ubuntu-latest
     timeout-minutes: 250
     container:
       image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
       options: --user 1001
+    needs: clean-gh-pages
     strategy:
       fail-fast: false
       matrix:
@@ -30,21 +47,25 @@ jobs:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           CI: true
 
-      - name: Push allure results to report-${{ matrix.org_number }} branch in external repo
+      - name: Push report folder to external report-${{ matrix.org_number }} branch
         if: always()
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "github-actions"
+          REPORT_BRANCH=report-${{ matrix.org_number }}
 
-          mkdir temp-repo
-          cd temp-repo
-          git clone --depth 1 --branch gh-pages https://x-access-token:${{ secrets.TOKEN }}@github.com/Safe-QA/report_${{ github.run_id }}.git .
-          git checkout -b report-${{ matrix.org_number }} || git checkout report-${{ matrix.org_number }}
-          rm -rf ./*
-          cp -r ../report/allure-results-${{ matrix.org_number }}/* . || echo "No results found"
+          git clone --single-branch --branch main https://x-access-token:${{ secrets.TOKEN }}@github.com/${{ github.repository }}.git main-repo
+          cd main-repo
+
+          git clone https://x-access-token:${{ secrets.TOKEN }}@github.com/Safe-QA/report_${{ github.run_id }}.git external-repo
+          cd external-repo
+
+          git checkout -b $REPORT_BRANCH || git checkout $REPORT_BRANCH
+          rm -rf *
+          cp -r ../main-repo/report/allure-results-${{ matrix.org_number }}/* .
           git add .
-          git commit -m "Add report for org-${{ matrix.org_number }}" || echo "Nothing to commit"
-          git push origin report-${{ matrix.org_number }}
+          git commit -m "Allure results for org-${{ matrix.org_number }}"
+          git push origin $REPORT_BRANCH
 
   merge-and-deploy-final-report:
     runs-on: ubuntu-latest
@@ -52,13 +73,18 @@ jobs:
     needs: [cypress-tests]
     if: always()
     steps:
-      - name: Checkout external repo
+      - name: Set up environment variable
+        id: set_date
+        run: echo "NOW=$(date +'%B_%d')" >> $GITHUB_ENV
+
+      - name: Clone and merge report branches in external repo
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "github-actions"
 
-          git clone --branch gh-pages https://x-access-token:${{ secrets.TOKEN }}@github.com/Safe-QA/report_${{ github.run_id }}.git external-repo
-          cd external-repo
+          git clone https://x-access-token:${{ secrets.TOKEN }}@github.com/Safe-QA/report_${{ env.NOW }}.git merged-repo
+          cd merged-repo
+          git checkout gh-pages
 
           git fetch origin report-1
           git merge origin/report-1 --no-ff -m "Merge report-1 into gh-pages"
@@ -81,6 +107,6 @@ jobs:
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_COLOR: ${{ job.status }}
-          SLACK_MESSAGE: 'Report URL: https://safe-qa.github.io/report_${{ github.run_id }}'
+          SLACK_MESSAGE: 'Report URL: https://safe-qa.github.io/report_${{ env.NOW }}'
           SLACK_TITLE: Cypress Test Results
           SLACK_USERNAME: Cypress_Tests
