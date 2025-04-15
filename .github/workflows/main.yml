@@ -117,19 +117,14 @@ jobs:
 
       - name: Generate Final Allure Report
         run: |
-          # Clone the repository again to ensure you're working with the latest
-          git config --global user.email "github-actions@github.com"
-          git config --global user.name "github-actions"
-
-          # Clone the repository to ensure you have the latest changes
-          git clone https://x-access-token:${{ secrets.TOKEN }}@github.com/Safe-QA/report_${{ env.NOW }}.git repo
-          cd repo
+          # Ensure you're in the correct directory and on the gh-pages branch
+          cd merged-repo
 
           # Checkout the gh-pages branch and pull the latest changes
           git checkout gh-pages
           git pull origin gh-pages
 
-          # Verify we're in the correct directory
+          # Verify you're in the correct directory and the gh-pages branch
           echo "Listing files in the current directory after checkout:"
           ls -l
 
@@ -146,10 +141,13 @@ jobs:
           # Generate Allure report
           allure generate allure-results -o allure-report
 
+          # Verify allure-report directory exists
+          echo "Listing files after generating Allure report:"
+          ls -l allure-report
 
       - name: Push Final Allure Report
         run: |
-          cd allure-report
+          cd merged-repo/allure-report
           git add .
           git commit -m "Final Allure Report generated from all org reports" || echo "No changes"
           git push origin gh-pages
