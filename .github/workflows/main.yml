@@ -80,12 +80,13 @@ jobs:
           git commit -m "Clean gh-pages before merging report branches" || echo "Nothing to commit"
           git push origin gh-pages
 
-      - name: Merge report-1 into allure-results
+      - name: Merge report-1 into allure-results/org-1
         run: |
           cd merged-repo
           git fetch origin report-1
           git checkout -b temp-report-1 origin/report-1
 
+          # Ensure we're not copying into itself; copy contents of allure-results to org-1
           mkdir -p ../merged-repo/allure-results/org-1
           cp -r ./allure-results/* ../merged-repo/allure-results/org-1/
 
@@ -95,12 +96,13 @@ jobs:
           git commit -m "Add report-1 to allure-results/org-1" || echo "No changes"
           git push origin gh-pages
 
-      - name: Merge report-2 into allure-results
+      - name: Merge report-2 into allure-results/org-2
         run: |
           cd merged-repo
           git fetch origin report-2
           git checkout -b temp-report-2 origin/report-2
 
+          # Avoid copying into itself; copy contents of allure-results to org-2
           mkdir -p ../merged-repo/allure-results/org-2
           cp -r ./allure-results/* ../merged-repo/allure-results/org-2/
 
