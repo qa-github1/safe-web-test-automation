@@ -87,7 +87,7 @@ jobs:
           git checkout -b temp-report-1 origin/report-1
 
           mkdir -p ../merged-repo/allure-results/org-1
-          cp -r ./* ../merged-repo/allure-results/org-1
+          cp -r ./allure-results/* ../merged-repo/allure-results/org-1/
 
           cd ../merged-repo
           git checkout gh-pages
@@ -102,7 +102,7 @@ jobs:
           git checkout -b temp-report-2 origin/report-2
 
           mkdir -p ../merged-repo/allure-results/org-2
-          cp -r ./* ../merged-repo/allure-results/org-2
+          cp -r ./allure-results/* ../merged-repo/allure-results/org-2/
 
           cd ../merged-repo
           git checkout gh-pages
@@ -118,7 +118,7 @@ jobs:
           cd merged-repo
           mkdir -p merged-results
           cp -r allure-results/org-*/* merged-results/ || echo "No individual reports to merge"
-          allure generate merged-results -o final-report --clean
+          allure generate merged-results -o . --clean
 
       - name: Push Final Allure Report
         run: |
