@@ -1,10 +1,8 @@
-const C = require('../fixtures/constants');
-const S = require('../fixtures/settings');
-const D = require('../fixtures/data');
-const api = require('../api-utils/api-spec');
-const ui = require('../pages/ui-spec');
-const E = require("../fixtures/files/excel-data");
-const searchMedia = require("../pages/ui-spec");
+const C = require('../../fixtures/constants');
+const S = require('../../fixtures/settings');
+const D = require('../../fixtures/data');
+const api = require('../../api-utils/api-spec');
+const ui = require('../../pages/ui-spec');
 
 let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
 let powerUser = S.getUserData(S.userAccounts.powerUser);
