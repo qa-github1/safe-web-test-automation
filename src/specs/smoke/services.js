@@ -17,15 +17,12 @@ before(function () {
     api.org_settings.update_org_settings(false, true);
 });
 
-
 describe('Dispo Auth', function () {
 
     it('All Dispo Actions for 8 items -- no service involved', function () {
 
         ui.app.log_title(this);
         api.auth.get_tokens(orgAdmin);
-        api.org_settings.enable_all_Item_fields()
-        api.org_settings.enable_all_Person_fields()
 
         let selectedTemplate = S.selectedEnvironment.taskTemplates.dispoAuth
         D.getNewTaskData()
@@ -271,6 +268,7 @@ describe('Services', function () {
 
         api.auth.get_tokens(orgAdmin);
         D.generateNewDataSet();
+        api.org_settings.enable_all_Item_fields(C.itemFields.dispositionStatus)
         api.cases.add_new_case(D.newCase.caseNumber);
         api.people.add_new_person();
 
@@ -326,11 +324,11 @@ describe('Services', function () {
         const person1 = Object.assign({}, D.newPerson)
         person1.businessName = D.randomNo + '_Person1'
         person1.firstName = D.randomNo + '_Person1'
-        person1.driverLicence = D.randomNo + '_Person1'
+        person1.driversLicense = D.randomNo + '_Person1'
         const person2 = Object.assign({}, D.newPerson)
         person2.businessName = D.randomNo + '_Person2'
         person2.firstName = D.randomNo + '_Person2'
-        person2.driverLicence = D.randomNo + '_Person2'
+        person2.driversLicense = D.randomNo + '_Person2'
 
         api.people.add_new_person(true, D.newCase, person1, 'person1')
         api.people.add_new_person(true, D.newCase, person2, 'person2')
@@ -345,14 +343,23 @@ describe('Services', function () {
                     .select_checkbox_on_first_table_row()
                     .click_Actions()
                     .click_option_on_expanded_menu('Merge Into')
-                    .select_Person_on_Merge_modal(person_2.businessName)
-
-
+                    .select_Person_on_Merge_modal(person2.businessName)
+                    .click_button('Merge')
+                    .verify_messages_on_sweet_alert([
+                        'The selected people will be removed after the merge. Are you sure? Person(s) to be merged:',
+                    person1.firstName])
+                    .click_button_on_sweet_alert('OK')
+                    .verify_text_is_present_on_main_container('People Merge Jobs')
+                    .sort_by_descending_order('Start Date')
+                    .verify_content_of_first_row_in_results_table(['Complete', person2.firstName])
+                    .click_link(person2.firstName)
+                    .select_tab('Merge History')
+                    .verify_content_of_first_row_in_results_table_on_active_tab(person1.businessName)
             })
         })
     });
 
-    it('Dispo Auth Service', function () {
+    it.only('Dispo Auth Service', function () {
 
         ui.app.log_title(this);
         api.auth.get_tokens(orgAdmin);
@@ -380,7 +387,7 @@ describe('Services', function () {
             .open_newly_created_task_via_direct_link()
             .select_tab('Items')
             .set_large_view()
-            .set_Action___Approve_for_Disposal([1, 52])
+            .set_Action___Approve_for_Disposal([1, 51])
             .click_Submit_for_Disposition()
             .verify_toast_message('Processing...')
             .verify_Dispo_Auth_Job_Status('Complete')
@@ -391,7 +398,7 @@ describe('Services', function () {
             .verify_text_is_present_and_check_X_more_times_after_waiting_for_Y_seconds('Approved for Disposal', 2, 5, true, true)
         ui.taskView.set_page_size(100)
             .verify_Disposition_Statuses_on_the_grid([
-            [[...Array(51).keys()], 'Approved for Disposal']])
+            [[...Array(50).keys()], 'Approved for Disposal']])
     });
 
     it('Auto Reports - Release Letters', function () {

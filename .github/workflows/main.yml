@@ -15,9 +15,9 @@ jobs:
       matrix:
         include:
           - spec_group: src/specs/smoke/services.js
-            org_number: 1
-          - spec_group: src/specs/smoke/main-actions.js
             org_number: 2
+          - spec_group: src/specs/smoke/main-actions.js
+            org_number: 1
     steps:
       - uses: actions/checkout@v2
 

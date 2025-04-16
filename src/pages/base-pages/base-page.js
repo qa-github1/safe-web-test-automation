@@ -57,7 +57,8 @@ let
     replaceTagsRadioButton = e => cy.get('[translate="MASS.UPDATE.OVERWRITE_EXISTING_TAGS"]'),
     tagsTypeaheadList = e => cy.get('[repeat="tagModel in allTagModels | filter: $select.search"]'),
     orgTagIconOnTagsTypeaheadList = e => tagsTypeaheadList().find('[ng-if="model.tagUsedBy==1"]'),
-    linkByText = linkText => cy.get('link').contains(linkText),
+    linkByText = linkText => cy.get('a').contains(linkText),
+    linkByTextOnFirstTableRow = linkText => cy.get('tr').first().contains(linkText),
     linkWrappedInElement = (linkText, parentElementTag) => cy.contains(linkText).parent(parentElementTag),
     parentLinkByInnerText = innerText => cy.get('link').contains(innerText).parent('a'),
     buttonByTitle = buttonTitle => cy.contains('button', buttonTitle),
@@ -567,6 +568,7 @@ export default class BasePage {
     };
 
     click_button_on_sweet_alert(buttonTitle) {
+        this.pause(1)
         buttonOnSweetAlert(buttonTitle).should('be.visible');
         buttonOnSweetAlert(buttonTitle).click();
         return this;

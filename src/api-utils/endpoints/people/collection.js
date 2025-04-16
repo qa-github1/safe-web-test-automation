@@ -9,34 +9,34 @@ exports.add_new_person = function (addToCase, caseObject, personObject, property
         '/api/people',
         body.generate_POST_request_payload_for_Add_Person(personObject),
         'Adding new person via API with ID_______',
-        'newPerson',
+        propertyToSave,
     );
 
     caseObject = caseObject || S.selectedEnvironment.oldClosedCase;
 
-    if (addToCase){
-        if(caseObject.caseNumber === D.newCase.caseNumber){
-            exports.add_person_to_case(true, true)
+    cy.getLocalStorage(propertyToSave).then(person => {
+        const personObjectFromLocalStorage = JSON.parse(person)
+
+        if (addToCase) {
+            if (caseObject.caseNumber === D.newCase.caseNumber) {
+                exports.add_person_to_case(personObjectFromLocalStorage, true)
+            } else {
+                exports.add_person_to_case(personObjectFromLocalStorage, false, false, caseObject.id)
+            }
         }
-        else{
-            exports.add_person_to_case(true, false, false, caseObject.id)
-        }
-    }
+    })
     return this;
 };
 
-exports.add_person_to_case = function (useNewPerson, useNewCase, specificPersonId, specificCaseID) {
+exports.add_person_to_case = function (personObjectFromLocalStorage, useNewCase, specificPersonId, specificCaseID) {
     cy.getLocalStorage("newCase").then(newCase => {
-        cy.getLocalStorage("newPerson").then(newPerson => {
+        specificCaseID = useNewCase ? JSON.parse(newCase).id : specificCaseID;
+        specificPersonId = personObjectFromLocalStorage ? personObjectFromLocalStorage.id : specificPersonId;
 
-            specificCaseID = useNewCase ? JSON.parse(newCase).id : specificCaseID;
-            specificPersonId = useNewPerson ? JSON.parse(newPerson).id : specificPersonId;
-
-            generic_request.POST(
-                '/api/people/addPersonToCase/' + specificCaseID,
-                body.generate_POST_request_payload_for_Add_Person_to_Case(specificPersonId),
-                'Adding person to case via API',
-            )
-        })
+        generic_request.POST(
+            '/api/people/addPersonToCase/' + specificCaseID,
+            body.generate_POST_request_payload_for_Add_Person_to_Case(specificPersonId),
+            'Adding person to case via API',
+        )
     })
 };
