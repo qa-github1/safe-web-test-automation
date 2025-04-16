@@ -50,7 +50,7 @@ let
     specificPersonOnItemBelongsToTypeahead = person => cy.get('[ng-repeat="person in $select.items"]').contains(person),
     firstMatchOnTypeahead = e => cy.get('[ng-repeat="match in matches track by $index"]').first(),
     caseOfficersOverwrite = e => cy.get('[ng-model="toggle.caseOfficersOverwrite"]'),
-    tagsOverwrite = e => cy.get('[ng-model="toggle.tagsOverwrite"]'),
+    replaceTagsRadioButton = e => cy.get('[translate="MASS.UPDATE.OVERWRITE_EXISTING_TAGS"]'),
     tagsTypeaheadList = e => cy.get('[repeat="tagModel in allTagModels | filter: $select.search"]'),
     orgTagIconOnTagsTypeaheadList = e => tagsTypeaheadList().find('[ng-if="model.tagUsedBy==1"]'),
     linkByText = linkText => cy.get('link').contains(linkText),
@@ -1927,7 +1927,8 @@ export default class BasePage {
             resultsTableHeader().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
                 tableStriped().find('td').eq(i).invoke('text').then(function (textFound) {
                     if (currentEnvironment === 'pentest') {
-                        self.verify_text(tableStriped().find('td').eq(i), cellContent);
+                        // this method is changed to _2 but was only verify_text, need to see if this is going to work for all tests
+                        self.verify_text_2(tableStriped().find('td').eq(i), cellContent);
                     } else if (currentEnvironment === 'dev') {
                         if (columnTitle.toLowerCase() === 'guid') {
                             self.verify_text(tableStriped().find('td').eq(i), cellContent);
@@ -2256,6 +2257,14 @@ export default class BasePage {
         return this;
     }
 
+
+
+
+
+
+
+
+
     check_asterisk_is_shown_for_specific_field_on_modal(fieldLabel, parentElementTag = 'div') {
         parentContainerFoundByInnerLabelOnModal(fieldLabel, parentElementTag)
             .find('[ng-message="required"]').scrollIntoView().should('be.visible');
@@ -2377,8 +2386,8 @@ export default class BasePage {
         return this
     }
 
-    enable_Tags_overwrite() {
-        tagsOverwrite().click()
+    click_on_replace_tags() {
+        replaceTagsRadioButton().click()
         return this
     }
 

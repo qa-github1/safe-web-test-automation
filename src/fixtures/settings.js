@@ -2140,7 +2140,7 @@ S.PENTEST = {
             expectedReturnDate: 41,
             actualDisposedDate: 42,
             publicFacingDescription: 46,
-            dispositionStatus: 44,
+            dispositionAuthorizationStatus: 44,
             latestTransactionNotes: 48,
             checkInNotes: 43,
         },
