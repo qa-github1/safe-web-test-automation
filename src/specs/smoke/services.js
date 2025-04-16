@@ -203,57 +203,6 @@ describe('Services', function () {
         ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.caseCreated, D.newCase, null, 1, false)
     })
 
-    it.only('Dispo Auth Service', function () {
-
-        ui.app.log_title(this);
-        api.auth.get_tokens(orgAdmin);
-
-        D.getNewCaseData();
-        D.getNewItemData(D.newCase);
-        api.cases.add_new_case();
-
-        api.org_settings.enable_all_Item_fields();
-        var numberOfRecords = 51;
-        let selectedTemplate = S.selectedEnvironment.taskTemplates.dispoAuth;
-        D.getNewTaskData();
-        D.newTask = Object.assign(D.newTask, selectedTemplate);
-        D.newTask.creatorId = S.userAccounts.orgAdmin.id;
-        D.newTask.assignedUserIds = [S.userAccounts.orgAdmin.id];
-
-        E.generateDataFor_ITEMS_Importer([D.newItem], null, null, numberOfRecords);
-        cy.generate_excel_file('Items_forTestingDispoActionsService', E.itemImportDataWithAllFields);
-        ui.importer.import_data('Items_forTestingDispoActionsService', C.importTypes.items)
-
-        api.items.get_items_from_specific_case(D.newCase.caseNumber, 1, true);
-        api.tasks.add_new_task(D.newTask, 51);
-
-        ui.taskView
-            .open_newly_created_task_via_direct_link()
-            .select_tab('Items')
-            .set_large_view()
-            .set_Action___Approve_for_Disposal([1, 52])
-            .click_Submit_for_Disposition()
-            .verify_toast_message('Processing...')
-            .verify_Dispo_Auth_Job_Status('Complete')
-            .reload_page()
-            //.verify_text_is_present_on_main_container('Closed')
-            .select_tab('Items')
-            .disable_large_view()
-            .verify_text_is_present_and_check_X_more_times_after_waiting_for_Y_seconds('Approved for Disposal', 2, 5, true, true)
-        ui.taskView.verify_Disposition_Statuses_on_the_grid([
-            [[...Array(51).keys()], 'Approved for Disposal']])
-    });
-
-    it('Auto Reports - Release Letters', function () {
-
-        ui.app.log_title(this);
-        api.auth.get_tokens(orgAdmin);
-
-        ui.menu.click_Tools__Auto_Reports()
-        ui.app.sort_by_descending_order('Delivery Time')
-            .verify_text_is_present_and_check_X_more_times_after_waiting_for_Y_seconds(approvedForReleaseItem.description, 10)
-    });
-
     it('Container Moves', function () {
 
         api.auth.get_tokens(orgAdmin);
@@ -317,5 +266,109 @@ describe('Services', function () {
             })
         });
     });
+
+    it('Container Auto Deactivate', function () {
+
+        api.auth.get_tokens(orgAdmin);
+        D.generateNewDataSet();
+        api.cases.add_new_case(D.newCase.caseNumber);
+        api.people.add_new_person();
+
+        api.locations.add_storage_location('BOX_1')
+        api.locations.add_storage_location('Container_A', 'BOX_1')
+        api.locations.update_location('Container_A', 'isContainer', true)
+
+        api.items.add_new_item(true, 'Container_A')
+        ui.app.open_newly_created_item_via_direct_link()
+            .click_Actions()
+            .perform_Item_Disposal_transaction(orgAdmin, C.disposalMethods.auctioned, 'testContainerAutoDeactivate' + D.randomNo, true)
+
+        ui.menu.click_Search__Container_AutoDeactivate_Jobs()
+        ui.app.verify_content_of_first_row_in_results_table([
+            D.currentDateAndRandomNumber + '_BOX_1' + '/' + D.currentDateAndRandomNumber + '_Container_A',
+            'Complete'])
+
+    });
+
+    it('Task/Case Reassignment', function () {
+
+        api.auth.get_tokens(orgAdmin);
+        D.generateNewDataSet();
+        api.users.add_new_user()
+
+        cy.getLocalStorage('newUser').then(user => {
+            const newUser = JSON.parse(user)
+            D.newTask.assignedUserIds = D.newCase.caseOfficerIds = [newUser.id]
+            api.cases.add_new_case();
+            api.tasks.add_new_task()
+
+            ui.menu.click_Settings__User_Admin()
+            ui.userAdmin.search_for_user(newUser.email)
+                .select_checkbox_on_first_table_row()
+                .click_Actions()
+                .click_option_on_expanded_menu('Deactivate Users')
+                .enter_values_on_reassign_modal([orgAdmin.fullName])
+                .click_Ok()
+                .verify_toast_message('Processing...')
+                .verify_content_of_first_row_in_results_table([newUser.email, 'Complete'])
+                .open_newly_created_case_via_direct_link()
+                .click_Edit()
+            D.newCase.caseOfficers = [newUser.name, orgAdmin.name]
+            ui.caseView.verify_values_on_Edit_form(D.newCase)
+        })
+    });
+
+    it('Dispo Auth Service', function () {
+
+        ui.app.log_title(this);
+        api.auth.get_tokens(orgAdmin);
+
+        D.getNewCaseData();
+        D.getNewItemData(D.newCase);
+        api.cases.add_new_case();
+
+        api.org_settings.enable_all_Item_fields();
+        var numberOfRecords = 51;
+        let selectedTemplate = S.selectedEnvironment.taskTemplates.dispoAuth;
+        D.getNewTaskData();
+        D.newTask = Object.assign(D.newTask, selectedTemplate);
+        D.newTask.creatorId = S.userAccounts.orgAdmin.id;
+        D.newTask.assignedUserIds = [S.userAccounts.orgAdmin.id];
+
+        E.generateDataFor_ITEMS_Importer([D.newItem], null, null, numberOfRecords);
+        cy.generate_excel_file('Items_forTestingDispoActionsService', E.itemImportDataWithAllFields);
+        ui.importer.import_data('Items_forTestingDispoActionsService', C.importTypes.items)
+
+        api.items.get_items_from_specific_case(D.newCase.caseNumber, 1, true);
+        api.tasks.add_new_task(D.newTask, 51);
+
+        ui.taskView
+            .open_newly_created_task_via_direct_link()
+            .select_tab('Items')
+            .set_large_view()
+            .set_Action___Approve_for_Disposal([1, 52])
+            .click_Submit_for_Disposition()
+            .verify_toast_message('Processing...')
+            .verify_Dispo_Auth_Job_Status('Complete')
+            .reload_page()
+            //.verify_text_is_present_on_main_container('Closed')
+            .select_tab('Items')
+            .disable_large_view()
+            .verify_text_is_present_and_check_X_more_times_after_waiting_for_Y_seconds('Approved for Disposal', 2, 5, true, true)
+            .set_page_size(100)
+        ui.taskView.verify_Disposition_Statuses_on_the_grid([
+            [[...Array(51).keys()], 'Approved for Disposal']])
+    });
+
+    it('Auto Reports - Release Letters', function () {
+
+        ui.app.log_title(this);
+        api.auth.get_tokens(orgAdmin);
+
+        ui.menu.click_Tools__Auto_Reports()
+        ui.app.sort_by_descending_order('Delivery Time')
+            .verify_text_is_present_and_check_X_more_times_after_waiting_for_Y_seconds(approvedForReleaseItem.description, 10)
+    });
+
 
 })

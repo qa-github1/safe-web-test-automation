@@ -1,5 +1,6 @@
 import authApi from "../../api-utils/endpoints/auth";
 import orgSettingsApi from "../../api-utils/endpoints/org-settings/collection";
+import '../../support/commands';
 
 let S = require('../../fixtures/settings');
 let D = require('../../fixtures/data');
@@ -685,7 +686,20 @@ export default class BasePage {
                 }
 
                 if (typeof LabelValueArray[0] === 'string' || LabelValueArray[0] instanceof String) {
-                    typeaheadInputField(LabelValueArray[0]).clear().invoke('val', LabelValueArray[1][i]).trigger('input')
+                   // typeaheadInputField(LabelValueArray[0]).clear().invoke('val', LabelValueArray[1][i]).trigger('input')
+                    typeaheadInputField(LabelValueArray[0])
+                        .clear()
+                        .invoke('val', LabelValueArray[1][i])
+                        .trigger('input')
+                        .then($input => {
+                            // Wait 500ms
+                            cy.wait(500).then(() => {
+                                // Remove last character
+                                const currentVal = $input.val();
+                                const newVal = currentVal.slice(0, -1); // remove last character
+                                cy.wrap($input).invoke('val', newVal).trigger('input');
+                            });
+                        });
                 } else {
                     LabelValueArray[0]().clear().invoke('val', LabelValueArray[1][i]).trigger('input')
                 }
@@ -1566,6 +1580,7 @@ export default class BasePage {
 
     select_checkbox_on_first_table_row(useTableOnActiveTab) {
         this.wait_until_spinner_disappears()
+        this.pause(0.5)
 
         if (useTableOnActiveTab) {
             checkboxOnFirstRowInResultsTableOnActiveTab().should('be.enabled').click()
@@ -1781,20 +1796,12 @@ export default class BasePage {
     };
 
     verify_content_of_first_row_in_results_table(content) {
-
-        if (this.isObject(content)) {
-            for (let property in content) {
-                firstRowInResultsTable().should('contain', content[property]);
-            }
-        } else if (Array.isArray(content)) {
-            content.forEach(function (value) {
-                firstRowInResultsTable().should('contain', value);
-            })
-        } else {
-            firstRowInResultsTable().should('contain', content);
-        }
+        cy.waitUntilWithContentLogs(() =>
+                firstRowInResultsTable().invoke('text'),
+            content
+        );
         return this;
-    };
+    }
 
     verify_content_of_results_table(content) {
 
@@ -2912,9 +2919,14 @@ export default class BasePage {
         return this;
     }
 
-    perform_Item_Disposal_transaction(witness_userObject, method, notes) {
+    perform_Item_Disposal_transaction(witness_userObject, method, notes, isItemInContainer) {
         this.click_option_on_expanded_menu(C.dropdowns.itemActions.disposeItem)
-            .populate_disposal_form(witness_userObject, method, notes)
+            if (isItemInContainer){
+                this.pause(1)
+                this.click_button_on_sweet_alert('Ok')
+            }
+
+            this.populate_disposal_form(witness_userObject, method, notes, isItemInContainer)
             .click_button_on_modal(C.buttons.ok)
             .verify_toast_message('Saved')
             .wait_until_spinner_disappears()

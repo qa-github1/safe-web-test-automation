@@ -519,7 +519,8 @@ D.getNewUserData = function (officeId) {
 
     D.newUser = {
         firstName: 'F' + randomNo,
-        middleName: 'M' + randomNo,
+        middleName: '' ,
+      //  middleName: 'M' + randomNo,
         lastName: 'L' + randomNo,
         fullName: 'F' + randomNo + ' ' + 'M' + randomNo + ' ' + 'L' + randomNo,
         personnelNumber: randomNo,

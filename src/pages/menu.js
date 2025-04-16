@@ -27,6 +27,7 @@ let
     notes = e => sideMenu().find('[translate="NAV.NOTES"]'),
     media = e => sideMenu().find('[translate="GENERAL.MEDIA"]'),
     tasks = e => sideMenu().find('[translate="NAV.TASKS"]'),
+    containerAutoDeactivateJobs = e => sideMenu().find('[translate="CONTAINERS.CONTAINER_AUTO_DEACTIVATE_JOBS.TITLE"]'),
     exportedSearches = e => sideMenu().find('[translate="NAV.EXPORTED_SEARCHES"]'),
     scan = e => sideMenu().find('[tooltip="Scan"]'),
     tasksList = e => sideMenu().find('.badge'),
@@ -177,6 +178,13 @@ export default class Menu extends BasePage {
          this.click_element_if_does_NOT_have_a_class(searchParent(), 'active')
         tasks().click();
         this.wait_search_criteria_to_be_visible();
+        return this;
+    };
+
+    click_Search__Container_AutoDeactivate_Jobs () {
+         this.click_element_if_does_NOT_have_a_class(searchParent(), 'active')
+        containerAutoDeactivateJobs().click();
+         this.verify_text_is_present_on_main_container('Container Auto-Deactivate Jobs')
         return this;
     };
 

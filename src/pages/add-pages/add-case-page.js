@@ -60,7 +60,6 @@ export default class AddCasePage extends BaseAddPage {
             ]);
 
 
-
         this.define_API_request_to_be_awaited('POST', 'api/cases', 'addCase', 'newCase')
 
         return this;

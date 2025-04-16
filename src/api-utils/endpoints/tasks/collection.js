@@ -65,7 +65,7 @@ exports.add_new_task_template = function (taskTemplate) {
     return this;
 };
 
-exports. add_new_task = function (taskObject, numberOfItemsAttached) {
+exports. add_new_task = function (taskObject = D.newTask, numberOfItemsAttached) {
     cy.getLocalStorage("newCase").then(newCase => {
             cy.getLocalStorage("newItem").then(newItem => {
                 cy.getLocalStorage("newPerson").then(newPerson => {
@@ -85,8 +85,8 @@ exports. add_new_task = function (taskObject, numberOfItemsAttached) {
                         cy.getLocalStorage('item' + i).then(item => {
                             taskObject.attachments.push({entityId: JSON.parse(item).id, entityType: 1, taskId: null})
                         })
+                        ui.app.pause(5)
                     }
-                    ui.app.pause(5)
 
                     generic_request.POST(
                         '/api/tasks/saveNewTask',
