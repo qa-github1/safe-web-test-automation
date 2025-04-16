@@ -134,7 +134,7 @@ describe('Import Item Updates', function () {
         let fileName = 'ItemUpdatesImport_Disposal_' + S.domain;
 
         api.auth.get_tokens(orgAdmin);
-        api.org_settings.enable_all_Item_fields();
+        api.org_settings.enable_all_Item_fields([C.itemFields.dispositionStatus, C.itemFields.publicFacingDescription]);
         D.generateNewDataSet();
         D.getEditedItemData(S.selectedEnvironment.oldActiveCase);
         api.cases.add_new_case();
@@ -178,7 +178,7 @@ describe('Import Item Updates', function () {
         let fileName = 'ItemUpdatesImport_Undispose_' + S.domain;
 
         api.auth.get_tokens(orgAdmin);
-        api.org_settings.enable_all_Item_fields();
+        api.org_settings.enable_all_Item_fields([C.itemFields.dispositionStatus]);
         D.generateNewDataSet();
         D.getEditedItemData(S.selectedEnvironment.oldActiveCase)
         api.cases.add_new_case();

@@ -3393,7 +3393,7 @@ S.chainOfCustody = {
         },
         checkin: (itemObject) => {
             return {
-                type: 'in',
+                type: 'In',
                 date: itemObject.checkInDate,
                 issuedFrom: itemObject.returnedByName_name,
                 issuedTo: itemObject.returnedByName_name,
@@ -3415,7 +3415,7 @@ S.chainOfCustody = {
         },
         checkout: (itemObject) => {
             return {
-                type: 'out',
+                type: 'Out',
                 date: itemObject.checkoutDate,
                 issuedFrom: itemObject.checkedOutBy_name,
                 issuedTo: itemObject.checkedOutTo_name,

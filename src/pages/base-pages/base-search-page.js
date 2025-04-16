@@ -7,7 +7,7 @@ const S = require('../../fixtures/settings');
 
 //************************************ ELEMENTS ***************************************//
 
-let searchCriteriaBasedOnFieldLabel = fieldLabel => cy.contains(fieldLabel).parent().find('[ng-model="field.searchCriteria"]'),
+let searchCriteriaBasedOnFieldLabel = fieldLabel => cy.contains(fieldLabel).parent().find('select[ng-model="field.searchCriteria"]'),
     dateInputField = fieldLabel => cy.contains(fieldLabel).parent().find('input').first(),
     dateInputField_2 = fieldLabel => cy.contains(fieldLabel).parent().find('input').eq(1),
     dateField_calendar = fieldLabel => cy.contains(fieldLabel).parent('div').find('.glyphicon-calendar'),

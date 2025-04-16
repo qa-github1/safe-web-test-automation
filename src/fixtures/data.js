@@ -161,6 +161,7 @@ D.getNewItemData = function (specificCaseObject, locationObject, newPerson) {
         primaryCaseId: specificCaseObject.id,
         caseNumber: specificCaseObject.caseNumber,
         description: 'description_' + D.getRandomNo(),
+        //publicFacingDescription: D.newItem.description,
         status: C.itemStatuses.checkedIn,
         updateMadeBy: S.userAccounts.orgAdmin.lastName,
         updateDate: helper.setDate(C.currentDateTimeFormat.dateOnly),
@@ -377,6 +378,7 @@ D.getEditedItemData = function (specificCaseObject, locationObject, newPerson) {
         checkedOutTo_name: '',
         checkedOutNotes: '',
         expectedReturnDate: '',
+        publicFacingDescription: D.newItem.description
     });
     return D.editedItem;
 };
