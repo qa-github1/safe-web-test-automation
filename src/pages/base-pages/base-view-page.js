@@ -7,6 +7,8 @@ import BasePage from "./base-page";
 //************************************ ELEMENTS ***************************************//
 let
     active_form = e => cy.get('.form-horizontal').not('.ng-hide'),
+    // resultsTable = (tableIndex = 0) => cy.get('.table-striped').eq(tableIndex).find('tbody'),
+    // firstRowInResultsTable = (tableIndex = 0) => resultsTable(tableIndex).children('tr').first(),
     textareaFieldFoundByLabelOnSpecificContainer = (container, fieldLabel) => container().contains(fieldLabel).parent('div').find('textarea'),
     textareaFieldFoundByLabel = (fieldLabel) => cy.contains(fieldLabel).parent('div').find('textarea'),
     inputFieldFoundByLabelOnSpecificContainer = (container, fieldLabel) => container().contains(fieldLabel).parent('div').find('input'),
@@ -37,7 +39,7 @@ let
     customDateOnHistory = (form = historyView_rightColumn) => form().contains('Date').parent('div').find('input'),
     customFormContainerOnHistoryLeft = e => historyView_leftColumn().children().find('form').children().find('[ng-repeat="form in forms"]'),
     customFormContainerOnHistoryRight = e => historyView_rightColumn().children().find('form').children().find('[ng-repeat="form in forms"]'),
-    element_on_active_tab = text => active_tab_container().children().contains(text),
+    element_on_active_tab = text => active_tab_container().children().contains(text).first(),
     edit_button_on_active_tab = text => active_tab_container().children().find('[translate="GENERAL.EDIT"]'),
     save_button_on_active_tab = text => active_tab_container().children().find('[button-text="\'GENERAL.BUTTON_SAVE\'"]').find('button'),
     mediaDescriptionField = e => cy.get('[stop-event="touchend"]'),
@@ -130,8 +132,7 @@ export default class BaseViewPage extends BasePage {
         this.select_tab(C.tabs.history)
             .set_visibility_of_table_column(C.tableColumns.details, true)
             .verify_title_on_active_tab(C.tabs.history)
-        // this method is used in a lot of tests. I changed the index from 1 to 0. Need to check if this method will be fine for all usages
-            this.click(C.buttons.details, this.firstRowInResultsTable(tableIndex))
+            .click_first_matching_table_element_on_active_tab('Details')
         //    .verify_element_is_visible('History View')
 
         return this;
@@ -160,6 +161,11 @@ export default class BaseViewPage extends BasePage {
 
     click_element_on_active_tab(text) {
         element_on_active_tab(text).click();
+        return this;
+    }
+
+    click_first_matching_table_element_on_active_tab(text) {
+        active_tab_container().find('tbody').contains(text).first().click()
         return this;
     }
 

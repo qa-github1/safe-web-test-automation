@@ -223,7 +223,7 @@ let
     transferToInput = e => cy.get('[name="transferredTo"]').find('input'),
     locationInputOnModal = e => cy.get('.modal-content').find('.locationInput'),
     disposalWitnessInput = e => cy.get('span[ng-model="disposal.witnessId"]').find('input'),
-    disposalMethodsDropdown= e => cy.get('[ng-options="t.id as t.name for t in data.disposalMethods"]'),
+    disposalMethodsDropdown = e => cy.get('[ng-options="t.id as t.name for t in data.disposalMethods"]'),
     usePreviousLocationCheckbox = e => cy.get('.icheckbox_square-blue').find('ins'),
     checkoutReason = e => cy.get('[ng-options="r.id as r.name for r in data.checkoutReasons"]')
 
@@ -460,8 +460,8 @@ export default class BasePage {
             toastMessage().should('be.visible', {timeout: timeoutInMiliseconds});
 
             toastMessage(timeoutInMiliseconds).invoke('text').then(function (toastMsg) {
-              //  toastMessage().click({multiple: true})
-               // firstToastMessage().click()
+                //  toastMessage().click({multiple: true})
+                // firstToastMessage().click()
 
                 cy.document().then(doc => {
                     // Find the first toast message element in the DOM
@@ -625,6 +625,37 @@ export default class BasePage {
         return this;
     };
 
+    select_typeahead_option(element, value, typeaheadElement, aliasOfEndpointToBeAwaited) {
+        if (value) {
+            element()
+                .clear()
+                .invoke('val', value)
+                .trigger('input')
+                .then($input => {
+                    // Wait 500ms
+                    cy.wait(500).then(() => {
+                        // Remove last character
+                        const currentVal = $input.val();
+                        const newVal = currentVal.slice(0, -1); // remove last character
+                        cy.wrap($input).invoke('val', newVal).trigger('input');
+                    });
+                });
+        }
+
+            if (aliasOfEndpointToBeAwaited) {
+                //this.wait_response_from_API_call(aliasOfEndpointToBeAwaited)
+                this.wait_until_spinner_disappears();
+            }
+
+            if (typeaheadElement) {
+                this.pause(1)
+                // element().type('{enter}')
+                typeaheadElement().click();
+                this.pause(0.5)
+            }
+        return this;
+    };
+
     type_if_values_provided(element_Value__stacks) {
         let self = this
         element_Value__stacks.forEach(function (stack) {
@@ -702,7 +733,7 @@ export default class BasePage {
                 }
 
                 if (typeof LabelValueArray[0] === 'string' || LabelValueArray[0] instanceof String) {
-                   // typeaheadInputField(LabelValueArray[0]).clear().invoke('val', LabelValueArray[1][i]).trigger('input')
+                    // typeaheadInputField(LabelValueArray[0]).clear().invoke('val', LabelValueArray[1][i]).trigger('input')
                     typeaheadInputField(LabelValueArray[0])
                         .clear()
                         .invoke('val', LabelValueArray[1][i])
@@ -923,8 +954,6 @@ export default class BasePage {
             }
         }
     }
-
-
 
 
     // I needed to add this method because we had an issue with reading  empty ' ' on DEV while on Pentest method above worked fine
@@ -1394,19 +1423,30 @@ export default class BasePage {
     //         }
     //     })
 
-    set_visibility_of_table_column(columnName, shouldBeVisible) {
-        cy.wait(2000)
-        cy.get('thead').invoke('text').then((text) => {
-            const columnExists = text.includes(columnName);
+    set_visibility_of_table_column(columnName, shouldBeVisible, onActiveTab = true) {
+        cy.wait(1000)
 
-            if (shouldBeVisible && !columnExists) {
-                this.click_element_on_active_tab(C.buttons.menuCustomization);
-                this.click_element_on_active_tab(C.buttons.options);
-                this.click(columnName, gridOptionsDropdown());
+        if (onActiveTab) {
+                if (shouldBeVisible) {
+                    active_tab().find('thead').contains(columnName).parents('th').then(($el) => {
+                        if ($el.hasClass('ng-hide')) {
+                            this.click_element_on_active_tab(C.buttons.menuCustomization);
+                            this.click_element_on_active_tab(C.buttons.options);
+                            this.click(columnName, gridOptionsDropdown());
+                        }
+                    });
+                }
+        } else {
+            if (shouldBeVisible) {
+                cy.get('thead').contains(columnName).parents('th').then(($el) => {
+                    if ($el.hasClass('ng-hide')) {
+                        this.click_element_on_active_tab(C.buttons.menuCustomization);
+                        this.click_element_on_active_tab(C.buttons.options);
+                        this.click(columnName, gridOptionsDropdown());
+                    }
+                });
             }
-        });
-
-
+        }
         // this.click_element_on_active_tab(C.buttons.menuCustomization);
         // this.click_element_on_active_tab(C.buttons.options);
         //
@@ -2336,13 +2376,6 @@ export default class BasePage {
     }
 
 
-
-
-
-
-
-
-
     check_asterisk_is_shown_for_specific_field_on_modal(fieldLabel, parentElementTag = 'div') {
         parentContainerFoundByInnerLabelOnModal(fieldLabel, parentElementTag)
             .find('[ng-message="required"]').scrollIntoView().should('be.visible');
@@ -2837,9 +2870,8 @@ export default class BasePage {
         this.click_option_on_typeahead(returnedBy.fullName);
         if (usePreviousLocation) {
             usePreviousLocationCheckbox().click();
-        }
-        else{
-                this.select_Storage_location(fullLocationPath)
+        } else {
+            this.select_Storage_location(fullLocationPath)
         }
         this.enter_note_on_modal(note);
         return this;
@@ -2910,7 +2942,7 @@ export default class BasePage {
         return this;
     }
 
-   perform_Item_Check_Out_transaction(takenBy_personOrUserObject, checkOutReason, notes, expectedReturnDate) {
+    perform_Item_Check_Out_transaction(takenBy_personOrUserObject, checkOutReason, notes, expectedReturnDate) {
         this.click_option_on_expanded_menu(C.dropdowns.itemActions.checkItemOut)
             .populate_CheckOut_form(takenBy_personOrUserObject, checkOutReason, notes, expectedReturnDate)
             .click_button_on_modal(C.buttons.ok)
@@ -2942,19 +2974,19 @@ export default class BasePage {
             .click_button_on_modal(C.buttons.ok)
             .verify_toast_message('Saved')
             .wait_until_spinner_disappears()
-       D.editedItem.status = 'Checked In'
-       D.editedItem.location = fullLocationPath
+        D.editedItem.status = 'Checked In'
+        D.editedItem.location = fullLocationPath
         return this;
     }
 
     perform_Item_Disposal_transaction(witness_userObject, method, notes, isItemInContainer) {
         this.click_option_on_expanded_menu(C.dropdowns.itemActions.disposeItem)
-            if (isItemInContainer){
-                this.pause(1)
-                this.click_button_on_sweet_alert('Ok')
-            }
+        if (isItemInContainer) {
+            this.pause(1)
+            this.click_button_on_sweet_alert('Ok')
+        }
 
-            this.populate_disposal_form(witness_userObject, method, notes, isItemInContainer)
+        this.populate_disposal_form(witness_userObject, method, notes, isItemInContainer)
             .click_button_on_modal(C.buttons.ok)
             .verify_toast_message('Saved')
             .wait_until_spinner_disappears()
