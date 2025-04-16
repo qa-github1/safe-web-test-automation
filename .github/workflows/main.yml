@@ -64,6 +64,7 @@ jobs:
     steps:
       - name: Set environment variable
         run: echo "NOW=$(date +'%B_%d')" >> $GITHUB_ENV
+
       - name: Clone and prepare gh-pages
         run: |
           git config --global user.email "github-actions@github.com"
@@ -85,14 +86,10 @@ jobs:
           git fetch origin report-1
           git checkout gh-pages
 
-          # Merge report-1 into gh-pages, resolving conflicts by favoring changes from report-1
-          git merge origin/report-1 --no-ff -m "Merge report-1 into gh-pages" || true
-
-          # Handle conflicts manually by keeping files from report-1 (overwriting deletions)
+          git merge origin/report-1 --allow-unrelated-histories --no-ff -m "Merge report-1 into gh-pages" || true
           git checkout --theirs .
           git add .
           git commit -m "Resolve merge conflict by keeping report-1 files" || echo "No changes"
-
           git push origin gh-pages
 
       - name: Merge report-2 directly into gh-pages
@@ -101,53 +98,38 @@ jobs:
           git fetch origin report-2
           git checkout gh-pages
 
-          # Merge report-2 into gh-pages, resolving conflicts by favoring changes from report-2
-          git merge origin/report-2 --no-ff -m "Merge report-2 into gh-pages" || true
-
-          # Handle conflicts manually by keeping files from report-2 (overwriting deletions)
+          git merge origin/report-2 --allow-unrelated-histories --no-ff -m "Merge report-2 into gh-pages" || true
           git checkout --theirs .
           git add .
           git commit -m "Resolve merge conflict by keeping report-2 files" || echo "No changes"
-
           git push origin gh-pages
 
       - name: Install Allure CLI
         run: npm install -g allure-commandline
+
       - name: Generate Final Allure Report
         run: |
-          # Ensure you're in the correct directory and on the gh-pages branch
           cd merged-repo
-
-          # Checkout the gh-pages branch and pull the latest changes
           git checkout gh-pages
           git pull origin gh-pages
 
-          # Verify you're in the correct directory and the gh-pages branch
           echo "Listing files in the current directory after checkout:"
           ls -l
 
-          # Ensure allure-results directory exists
           mkdir -p allure-results
-
-          # List files again to ensure .json files are present
           echo "Listing files again after ensuring allure-results exists:"
           ls -l
 
-          # Move .json files to allure-results (if they exist)
           mv *.json allure-results/ || echo "No .json files to move"
-           mv *.png allure-results/ || echo "No .png files to move"
+          mv *.png allure-results/ || echo "No .png files to move"
 
-          # Generate Allure report
           allure generate allure-results -o allure-report
 
-          # Verify allure-report directory exists
           echo "Listing files after generating Allure report:"
           ls -l allure-report
 
-          # Move index.html and other generated files to the root directory
-          mv allure-report/* ./
-
-          # Verify that the files are moved correctly
+          # Safely copy files to root using rsync
+          rsync -a allure-report/ ./
           echo "Listing files after moving report to root directory:"
           ls -l
 
@@ -157,7 +139,6 @@ jobs:
           git add .
           git commit -m "Final Allure Report generated from all org reports" || echo "No changes"
           git push origin gh-pages
-
 
   slack-notification:
     runs-on: ubuntu-latest
