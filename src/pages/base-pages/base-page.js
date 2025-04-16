@@ -254,6 +254,7 @@ export default class BasePage {
         this.resultsTable = resultsTable;
         this.firstRowInResultsTable = firstRowInResultsTable;
         this.firstTypeaheadOption = firstTypeaheadOption;
+        this.firstMatchOnTypeahead = firstMatchOnTypeahead;
         this.checkboxToSelectAll = checkboxToSelectAll;
         this.mainContainer = mainContainer;
         this.tagsField = tagsField;
@@ -459,7 +460,20 @@ export default class BasePage {
 
             toastMessage(timeoutInMiliseconds).invoke('text').then(function (toastMsg) {
               //  toastMessage().click({multiple: true})
-                firstToastMessage().click()
+               // firstToastMessage().click()
+
+                cy.document().then(doc => {
+                    // Find the first toast message element in the DOM
+                    const firstToast = doc.querySelector('.toast');
+
+                    if (firstToast) {
+                        // Ensure the toast is still attached to the DOM and is visible
+                        if (firstToast.offsetParent !== null) {
+                            firstToast.click(); // Use native click if the element is still visible
+                        }
+                    }
+                });
+
                 toastMessage().should('not.exist');
                 if (text instanceof Array) {
                     text.forEach(element =>

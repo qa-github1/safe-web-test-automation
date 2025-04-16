@@ -334,16 +334,6 @@ exports.generate_request_payload_for_setting_visible_and_required_Item_fields = 
             })
     }
 
-    if (shouldFieldBeDisabled(fieldsToDisable, C.itemFields.dispositionStatus)) {
-        body.push(
-            {
-                "orgFieldId": S.selectedEnvironment.fieldIds.item.dispositionAuthorizationStatus,
-                "entityType": 1,
-                "name": "DISPO_AUTH_STATUS",
-                "recordType": 1
-            })
-    }
-
     if (shouldFieldBeDisabled(fieldsToDisable, C.itemFields.description)) {
         body.push(
             {
@@ -474,12 +464,6 @@ exports.generate_request_payload_for_disabling_Item_fields = function (fieldsToE
             "name": "ITEM_CUSTODY_REASON",
             "recordType": 1
         },
-        {
-            "orgFieldId": S.selectedEnvironment.fieldIds.item.dispositionAuthorizationStatus,
-            "entityType": 1,
-            "name": "DISPO_AUTH_STATUS",
-            "recordType": 1
-        },
     ];
 
     if (!shouldFieldBeEnabled(fieldsToEnable, C.itemFields.tags)) {
@@ -581,15 +565,14 @@ exports.generate_request_payload_for_disabling_Item_fields = function (fieldsToE
         })
     }
 
-
-    // if (!shouldFieldBeEnabled(fieldsToEnable, C.itemFields.dispositionStatus)) {
-    //     body.push({
-    //         "orgFieldId": S.selectedEnvironment.fieldIds.item.dispositionAuthorizationStatus,
-    //         "entityType": 1,
-    //         "name": "DISPO_AUTH_STATUS",
-    //         "recordType": 1
-    //     })
-    //  }
+    if (!shouldFieldBeEnabled(fieldsToEnable, C.itemFields.dispositionStatus)) {
+        body.push({
+            "orgFieldId": S.selectedEnvironment.fieldIds.item.dispositionAuthorizationStatus,
+            "entityType": 1,
+            "name": "DISPO_AUTH_STATUS",
+            "recordType": 1
+        })
+     }
 
     return body;
 };

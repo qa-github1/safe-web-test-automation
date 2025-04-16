@@ -318,6 +318,40 @@ describe('Services', function () {
         })
     });
 
+    it('People Merge', function () {
+
+        api.auth.get_tokens(orgAdmin);
+        D.generateNewDataSet();
+        api.cases.add_new_case()
+        const person1 = Object.assign({}, D.newPerson)
+        person1.businessName = D.randomNo + '_Person1'
+        person1.firstName = D.randomNo + '_Person1'
+        person1.driverLicence = D.randomNo + '_Person1'
+        const person2 = Object.assign({}, D.newPerson)
+        person2.businessName = D.randomNo + '_Person2'
+        person2.firstName = D.randomNo + '_Person2'
+        person2.driverLicence = D.randomNo + '_Person2'
+
+        api.people.add_new_person(true, D.newCase, person1, 'person1')
+        api.people.add_new_person(true, D.newCase, person2, 'person2')
+
+        cy.getLocalStorage('person1').then(person_1 => {
+            cy.getLocalStorage('person2').then(person_2 => {
+                const person1 = JSON.parse(person_1)
+                const person2 = JSON.parse(person_2)
+
+                ui.menu.click_Search__People()
+                ui.searchPeople.run_search_by_Business_Name(person1.businessName)
+                    .select_checkbox_on_first_table_row()
+                    .click_Actions()
+                    .click_option_on_expanded_menu('Merge Into')
+                    .select_Person_on_Merge_modal(person_2.businessName)
+
+
+            })
+        })
+    });
+
     it('Dispo Auth Service', function () {
 
         ui.app.log_title(this);
@@ -355,8 +389,8 @@ describe('Services', function () {
             .select_tab('Items')
             .disable_large_view()
             .verify_text_is_present_and_check_X_more_times_after_waiting_for_Y_seconds('Approved for Disposal', 2, 5, true, true)
-            .set_page_size(100)
-        ui.taskView.verify_Disposition_Statuses_on_the_grid([
+        ui.taskView.set_page_size(100)
+            .verify_Disposition_Statuses_on_the_grid([
             [[...Array(51).keys()], 'Approved for Disposal']])
     });
 

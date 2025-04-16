@@ -3,7 +3,7 @@ const body = require('./payload');
 const S = require('../../../fixtures/settings');
 const D = require('../../../fixtures/data');
 
-exports.add_new_person = function (addToCase, caseObject, personObject) {
+exports.add_new_person = function (addToCase, caseObject, personObject, propertyToSave = 'newPerson') {
 
     generic_request.POST(
         '/api/people',

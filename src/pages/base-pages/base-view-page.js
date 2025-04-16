@@ -184,8 +184,9 @@ export default class BaseViewPage extends BasePage {
     }
 
     click_Edit() {
+       this.pause(0.5)
         edit_button_on_active_tab().click();
-        cy.wait(1000)
+        this.pause(1)
         this.wait_element_to_be_visible(save_button_on_active_tab)
         this.verify_Save_isPresent()
         return this;
