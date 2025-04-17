@@ -52,6 +52,9 @@ jobs:
 
           cp -r ../report/allure-results-${{ matrix.org_number }}/* ./
 
+          echo "🔍 Skipping files larger than 100MB..."
+          find . -type f -size +100M -print -delete
+
           git add .
           git commit -m "Allure results for org-${{ matrix.org_number }}" || echo "No changes to commit"
           git push origin $REPORT_BRANCH

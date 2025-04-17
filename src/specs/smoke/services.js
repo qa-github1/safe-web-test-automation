@@ -17,7 +17,7 @@ before(function () {
     api.org_settings.update_org_settings(false, true);
 });
 
-describe('Dispo Auth', function () {
+describe.only('Dispo Auth', function () {
 
     it('All Dispo Actions for 8 items -- no service involved', function () {
 

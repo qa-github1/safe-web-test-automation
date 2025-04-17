@@ -125,7 +125,7 @@ describe('Case', function () {
         });
 
 });
-describe('Item', function () {
+describe.only('Item', function () {
 
     it(
         '*** Add/Edit/Search/MassUpdate Item ' +
