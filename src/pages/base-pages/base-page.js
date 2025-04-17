@@ -131,7 +131,7 @@ let
     lastRowInResultsTable = e => resultsTable().children('tr').last(),
     firstRowInResultsTableOnModal = e => cy.get('.modal-content').find('tbody').children('tr').first(),
     firstRowInResultsTableOnActiveTab = e => active_tab().find('tbody').children('tr').first(),
-    checkboxOnFirstRowInResultsTableOnActiveTab = e => active_tab().find('tbody').children('tr').first().find('.bg-grid-checkbox'),
+    checkboxOnFirstRowInResultsTableOnActiveTab = tableIndex => active_tab().find('tbody').eq(tableIndex).children('tr').first().find('.bg-grid-checkbox'),
     checkboxOnFirstTableRow = e => resultsTable().find('.bg-grid-checkbox').first(),
     checkboxToSelectAll = e => cy.get('[ng-model="options.selectAllToggle"]').first(),
     statisticsBlock = e => cy.get('.statistic-block').first(),
@@ -2070,6 +2070,7 @@ export default class BasePage {
     };
 
     sort_by_descending_order(columnTitle) {
+        tableColumn_header(columnTitle).click()
         sortingArrow().parents('th').invoke('text').then((text) => {
             //cy.log('Data is sorted by  '+ text)
             if (!text.includes(columnTitle)) {
@@ -2106,8 +2107,8 @@ export default class BasePage {
         return this;
     };
 
-    select_checkbox_on_first_table_row_on_active_tab() {
-        checkboxOnFirstRowInResultsTableOnActiveTab().click();
+    select_checkbox_on_first_table_row_on_active_tab(tableIndex = 0) {
+        checkboxOnFirstRowInResultsTableOnActiveTab(tableIndex).click();
         return this;
     };
 

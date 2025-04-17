@@ -4,6 +4,8 @@ const D = require('../../fixtures/data');
 const api = require('../../api-utils/api-spec');
 const ui = require('../../pages/ui-spec');
 const E = require("../../fixtures/files/excel-data");
+const helper = require("../../support/e2e-helper");
+const DF = require("../../support/date-time-formatting");
 
 let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
 let powerUser = S.getUserData(S.userAccounts.powerUser);
@@ -411,5 +413,76 @@ describe('Services', function () {
             .verify_text_is_present_and_check_X_more_times_after_waiting_for_Y_seconds(approvedForReleaseItem.description, 10)
     });
 
+    xit('Auto Disposition', function () {
+
+        api.auth.get_tokens(user);
+        ui.menu.click_Settings__Organization()
+            .click_element_containing_link(C.labels.organization.tabs.autoDisposition);
+        ui.autoDispo.click_disposition_Configuration_For_Case_Offense_Types();
+        ui.autoDispo.verify_Redistribute_Case_Review_Date_labels(true)
+
+
+        D.generateNewDataSet()
+        D.getDataForMultipleCases(3)
+        let fileName = 'Case_pastDueReview';
+        D.case1.reviewDate = '';
+        D.case2.reviewDate = helper.getSpecificDateInSpecificFormat(DF.dateTimeFormats.long.mask, '01/08/2019');
+        D.case3.reviewDate = helper.getSpecificDateInSpecificFormat(DF.dateTimeFormats.short.mask, '01/08/2030');
+
+        // import 3 cases (NO Review Date, Review Date past due and Upcoming Review Date )
+        E.generateDataFor_CASES_Importer([D.case1, D.case2, D.case3]);
+        ui.app.generate_excel_file(fileName, E.caseImportDataWithAllFields);
+        ui.menu.click_Tools__Data_Import();
+        ui.importer.upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.cases, null, 1, null,
+            ['Some Review Dates are blank. They will be auto-applied. Select Import to proceed.'])
+            .verify_toast_message([
+                C.toastMsgs.importComplete,
+                3 + C.toastMsgs.recordsImported])
+
+        // redistribute dates and verify Review Date and notes again
+        D.case2.reviewDate = minDate;
+        D.case2.reviewDateNotes = redistributeNote;
+
+        ui.menu.click_Settings__Organization()
+            .click_element_containing_link(C.labels.organization.tabs.autoDisposition);
+        ui.autoDispo.click_disposition_Configuration_For_Case_Offense_Types();
+     //   ui.autoDispo.verify_Redistribute_Case_Review_Date_labels(false, 1, 2)
+        ui.autoDispo.click_button(C.buttons.redestributeCaseReviewDates)
+            .verify_modal_content(C.labels.autoDisposition.updateCases)
+            .click_button(C.tabs.pastDue)
+            .populate_Update_Cases_modal(minDate, maxDate, redistributeNote)
+            .click_button(C.buttons.updateCases)
+            .verify_toast_message(C.toastMsgs.saved)
+            .verify_Redistribute_Case_Review_Date_labels(true, 0, 3)
+            .quick_search_for_case(D.case2.caseNumber)
+            .click_button(C.buttons.edit);
+        ui.caseView.verify_values_on_Edit_form(D.case2);
+
+        // // verify change is not applied for Case with 'No Review Date'
+        // ui.app.quick_search_for_case(D.case1.caseNumber)
+        //     .click_button(C.buttons.edit);
+        // ui.caseView.verify_values_on_Edit_form(D.case1);
+
+        // verify change is not applied for Case with 'Upcoming Review Date'
+        ui.app.quick_search_for_case(D.case3.caseNumber)
+            .click_button(C.buttons.edit);
+        ui.caseView.verify_values_on_Edit_form(D.case3);   });
+
+    it('Media Mass Download', function () {
+
+        api.auth.get_tokens(orgAdmin);
+        api.items.add_new_item()
+        ui.itemView.open_newly_created_item_via_direct_link()
+            .select_tab(C.tabs.media)
+            .click_button(C.buttons.add)
+            .verify_element_is_visible('Drag And Drop your files here')
+            .upload_file_and_verify_toast_msg('image.png')
+            .select_checkbox_on_first_table_row_on_active_tab(1)
+            .click_Actions(true)
+            .click_option_on_expanded_menu('Mass Download')
+            .verify_text_is_present_on_main_container('Download Jobs')
+            .sort_by_descending_order('Start Date')
+            .verify_content_of_first_row_in_results_table(['Done', 'Download!!!'])
+    })
 
 })
