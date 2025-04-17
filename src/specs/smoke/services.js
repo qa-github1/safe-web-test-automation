@@ -17,7 +17,7 @@ before(function () {
     api.org_settings.update_org_settings(false, true);
 });
 
-describe.only('Dispo Auth', function () {
+describe('Dispo Auth', function () {
 
     it('All Dispo Actions for 8 items -- no service involved', function () {
 
@@ -54,7 +54,7 @@ describe.only('Dispo Auth', function () {
         api.people.add_new_person(true, D.newCase, person3)
         let address3 = Object.assign({}, D.getNewPersonAddressData())
 
-        for (let i = 0; i < 8; i++) {
+        for (let i = 1; i < 9; i++) {
             D['newitem_' + i] = Object.assign({}, D.newItem)
             D['newitem_' + i].description = i + '__ ' + D.newItem.description
             api.items.add_new_item(true, null, 'item' + i, D['newitem_' + i])

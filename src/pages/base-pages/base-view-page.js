@@ -20,7 +20,6 @@ let
     redFieldsOnHistoryColumn = e => cy.get('.modal-content').find('.red-field'),
     active_tab = e => cy.get('.nav-tabs').find('.active'),
     edit_form = e => cy.get('[name="frmEdit"]'),
-    active_tab_container = e => cy.get('[class="tab-pane ng-scope active"]'),
     customFormContainerOnEdit = e => cy.get('[ng-repeat="form in formsEdit track by $index"]'),
     detailsButton = e => cy.get('[translate="GENERAL.DETAILS"]'),
     historyView_leftColumn = e => cy.get('[ng-class="previousHistory ? \'col-md-6\' : \'col-md-12\'"]'),
@@ -40,6 +39,7 @@ let
     customFormContainerOnHistoryLeft = e => historyView_leftColumn().children().find('form').children().find('[ng-repeat="form in forms"]'),
     customFormContainerOnHistoryRight = e => historyView_rightColumn().children().find('form').children().find('[ng-repeat="form in forms"]'),
     element_on_active_tab = text => active_tab_container().children().contains(text).first(),
+    active_tab_container = e => cy.get('[class="tab-pane ng-scope active"]'),
     edit_button_on_active_tab = text => active_tab_container().children().find('[translate="GENERAL.EDIT"]'),
     save_button_on_active_tab = text => active_tab_container().children().find('[button-text="\'GENERAL.BUTTON_SAVE\'"]').find('button'),
     mediaDescriptionField = e => cy.get('[stop-event="touchend"]'),
@@ -191,7 +191,12 @@ export default class BaseViewPage extends BasePage {
 
     click_Edit() {
        this.pause(0.5)
-        edit_button_on_active_tab().click();
+       // edit_button_on_active_tab().click();
+
+        cy.get('.tab-pane.ng-scope.active').within(() => {
+            cy.get('[translate="GENERAL.EDIT"]').click(); // or .should('exist') for presence check
+        });
+
         this.pause(1)
         this.wait_element_to_be_visible(save_button_on_active_tab)
         this.verify_Save_isPresent()
