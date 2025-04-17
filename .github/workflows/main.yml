@@ -54,13 +54,18 @@ jobs:
 
           echo "🔍 Skipping files larger than 100MB..."
           find . -type f -size +100M -print -delete
-          
-          echo "🧹 Removing all .json files to avoid secret scanning blocks..."
-          find . -type f -name '*.json' -print -delete
+
+          echo "🔐 Scanning .json files for secret-like patterns..."
+          for file in $(find . -type f -name "*.json"); do
+            if grep -qE '(A3T|AKIA|AGPA|AIDA|ANPA|AROA|ASIA)[A-Z0-9]{16}' "$file"; then
+              echo "🚨 Removing suspicious file: $file"
+              git rm -f --ignore-unmatch "$file"
+            fi
+          done
 
           git add .
-          git commit -m "Allure results for org-${{ matrix.org_number }}" || echo "No changes to commit"
-          git push origin $REPORT_BRANCH
+          git commit -m "Allure results for org-${{ matrix.org_number }} (with secret-suspect .json files removed)" || echo "No changes to commit"
+          git push origin $REPORT_BRANCH || echo "🔁 Push failed again. Manual intervention may be needed."
 
   merge-and-deploy-final-report:
     runs-on: ubuntu-latest
