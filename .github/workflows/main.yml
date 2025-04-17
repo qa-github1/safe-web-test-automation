@@ -54,6 +54,9 @@ jobs:
 
           echo "🔍 Skipping files larger than 100MB..."
           find . -type f -size +100M -print -delete
+          
+          echo "🧹 Removing all .json files to avoid secret scanning blocks..."
+          find . -type f -name '*.json' -print -delete
 
           git add .
           git commit -m "Allure results for org-${{ matrix.org_number }}" || echo "No changes to commit"

@@ -288,7 +288,7 @@ describe('Services', function () {
 
     });
 
-    it('Task/Case Reassignment', function () {
+    it ('Task/Case Reassignment', function () {
 
         api.auth.get_tokens(orgAdmin);
         D.generateNewDataSet();

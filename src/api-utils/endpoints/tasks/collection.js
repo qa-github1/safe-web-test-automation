@@ -81,13 +81,12 @@ exports. add_new_task = function (taskObject = D.newTask, numberOfItemsAttached 
                         taskObject.attachments.push(  {entityId: JSON.parse(newPerson).id, entityType: 2, taskId: null})
                     }
 
-                    for (let i = 1; i < (numberOfItemsAttached+1); i++) {
-                        cy.getLocalStorage('item' + i).then(item => {
-                            taskObject.attachments.push({entityId: JSON.parse(item).id, entityType: 1, taskId: null})
-                        })
-                    }
-
-                    if ( taskObject.attachments.length) {
+                    if (numberOfItemsAttached > 1) {
+                        for (let i = 1; i < (numberOfItemsAttached+1); i++) {
+                            cy.getLocalStorage('item' + i).then(item => {
+                                taskObject.attachments.push({entityId: JSON.parse(item).id, entityType: 1, taskId: null})
+                            })
+                        }
                         ui.app.pause(5)
                     }
 

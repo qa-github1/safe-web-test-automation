@@ -193,9 +193,10 @@ export default class BaseViewPage extends BasePage {
        this.pause(0.5)
        // edit_button_on_active_tab().click();
 
-        cy.get('.tab-pane.ng-scope.active').within(() => {
-            cy.get('[translate="GENERAL.EDIT"]').click(); // or .should('exist') for presence check
-        });
+        //cy.get('.tab-pane.ng-scope.active').within(() => {
+            cy.get('[translate="GENERAL.EDIT"]').first().should('exist') // or .should('exist') for presence check
+            cy.get('[translate="GENERAL.EDIT"]').first().click(); // or .should('exist') for presence check
+       // });
 
         this.pause(1)
         this.wait_element_to_be_visible(save_button_on_active_tab)

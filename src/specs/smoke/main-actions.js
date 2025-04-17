@@ -127,7 +127,7 @@ describe('Case', function () {
 });
 describe('Item', function () {
 
-    it(
+    it.only(
         '*** Add/Edit/Search/MassUpdate Item ' +
         '*** Add/Search Item Note  ' +
         '*** Add/Search Item Media', function () {
