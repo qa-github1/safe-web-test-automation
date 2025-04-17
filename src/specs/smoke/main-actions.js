@@ -14,7 +14,6 @@ before(function () {
     api.org_settings.enable_all_Item_fields();
     api.org_settings.enable_all_Person_fields();
     api.org_settings.update_org_settings(false, true);
-    api.users.update_current_user_settings(orgAdmin.id, C.currentDateFormat.mask)
 });
 
 describe('Case', function () {
