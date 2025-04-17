@@ -482,7 +482,7 @@ describe('Services', function () {
             .click_option_on_expanded_menu('Mass Download')
             .verify_text_is_present_on_main_container('Download Jobs')
             .sort_by_descending_order('Start Date')
-            .verify_content_of_first_row_in_results_table(['Done', 'Download!!!'])
+            .verify_content_of_first_row_in_results_table(['Done', 'Download'])
     })
 
 })
