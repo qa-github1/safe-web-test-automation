@@ -423,12 +423,6 @@ exports.generate_request_payload_for_disabling_Item_fields = function (fieldsToE
             "recordType": 1
         },
         {
-            "orgFieldId": S.selectedEnvironment.fieldIds.item.dispositionAuthorizationStatus,
-            "entityType": 1,
-            "name": "DISPO_AUTH_STATUS",
-            "recordType": 1
-        },
-        {
             "orgFieldId": S.selectedEnvironment.fieldIds.item.publicFacingDescription,
             "entityType": 1,
             "name": "ITEM.PUBLIC_FACING_DESCRIPTION",

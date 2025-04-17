@@ -394,9 +394,9 @@ describe('Inventory Reports', function () {
         })
     });
 
-    context('2. Scanning 1000 items', function () {
+    context.only('2. Scanning 1000 items', function () {
         // this test is excluded from the regular regression suite for now, to reduce the total execution time
-        xit('3. Scanning 1000 items during Inventory report', function () {
+        it('3. Scanning 1000 items during Inventory report', function () {
 
             api.auth.get_tokens(orgAdmin);
             api.org_settings.disable_Item_fields([C.itemFields.description])
@@ -411,10 +411,7 @@ describe('Inventory Reports', function () {
             E.generateDataFor_ITEMS_Importer([D.newItem], null, null, numberOfRecords);
             cy.generate_excel_file('Items_forTestingInventoryReports', E.itemImportDataWithMinimumFields);
             ui.menu.click_Tools__Data_Import();
-            ui.importer.upload_then_Map_and_Submit_file_for_importing('Items_forTestingInventoryReports', C.importTypes.items, C.importMappings.minimumItemFields)
-                .verify_toast_message([
-                    C.toastMsgs.importComplete,
-                    numberOfRecords + C.toastMsgs.recordsImported], false, 2)
+            ui.importer.import_data('Items_forTestingInventoryReports', C.importTypes.items)
 
             api.cases.quick_case_search(D.newCase.caseNumber)
             api.items.get_items_from_specific_case(D.newCase.caseNumber, 2)

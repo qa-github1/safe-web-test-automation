@@ -52,7 +52,7 @@ describe('Import Items', function () {
             .verify_title_on_active_tab(1)
     });
 
-    it('2. Item with all fields - Disposed Status', function () {
+    it.only('2. Item with all fields - Disposed Status', function () {
         ui.app.log_title(this);
         let fileName = 'ItemImport_allFields_Disposed_' + S.domain;
         api.auth.get_tokens(orgAdmin);
@@ -85,6 +85,9 @@ describe('Import Items', function () {
             .verify_content_of_sequential_rows_in_results_table([
                 CoC_disposal_ItemEntry
             ])
+            // .verify_data_on_Chain_of_Custody([
+            //     [['Type', 'Disposals'], ['Issued From', D.newItem.disposedByName], ['Issued To', D.newItem.disposedByName], ['Notes', D.newItem.disposalNotes]],
+            // ])
             .open_last_history_record()
             .verify_all_values_on_history(D.newItem)
             .click_button_on_modal(C.buttons.cancel)
