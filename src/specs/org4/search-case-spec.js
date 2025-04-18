@@ -889,7 +889,7 @@ describe('Cases Search', function () {
                     .verify_data_on_the_grid(D.case0);
             });
 
-            it.only('1.9.2 not equals', function () {
+            it('1.9.2 not equals', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();

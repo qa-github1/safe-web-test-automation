@@ -208,7 +208,7 @@ describe('Workflows', function () {
             ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.itemCreated, D.newItem)
         });
 
-        it.only('2.2 Email notification - when Item edited - matching records with "Description equals ..."', function () {
+        it('2.2 Email notification - when Item edited - matching records with "Description equals ..."', function () {
 
             ui.menu.click_Settings__Workflows();
             ui.workflows.click_(C.buttons.add)

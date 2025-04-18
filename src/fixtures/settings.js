@@ -2888,10 +2888,10 @@ S.PENTEST_3 = {
     },
     org2: {
         office_1: {
-            id: 1054,
-            guid: 'a9e131e6-3d36-eb11-aa49-062d5b58f56e',
+            id: 1119,
+            guid: 'f36bc8a3-4630-ed11-832b-021f02b7478f',
             name: "Cypress Office 1",
-            orgAndOfficeName: "Web Test Automation - Cypress Office 1"
+            orgAndOfficeName: "Web Test Automtion #4 - Cypress Office 1"
         },
         id: 546,
         orgName: "Web Test Automation",
@@ -3154,14 +3154,16 @@ S.PENTEST_4 = {
     },
     office_2: {
         id: 1138,
-        name: "Web Test Automtion #4 - Cypress Office 2"
+        name: "Web Test Automtion #4 - Cypress Office 2",
+        orgAndOfficeName: "Web Test Automtion #4 - Cypress Office 2"
+
     },
     org2: {
         office_1: {
-            id: 1054,
+            id: 1118,
             guid: 'a9e131e6-3d36-eb11-aa49-062d5b58f56e',
             name: "Cypress Office 1",
-            orgAndOfficeName: "Web Test Automation - Cypress Office 1"
+            orgAndOfficeName: "Web Test Automtion #3 - Cypress Office 1"
         },
         id: 546,
         orgName: "Web Test Automation",
@@ -3192,7 +3194,7 @@ S.PENTEST_4 = {
         },
         basicUser: {
             id: 43722,
-            guid: '9fbf2a88-de8c-ed11-832e-021f02b7478f'
+            guid: '9fbf2a88-de8c-ed11-832e-021f02b7478',
         },
         blockedUser: {
             id: 97339,
@@ -3327,8 +3329,8 @@ S.PENTEST_4 = {
     // },
     regularUser_permissionGroup: {
         name: 'Cypress - Regular User',
-        id: 4477,
-        startingIndexForViewPermissions: 66645,
+        id: 4596,
+        startingIndexForViewPermissions: 92329,
         get startingIndexForCreatePermissions() {
             return S.PENTEST_4.regularUser_permissionGroup.startingIndexForViewPermissions + 22
         },
@@ -3362,13 +3364,13 @@ S.PENTEST_4 = {
         name: 'Cypress Admin Group',
         id: 2912
     },
-    // blocked_userGroup: {
-    //     name: 'Cypress Blocked Group',
-    //     id: 2904
-    // },
+    blocked_userGroup: {
+        name: 'Cypress Blocked Group',
+        id: 2904
+    },
     readOnly_userGroup: {
         name: 'Cypress ReadOnly Group',
-        id: 2913
+        id: 3146
     },
     taskTemplates: {
         dispoAuth: {
