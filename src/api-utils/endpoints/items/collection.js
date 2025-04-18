@@ -128,7 +128,7 @@ exports.get_items_from_specific_case = function (caseNumber, numberOfPagesWith10
 
                     for (let i = 0; i<caseItemsObjects.length; i++){
                         barcodes.push(caseItemsObjects[i].barcode)
-                        if (storeAllItemsToLocalStorage) cy.setLocalStorage("item" + i, JSON.stringify(caseItemsObjects[i]));
+                        if (storeAllItemsToLocalStorage) cy.setLocalStorage("item" + (i +1), JSON.stringify(caseItemsObjects[i]));
                     }
                 });
             });

@@ -9,7 +9,8 @@ let
     businessNameSearchCriteria = e => cy.get('[translate="GENERAL.BUSINESSNAME"]').parent().find('[ng-model="field.searchCriteria"]'),
     businessNameInput = e => cy.get('[translate="GENERAL.BUSINESSNAME"]').parent().find('[ng-model="field.model"]'),
     firstNameInput = e => cy.contains('First Name').parent().find('input').first(),
-    firstNameSearchCriteria = e => cy.contains('First Name').parent().find('[ng-model="field.searchCriteria"]')
+    firstNameSearchCriteria = e => cy.contains('First Name').parent().find('[ng-model="field.searchCriteria"]'),
+    destinationPersonInput = e => cy.get('[translate="PEOPLE.SELECT_DESTINATION_PERSON_FOR"]').parent('form').find('input')
 
 
 export default class SearchPeoplePage extends BaseSearchPage {
@@ -42,6 +43,11 @@ export default class SearchPeoplePage extends BaseSearchPage {
         menu.click_Search__People();
         this.enter_Business_Name(businessName, searchOperator);
         super.click_Search();
+        return this;
+    };
+    select_Person_on_Merge_modal(personName) {
+        this.enterValue(destinationPersonInput, personName)
+        this.firstMatchOnTypeahead().click()
         return this;
     };
 }

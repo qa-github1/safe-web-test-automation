@@ -1,4 +1,5 @@
 import '@testing-library/cypress/add-commands'
+import 'cypress-wait-until';
 //
 // Cypress.Commands.overwrite('log', (subject, message, color, bgColor) => cy.task('log', message, {
 //     color: color,
@@ -20,6 +21,48 @@ Cypress.Commands.add(
         return unquote(before.getPropertyValue(property));
     },
 );
+
+Cypress.Commands.add('waitUntilWithContentLogs', (getActualTextFn, expectedValues, options = {}) => {
+    let attempt = 0;
+
+    const normalizeExpected = (expected) => {
+        if (Array.isArray(expected)) return expected;
+        if (typeof expected === 'object') return Object.values(expected);
+        return [expected];
+    };
+
+    const wrappedCondition = () => {
+        attempt++;
+
+        return getActualTextFn().then(actualText => {
+            const expectedArray = normalizeExpected(expectedValues);
+            const failedMatches = expectedArray.filter(val => !actualText.includes(val));
+            const passed = failedMatches.length === 0;
+
+            Cypress.log({
+                name: 'waitUntilWithContentLogs',
+                message: passed
+                    ? `[✅ Attempt ${attempt}] Found all expected values: [${expectedArray.join(', ')}]`
+                    : `[❌ Attempt ${attempt}] Missing: [${failedMatches.join(', ')}]`,
+                consoleProps: () => ({
+                    attempt,
+                    expected: expectedArray,
+                    missing: failedMatches,
+                    actual: actualText,
+                })
+            });
+
+            return passed;
+        });
+    };
+
+    return cy.waitUntil(wrappedCondition, {
+        timeout: 60000,
+        interval: 1000,
+        ...options
+    });
+});
+
 
 const Log = {
     reset: '\x1b[0m',

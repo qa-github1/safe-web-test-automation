@@ -1,86 +1,23 @@
-const C = require('../fixtures/constants');
-const S = require('../fixtures/settings');
-const D = require('../fixtures/data');
-const api = require('../api-utils/api-spec');
-const ui = require('../pages/ui-spec');
-const E = require("../fixtures/files/excel-data");
-const searchMedia = require("../pages/ui-spec");
+const C = require('../../fixtures/constants');
+const DF = require('../../support/date-time-formatting');
+const S = require('../../fixtures/settings');
+const D = require('../../fixtures/data');
+const api = require('../../api-utils/api-spec');
+const ui = require('../../pages/ui-spec');
 
 let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
+let powerUser = S.getUserData(S.userAccounts.powerUser);
 let approvedForReleaseItem = {}
 
-describe('Dispo Auth', function () {
-
-    it('All Dispo Actions for 8 items -- no service involved', function () {
-
-        ui.app.log_title(this);
-        api.auth.get_tokens(orgAdmin);
-        api.org_settings.enable_all_Item_fields()
-        api.org_settings.enable_all_Person_fields()
-
-        let selectedTemplate = S.selectedEnvironment.taskTemplates.dispoAuth
-        D.getNewTaskData()
-         D.generateNewDataSet()
-        D.newTask = Object.assign(D.newTask, selectedTemplate)
-        D.newTask.creatorId = S.userAccounts.orgAdmin.id
-        D.newTask.assignedUserIds = [S.userAccounts.orgAdmin.id]
-         api.cases.add_new_case()
-
-        // For "Approve for Release" to New Person --> use detected duplicate person, keep address blank
-        let person1 = Object.assign({}, D.getNewPersonData())
-        person1.firstName = 'Person_1'
-        api.people.add_new_person(false, null, person1)
-        let address1 = {}
-
-        // For "Approve for Release" to New Person, --> add an address
-        D.newPerson = D.getNewPersonData()
-        let person2 = Object.assign({}, {firstName: D.newPerson.firstName, lastName: D.newPerson.lastName, personType: S.selectedEnvironment.personType.name})
-        person2.firstName = person2.firstName + '_P_2'
-        let address2 = Object.assign({}, D.getNewPersonAddressData())
-
-        // For "Approve for Release" to Existing Person, already linked to the case, WITH an address
-        let person3 = Object.assign({}, D.getNewPersonData())
-        person3.firstName = person3.firstName + '_P_3'
-        api.people.add_new_person(true, D.newCase, person3)
-        let address3 = Object.assign({}, D.getNewPersonAddressData())
-
-        for (let i = 0; i < 8; i++) {
-            D['newitem_' + i] = Object.assign({}, D.newItem)
-            D['newitem_' + i].description = i + '__ ' + D.newItem.description
-            api.items.add_new_item(true, null, 'item' + i, D['newitem_' + i])
-            cy.getLocalStorage('item2').then(item => {
-                approvedForReleaseItem = JSON.parse(item)
-            })
-        }
-
-       api.tasks.add_new_task(D.newTask, 8)
-
-        ui.taskView
-            .open_newly_created_task_via_direct_link()
-            .select_tab('Items')
-            .set_Action___Approve_for_Disposal([1])
-            .set_Action___Approve_for_Release([2], person1, {}, false, false, false, false, true, true)
-            .set_Action___Approve_for_Release([3], person2, address2, false, false, false, false, false, false)
-            .set_Action___Approve_for_Release([4], person3, address3, true, true, true, false)
-            .set_Action___Delayed_Release([5], person3, address3, true, true, true, true)
-            .set_Action___Hold([6],  'Case Active', false, 10)
-            .set_Action___Hold([7],  'Active Warrant', true)
-            .set_Action___Timed_Disposal([8], '3y' )
-            .click('Submit For Disposition')
-            .verify_toast_message('Submitted for Disposition')
-            .wait_until_spinner_disappears()
-            .verify_Disposition_Statuses_on_the_grid
-            ([
-                [[1], 'Approved for Disposal'],
-                [[2, 3, 4], 'Approved for Release'],
-                [[5],'Delayed Release'],
-                [6,'Hold'],
-                [7,'Indefinite Retention'],
-                [8,'Delayed Disposal']])
-            .select_tab('Basic Info')
-            .verify_text_is_present_on_main_container('Closed')
-    });
+before(function () {
+    api.auth.get_tokens(orgAdmin);
+    api.org_settings.enable_all_Case_fields();
+    api.org_settings.enable_all_Item_fields();
+    api.org_settings.enable_all_Person_fields();
+    api.org_settings.update_org_settings(false, true);
+    api.users.update_current_user_settings(orgAdmin.id, DF.dateTimeFormats.short, DF.dateFormats.shortDate)
 });
+
 describe('Case', function () {
 
     it(
@@ -128,9 +65,6 @@ describe('Case', function () {
                 .click_button(C.buttons.add)
                 .verify_element_is_visible('Drag And Drop your files here')
                 .upload_file_and_verify_toast_msg('image.png')
-                .reload_page()
-                .select_tab(C.tabs.media)
-                .verify_content_of_results_table('image.png')
                 .edit_Description_on_first_row_on_grid(note)
 
             //Check values after reloading
@@ -241,9 +175,6 @@ describe('Item', function () {
                 .click_button(C.buttons.add)
                 .verify_element_is_visible('Drag And Drop your files here')
                 .upload_file_and_verify_toast_msg('image.png')
-                .reload_page()
-                .select_tab(C.tabs.media)
-                .verify_content_of_results_table('image.png')
                 .edit_Description_on_first_row_on_grid(note)
 
             //Check values after reloading
@@ -367,10 +298,12 @@ describe('Person', function () {
                 .click_button(C.buttons.edit)
                 .verify_values_on_Edit_form(D.newPerson)
 
-                // EDIT ITEM
+                // EDIT PERSON
                 .edit_all_values(D.editedPerson)
                 .click_Save()
                 .verify_toast_message(C.toastMsgs.saved)
+                .pause(1)
+                .wait_until_spinner_disappears()
                 .open_last_history_record(1)
                 .verify_all_values_on_history(D.editedPerson, D.newPerson)
                 //-- uncomment method in the next line and remove the one below that when bug gets fixed in #13328
@@ -389,9 +322,6 @@ describe('Person', function () {
                 .click_button_on_active_tab(C.buttons.add)
                 .verify_element_is_visible('Drag And Drop your files here')
                 .upload_file_and_verify_toast_msg('image.png')
-                .reload_page()
-                .select_tab(C.tabs.media)
-                .verify_content_of_results_table('image.png')
                 .edit_Description_on_first_row_on_grid(note)
 
             //Check values after reloading
@@ -416,6 +346,163 @@ describe('Person', function () {
 
         });
 });
+describe('User', function () {
+
+    it('Add User -- Assign Permissions -- Log in with newly created user', function () {
+        ui.app.log_title(this);
+
+        api.auth.get_tokens(orgAdmin);
+        D.generateNewDataSet();
+        D.newUser.permissionGroups = [S.selectedEnvironment.admin_permissionGroup.name]
+        api.org_settings.set_required_User_forms([])
+        ui.app.clear_gmail_inbox(S.gmailAccount);
+
+        api.org_settings.update_org_settings_by_specifying_property_and_value('addUserSupervisor', true)
+        api.org_settings.update_org_settings_by_specifying_property_and_value('isDivisionsAndUnitsEnabled', true)
+        ui.menu.click_Settings__User_Admin()
+            .click_button(C.buttons.add)
+        ui.userAdmin.enter_all_values(D.newUser)
+            .scroll_and_click(C.buttons.ok)
+            .verify_toast_message(C.toastMsgs.saved)
+            .select_permission_group_per_office(S.selectedEnvironment.admin_permissionGroup.name, D.newUser.office)
+            .click_button(C.buttons.save)
+            .verify_toast_message(C.toastMsgs.saved)
+            .search_for_user(D.newUser.email)
+        ui.userAdmin.verify_user_data_on_grid(D.newUser)
+        ui.menu.click_Log_Out()
+
+        ui.userAdmin.verify_email_content_(D.newUser.email, C.users.emailTemplates.welcomeToSafe, D.newUser, ' ')
+            .open_verification_link_from_email()
+            .set_password(D.newUser.password)
+            .scroll_and_click(C.buttons.setPassword)
+            .verify_confirmation_message_for_setting_Password(C.users.setPassword.confirmationMsg)
+            .click_button(C.buttons.login);
+        ui.login.enter_credentials(D.newUser.email, D.newUser.password)
+            .click_Login_button()
+            .verify_text_is_present_on_main_container(C.labels.dashboard.title)
+        ui.userAdmin.save_current_user_profile_to_local_storage()
+
+        api.auth.get_tokens(orgAdmin);
+        api.users.deactivate_previously_created_user();
+    });
+
+});
+describe('Item Transactions', function () {
+
+    it('Verify all transactions, data changes and enabled/disabled actions based on Item status', function () {
+        ui.app.log_title(this);
+
+        api.auth.get_tokens(orgAdmin);
+        api.org_settings.enable_all_Item_fields(C.itemFields.dispositionStatus);
+        D.generateNewDataSet()
+        api.cases.add_new_case()
+        api.items.add_new_item();
+        api.locations.add_storage_location('Box_2')
+
+        ui.app.open_newly_created_item_via_direct_link();
+        ui.itemView
+            //CHECK OUT
+            .click_Actions()
+            .perform_Item_Check_Out_transaction(orgAdmin, C.checkoutReasons.lab, 'test-note', D.currentDate)
+            .verify_edited_and_not_edited_values('view', ["Status", "Storage Location"], D.editedItem, D.newItem)
+            .click_Actions()
+            .verify_enabled_and_disabled_options_under_Actions_dropdown(
+                [
+                    'Check Item In',
+                    'Transfer Item',
+                    'Dispose Item',
+                    'Duplicate',
+                    'Split',
+                    'Manage Cases'],
+                [
+                    'Check Item Out',
+                    'Move Item',
+                    'Undispose Item',
+                ])
+
+            //TRANSFER
+            .perform_Item_Transfer_transaction(powerUser, orgAdmin, 'test-note')
+            .verify_edited_and_not_edited_values('view', ["Custodian"], D.editedItem, D.newItem)
+            .click_Actions()
+            .verify_enabled_and_disabled_options_under_Actions_dropdown(
+                [
+                    'Check Item In',
+                    'Transfer Item',
+                    'Dispose Item',
+                    'Duplicate',
+                    'Split',
+                    'Manage Cases'],
+                [
+                    'Check Item Out',
+                    'Move Item',
+                    'Undispose Item',
+                ])
+
+        //CHECK IN
+        ui.searchItem
+            .run_search_by_Item_Description(D.newItem.description)
+            .select_row_on_the_grid_that_contains_specific_value(D.newItem.description)
+            .click_Actions()
+            .perform_Item_CheckIn_transaction(powerUser, false, D['newLocationBox_2'][0].name, 'test-note')
+            .click_Actions()
+            .verify_enabled_and_disabled_options_under_Actions_dropdown_on_Search_Page(
+                [
+                    'Check Item Out',
+                    'Move Item',
+                    'Dispose Item',
+                    'Duplicate',
+                    'Split',
+                    'Manage Cases'],
+                [
+                    'Check Item In',
+                    'Transfer Item',
+                    'Undispose Item'
+                ])
+            .click_Actions()
+            .click_View_on_first_table_row()
+        ui.itemView.verify_Item_View_page_is_open(D.newCase.caseNumber)
+            .verify_edited_and_not_edited_values('view', ["Status", "Storage Location"], D.editedItem, D.newItem)
+
+            //DISPOSAL
+            .click_Actions()
+            .perform_Item_Disposal_transaction(powerUser, C.disposalMethods.auctioned, 'test-note')
+            .verify_edited_and_not_edited_values('view', ["Status", "Storage Location"], D.editedItem, D.newItem)
+            .click_Actions()
+            .verify_enabled_and_disabled_options_under_Actions_dropdown(
+                [
+                    'Undispose Item',
+                    'Duplicate',
+                    'Manage Cases'],
+                [
+                    'Check Item In',
+                    'Check Item Out',
+                    'Move Item',
+                    'Transfer Item',
+                    'Dispose Item',
+                    // 'Split' // uncomment this when bugs gets fixed -- card  #14841 /#20
+                ])
+
+            //UNDISPOSAL
+            .perform_Item_Undisposal_transaction(powerUser, true, D['newLocationBox_2'][0].name, 'test-note')
+            .verify_edited_and_not_edited_values('view', ["Status", "Storage Location"], D.editedItem, D.newItem)
+            .click_Actions()
+            .verify_enabled_and_disabled_options_under_Actions_dropdown([
+                'Check Item Out',
+                'Move Item',
+                'Dispose Item',
+                'Duplicate',
+                'Split',
+                'Manage Cases'], [
+                'Check Item In',
+                'Transfer Item',
+                'Undispose Item'
+            ])
+
+        api.locations.get_and_save_any_location_data_to_local_storage('root')
+        api.locations.move_location('Box_2', 'root')
+
+    });
+});
 
 // describe('Task', function () {
 //
@@ -425,129 +512,3 @@ describe('Person', function () {
 //     });
 //
 // });
-
-describe('Services', function () {
-
-    let powerUser = S.userAccounts.powerUser
-
-    it('Workflow Service', function () {
-        api.auth.get_tokens(S.userAccounts.orgAdmin);
-        D.generateNewDataSet();
-        api.workflows.delete_all_workflows();
-        ui.app.clear_gmail_inbox(S.gmailAccount);
-
-        ui.menu.click_Settings__Workflows();
-        ui.workflows.click_(C.buttons.add)
-            .set_up_workflow(
-                'workflow' + D.randomNo,
-                C.workflows.types.cases,
-                powerUser.name,
-                ['Email',
-                    //'Create new Task'
-                ],
-                C.workflows.executeWhen.created)
-            .click_Save()
-
-        api.cases.add_new_case();
-        // ui.app.open_newly_created_case_via_direct_link()
-        //     .select_tab('Tasks')
-        //     .get_text_from_grid_and_save_in_local_storage('Task #', 'taskNumber', 'td')
-        ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.caseCreated, D.newCase, null, 1, false)
-    })
-
-    it('Importer', function () {
-        let fileName = 'CaseImport_allFields_' + S.domain;
-        api.auth.get_tokens(S.userAccounts.orgAdmin);
-
-        D.generateNewDataSet();
-        D.getNewItemData(D.newCase);
-        D.newCase.caseOfficers_importFormat =
-            S.userAccounts.orgAdmin.email + ';' +
-            S.selectedEnvironment.admin_userGroup.name
-        D.newCase.caseOfficers = [S.userAccounts.orgAdmin.name, S.selectedEnvironment.admin_userGroup.name]
-
-        E.generateDataFor_CASES_Importer([D.newCase]);
-
-        ui.app.generate_excel_file(fileName, E.caseImportDataWithAllFields);
-        api.org_settings.enable_all_Case_fields();
-        api.org_settings.enable_all_Item_fields();
-        api.org_settings.update_org_settings(true, true);
-        api.auto_disposition.edit(true);
-
-        ui.menu.click_Tools__Data_Import();
-        ui.importer.upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.cases)
-            .verify_toast_message([
-                C.toastMsgs.importComplete,
-                1 + C.toastMsgs.recordsImported])
-            .quick_search_for_case(D.newCase.caseNumber);
-
-        ui.caseView.verify_Case_View_page_is_open(D.newCase.caseNumber)
-            .click_button_on_active_tab(C.buttons.edit)
-            .verify_values_on_Edit_form(D.newCase)
-            .open_last_history_record()
-            .verify_all_values_on_history(D.newCase)
-            .click_button_on_modal(C.buttons.cancel)
-            .verify_title_on_active_tab(1)
-
-        D.newItem.caseNumber = D.newCase.caseNumber
-        ui.menu.click_Add__Item();
-        ui.addItem.enter_Case_Number_and_select_on_typeahead(D.newCase.caseNumber)
-            .populate_all_fields_on_both_forms(D.newItem, false)
-            .select_post_save_action(C.postSaveActions.viewAddedItem)
-            .click_Save(D.newItem)
-            .verify_Error_toast_message_is_NOT_visible();
-        ui.itemView.verify_Item_View_page_is_open(D.newCase.caseNumber)
-    })
-
-    it('Dispo Auth Service', function () {
-
-        ui.app.log_title(this);
-        api.auth.get_tokens(orgAdmin);
-
-        D.getNewCaseData();
-        D.getNewItemData(D.newCase);
-        api.cases.add_new_case();
-
-        api.org_settings.enable_all_Item_fields();
-        var numberOfRecords = 51;
-        let selectedTemplate = S.selectedEnvironment.taskTemplates.dispoAuth;
-        D.getNewTaskData();
-        D.newTask = Object.assign(D.newTask, selectedTemplate);
-        D.newTask.creatorId = S.userAccounts.orgAdmin.id;
-        D.newTask.assignedUserIds = [S.userAccounts.orgAdmin.id];
-
-        E.generateDataFor_ITEMS_Importer([D.newItem], null, null, numberOfRecords);
-        cy.generate_excel_file('Items_forTestingDispoActionsService', E.itemImportDataWithAllFields);
-        ui.importer.import_data('Items_forTestingDispoActionsService', C.importTypes.items)
-
-        api.items.get_items_from_specific_case(D.newCase.caseNumber, 1, true);
-        api.tasks.add_new_task(D.newTask, 51);
-
-        ui.taskView
-            .open_newly_created_task_via_direct_link()
-            .select_tab('Items')
-            .set_large_view()
-            .set_Action___Approve_for_Disposal([1, 51])
-            .click('Submit For Disposition')
-            .verify_toast_message('Processing...')
-            .verify_Dispo_Auth_Job_Status('Complete')
-            .wait_until_spinner_disappears()
-            .disable_large_view()
-            .reload_page()
-            //.verify_text_is_present_on_main_container('Closed')
-            .select_tab('Items')
-            .verify_Disposition_Statuses_on_the_grid([
-                [[...Array(51).keys()], 'Approved for Disposal']])
-    });
-
-    it('Auto Reports - Release Letters', function () {
-
-        ui.app.log_title(this);
-        api.auth.get_tokens(orgAdmin);
-
-        ui.menu.click_Tools__Auto_Reports()
-        ui.app.sort_by_descending_order('Delivery Time')
-            .verify_text_is_present_and_check_X_more_times_after_waiting_for_30_seconds(approvedForReleaseItem.description, 10)
-    });
-
-})

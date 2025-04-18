@@ -12,6 +12,7 @@ C = {
         actions: 'Actions',
         search: 'Search',
         reports: 'Reports',
+        export: 'Export',
         view: 'View',
         add: 'Add',
         next: 'Next',
@@ -447,6 +448,7 @@ C = {
         resultsLimitExceededTitle: `Result Limit Exceeded`,
         resultsLimitExceeded: (limit) => `The query returned ${limit} results which is too many to be displayed.  Please narrow your search if you need to display results.`,
         reportRunning: 'The report is running and will automatically open in a new window when it is finished.',
+        popupBlocked: 'Pop-up Blocked!Please allow pop-ups in your browser in order to view or print the report.',
         daysCanOnlyBePositiveNumber: 'Days can only be Positive Number',
         locationChanged: 'Location Changed',
         emailsSent: numberOfEmails => `${numberOfEmails} emails sent`

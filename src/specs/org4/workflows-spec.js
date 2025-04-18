@@ -182,6 +182,7 @@ describe('Workflows', function () {
 
     });
 
+
     context('2. Item Workflows - all item fields enabled in Org Settings', function () {
 
         before(function () {
@@ -228,7 +229,7 @@ describe('Workflows', function () {
             api.org_settings.enable_all_Item_fields();
             api.cases.add_new_case()
             api.items.add_new_item()
-                .edit_newly_added_item();
+                .edit_newly_added_item(false);
             ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.itemEdited, D.editedItem)
         });
 

@@ -176,7 +176,8 @@ export default class AddItemPage extends BaseAddPage {
             ]);
 
         if (!skipStorageLocation) {
-            this.type_if_value_provided(storageLocation, itemObject.location, this.firstLocationOnTypeahead);
+         //   this.type_if_value_provided(storageLocation, itemObject.location, this.firstLocationOnTypeahead);
+            this.select_typeahead_option(storageLocation, itemObject.location, this.firstLocationOnTypeahead)
         }
 
         if (!skipItemBelongsTo) {

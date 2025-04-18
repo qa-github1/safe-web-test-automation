@@ -365,7 +365,7 @@ S.DEV_1 = {
     },
     taskTemplates: {
         dispoAuth: {
-            templateId: 4308,
+            templateId: 4524,
             type: 'Disposition Authorization',
             subtype: '',
             active: true,
@@ -376,7 +376,7 @@ S.DEV_1 = {
             title: 'Disposition Authorization',
         },
         other: {
-            templateId: 3386,
+            templateId: 4523,
             type: 'Other',
             subtype: '',
             active: true,
@@ -396,18 +396,18 @@ S.DEV_1 = {
     person: {
         name: 'Person_1',
         fullName: 'Cypress Person_1',
-        id: 6606993,
+        id: 5076012,
         get organizationId() {
             return S.DEV_1.orgSettings.id
         },
         userId: null,
-        guid: '6e2e9db2-48ab-4769-9eca-d678e6d77351',
+        guid: '4341bc26-96cd-45a2-a1d6-e88dd4b18a39',
         email: 'qa+person_1@trackerproducts.com'
     },
     person_2: {
         name: 'Person_2',
         fullName: 'Cypress Person_2',
-        id: 6606994,
+        id: 5076223,
         get organizationId() {
             return S.DEV_1.orgSettings.id
         },
@@ -819,6 +819,10 @@ S.DEV_3 = {
         basicUser: {
             id: 43684,
             guid: '6729d18f-8e86-ed11-832d-021f02b7478f'
+        },
+        blockedUser: {
+            id: 54357, // needs to be updated
+            guid: 'a484b498-75c9-ed11-8334-021f02b7478f' // needs to be updated
         },
     },
     divisions: {
@@ -2526,6 +2530,32 @@ S.PENTEST_1 = {
         name: 'Cypress ReadOnly Group',
         id: 2541
     },
+    taskTemplates: {
+        dispoAuth: {
+            templateId: 3747,
+            type: 'Disposition Authorization',
+            subtype: '',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 5,
+            useDispositionAuthorizationActions: true,
+            title: 'Disposition Authorization',
+            message: 'Message-forAutomatedTests'
+        },
+        other: {
+            templateId: 3381,
+            type: 'Other',
+            subtype: '',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 10,
+            useDispositionAuthorizationActions: true,
+            title: 'Title--forAutomatedTests',
+            message: 'Message-forAutomatedTests'
+        },
+    },
     orgTag1: {tagModelId: 6548, name: 'sensitive information', color: "#ad2355", tagUsedBy: 1},
     orgTag2: {tagModelId: 6714, name: 'eligible for disposal', color: "#4b9b62", tagUsedBy: 1},
     tagA: {tagModelId: 16806, name: 'Tag_A__', color: "#4b9b62", tagUsedBy: 1},
@@ -2801,7 +2831,6 @@ S.PENTEST_2 = {
         name: 'Cypress ReadOnly Group',
         id: 2898
     },
-
     taskTemplates: {
         dispoAuth: {
             templateId: 3511,
@@ -2815,7 +2844,6 @@ S.PENTEST_2 = {
             title: 'Disposition Authorization',
             message: 'Message-forAutomatedTests'
         },
-
         other: {
             templateId: 3381,
             type: 'Other',
