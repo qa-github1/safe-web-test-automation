@@ -21,6 +21,10 @@ S.isOrg2 = function () {
     return Cypress.env('orgNum') === 2
 }
 
+S.isOrg3 = function () {
+    return Cypress.env('orgNum') === 3
+}
+
 S.getCurrentDate = function (mask) {
     S.currentDateAndTime = helper.getCurrentDateInCurrentFormat(C.currentDateTimeFormat);
     S.currentDate = helper.getCurrentDateInCurrentFormat(C.currentDateFormat);
@@ -2850,7 +2854,9 @@ S.PENTEST_3 = {
     },
     office_2: {
         id: 1130,
-        name: "Web Test Automtion #3 - Cypress Office 2"
+        guid: '3d054095-8b86-ed11-832d-021f02b7478f',
+        name: "Cypress Office 2",
+        orgAndOfficeName: "Web Test Automtion #3 - Cypress Office 2"
     },
     org2: {
         office_1: {
@@ -2865,6 +2871,7 @@ S.PENTEST_3 = {
         officeName: "Cypress Office 1",
         orgAndOfficeName: "Web Test Automation - Cypress Office 1"
     },
+
     users: {
         systemAdminId: 40357,
         orgAdminId: 43666,
@@ -2894,6 +2901,10 @@ S.PENTEST_3 = {
             id: 43684,
             guid: '6729d18f-8e86-ed11-832d-021f02b7478f'
         },
+        blockedUser: {
+            id: 97282,
+            guid: '3b61822f-9f1a-f011-8371-021f02b7478f'
+        },
     },
     divisions: {
         div1: {
@@ -2919,12 +2930,12 @@ S.PENTEST_3 = {
             id: 89
         }
     },
-    // forms: {
-    //     userFormWithRequiredFields: 2542,
-    //     userFormWithOptionalFields: 2546,
-    //     taskFormWithRequiredFields: 2547,
-    //     taskFormWithOptionalFields: 2548
-    // },
+    forms: {
+        userFormWithRequiredFields: 24206,
+        userFormWithOptionalFields: 24207,
+        taskFormWithRequiredFields: 2547,
+        taskFormWithOptionalFields: 2548
+    },
     locations: [
         {
             id: 487927,
@@ -2948,22 +2959,22 @@ S.PENTEST_3 = {
     //     id: 105156,
     // },
     oldClosedCase: {
-        id: 7743098,
-        caseNumber: 'AutomatedTest-Closed Case',
+        id: 7743123,
+        caseNumber: 'Closed Case-AutomatedTest',
         createdDate: '12/28/2022',
         offenseDate: '12/21/2022',
         reviewDate: '12/30/2022',
-        closedDate: '12/29/2022',
+        closedDate: '12/28/2022',
     },
     oldActiveCase: {
         id: 7743205,
         caseNumber: 'AutomatedTest-Active Case',
         createdDate: '12/28/2022',
         offenseDate: '12/20/2022',
-        reviewDate: '01/03/2023',
+        reviewDate: '12/30/2022',
         caseReviewNotes: 'reviewNotes_122822788007',
     },
-    otherTaskTemplateId: 3605,
+    //otherTaskTemplateId: 3388,
     recentCase: {
         id: 7743099,
         caseNumber: 'AutomatedTest-Active Case'
@@ -3084,7 +3095,7 @@ S.PENTEST_3 = {
             title: 'Disposition Authorization',
         },
         other: {
-            templateId: 3388,
+            templateId: 3382,
             type: 'Other',
             subtype: '',
             active: true,
@@ -3155,6 +3166,10 @@ S.PENTEST_4 = {
             id: 43722,
             guid: '9fbf2a88-de8c-ed11-832e-021f02b7478f'
         },
+        blockedUser: {
+            id: 97339,
+            guid: 'db569414-481c-f011-8371-021f02b7478f'
+        },
     },
     divisions: {
         div1: {
@@ -3223,7 +3238,7 @@ S.PENTEST_4 = {
         offenseDate: '12/20/2022',
         reviewDate: '11/15/2025'
     },
-    otherTaskTemplateId: 3383,
+    otherTaskTemplateId: 3390,
     // recentCase: {
     //     id: 7744372,
     //     caseNumber: 'AutomatedTest-Active Case'
@@ -3296,6 +3311,7 @@ S.PENTEST_4 = {
             return S.PENTEST_4.regularUser_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
+
     readOnly_permissionGroup: {
         name: 'Cypress - ReadOnly',
         id: 4478,
@@ -3325,6 +3341,31 @@ S.PENTEST_4 = {
     readOnly_userGroup: {
         name: 'Cypress ReadOnly Group',
         id: 2913
+    },
+    taskTemplates: {
+        dispoAuth: {
+            templateId: 4308,
+            type: 'Disposition Authorization',
+            subtype: '',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 5,
+            useDispositionAuthorizationActions: true,
+            title: 'Disposition Authorization',
+        },
+        other: {
+            templateId: 3390,
+            type: 'Other',
+            subtype: '',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 10,
+            useDispositionAuthorizationActions: true,
+            title: 'Title--forAutomatedTests',
+            message: 'Message-forAutomatedTests'
+        }
     },
     orgTag1: {tagModelId: 16872, name: 'sensitive information', color: "#ad2355", tagUsedBy: 1},
     orgTag2: {tagModelId: 16873, name: 'eligible for disposal', color: "#4b9b62", tagUsedBy: 1},
