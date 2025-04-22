@@ -210,7 +210,7 @@ export default class UserAdminPage extends BasePage {
         login.enter_credentials(D.newUser.email, D.newUser.password)
             .click_Login_button()
 
-        if (S.isOrg2()) {
+        if (S.isOrg2() || S.isOrg3() ) {
             cy.contains('END OF TERMS AND CONDITIONS').scrollIntoView()
             cy.get('[title="Accept"]').click()
         }

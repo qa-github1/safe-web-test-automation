@@ -889,7 +889,7 @@ describe('Cases Search', function () {
                     .verify_data_on_the_grid(D.case0);
             });
 
-            it.only('1.9.2 not equals', function () {
+            it('1.9.2 not equals', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(orgAdmin);
                 ui.menu.click_Search__Case();
@@ -1250,6 +1250,8 @@ describe('Cases Search', function () {
             });
 
             it('1.14.6 older than X', function () {
+                //data are fixed in org3 pentest, failing in org2, but need to check what will be after executing
+                //tests related to redistribute cases with past date
                 ui.app.log_title(this);
                 let caseNo = S.selectedEnvironment.oldActiveCase.caseNumber;
                 let date1 = helper.getCurrentDateInSpecificFormat('mm/dd/yyyy')
@@ -1266,6 +1268,7 @@ describe('Cases Search', function () {
             });
 
             it('1.14.7 between X and Y', function () {
+                // set data on pentest2
                 ui.app.log_title(this);
                 let caseNo = S.selectedEnvironment.oldActiveCase.caseNumber;
                 let date1 = helper.getCurrentDateInSpecificFormat('mm/dd/yyyy')

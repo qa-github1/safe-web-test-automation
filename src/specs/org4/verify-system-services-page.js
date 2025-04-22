@@ -15,16 +15,18 @@ describe('System Services Page: verify the existing Services are in place, if a 
             "Reporter",
             "Workflow",
             "AutoDispo",
-            "Item to ES Service",
+            "ObjectToEs",
             "OrgDataDelete",
             "ScheduledJobs",
             "PersonMerge",
+            "ChangePrimaryCase",
             "ItemMassUpdate",
             "Verifications",
             "TransactionByQuery",
             "SharedViews",
             "MassUpdateByQuery",
-            "LocationsMove"
+            "LocationsMove",
+            "ReassignUsers"
         ]);
         ui.app.verify_system_services_page_status();
     });
