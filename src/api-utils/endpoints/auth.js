@@ -154,7 +154,6 @@ exports.keep_some_values_in_local_storage = function (arrayOfPropertiesToRetain,
         if (arrayOfPropertiesToRetain) {
             arrayOfPropertiesToRetain.forEach(property => {
                 cy.setLocalStorage(property, JSON.stringify(S.selectedEnvironment[property]));
-
             })
         }
 
