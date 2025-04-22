@@ -19,6 +19,8 @@ function request_with_JSON_data(httpMethod, urlSuffix, requestBody, log = '', pr
                 let propertyName;
                 let propertyValue;
 
+                cy.log('RESPONSe IS ' + JSON.stringify(response))
+
                 propertyName = propertyToSaveInLocalStorage || '';
 
                 // set value to be saved in settings.js file and local storage
@@ -44,12 +46,19 @@ function request_with_JSON_data(httpMethod, urlSuffix, requestBody, log = '', pr
                     cy.setLocalStorage(propertyName, propertyValue);
                 }
 
-                // log message and/or ID from the response object if available
-                // if (response.body && response.body.id) {
-                //    cy.log( '*********************************************    ' + log + propertyName + ' ' + JSON.parse(propertyValue).id + '     *********************************************', 'blue');
+
+                cy.log( '*********************************************    ' + log + propertyName + ' ' + response + '     *********************************************', 'blue');
+                console.log( '*********************************************    ' + log + propertyName + ' ' + JSON.stringify(response)+ '     *********************************************');
+
+
+                // // log message and/or ID from the response object if available
+                // if (response.body) {
+                //    cy.log( '*********************************************    ' + log + propertyName + ' ' + propertyValue + '     *********************************************', 'blue');
+                //    console.log( '*********************************************    ' + log + propertyName + ' ' + propertyValue+ '     *********************************************');
                 //
-                // } else {
-                //    cy.log('*********************************************    ' + log + propertyName + '     *********************************************', 'blue');
+                // } else{
+                //    cy.log('*********************************************    ' + log + propertyName + '     *********************************************');
+                //    console.log('*********************************************    ' + log + propertyName + '     *********************************************');
                 // }
             });
 }

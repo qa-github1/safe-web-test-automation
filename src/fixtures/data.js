@@ -20,6 +20,17 @@ D.getCurrentDateAndRandomNumber = function (randomNumberLenght) {
     return helper.mediumDate + '_' + helper.getRandomNo(randomNumberLenght);
 }
 
+
+D.getStorageLocationData = function (locationName, parentId = 0, canStore = true, isActive = true) {
+    D[locationName] = {
+            "name": D.currentDateAndRandomNumber + '_' + locationName,
+            "active": isActive,
+            "parentId": parentId,
+            "canStoreHere": canStore
+        }
+    return D[locationName]
+}
+
 D.getNewCaseData = function (caseNumber, autoDispoOff = false) {
     api.cases.get_most_recent_case();
     caseNumber = caseNumber || this.setNewRandomNo();
@@ -60,7 +71,7 @@ D.getNewCaseData = function (caseNumber, autoDispoOff = false) {
         caseOfficerGroupIds: [],
         caseOfficer: S.userAccounts.orgAdmin.email,
         caseOfficers: [S.userAccounts.orgAdmin.name],
-        caseOfficers_importFormat:  S.userAccounts.orgAdmin.guid,
+        caseOfficers_importFormat: S.userAccounts.orgAdmin.guid,
         caseOfficers_names: [S.userAccounts.orgAdmin.name],
         caseOfficerEmail: S.userAccounts.orgAdmin.name,
         caseOfficerName: S.userAccounts.orgAdmin.name,
@@ -521,8 +532,8 @@ D.getNewUserData = function (officeId) {
 
     D.newUser = {
         firstName: 'F' + randomNo,
-        middleName: '' ,
-      //  middleName: 'M' + randomNo,
+        middleName: '',
+        //  middleName: 'M' + randomNo,
         lastName: 'L' + randomNo,
         fullName: 'F' + randomNo + ' ' + 'M' + randomNo + ' ' + 'L' + randomNo,
         personnelNumber: randomNo,
@@ -969,16 +980,6 @@ D.getDataForMultipleCases = function (numberOfCases) {
 }
 
 D.currentDateAndRandomNumber = helper.mediumDate + '_' + helper.getRandomNo(3);
-
-D.buildStorageLocationData = function (locationSuffix, parentId = null, canStore = true, isActive = true) {
-
-    return D['newLocation' + locationSuffix] = [{
-        "name": D.currentDateAndRandomNumber + '_' + locationSuffix,
-        "active": isActive,
-        "parentId": parentId,
-        "canStoreHere": canStore
-    }]
-}
 
 
 module.exports = D;

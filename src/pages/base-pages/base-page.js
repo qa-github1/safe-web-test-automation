@@ -130,8 +130,10 @@ let
     tableColumnFoundByText = (text, tableIndex = 0) => resultsTableHeader(tableIndex).contains(text),
     lastRowInResultsTable = e => resultsTable().children('tr').last(),
     firstRowInResultsTableOnModal = e => cy.get('.modal-content').find('tbody').children('tr').first(),
+    visibleTable = e => cy.get('.table').not('.ng-hide'),
+    checkboxOnFirstRowOnVisbileTable = e => visibleTable().find('tbody').children('tr').first(),
     firstRowInResultsTableOnActiveTab = e => active_tab().find('tbody').children('tr').first(),
-    checkboxOnFirstRowInResultsTableOnActiveTab = tableIndex => active_tab().find('tbody').eq(tableIndex).children('tr').first().find('.bg-grid-checkbox'),
+    checkboxOnFirstRowInResultsTableOnActiveTab = (tableIndex = 0) => active_tab().find('tbody').eq(tableIndex).children('tr').first().find('.bg-grid-checkbox'),
     checkboxOnFirstTableRow = e => resultsTable().find('.bg-grid-checkbox').first(),
     checkboxToSelectAll = e => cy.get('[ng-model="options.selectAllToggle"]').first(),
     statisticsBlock = e => cy.get('.statistic-block').first(),
@@ -365,7 +367,12 @@ export default class BasePage {
 
     verify_text_is_present_on_main_container(text) {
         this.toastMessage().should('not.exist');
-        this.verify_text(mainContainer, text)
+      //  this.verify_text(mainContainer, text)
+
+        cy.waitUntilWithContentLogs(() =>
+                mainContainer().invoke('text'),
+            text
+        );
         return this;
     };
 
@@ -942,13 +949,19 @@ export default class BasePage {
     check_text(element, text) {
         if (element instanceof Function) {
             if (text === '') {
-                element().invoke('text').should('eq', text)
+                element().invoke('text').then((textFound) => {
+                    let normalizedActual = (Number.isFinite(textFound)) ? textFound : textFound.toString();
+                    expect(normalizedActual).to.eq('');
+                })
             } else if (text) {
                 element().should('contain.text', text)
             }
         } else {
             if (text === '') {
-                element.invoke('text').should('eq', text)
+                element.invoke('text').then((textFound) => {
+                    let normalizedActual = (Number.isFinite(textFound)) ? textFound : textFound.toString();
+                    expect(normalizedActual).to.eq('');
+                })
             } else if (text) {
                 element.should('contain.text', text)
             }
@@ -967,7 +980,7 @@ export default class BasePage {
             let expectedText = text || '';
 
             let normalizedText = actualText;
-            let normalizedExpected = (Number.isFinite(actualText)) ? actualText : actualText.toString()
+            let normalizedActual = (Number.isFinite(actualText)) ? actualText : actualText.toString();
 
             if (fieldName.toLowerCase() !== 'Guid') {
                 normalizedText = actualText.replace(/\s+/g, ' ').trim();
@@ -1239,8 +1252,10 @@ export default class BasePage {
         } else {
             cy.get('body').then($body => {
                 if ($body.find('[title="Select an item or items for which you would like to perform Action."]').length > 0) {
+                    actionsButton().should('exist')
                     actionsButton().click()
                 } else if ($body.find('[translate="GENERAL.ACTIONS"]').length > 0) {
+                    actionsButton2().should('exist')
                     actionsButton2().click()
                 } else {
                     cy.log('No action button found')
@@ -1608,12 +1623,17 @@ export default class BasePage {
 
     select_tab(tabTitle) {
 
-        let tab = title => (tabTitle === C.tabs.history) ? historyTab() : specificTab(title);
+        this.pause(1)
+        this.wait_until_spinner_disappears()
 
-        tab(tabTitle).should('be.visible');
-        tab(tabTitle).click();
-        tab(tabTitle).should('have.class', 'active');
-        this.pause(0.5)
+        if (tabTitle === C.tabs.history){
+            historyTab(tabTitle).should('be.visible').click().should('have.class', 'active')
+        }
+        else{
+            specificTab(tabTitle).should('be.visible').click().should('have.class', 'active')
+        }
+        this.pause(1)
+        this.wait_until_spinner_disappears()
         return this;
     };
 
@@ -2109,6 +2129,11 @@ export default class BasePage {
 
     select_checkbox_on_first_table_row_on_active_tab(tableIndex = 0) {
         checkboxOnFirstRowInResultsTableOnActiveTab(tableIndex).click();
+        return this;
+    };
+
+    select_checkbox_on_first_row_on_visible_table() {
+        checkboxOnFirstRowOnVisbileTable().click();
         return this;
     };
 
@@ -2913,7 +2938,7 @@ export default class BasePage {
     }
 
     populate_disposal_form(disposalWitness_user, method, notes) {
-        disposalWitnessInput().type(disposalWitness_user.email);
+        this.enterValue(disposalWitnessInput, disposalWitness_user.email)
         this.pause(0.5)
         this.click_option_on_typeahead(disposalWitness_user.fullName);
         disposalMethodsDropdown().select(method)

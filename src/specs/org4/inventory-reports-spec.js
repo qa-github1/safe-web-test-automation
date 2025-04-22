@@ -6,29 +6,16 @@ const ui = require('../../pages/ui-spec');
 const E = require("../../fixtures/files/excel-data");
 
 let orgAdmin = S.userAccounts.orgAdmin;
-
 describe('Inventory Reports', function () {
 
     context('1. Parent/child locations with items but without containers', function () {
 
-        let locations = [
-            'Parent1',
-            'Child1_1',
-            'Child1_2',
-            'Parent2',
-            'Child2_1',
-        ]
-
-        let items = [
-            'item0',
-            'item1',
-            'item2',
-            'item3',
-            'item4',
-            'item5',
-            'item6',
-            'item7',
-        ]
+        let
+            parent1 = D.currentDateAndRandomNumber + '_' +  'Parent1',
+            child1_1 = D.currentDateAndRandomNumber + '_' + 'Child1_1',
+            child1_2 = D.currentDateAndRandomNumber + '_' + 'Child1_2',
+            parent2 = D.currentDateAndRandomNumber + '_' + 'Parent2',
+            child2_1 = D.currentDateAndRandomNumber + '_' + 'Child2_1'
 
         let barcodes = [];
 
@@ -39,25 +26,25 @@ describe('Inventory Reports', function () {
             api.cases.add_new_case(D.newCase.caseNumber);
             api.people.add_new_person();
 
-            api.locations.add_storage_location('Parent1')
-            api.locations.add_storage_location('Child1_1', 'Parent1')
-            api.locations.add_storage_location('Child1_2', 'Parent1')
+            api.locations.add_storage_location(parent1)
+            api.locations.add_storage_location(child1_1, parent1)
+            api.locations.add_storage_location(child1_2, parent1)
 
-            api.locations.add_storage_location('Parent2')
-            api.locations.add_storage_location('Child2_1', 'Parent2')
+            api.locations.add_storage_location(parent2)
+            api.locations.add_storage_location(child2_1, parent2)
 
-            api.items.add_new_item(true, 'Parent1', 'item0')
+            api.items.add_new_item(true, parent1, 'item0')
 
-            api.items.add_new_item(true, 'Child1_1', 'item1')
-            api.items.add_new_item(true, 'Child1_1', 'item2')
+            api.items.add_new_item(true, child1_1, 'item1')
+            api.items.add_new_item(true, child1_1, 'item2')
 
-            api.items.add_new_item(true, 'Child1_2', 'item3')
-            api.items.add_new_item(true, 'Child1_2', 'item4')
+            api.items.add_new_item(true, child1_2, 'item3')
+            api.items.add_new_item(true, child1_2, 'item4')
 
-            api.items.add_new_item(true, 'Parent2', 'item5')
+            api.items.add_new_item(true, parent2, 'item5')
 
-            api.items.add_new_item(true, 'Child2_1', 'item6')
-            api.items.add_new_item(true, 'Child2_1', 'item7')
+            api.items.add_new_item(true, child2_1, 'item6')
+            api.items.add_new_item(true, child2_1, 'item7')
 
             for (let i = 0; i < 8; i++) {
                 cy.getLocalStorage('item' + i).then(item => {
@@ -67,31 +54,29 @@ describe('Inventory Reports', function () {
         });
 
         after(function () {
-            let arrayOfPropertiesInLocalStorage = locations.concat(items);
-            api.auth.get_tokens(orgAdmin, arrayOfPropertiesInLocalStorage);
+            api.auth.get_tokens(orgAdmin);
 
             // api.locations.delete_empty_storage_locations()
             api.locations.get_and_save_any_location_data_to_local_storage('root')
-            api.locations.move_location('Parent1', 'root')
-            api.locations.move_location('Child1_1', 'root')
-            api.locations.move_location('Child1_2', 'root')
-            api.locations.move_location('Parent2', 'root')
-            api.locations.move_location('Child2_1', 'root')
+            api.locations.move_location(parent1, 'root')
+            api.locations.move_location(child1_1, 'root')
+            api.locations.move_location(child1_2, 'root')
+            api.locations.move_location(parent2, 'root')
+            api.locations.move_location(child2_1, 'root')
         })
 
         it('1.1. DR for single parent location - No Discrepancies Found', function () {
             let reportName = D.getCurrentDateAndRandomNumber(4);
-            let arrayOfPropertiesInLocalStorage = locations.concat(items);
 
-            api.auth.get_tokens(orgAdmin, arrayOfPropertiesInLocalStorage);
+            api.auth.get_tokens(orgAdmin);
             ui.menu.click_Tools__Inventory_Reports()
                 .click_button(C.buttons.newReport)
-            ui.inventoryReports.start_report(reportName, D['newLocationParent1'][0].barcode)
+            ui.inventoryReports.start_report(reportName, D[parent1].barcode)
                 .enter_barcode(barcodes[0])
-                .enter_barcode(D['newLocationChild1_1'][0].barcode, true)
+                .enter_barcode(D[child1_1].barcode, true)
                 .enter_barcode(barcodes[1])
                 .enter_barcode(barcodes[2])
-                .enter_barcode(D['newLocationChild1_2'][0].barcode, true)
+                .enter_barcode(D[child1_2].barcode, true)
                 .enter_barcode(barcodes[3])
                 .enter_barcode(barcodes[4])
                 .click_button(C.buttons.runReport)
@@ -101,13 +86,12 @@ describe('Inventory Reports', function () {
 
         it('1.2. DR for single child location - No Discrepancies Found', function () {
             let reportName = D.getCurrentDateAndRandomNumber(4);
-            let arrayOfPropertiesInLocalStorage = locations.concat(items);
 
-            api.auth.get_tokens(orgAdmin, arrayOfPropertiesInLocalStorage);
+            api.auth.get_tokens(orgAdmin);
 
             ui.menu.click_Tools__Inventory_Reports()
                 .click_button(C.buttons.newReport)
-            ui.inventoryReports.start_report(reportName, D['newLocationChild1_1'][0].barcode)
+            ui.inventoryReports.start_report(reportName, D[child1_1].barcode)
                 .enter_barcode(barcodes[1])
                 .enter_barcode(barcodes[2])
                 .click_button(C.buttons.runReport)
@@ -117,9 +101,8 @@ describe('Inventory Reports', function () {
 
         it('1.3. DR for multiple parent and child locations - starting with Parent loc - No Discrepancies Found', function () {
             let reportName = D.getCurrentDateAndRandomNumber(4);
-            let arrayOfPropertiesInLocalStorage = locations.concat(items);
 
-            api.auth.get_tokens(orgAdmin, arrayOfPropertiesInLocalStorage);
+            api.auth.get_tokens(orgAdmin);
 
             for (let i = 0; i < 8; i++) {
                 cy.getLocalStorage('item' + i).then(item => {
@@ -128,17 +111,17 @@ describe('Inventory Reports', function () {
                     if (i === 7) {
                         ui.menu.click_Tools__Inventory_Reports()
                             .click_button(C.buttons.newReport)
-                        ui.inventoryReports.start_report(reportName, D['newLocationParent1'][0].barcode)
+                        ui.inventoryReports.start_report(reportName, D[parent1].barcode)
                             .enter_barcode(barcodes[0])
-                            .enter_barcode(D['newLocationChild1_1'][0].barcode, true)
+                            .enter_barcode(D[child1_1].barcode, true)
                             .enter_barcode(barcodes[1])
                             .enter_barcode(barcodes[2])
-                            .enter_barcode(D['newLocationChild1_2'][0].barcode, true)
+                            .enter_barcode(D[child1_2].barcode, true)
                             .enter_barcode(barcodes[3])
                             .enter_barcode(barcodes[4])
-                            .enter_barcode(D['newLocationParent2'][0].barcode, true)
+                            .enter_barcode(D[parent2].barcode, true)
                             .enter_barcode(barcodes[5])
-                            .enter_barcode(D['newLocationChild2_1'][0].barcode, true)
+                            .enter_barcode(D[child2_1].barcode, true)
                             .enter_barcode(barcodes[6])
                             .enter_barcode(barcodes[7])
                             .click_button(C.buttons.runReport)
@@ -151,9 +134,8 @@ describe('Inventory Reports', function () {
 
         it('1.4. Create and run DR for multiple parent and child locations - starting with Child loc -  No Discrepancies Found', function () {
             let reportName = D.getCurrentDateAndRandomNumber(4);
-            let arrayOfPropertiesInLocalStorage = locations.concat(items);
 
-            api.auth.get_tokens(orgAdmin, arrayOfPropertiesInLocalStorage);
+            api.auth.get_tokens(orgAdmin);
 
             for (let i = 0; i < 8; i++) {
                 cy.getLocalStorage('item' + i).then(item => {
@@ -162,15 +144,15 @@ describe('Inventory Reports', function () {
                     if (i === 7) {
                         ui.menu.click_Tools__Inventory_Reports()
                             .click_button(C.buttons.newReport)
-                        ui.inventoryReports.start_report(reportName, D['newLocationChild1_1'][0].barcode)
+                        ui.inventoryReports.start_report(reportName, D[child1_1].barcode)
                             .enter_barcode(barcodes[1])
                             .enter_barcode(barcodes[2])
-                            .enter_barcode(D['newLocationChild1_2'][0].barcode, true)
+                            .enter_barcode(D[child1_2].barcode, true)
                             .enter_barcode(barcodes[3])
                             .enter_barcode(barcodes[4])
-                            .enter_barcode(D['newLocationParent2'][0].barcode, true)
+                            .enter_barcode(D[parent2].barcode, true)
                             .enter_barcode(barcodes[5])
-                            .enter_barcode(D['newLocationChild2_1'][0].barcode, true)
+                            .enter_barcode(D[child2_1].barcode, true)
                             .enter_barcode(barcodes[6])
                             .enter_barcode(barcodes[7])
                             .click_button(C.buttons.runReport)
@@ -183,9 +165,8 @@ describe('Inventory Reports', function () {
 
         it('1.5. Create and run DR for multiple parent and child locations  - starting with Child loc - switching back to parent location-  No Discrepancies Found', function () {
             let reportName = D.getCurrentDateAndRandomNumber(4);
-            let arrayOfPropertiesInLocalStorage = locations.concat(items);
 
-            api.auth.get_tokens(orgAdmin, arrayOfPropertiesInLocalStorage);
+            api.auth.get_tokens(orgAdmin);
 
             for (let i = 0; i < 8; i++) {
                 cy.getLocalStorage('item' + i).then(item => {
@@ -194,18 +175,18 @@ describe('Inventory Reports', function () {
                     if (i === 7) {
                         ui.menu.click_Tools__Inventory_Reports()
                             .click_button(C.buttons.newReport)
-                        ui.inventoryReports.start_report(reportName, D['newLocationChild1_1'][0].barcode)
+                        ui.inventoryReports.start_report(reportName, D[child1_1].barcode)
                             .enter_barcode(barcodes[1])
-                            .enter_barcode(D['newLocationParent1'][0].barcode, true)
+                            .enter_barcode(D[parent1].barcode, true)
                             .enter_barcode(barcodes[0])
-                            .enter_barcode(D['newLocationChild1_1'][0].barcode, true)
+                            .enter_barcode(D[child1_1].barcode, true)
                             .enter_barcode(barcodes[2])
-                            .enter_barcode(D['newLocationParent2'][0].barcode, true)
+                            .enter_barcode(D[parent2].barcode, true)
                             .enter_barcode(barcodes[5])
-                            .enter_barcode(D['newLocationChild1_2'][0].barcode, true)
+                            .enter_barcode(D[child1_2].barcode, true)
                             .enter_barcode(barcodes[3])
                             .enter_barcode(barcodes[4])
-                            .enter_barcode(D['newLocationChild2_1'][0].barcode, true)
+                            .enter_barcode(D[child2_1].barcode, true)
                             .enter_barcode(barcodes[6])
                             .enter_barcode(barcodes[7])
                             .click_button(C.buttons.runReport)
@@ -218,13 +199,12 @@ describe('Inventory Reports', function () {
 
         it('1.6. Create and run DR for single parent location - multiple Discrepancies Found', function () {
             let reportName = D.getCurrentDateAndRandomNumber(4);
-            let arrayOfPropertiesInLocalStorage = locations.concat(items);
 
-            api.auth.get_tokens(orgAdmin, arrayOfPropertiesInLocalStorage);
+            api.auth.get_tokens(orgAdmin);
 
             ui.menu.click_Tools__Inventory_Reports()
                 .click_button(C.buttons.newReport)
-            ui.inventoryReports.start_report(reportName, D['newLocationParent1'][0].barcode)
+            ui.inventoryReports.start_report(reportName, D[parent1].barcode)
                 .enter_barcode(barcodes[1])
                 .click_button(C.buttons.runReport)
                 .verify_text_is_present_on_main_container(C.labels.InventoryReports.wrongStorageLocation(1))
@@ -234,13 +214,12 @@ describe('Inventory Reports', function () {
 
         it('1.7. Create and run DR for single child location - multiple Discrepancies Found', function () {
             let reportName = D.getCurrentDateAndRandomNumber(4);
-            let arrayOfPropertiesInLocalStorage = locations.concat(items);
 
-            api.auth.get_tokens(orgAdmin, arrayOfPropertiesInLocalStorage);
+            api.auth.get_tokens(orgAdmin);
 
             ui.menu.click_Tools__Inventory_Reports()
                 .click_button(C.buttons.newReport)
-            ui.inventoryReports.start_report(reportName, D['newLocationChild1_1'][0].barcode)
+            ui.inventoryReports.start_report(reportName, D[child1_1].barcode)
                 .enter_barcode(barcodes[0])
                 .click_button(C.buttons.runReport)
                 .verify_text_is_present_on_main_container(C.labels.InventoryReports.wrongStorageLocation(1))
@@ -250,16 +229,15 @@ describe('Inventory Reports', function () {
 
         it('1.8. Create and run DR for multiple storage locations - multiple Discrepancies Found', function () {
             let reportName = D.getCurrentDateAndRandomNumber(4);
-            let arrayOfPropertiesInLocalStorage = locations.concat(items);
 
-            api.auth.get_tokens(orgAdmin, arrayOfPropertiesInLocalStorage);
+            api.auth.get_tokens(orgAdmin);
 
             ui.menu.click_Tools__Inventory_Reports()
                 .click_button(C.buttons.newReport)
-            ui.inventoryReports.start_report(reportName, D['newLocationParent1'][0].barcode)
+            ui.inventoryReports.start_report(reportName, D[parent1].barcode)
                 .enter_barcode(barcodes[0])
                 .enter_barcode(barcodes[1])
-                .enter_barcode(D['newLocationChild1_1'][0].barcode, true)
+                .enter_barcode(D[child1_1].barcode, true)
                 .enter_barcode(barcodes[2])
                 .click_button(C.buttons.runReport)
                 .verify_text_is_present_on_main_container(C.labels.InventoryReports.wrongStorageLocation(1))
@@ -270,27 +248,19 @@ describe('Inventory Reports', function () {
 
     context('2. Parent/child locations with items and containers', function () {
 
-        let locations = [
-            'LOC1',
-            'Container1',
-            'EmptyContainer1',
-            'Sublocation1',
-            'SubContainer1',
-            'LOC2',
-            'Container2',
-            'EmptyContainer2',
-            'Sublocation2',
-        ]
-
-        let items = [
-            'item0',
-            'item1',
-            'item2',
-            'item3',
-            'item4'
-        ]
-
         let barcodes = [];
+
+        let
+            loc1 = D.currentDateAndRandomNumber + '_' +  'Loc1',
+            container1 = D.currentDateAndRandomNumber + '_' + 'Container1',
+            emptyContainer1 = D.currentDateAndRandomNumber + '_' + 'EmptyContainer1',
+            inactiveContainer1 = D.currentDateAndRandomNumber + '_' + 'InactiveContainer1',
+            sublocation1 = D.currentDateAndRandomNumber + '_' + 'Sublocation1',
+            subcontainer1 = D.currentDateAndRandomNumber + '_' + 'Subcontainer1',
+            loc2 = D.currentDateAndRandomNumber + '_' + 'Loc2',
+            container2 = D.currentDateAndRandomNumber + '_' + 'Container2',
+            emptyContainer2 = D.currentDateAndRandomNumber + '_' + 'EmptyContainer2',
+            sublocation2 = D.currentDateAndRandomNumber + '_' + 'Sublocation2'
 
         before(function () {
             api.auth.get_tokens(orgAdmin);
@@ -299,32 +269,33 @@ describe('Inventory Reports', function () {
             api.cases.add_new_case(D.newCase.caseNumber);
             api.people.add_new_person();
 
-            api.locations.add_storage_location('LOC1')
-            api.locations.add_storage_location('Container1', 'LOC1')
-            api.locations.update_location('Container1', 'isContainer', true)
-            api.locations.add_storage_location('EmptyContainer1', 'LOC1')
-            api.locations.update_location('EmptyContainer1', 'isContainer', true)
-            api.locations.add_storage_location('InactiveContainer1', 'LOC1')
-            api.locations.update_location('InactiveContainer1', 'active', false)
-            api.locations.add_storage_location('Sublocation1', 'LOC1')
-            api.locations.add_storage_location('SubContainer1', 'Sublocation1')
-            api.locations.update_location('SubContainer1', 'isContainer', true)
 
-            api.locations.add_storage_location('LOC2')
-            api.locations.add_storage_location('Container2', 'LOC2')
-            api.locations.update_location('Container2', 'isContainer', true)
-            api.locations.add_storage_location('EmptyContainer2', 'LOC2')
-            api.locations.update_location('EmptyContainer2', 'isContainer', true)
-            api.locations.add_storage_location('Sublocation2', 'LOC2')
+            api.locations.add_storage_location(loc1)
+            api.locations.add_storage_location(container1, loc1)
+            api.locations.update_location(container1, 'isContainer', true)
+            api.locations.add_storage_location(emptyContainer1, loc1)
+            api.locations.update_location(emptyContainer1, 'isContainer', true)
+            api.locations.add_storage_location(inactiveContainer1, loc1)
+            api.locations.update_location(inactiveContainer1, 'active', false)
+            api.locations.add_storage_location(sublocation1, loc1)
+            api.locations.add_storage_location(subcontainer1, sublocation1)
+            api.locations.update_location(subcontainer1, 'isContainer', true)
+
+            api.locations.add_storage_location(loc2)
+            api.locations.add_storage_location(container2, loc2)
+            api.locations.update_location(container2, 'isContainer', true)
+            api.locations.add_storage_location(emptyContainer2, loc2)
+            api.locations.update_location(emptyContainer2, 'isContainer', true)
+            api.locations.add_storage_location(sublocation2, loc2)
 
 
-            api.items.add_new_item(true, 'LOC1', 'item0')
-            api.items.add_new_item(true, 'LOC1', 'item1')
-            api.items.add_new_item(true, 'Container1', 'item2')
-            api.items.add_new_item(true, 'Sublocation1', 'item3')
-            api.items.add_new_item(true, 'SubContainer1', 'item4')
-            api.items.add_new_item(true, 'LOC2', 'item5')
-            api.items.add_new_item(true, 'Container2', 'item6')
+            api.items.add_new_item(true, loc1, 'item0')
+            api.items.add_new_item(true, loc1, 'item1')
+            api.items.add_new_item(true, container1, 'item2')
+            api.items.add_new_item(true, sublocation1, 'item3')
+            api.items.add_new_item(true, subcontainer1, 'item4')
+            api.items.add_new_item(true, loc2, 'item5')
+            api.items.add_new_item(true, container2, 'item6')
 
             for (let i = 0; i < 7; i++) {
                 cy.getLocalStorage('item' + i).then(item => {
@@ -337,21 +308,20 @@ describe('Inventory Reports', function () {
             'container with item, empty container, sub-location, empty sub-container and sub-container with item - No Discrepancies Found', function () {
 
             let reportName = D.getCurrentDateAndRandomNumber(4);
-            let arrayOfPropertiesInLocalStorage = locations.concat(items);
 
-            api.auth.get_tokens(orgAdmin, arrayOfPropertiesInLocalStorage);
+            api.auth.get_tokens(orgAdmin);
 
             ui.menu.click_Tools__Inventory_Reports()
                 .click_button(C.buttons.newReport)
-            ui.inventoryReports.start_report(reportName, S.LOC1.barcode)
+            ui.inventoryReports.start_report(reportName, D[loc1].barcode)
                 .enter_barcode(barcodes[0])
                 .enter_barcode(barcodes[1])
-                .enter_barcode(S.Container1.barcode, false)
-                .enter_barcode(S.Sublocation1.barcode, true)
-                .enter_barcode(S.SubContainer1.barcode, false)
+                .enter_barcode(D[container1].barcode, false)
+                .enter_barcode(D[sublocation1].barcode, true)
+                .enter_barcode(D[subcontainer1].barcode, false)
                 .enter_barcode(barcodes[3])
-                .enter_barcode(S.LOC2.barcode, true)
-                .enter_barcode(S.Container2.barcode, false)
+                .enter_barcode(D[loc2].barcode, true)
+                .enter_barcode(D[container2].barcode, false)
                 .enter_barcode(barcodes[5])
                 .click_button(C.buttons.runReport)
                 .verify_text_is_present_on_main_container(C.labels.InventoryReports.noDiscrepanciesFound)
@@ -366,24 +336,23 @@ describe('Inventory Reports', function () {
             '"Containers in Wrong Location"', function () {
 
             let reportName = D.getCurrentDateAndRandomNumber(4);
-            let arrayOfPropertiesInLocalStorage = locations.concat(items);
 
-            api.auth.get_tokens(orgAdmin, arrayOfPropertiesInLocalStorage);
+            api.auth.get_tokens(orgAdmin);
 
             ui.menu.click_Tools__Inventory_Reports()
                 .click_button(C.buttons.newReport)
-            ui.inventoryReports.start_report(reportName, S.LOC1.barcode)
+            ui.inventoryReports.start_report(reportName, D[loc1].barcode)
                 .enter_barcode('test')
                 .enter_barcode('test', false, true)
                 .enter_barcode(barcodes[0])
                 .enter_barcode(barcodes[0], false, true)
                 .enter_barcode(barcodes[0], false, true)
-                .enter_barcode(S.Container2.barcode, false)
-                .enter_barcode(S.Container2.barcode, false, true)
+                .enter_barcode(D[container2].barcode, false)
+                .enter_barcode(D[container2].barcode, false, true)
                 .enter_barcode(barcodes[2])
                 .enter_barcode(barcodes[2])
                 .enter_barcode(barcodes[5])
-                .enter_barcode(S.LOC2.barcode, true)
+                .enter_barcode(D[loc2].barcode, true)
                 .click_button(C.buttons.runReport)
                 .verify_text_is_present_on_main_container(C.labels.InventoryReports.barcodeValidButNotFoundInSystem(1))
                 .verify_text_is_present_on_main_container(C.labels.InventoryReports.wrongStorageLocation(2))
@@ -394,20 +363,20 @@ describe('Inventory Reports', function () {
         })
     });
 
-    context.only('2. Scanning 1000 items', function () {
+    context('2. Scanning 1000 items', function () {
         // this test is excluded from the regular regression suite for now, to reduce the total execution time
         it('3. Scanning 1000 items during Inventory report', function () {
 
             api.auth.get_tokens(orgAdmin);
             api.org_settings.disable_Item_fields([C.itemFields.description])
             // setting 20 items here for now, but we can adjust the number at any point
-            var numberOfRecords = 20
+            var numberOfRecords = 1000
 
             D.getNewCaseData()
             D.getNewItemData(D.newCase)
             api.locations.add_storage_location('RootLevel')
             api.cases.add_new_case()
-            D.newItem.location = D['newLocationRootLevel'][0].name
+            D.newItem.location = D['RootLevel'][0].name
             E.generateDataFor_ITEMS_Importer([D.newItem], null, null, numberOfRecords);
             cy.generate_excel_file('Items_forTestingInventoryReports', E.itemImportDataWithMinimumFields);
             ui.menu.click_Tools__Data_Import();
@@ -427,7 +396,7 @@ describe('Inventory Reports', function () {
                     ui.inventoryReports.start_report(reportName, JSON.parse(parentLoc).barcode)
                     for (let i = 0; i < numberOfRecords; i++) {
                         ui.inventoryReports.enter_barcode_(barcodesArray[i])
-                        if(i === numberOfRecords-1) ui.app.pause(3)
+                        if (i === numberOfRecords - 1) ui.app.pause(3)
                     }
                 })
             })

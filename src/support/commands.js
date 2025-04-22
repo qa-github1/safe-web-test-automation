@@ -25,18 +25,23 @@ Cypress.Commands.add(
 Cypress.Commands.add('waitUntilWithContentLogs', (getActualTextFn, expectedValues, options = {}) => {
     let attempt = 0;
 
+    const normalizeText = (text) => {
+        return text.replace(/\s+/g, ' ').trim();
+    };
+
     const normalizeExpected = (expected) => {
-        if (Array.isArray(expected)) return expected;
-        if (typeof expected === 'object') return Object.values(expected);
-        return [expected];
+        if (Array.isArray(expected)) return expected.map(normalizeText);
+        if (typeof expected === 'object') return Object.values(expected).map(normalizeText);
+        return [normalizeText(expected)];
     };
 
     const wrappedCondition = () => {
         attempt++;
 
         return getActualTextFn().then(actualText => {
+            const normalizedActual = normalizeText(actualText);
             const expectedArray = normalizeExpected(expectedValues);
-            const failedMatches = expectedArray.filter(val => !actualText.includes(val));
+            const failedMatches = expectedArray.filter(val => !normalizedActual.includes(val));
             const passed = failedMatches.length === 0;
 
             Cypress.log({
@@ -48,7 +53,7 @@ Cypress.Commands.add('waitUntilWithContentLogs', (getActualTextFn, expectedValue
                     attempt,
                     expected: expectedArray,
                     missing: failedMatches,
-                    actual: actualText,
+                    actual: normalizedActual,
                 })
             });
 

@@ -5,10 +5,29 @@ const cases = require('../cases/collection');
 const body = require('./payload');
 const ui = require("../../../pages/ui-spec");
 
-exports.add_new_item = function (toNewCase = true, locationSuffix = null, propertyToSave = 'newItem', itemObject) {
+function isObject(variable) {
+    return Object.prototype.toString.call(variable) === '[object Object]'
+}
+
+exports.add_new_item = function (toNewCase = true, locationObjectOrName = null, propertyToSave = 'newItem', itemObject) {
+   let specificLocation
+
+    if (isObject(locationObjectOrName)) {
+        specificLocation = Object.assign({}, locationObjectOrName)
+    }
+    else{
+        specificLocation =  Object.assign({},
+            {
+                "name": locationObjectOrName,
+                "active": true,
+                "parentId": 0,
+                "canStoreHere": true
+            })
+    }
+
     cy.getLocalStorage("newCase").then(newCase => {
         cy.getLocalStorage("newPerson").then(newPerson => {
-            cy.getLocalStorage(locationSuffix).then(location => {
+            cy.getLocalStorage(specificLocation.name).then(location => {
 
                // let caseObject = toNewCase ? JSON.parse(newCase) : null;
                // let locationObject = JSON.parse(location);
