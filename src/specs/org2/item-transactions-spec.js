@@ -12,9 +12,11 @@ describe('Item Transactions & Actions', function () {
     before(function () {
         api.auth.get_tokens(orgAdmin);
         api.users.update_current_user_settings(orgAdmin.id)
-        api.org_settings.disable_Item_fields(['Description']);
+        //api.org_settings.disable_Item_fields(['Description']);
+        api.org_settings.enable_all_Item_fields(C.itemFields.dispositionStatus);
         api.org_settings.enable_all_Person_fields()
-        api.org_settings.update_org_settings(false, true, false, " ")
+        api.org_settings.update_org_settings(false, true, false, "~person.firstName~ ~person.lastName~")
+        api.locations.add_storage_location('Box_2')
 
     });
 
@@ -39,17 +41,19 @@ describe('Item Transactions & Actions', function () {
         api.items.add_new_item(false);
         ui.app.open_newly_created_item_via_direct_link();
 
-        ui.itemView.check_Out_the_item(orgAdmin, C.checkoutReasons.lab, 'test-note', D.currentDate)
-            .verify_Items_Status('Checked Out')
-            .click_Actions_on_View_page()
+        ui.app.click_Actions()
+            .perform_Item_Check_Out_transaction(orgAdmin, C.checkoutReasons.lab, 'test-note', D.currentDate)
+        ui.itemView.verify_Items_Status('Checked Out')
+            .verify_edited_and_not_edited_values('view', ["Status", "Storage Location"], D.editedItem, D.newItem)
+            .click_Actions()
             .verify_enabled_and_disabled_options_under_Actions_dropdown(enabledActions, disabledActions)
         ui.searchItem.run_search_by_Item_Description(D.newItem.description)
             .select_row_on_the_grid_that_contains_specific_value(D.newItem.description)
-            .click_Actions_on_Search_Page()
+            .click_Actions()
             .verify_enabled_and_disabled_options_under_Actions_dropdown_on_Search_Page(enabledActions, disabledActions)
     });
 
-    it.only('2. Verify Transfer transaction and enabled/disabled actions for Checked Out item', function () {
+    it('2. Verify Transfer transaction and enabled/disabled actions for Checked Out item', function () {
         ui.app.log_title(this);
         const enabledActions = [
             'Check Item In',
@@ -68,17 +72,18 @@ describe('Item Transactions & Actions', function () {
         api.auth.get_tokens(orgAdmin);
          D.generateNewDataSet()
          api.items.add_new_item(false);
-         ui.app.open_newly_created_item_via_direct_link();
+        api.transactions.check_out_item()
+        ui.app.open_newly_created_item_via_direct_link();
 
-        ui.itemView
-            .check_Out_the_item(orgAdmin, C.checkoutReasons.lab, 'test-note', D.currentDate)
-            .transfer_the_item(powerUser, orgAdmin, 'test-note')
-           .verify_Items_Status('Checked Out')
-            .click_Actions_on_View_page()
-            .verify_enabled_and_disabled_options_under_Actions_dropdown(enabledActions, disabledActions)
+        ui.app.click_Actions()
+            .perform_Item_Transfer_transaction(powerUser, orgAdmin, 'test-note')
+            ui.itemView.verify_Items_Status('Checked Out')
+                .verify_edited_and_not_edited_values('view', ["Custodian"], D.editedItem, D.newItem)
+                .click_Actions()
+                .verify_enabled_and_disabled_options_under_Actions_dropdown(enabledActions, disabledActions)
         ui.searchItem.run_search_by_Item_Description(D.newItem.description)
             .select_row_on_the_grid_that_contains_specific_value(D.newItem.description)
-            .click_Actions_on_Search_Page()
+            .click_Actions()
             .verify_enabled_and_disabled_options_under_Actions_dropdown_on_Search_Page(enabledActions, disabledActions)
     });
 
@@ -104,13 +109,14 @@ describe('Item Transactions & Actions', function () {
         api.transactions.check_out_item()
         ui.app.open_newly_created_item_via_direct_link();
 
-        ui.itemView.check_In_the_item(powerUser, true, 'test-note')
-            .verify_Items_Status('Checked In')
-            .click_Actions_on_View_page()
+        ui.app.click_Actions()
+            .perform_Item_CheckIn_transaction(powerUser, false, D['newLocationBox_2'][0].name, 'test-note')
+            ui.itemView.verify_Items_Status('Checked In')
+            .click_Actions()
             .verify_enabled_and_disabled_options_under_Actions_dropdown(enabledActions, disabledActions)
         ui.searchItem.run_search_by_Item_Description(D.newItem.description)
             .select_row_on_the_grid_that_contains_specific_value(D.newItem.description)
-            .click_Actions_on_Search_Page()
+            .click_Actions()
             .verify_enabled_and_disabled_options_under_Actions_dropdown_on_Search_Page(enabledActions, disabledActions)
     });
 
@@ -135,13 +141,15 @@ describe('Item Transactions & Actions', function () {
         api.items.add_new_item(false);
         ui.app.open_newly_created_item_via_direct_link();
 
-        ui.itemView.dispose_the_item(powerUser, C.disposalMethods.auctioned, 'test-note')
-            .verify_Items_Status('Disposed')
-            .click_Actions_on_View_page()
+        ui.app.click_Actions()
+            .perform_Item_Disposal_transaction(powerUser, C.disposalMethods.auctioned, 'test-note')
+            ui.itemView.verify_edited_and_not_edited_values('view', ["Status", "Storage Location"], D.editedItem, D.newItem)
+        ui.itemView.verify_Items_Status('Disposed')
+            .click_Actions()
             .verify_enabled_and_disabled_options_under_Actions_dropdown(enabledActions, disabledActions)
         ui.searchItem.run_search_by_Item_Description(D.newItem.description)
             .select_row_on_the_grid_that_contains_specific_value(D.newItem.description)
-            .click_Actions_on_Search_Page()
+            .click_Actions()
             .verify_enabled_and_disabled_options_under_Actions_dropdown_on_Search_Page(enabledActions, disabledActions)
     });
 
@@ -167,13 +175,19 @@ describe('Item Transactions & Actions', function () {
         api.transactions.dispose_item()
         ui.app.open_newly_created_item_via_direct_link();
 
-        ui.itemView.undispose_the_item(powerUser, true, 'test-note')
-            .verify_Items_Status('Checked In')
-            .click_Actions_on_View_page()
+        ui.app.click_Actions()
+            .perform_Item_Undisposal_transaction(powerUser, true, D['newLocationBox_2'][0].name, 'test-note')
+        ui.itemView.verify_edited_and_not_edited_values('view', ["Status", "Storage Location"], D.editedItem, D.newItem)
+                .verify_Items_Status('Checked In')
+            .click_Actions()
             .verify_enabled_and_disabled_options_under_Actions_dropdown(enabledActions, disabledActions)
         ui.searchItem.run_search_by_Item_Description(D.newItem.description)
             .select_row_on_the_grid_that_contains_specific_value(D.newItem.description)
-            .click_Actions_on_Search_Page()
+            .click_Actions()
             .verify_enabled_and_disabled_options_under_Actions_dropdown_on_Search_Page(enabledActions, disabledActions)
+
+        api.locations.get_and_save_any_location_data_to_local_storage('root')
+        api.locations.move_location('Box_2', 'root')
+
     });
 });

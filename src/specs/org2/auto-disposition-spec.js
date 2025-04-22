@@ -59,7 +59,7 @@ describe('Auto-Disposition', function () {
             api.users.update_current_user_settings(user.id, DF.dateTimeFormats.long)
         });
 
-        it.only('3.1 Verify "Re-Distribute" for "Past Due" cases', function () {
+        it('3.1 Verify "Re-Distribute" for "Past Due" cases', function () {
             api.auth.get_tokens(user);
            // api.users.update_current_user_settings(user.id)
             ui.menu.click_Settings__Organization()

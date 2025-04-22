@@ -54,6 +54,7 @@ describe('Add Item', function () {
 
         it('1.2. Optional fields disabled -- redirect to View Added Item ' +
             '-- Item Belongs To Shows All People" turned OFF in Org Settings -- multiple values selected for "Item Belongs to" and Tags', function () {
+           //this test is failing in Org #4
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
             D.getItemDataWithReducedFields(D.newCase);
@@ -236,6 +237,7 @@ describe('Add Item', function () {
             api.auth.get_tokens(orgAdmin);
             D.getNewItemData(D.newCase);
             api.org_settings.enable_all_Item_fields();
+            D.newUser.middleName = 'M' + D.randomNo
             api.users.add_new_user('new_user');
 
             ui.menu.click_Add__Item();
@@ -433,7 +435,7 @@ describe('Add Item', function () {
                 .verify_text_is_present_on_main_container(C.labels.addItem.title)
                 .verify_Case_Number_is_populated_on_enabled_input_field(D.newItem.caseNumber)
                 .verify_Category(D.newItem.category)
-                .click(C.buttons.next)
+                .click_Next()
                 .verify_location(D.newItem.location)
                 .verify_text_on_main_Form(C.labels.addItem.confirmItemSplit)
                 .select_checkbox()

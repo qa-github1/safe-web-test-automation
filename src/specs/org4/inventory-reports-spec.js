@@ -394,9 +394,9 @@ describe('Inventory Reports', function () {
         })
     });
 
-    context.only('2. Scanning 1000 items', function () {
+    context('2. Scanning 1000 items', function () {
         // this test is excluded from the regular regression suite for now, to reduce the total execution time
-        it('3. Scanning 1000 items during Inventory report', function () {
+        xit('3. Scanning 1000 items during Inventory report', function () {
 
             api.auth.get_tokens(orgAdmin);
             api.org_settings.disable_Item_fields([C.itemFields.description])

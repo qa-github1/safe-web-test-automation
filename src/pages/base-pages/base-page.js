@@ -2869,7 +2869,7 @@ export default class BasePage {
     populate_CheckIn_form(returnedBy, usePreviousLocation, fullLocationPath, note) {
         returnedByInput().type(returnedBy.email);
         this.click_option_on_typeahead(returnedBy.fullName);
-        if (usePreviousLocation) {
+        if (usePreviousLocation === true) {
             usePreviousLocationCheckbox().click();
         } else {
             this.select_Storage_location(fullLocationPath)
@@ -2933,7 +2933,7 @@ export default class BasePage {
     }
 
     perform_Item_Undisposal_transaction(returnedBy_userObject, usePreviousLocation, fullLocationPath, note) {
-        this.click_option_on_expanded_menu(C.dropdowns.itemActions.undisposeItem)
+    this.click_option_on_expanded_menu(C.dropdowns.itemActions.undisposeItem)
             .populate_CheckIn_form(returnedBy_userObject, usePreviousLocation, fullLocationPath, note)
             .click_button_on_modal(C.buttons.ok)
             .verify_toast_message('Saved')
