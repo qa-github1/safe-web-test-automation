@@ -337,7 +337,7 @@ export default class CaseViewPage extends BaseViewPage {
             });
             this.wait_element_to_be_visible(caseNumberInput_enabled);
 
-            this.edit_fields_if_new_values_provided(
+            this.type_if_values_provided(
                 [
                     [caseNumberInput_enabled, newCaseObject.caseNumber],
                     [offenseLocationInput, newCaseObject.offenseLocation, offenseLocationTypeahead],

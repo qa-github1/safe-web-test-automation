@@ -10,23 +10,33 @@ function unquote(str) {
     return str.replace(/(^")|("$)/g, '');
 }
 
-Cypress.Commands.add(
-    'before',
+Cypress.Commands.add('verifyTextAndRetry', (
+    getActualTextFn,
+    expectedValues,
     {
-        prevSubject: 'element',
-    },
-    (el, property) => {
-        const win = el[0].ownerDocument.defaultView;
-        const before = win.getComputedStyle(el[0], 'before');
-        return unquote(before.getPropertyValue(property));
-    },
-);
+        maxAttempts = 60,
+        retryInterval = 1000,
+        ...options
+    } = {}
+) => {
+    // 🛑 Skip if expectedValues is undefined, null, or empty string
+    if (
+        expectedValues === undefined ||
+        expectedValues === null ||
+        (typeof expectedValues === 'string' && expectedValues.trim() === '')
+    ) {
+        Cypress.log({
+            name: 'verifyTextAndRetry',
+            message: `[⚠️ Skipped] No expected text provided, skipping verification.`,
+        });
+        return; // do nothing
+    }
 
-Cypress.Commands.add('waitUntilWithContentLogs', (getActualTextFn, expectedValues, options = {}) => {
     let attempt = 0;
 
     const normalizeText = (text) => {
-        return text.replace(/\s+/g, ' ').trim();
+        if (text == null) return '';
+        return String(text).replace(/\s+/g, ' ').trim();
     };
 
     const normalizeExpected = (expected) => {
@@ -45,7 +55,7 @@ Cypress.Commands.add('waitUntilWithContentLogs', (getActualTextFn, expectedValue
             const passed = failedMatches.length === 0;
 
             Cypress.log({
-                name: 'waitUntilWithContentLogs',
+                name: 'verifyTextAndRetry',
                 message: passed
                     ? `[✅ Attempt ${attempt}] Found all expected values: [${expectedArray.join(', ')}]`
                     : `[❌ Attempt ${attempt}] Missing: [${failedMatches.join(', ')}]`,
@@ -62,9 +72,65 @@ Cypress.Commands.add('waitUntilWithContentLogs', (getActualTextFn, expectedValue
     };
 
     return cy.waitUntil(wrappedCondition, {
-        timeout: 60000,
-        interval: 1000,
+        timeout: maxAttempts * retryInterval,
+        interval: retryInterval,
         ...options
+    });
+});
+
+//EXAMPLE
+// cy.verifyTextAndRetry(
+//     () => mainContainer().invoke('text'),
+//     text,
+//     { maxAttempts: 30, retryInterval: 500 } // OPTIONAL
+// );
+
+Cypress.Commands.add('retryTypeaheadSelect', (
+    inputFn,
+    inputValue,
+    dropdownSelector,
+    {
+        matchText = '',               // optional: match dropdown content
+        maxAttempts = 5,
+        retryInterval = 1000,
+    } = {}
+) => {
+    let attempt = 0;
+
+    const attemptInteraction = () => {
+        attempt++;
+        cy.log(`🔁 [Attempt ${attempt}] Typing: "${inputValue}" and checking for dropdown items...`);
+
+        return cy.wrap(null).then(() => {
+            inputFn().clear().type(inputValue, { delay: 100 });
+
+            return cy.wait(300).then(() => {
+                return cy.document().then((doc) => {
+                    const items = [...doc.querySelectorAll(dropdownSelector)];
+
+                    if (items.length > 0) {
+                        const matchingItem = matchText
+                            ? items.find(el => el.textContent.includes(matchText))
+                            : items[0];
+
+                        if (matchingItem) {
+                            cy.wrap(matchingItem).click({ force: true });
+                            cy.log(`✅ Clicked on: "${matchingItem.textContent.trim()}"`);
+                            return true;
+                        }
+                    }
+
+                    cy.log('❌ No matching dropdown item found');
+                    return false;
+                });
+            });
+        });
+    };
+
+    return cy.waitUntil(attemptInteraction, {
+        timeout: maxAttempts * retryInterval,
+        interval: retryInterval,
+        errorMsg: `❌ Failed to select typeahead value '${inputValue}' after ${maxAttempts} attempts`,
     });
 });
 

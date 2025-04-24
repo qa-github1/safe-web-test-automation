@@ -9,14 +9,14 @@ let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
 let powerUser = S.getUserData(S.userAccounts.powerUser);
 let approvedForReleaseItem = {}
 
-before(function () {
-    api.auth.get_tokens(orgAdmin);
-    api.org_settings.enable_all_Case_fields();
-    api.org_settings.enable_all_Item_fields();
-    api.org_settings.enable_all_Person_fields();
-    api.org_settings.update_org_settings(false, true);
-    api.users.update_current_user_settings(orgAdmin.id, DF.dateTimeFormats.short, DF.dateFormats.shortDate)
-});
+// before(function () {
+//     api.auth.get_tokens(orgAdmin);
+//     api.org_settings.enable_all_Case_fields();
+//     api.org_settings.enable_all_Item_fields();
+//     api.org_settings.enable_all_Person_fields();
+//     api.org_settings.update_org_settings(false, true);
+//     api.users.update_current_user_settings(orgAdmin.id, DF.dateTimeFormats.short, DF.dateFormats.shortDate)
+// });
 
 describe('Case', function () {
 
@@ -66,6 +66,7 @@ describe('Case', function () {
                 .verify_element_is_visible('Drag And Drop your files here')
                 .upload_file_and_verify_toast_msg('image.png')
                 .edit_Description_on_first_row_on_grid(note)
+            D.editedCase.mediaCount = 1
 
             //Check values after reloading
             ui.caseView.reload_page()
@@ -198,7 +199,8 @@ describe('Item', function () {
                 .verify_content_of_first_row_in_results_table(D.editedItem.description);
 
             //MASS UPDATE ITEMS
-            D.generateNewDataSet();
+            D.getNewItemData(D.newCase)
+            D.getEditedItemData(D.newCase)
 
             let allValues = [
                 D.editedItem.description,
@@ -227,11 +229,11 @@ describe('Item', function () {
                 'Tags',
             ]
             D.editedItem.serialNumber = D.newItem.serialNumber
-
             D.newItem1 = Object.assign({}, D.newItem)
             D.newItem1.description = '1__ ' + D.newItem.description
             D.newItem2 = Object.assign({}, D.newItem)
             D.newItem2.description = '2__ ' + D.newItem.description
+            D.editedItem.additionalBarcodes = []
 
             api.items.add_new_item(true, null, 'item_1', D.newItem1)
             api.items.add_new_item(true, null, 'item_2', D.newItem2)
@@ -398,7 +400,8 @@ describe('Item Transactions', function () {
         let initialItem = Object.assign({}, D.newItem)
         api.cases.add_new_case()
         api.items.add_new_item();
-        api.locations.add_storage_location('Box_2')
+        D.box2 = D.getStorageLocationData('BOX_2')
+        api.locations.add_storage_location(D.box2)
 
         ui.app.open_newly_created_item_via_direct_link();
         ui.itemView
@@ -458,7 +461,7 @@ describe('Item Transactions', function () {
             .run_search_by_Item_Description(D.newItem.description)
             .select_row_on_the_grid_that_contains_specific_value(D.newItem.description)
             .click_Actions()
-            .perform_Item_CheckIn_transaction(powerUser, false, D['newLocationBox_2'][0].name, 'test-note3')
+            .perform_Item_CheckIn_transaction(powerUser, false, D.box2.name, 'test-note3')
             .click_Actions()
             .verify_enabled_and_disabled_options_under_Actions_dropdown_on_Search_Page(
                 [
@@ -479,7 +482,7 @@ describe('Item Transactions', function () {
             .verify_edited_and_not_edited_values('view', ["Status", "Storage Location"], D.editedItem, D.newItem)
             .select_tab(C.tabs.chainOfCustody)
             .verify_data_on_Chain_of_Custody([
-                [['Type', 'In'], ['Issued From', powerUser.name], ['Issued To', orgAdmin.name], ['Storage Location', D['newLocationBox_2'][0].name],  ['Check out Reason', ``], ['Note', `test-note3`]],
+                [['Type', 'In'], ['Issued From', powerUser.name], ['Issued To', orgAdmin.name], ['Storage Location', D.box2.name],  ['Check out Reason', ``], ['Note', `test-note3`]],
                 [['Type', 'Transfer'], ['Issued From', orgAdmin.name], ['Issued To', powerUser.name], ['Storage Location', ``],  ['Check out Reason', ``], ['Note', `test-note2`]],
                 [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ``],  ['Check out Reason', `Lab`], ['Note', `test-note1`]],
                 [['Type', 'In'], ['Issued From', orgAdmin.name], ['Issued To', 'New Item Entry'], ['Storage Location', initialItem.location], ['Notes', `Item entered into system.`]],
@@ -493,7 +496,7 @@ describe('Item Transactions', function () {
             .select_tab(C.tabs.chainOfCustody)
             .verify_data_on_Chain_of_Custody([
                 [['Type', 'Disposal'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location',''],  ['Check out Reason', ``], ['Note', `test-note4`]],
-                [['Type', 'In'], ['Issued From', powerUser.name], ['Issued To', orgAdmin.name], ['Storage Location', D['newLocationBox_2'][0].name],  ['Check out Reason', ``], ['Note', `test-note3`]],
+                [['Type', 'In'], ['Issued From', powerUser.name], ['Issued To', orgAdmin.name], ['Storage Location', D.box2.name],  ['Check out Reason', ``], ['Note', `test-note3`]],
                 [['Type', 'Transfer'], ['Issued From', orgAdmin.name], ['Issued To', powerUser.name], ['Storage Location', ``],  ['Check out Reason', ``], ['Note', `test-note2`]],
                 [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ``],  ['Check out Reason', `Lab`], ['Note', `test-note1`]],
                 [['Type', 'In'], ['Issued From', orgAdmin.name], ['Issued To', 'New Item Entry'], ['Storage Location', initialItem.location], ['Notes', `Item entered into system.`]],
@@ -515,13 +518,13 @@ describe('Item Transactions', function () {
                 ])
 
             //UNDISPOSAL
-            .perform_Item_Undisposal_transaction(powerUser, true, D['newLocationBox_2'][0].name, 'test-note5')
+            .perform_Item_Undisposal_transaction(powerUser, true, D.box2.name, 'test-note5')
             .verify_edited_and_not_edited_values('view', ["Status", "Storage Location"], D.editedItem, D.newItem)
             .select_tab(C.tabs.chainOfCustody)
             .verify_data_on_Chain_of_Custody([
-                [['Type', 'In'], ['Issued From', powerUser.name], ['Issued To', orgAdmin.name], ['Storage Location', D['newLocationBox_2'][0].name],  ['Check out Reason', ``], ['Note', `test-note5`]],
+                [['Type', 'In'], ['Issued From', powerUser.name], ['Issued To', orgAdmin.name], ['Storage Location', D.box2.name],  ['Check out Reason', ``], ['Note', `test-note5`]],
                 [['Type', 'Disposal'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location',''],  ['Witness', powerUser.name], ['Storage Location',''],  ['Check out Reason', ``], ['Note', `test-note4`]],
-                [['Type', 'In'], ['Issued From', powerUser.name], ['Issued To', orgAdmin.name], ['Storage Location', D['newLocationBox_2'][0].name],  ['Check out Reason', ``], ['Note', `test-note3`]],
+                [['Type', 'In'], ['Issued From', powerUser.name], ['Issued To', orgAdmin.name], ['Storage Location', D.box2.name],  ['Check out Reason', ``], ['Note', `test-note3`]],
                 [['Type', 'Transfer'], ['Issued From', orgAdmin.name], ['Issued To', powerUser.name], ['Storage Location', ``],  ['Check out Reason', ``], ['Note', `test-note2`]],
                 [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ``],  ['Check out Reason', `Lab`], ['Note', `test-note1`]],
                 [['Type', 'In'], ['Issued From', orgAdmin.name], ['Issued To', 'New Item Entry'], ['Storage Location', initialItem.location], ['Notes', `Item entered into system.`]],

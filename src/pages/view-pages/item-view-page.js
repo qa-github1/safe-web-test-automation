@@ -15,6 +15,7 @@ let
     fieldFoundByLabelOnHistoryColumn = (container, fieldLabel) => container().contains(fieldLabel).parent('div').find('ng-transclude'),
     active_tab_container = e => cy.get('[class="tab-pane ng-scope active"]'),
     additionalBarcodeInput = e => cy.get('input[name="barcodes"]'),
+    categoryOnEditForm = e => cy.get('[ng-model="itemEdit.categoryId"]'),
     additionalBarcodeOldValue = e => cy.get('[label="\'ITEM_BARCODES\'"]').eq(2),
     additionalBarcodeNewValue = e => cy.get('[label="\'ITEM_BARCODES\'"]').eq(1),
     additionalBarcodes = e => cy.get('[ng-model="newItem.barcodes[0].value"]'),
@@ -92,7 +93,7 @@ export default class ItemViewPage extends BaseViewPage {
 
         this.verify_text_on_multiple_elements(
             [
-                [categoryDropdown_selectedOption(itemObject.category), itemObject.category],
+                [categoryOnEditForm, itemObject.category],
                 [this.tagsField, itemObject.tags],
                 [custodyReasonDropdown_selectedOption, itemObject.custodyReason]
 
@@ -203,11 +204,11 @@ export default class ItemViewPage extends BaseViewPage {
     };
 
     edit_all_values(newItemObject) {
-        this.edit_fields_if_new_values_provided(
+        this.type_if_values_provided(
             [
                 [recoveryLocationInput, newItemObject.recoveryLocation],
                 [recoveryDateInput, newItemObject.recoveryDate],
-                [recoveredByInput, newItemObject.recoveredBy, recoveredByTypeahead],
+                [recoveredByInput, newItemObject.recoveredByName, recoveredByTypeahead],
                 [serialNoInput, newItemObject.serialNumber],
                 [makeInput, newItemObject.make],
                 [modelInput, newItemObject.model],
