@@ -55,7 +55,7 @@ export default class PersonViewPage extends BaseViewPage {
     };
 
     edit_all_values(newPersonObject) {
-        this.edit_fields_if_new_values_provided(
+        this.type_if_values_provided(
             [
                 [businessName, newPersonObject.businessName],
                 [firstName, newPersonObject.firstName],

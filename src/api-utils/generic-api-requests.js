@@ -19,7 +19,7 @@ function request_with_JSON_data(httpMethod, urlSuffix, requestBody, log = '', pr
                 let propertyName;
                 let propertyValue;
 
-                cy.log('RESPONSe IS ' + JSON.stringify(response))
+              //  cy.log('RESPONSe IS ' + JSON.stringify(response))
 
                 propertyName = propertyToSaveInLocalStorage || '';
 
@@ -47,9 +47,9 @@ function request_with_JSON_data(httpMethod, urlSuffix, requestBody, log = '', pr
                 }
 
 
-                cy.log( '*********************************************    ' + log + propertyName + ' ' + response + '     *********************************************', 'blue');
-                console.log( '*********************************************    ' + log + propertyName + ' ' + JSON.stringify(response)+ '     *********************************************');
-
+                // cy.log( '*********************************************    ' + log + propertyName + ' ' + response + '     *********************************************', 'blue');
+                // console.log( '*********************************************    ' + log + propertyName + ' ' + JSON.stringify(response)+ '     *********************************************');
+                //
 
                 // // log message and/or ID from the response object if available
                 // if (response.body) {

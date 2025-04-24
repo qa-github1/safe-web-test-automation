@@ -227,7 +227,8 @@ let
     disposalWitnessInput = e => cy.get('span[ng-model="disposal.witnessId"]').find('input'),
     disposalMethodsDropdown = e => cy.get('[ng-options="t.id as t.name for t in data.disposalMethods"]'),
     usePreviousLocationCheckbox = e => cy.get('.icheckbox_square-blue').find('ins'),
-    checkoutReason = e => cy.get('[ng-options="r.id as r.name for r in data.checkoutReasons"]')
+    checkoutReason = e => cy.get('[ng-options="r.id as r.name for r in data.checkoutReasons"]'),
+    typeaheadSelectorMatchInMatches = '[ng-repeat="match in matches track by $index"]'
 
 let dashboardGetRequests = [
     '/api/users/currentuser?groups=true',
@@ -241,6 +242,7 @@ let dashboardGetRequests = [
 export default class BasePage {
 
     constructor() {
+        this.typeaheadSelectorMatchInMatches = typeaheadSelectorMatchInMatches;
         this.searchParametersAccordion = searchParametersAccordion;
         this.searchParametersExpandedPanel = searchParametersExpandedPanel;
         this.itemsCountOnSearchGrid = itemsCountOnSearchGrid;
@@ -367,9 +369,7 @@ export default class BasePage {
 
     verify_text_is_present_on_main_container(text) {
         this.toastMessage().should('not.exist');
-      //  this.verify_text(mainContainer, text)
-
-        cy.waitUntilWithContentLogs(() =>
+        cy.verifyTextAndRetry(() =>
                 mainContainer().invoke('text'),
             text
         );
@@ -632,34 +632,42 @@ export default class BasePage {
         return this;
     };
 
-    select_typeahead_option(element, value, typeaheadElement, aliasOfEndpointToBeAwaited) {
-        if (value) {
-            element()
-                .clear()
-                .invoke('val', value)
-                .trigger('input')
-                .then($input => {
-                    // Wait 500ms
-                    cy.wait(500).then(() => {
-                        // Remove last character
-                        const currentVal = $input.val();
-                        const newVal = currentVal.slice(0, -1); // remove last character
-                        cy.wrap($input).invoke('val', newVal).trigger('input');
+    enter_value_and_retype_last_character_if_typeahead_did_not_appear(element, value, typaheadSelectorToCheck) {
+        const lastChar = value.slice(-1);
+
+        element()
+            .clear()
+            .invoke('val', value)
+            .trigger('input')
+            .then($el => {
+                cy.wait(3000).then(() => {
+                    // Check if the element exists in the DOM
+                    cy.document().then(doc => {
+                        const exists = doc.querySelector(typaheadSelectorToCheck);
+                        if (!exists) {
+                            cy.wrap($el).type('{backspace}').type(lastChar);
+                        }
                     });
                 });
+            });
+    }
+
+    select_typeahead_option(element, value, typeaheadElementSelector, aliasOfEndpointToBeAwaited) {
+        if (value) {
+            this.enter_value_and_retype_last_character_if_typeahead_did_not_appear(element, value, typeaheadElementSelector)
         }
 
-            if (aliasOfEndpointToBeAwaited) {
-                //this.wait_response_from_API_call(aliasOfEndpointToBeAwaited)
-                this.wait_until_spinner_disappears();
-            }
+        if (aliasOfEndpointToBeAwaited) {
+            //this.wait_response_from_API_call(aliasOfEndpointToBeAwaited)
+            this.wait_until_spinner_disappears();
+        }
 
-            if (typeaheadElement) {
-                this.pause(1)
-                // element().type('{enter}')
-                typeaheadElement().click();
-                this.pause(0.5)
-            }
+        if (typeaheadElementSelector) {
+            this.pause(1)
+            // element().type('{enter}')
+            cy.get(typeaheadElementSelector).first().click();
+            this.pause(0.5)
+        }
         return this;
     };
 
@@ -673,8 +681,11 @@ export default class BasePage {
             // 3 (stack[3]): aliasOfEndpointToBeAwaited (optional)
 
             if (stack[1]) {
-                if (stack[2]) {
-                    stack[0]().type(stack[1])
+
+                if (stack[2] === '{enter}') {
+                    stack[0]().type('{enter}');
+                } else if (stack[2]) {
+                    stack[0]().clear().type(stack[1])
                     if (stack[3]) {
                         self.wait_response_from_API_call(stack[3])
                     }
@@ -689,7 +700,6 @@ export default class BasePage {
         return this;
     };
 
-
     verify_value_if_provided(element, value) {
         if (value) {
             this.verify_value(element, value)
@@ -702,24 +712,6 @@ export default class BasePage {
             element().clear()
         })
     }
-
-    edit_fields_if_new_values_provided(elementValuePairs) {
-        let self = this
-        elementValuePairs.forEach(function (pair) {
-            if (pair[1]) {
-                self.clearAndEnterValue(pair[0], pair[1])
-
-                // if element is like Tag input field - just press enter
-                if (pair[2] === '{enter}') {
-                    pair[0]().type('{enter}');
-                } else if (pair[2]) {
-                    // if element is like typeahead input field - select value from dropdown
-                    pair[2]().click();
-                }
-            }
-        });
-        return this;
-    };
 
     enter_values_on_single_multi_select_typeahead_field(LabelValueArray) {
         if (LabelValueArray[1]) {
@@ -946,68 +938,80 @@ export default class BasePage {
     };
 
 
+    // check_text(element, text) {
+    //
+    //     if (element instanceof Function) {
+    //         cy.verifyTextAndRetry(() =>
+    //                 element().invoke('text'),
+    //             text
+    //         );
+    //     } else {
+    //         cy.verifyTextAndRetry(() =>
+    //                 element.invoke('text'),
+    //             text
+    //         );
+    //     }
+    // }
+
     check_text(element, text) {
-        if (element instanceof Function) {
-            if (text === '') {
-                element().invoke('text').then((textFound) => {
-                    let normalizedActual = (Number.isFinite(textFound)) ? textFound : textFound.toString();
-                    expect(normalizedActual).to.eq('');
-                })
-            } else if (text) {
-                element().should('contain.text', text)
-            }
-        } else {
-            if (text === '') {
-                element.invoke('text').then((textFound) => {
-                    let normalizedActual = (Number.isFinite(textFound)) ? textFound : textFound.toString();
-                    expect(normalizedActual).to.eq('');
-                })
-            } else if (text) {
-                element.should('contain.text', text)
-            }
+        if (text) {
+            let getTextFn = () => {
+                return (element instanceof Function ? element() : element).invoke('text');
+            };
+            cy.verifyTextAndRetry(getTextFn, text, {maxAttempts: 10, retryInterval: 500});
         }
     }
 
 
-    // I needed to add this method because we had an issue with reading  empty ' ' on DEV while on Pentest method above worked fine
-    check_text_2(element, text, fieldName = '') {
-        if (element instanceof Function) {
-            element = element();
-        }
+    //  AMN: I needed to add this method because we had an issue with reading  empty ' ' on DEV while on Pentest method above worked fine
+    // SMJ: commenting out this method, to be deleted later, as we should try to use the check_text() method above on all envs, with retry mechanism which incorporates the trimming of whitespaces as well
+    // check_text_2(element, text, fieldName = '') {
+    //     if (element instanceof Function) {
+    //         element = element();
+    //     }
+    //
+    //     element.invoke('text').then((textFound) => {
+    //         let actualText = textFound || '';
+    //         let expectedText = text || '';
+    //
+    //         let normalizedText = actualText;
+    //         let normalizedActual = (Number.isFinite(actualText)) ? actualText : actualText.toString();
+    //
+    //         if (fieldName.toLowerCase() !== 'Guid') {
+    //             normalizedText = actualText.replace(/\s+/g, ' ').trim();
+    //             normalizedExpected = normalizedExpected.replace(/\s+/g, ' ').trim();
+    //         }
+    //
+    //         if (normalizedExpected === '') {
+    //             expect(normalizedText).to.eq('');
+    //         } else {
+    //             expect(normalizedText).to.contain(normalizedExpected);
+    //         }
+    //     });
+    // }
 
-        element.invoke('text').then((textFound) => {
-            let actualText = textFound || '';
-            let expectedText = text || '';
-
-            let normalizedText = actualText;
-            let normalizedActual = (Number.isFinite(actualText)) ? actualText : actualText.toString();
-
-            if (fieldName.toLowerCase() !== 'Guid') {
-                normalizedText = actualText.replace(/\s+/g, ' ').trim();
-                normalizedExpected = normalizedExpected.replace(/\s+/g, ' ').trim();
-            }
-
-            if (normalizedExpected === '') {
-                expect(normalizedText).to.eq('');
-            } else {
-                expect(normalizedText).to.contain(normalizedExpected);
-            }
-        });
-    }
+    // check_value(element, value) {
+    //     if (element instanceof Function) {
+    //         if (value === '') {
+    //             element().invoke('val').should('eq', value)
+    //         } else if (value) {
+    //             element().invoke('val').should('contain', value)
+    //         }
+    //     } else {
+    //         if (value === '') {
+    //             element.invoke('val').should('eq', value)
+    //         } else if (value) {
+    //             element.invoke('val').should('contain', value)
+    //         }
+    //     }
+    // }
 
     check_value(element, value) {
-        if (element instanceof Function) {
-            if (value === '') {
-                element().invoke('val').should('eq', value)
-            } else if (value) {
-                element().invoke('val').should('contain', value)
-            }
-        } else {
-            if (value === '') {
-                element.invoke('val').should('eq', value)
-            } else if (value) {
-                element.invoke('val').should('contain', value)
-            }
+        if (value) {
+            const getTextFn = () => {
+                return (element instanceof Function ? element() : element).invoke('val');
+            };
+            cy.verifyTextAndRetry(getTextFn, value, {maxAttempts: 10, retryInterval: 500});
         }
     }
 
@@ -1027,22 +1031,23 @@ export default class BasePage {
         return this;
     };
 
-    //this method is added because of add-user spec -> we have different behavior on dev and pentest related to verifying empty ' '
-    verify_text_2(element, expectedText) {
-        let self = this
-        if (this.isObject(expectedText)) {
-            for (let property in expectedText) {
-                self.check_text(element, expectedText[property])
-            }
-        } else if (Array.isArray(expectedText)) {
-            expectedText.forEach(function (value) {
-                self.check_text(element, value)
-            })
-        } else {
-            self.check_text_2(element, expectedText)
-        }
-        return this;
-    };
+    //AMN: this method is added because of add-user spec -> we have different behavior on dev and pentest related to verifying empty ' '
+    // SMJ: commenting out this method, to be deleted later, as we should try to use the verify_text() method above on all envs, with retry mechanism which incorporates the trimming of whitespaces as well
+    // verify_text_2(element, expectedText) {
+    //     let self = this
+    //     if (this.isObject(expectedText)) {
+    //         for (let property in expectedText) {
+    //             self.check_text(element, expectedText[property])
+    //         }
+    //     } else if (Array.isArray(expectedText)) {
+    //         expectedText.forEach(function (value) {
+    //             self.check_text(element, value)
+    //         })
+    //     } else {
+    //         self.check_text_2(element, expectedText)
+    //     }
+    //     return this;
+    // };
 
 
     verify_value(element, expectedText) {
@@ -1442,15 +1447,15 @@ export default class BasePage {
         cy.wait(1000)
 
         if (onActiveTab) {
-                if (shouldBeVisible) {
-                    active_tab().find('thead').contains(columnName).parents('th').then(($el) => {
-                        if ($el.hasClass('ng-hide')) {
-                            this.click_element_on_active_tab(C.buttons.menuCustomization);
-                            this.click_element_on_active_tab(C.buttons.options);
-                            this.click(columnName, gridOptionsDropdown());
-                        }
-                    });
-                }
+            if (shouldBeVisible) {
+                active_tab().find('thead').contains(columnName).parents('th').then(($el) => {
+                    if ($el.hasClass('ng-hide')) {
+                        this.click_element_on_active_tab(C.buttons.menuCustomization);
+                        this.click_element_on_active_tab(C.buttons.options);
+                        this.click(columnName, gridOptionsDropdown());
+                    }
+                });
+            }
         } else {
             if (shouldBeVisible) {
                 cy.get('thead').contains(columnName).parents('th').then(($el) => {
@@ -1626,10 +1631,9 @@ export default class BasePage {
         this.pause(1)
         this.wait_until_spinner_disappears()
 
-        if (tabTitle === C.tabs.history){
+        if (tabTitle === C.tabs.history) {
             historyTab(tabTitle).should('be.visible').click().should('have.class', 'active')
-        }
-        else{
+        } else {
             specificTab(tabTitle).should('be.visible').click().should('have.class', 'active')
         }
         this.pause(1)
@@ -1875,7 +1879,7 @@ export default class BasePage {
     };
 
     verify_content_of_first_row_in_results_table(content) {
-        cy.waitUntilWithContentLogs(() =>
+        cy.verifyTextAndRetry(() =>
                 firstRowInResultsTable().invoke('text'),
             content
         );
@@ -2024,16 +2028,21 @@ export default class BasePage {
 
         if (Array.isArray(cellContent)) {
             resultsTableHeader().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
-                cellContent.forEach(function (value) {
-                    self.verify_text(specificRowInResultsTable(rowNumber).find('td').eq(i), value);
+                specificRowInResultsTable(rowNumber).find('td').eq(i).invoke('text').then(function (textFound) {
+                    cellContent.forEach(function (value) {
+                        self.verify_text(specificRowInResultsTable(rowNumber).find('td').eq(i), value);
+                    });
                 });
             });
         } else {
-            resultsTableHeader().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
-                specificRowInResultsTable(rowNumber).find('td').eq(i).invoke('text').then(function (textFound) {
-                    self.verify_text(specificRowInResultsTable(rowNumber).find('td').eq(i), cellContent);
+            resultsTableHeader()
+                .contains(headerCellTag, columnTitle)
+                .not('ng-hide')
+                .invoke('index')
+                .then((i) => {
+                    const getCellText = () =>  specificRowInResultsTable(rowNumber).find('td').eq(i)
+                    self.verify_text(getCellText, cellContent);
                 });
-            });
         }
         return this;
     }
@@ -2060,20 +2069,19 @@ export default class BasePage {
                 });
             });
         } else {
-            resultsTableHeader().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
-                tableStriped().find('td').eq(i).invoke('text').then(function (textFound) {
-                    if (currentEnvironment === 'pentest') {
-                        // this method is changed to _2 but was only verify_text, need to see if this is going to work for all tests
-                        self.verify_text_2(tableStriped().find('td').eq(i), cellContent);
-                    } else if (currentEnvironment === 'dev') {
-                        if (columnTitle.toLowerCase() === 'guid') {
-                            self.verify_text(tableStriped().find('td').eq(i), cellContent);
-                        } else {
-                            self.verify_text_2(tableStriped().find('td').eq(i), cellContent);
-                        }
-                    }
+            // resultsTableHeader().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
+            //     tableStriped().find('td').eq(i).invoke('text').then(function (textFound) {
+            //                 self.verify_text(tableStriped().find('td').eq(i), cellContent);
+            //     });
+            // });
+            resultsTableHeader()
+                .contains(headerCellTag, columnTitle)
+                .not('ng-hide')
+                .invoke('index')
+                .then((i) => {
+                    const getCellText = () => tableStriped().find('td').eq(i)
+                    self.verify_text(getCellText, cellContent);
                 });
-            });
         }
         return this;
     }
@@ -2482,6 +2490,28 @@ export default class BasePage {
             .invoke('val', value).trigger('input')
     }
 
+    turnOnToggleAndEnterValueToInputFieldWithLastCharacterReentering(label, value, typaheadSelectorToCheck) {
+        const lastChar = value.slice(-1);
+
+        this.turnOnToggleAndReturnParentElement(label)
+            .find('input').first()
+            // .clear()
+            // .invoke('val', value).trigger('input')
+            .clear()
+            .invoke('val', value)
+            .then($el => {
+                cy.wait(500).then(() => {
+                    // Check if the element exists in the DOM
+                    cy.document().then(doc => {
+                        const exists = doc.querySelector(typaheadSelectorToCheck);
+                        if (!exists) {
+                            cy.wrap($el).type('{backspace}').type(lastChar);
+                        }
+                    });
+                });
+            });
+    }
+
     findElementByLabelAndSelectDropdownOption(label, value) {
         parentContainerFoundByInnerLabelOnModal(label, '.form-group')
             .find('select').first()
@@ -2568,7 +2598,7 @@ export default class BasePage {
                 this.turnOnToggleAndSelectTypeaheadOptionsOnMultiSelectField(label, value)
 
             } else if (['Recovered By', 'Submitted By'].some(v => label === v)) {
-                this.turnOnToggleAndEnterValueToInputField(label, value)
+                this.turnOnToggleAndEnterValueToInputFieldWithLastCharacterReentering(label, value, this.typeaheadSelectorMatchInMatches)
                 firstMatchOnTypeahead().click()
 
             } else if (['Item Belongs to'].some(v => label === v)) {

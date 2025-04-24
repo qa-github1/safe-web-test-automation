@@ -256,14 +256,29 @@ export default class BaseViewPage extends BasePage {
     //
     // }
 
-    verify_edited_or_old_text_on_multi_select_field(labelsOfEditedFields, label, fieldSelector, editedValue, initialValue, oldValueOverwritten = false) {
-        const isPentest = Cypress.env('env') === 'pentest';
-        const verifyMethod = isPentest ? this.verify_text : this.verify_text_2;
+    // verify_edited_or_old_text_on_multi_select_field(labelsOfEditedFields, label, fieldSelector, editedValue, initialValue, oldValueOverwritten = false) {
+    //     const isPentest = Cypress.env('env') === 'pentest';
+    //     const verifyMethod = isPentest ? this.verify_text : this.verify_text_2;
+    //
+    //     if (labelsOfEditedFields.includes(label) && editedValue !== null) {
+    //         verifyMethod.call(this, fieldSelector, editedValue);
+    //     } else if (initialValue) {
+    //         verifyMethod.call(this, fieldSelector, initialValue);
+    //     }
+    // }
 
+    verify_edited_or_old_text_on_multi_select_field(labelsOfEditedFields, label, fieldSelector, editedValue, initialValue, oldValueOverwritten = false) {
         if (labelsOfEditedFields.includes(label) && editedValue !== null) {
-            verifyMethod.call(this, fieldSelector, editedValue);
-        } else if (initialValue) {
-            verifyMethod.call(this, fieldSelector, initialValue);
+            this.verify_text(fieldSelector, editedValue);
+            // if (oldValueOverwritten) {
+            //     this.verify_element_does_NOT_contain_text(fieldSelector, initialValue);
+            // }
+           //  else {
+           //     this.verify_text(fieldSelector, initialValue);
+           // }
+        }
+        else if (initialValue) {
+            this.verify_text(fieldSelector, initialValue);
         }
     }
 
@@ -380,37 +395,36 @@ export default class BaseViewPage extends BasePage {
             column = this.historyView_rightColumn;
         }
         let self = this;
-        const isDev = S.selectedEnvironment.name === 'dev';
-        const isPentest = S.selectedEnvironment.name === 'pentest';
 
-        column().within(($form) => {
-            label_TextPairs.forEach(function (stack) {
-                if (stack[1] !== null) {
-                    if (isDev) {
-                        self.verify_text_2(fieldValueFoundByLabel(stack[0]), stack[1]);
-                    } else if (isPentest) {
-                        self.verify_text(fieldValueFoundByLabel(stack[0]), stack[1]);
-                    }
+        if(label_TextPairs){
+            label_TextPairs.forEach(([label, text]) => {
+                if (text !== null) {
+                    const fieldGetter = () =>
+                        column().contains(label).parent('div').find('ng-transclude');
+                    self.verify_text(fieldGetter, text); // ✅ now passing a function
                 }
             });
+        }
 
-            if (label_InputValuePairs) {
-                label_InputValuePairs.forEach(function (stack) {
-                    if (stack[1] !== null) {
-                        self.verify_value(inputFieldFoundByLabel(stack[0]), stack[1]);
-                    }
-                });
-            }
+        if (label_InputValuePairs){
+            label_InputValuePairs.forEach(([label, value]) => {
+                if (value !== null) {
+                    const fieldGetter = () =>
+                        column().contains(label).parent('div').find('input');
+                    self.verify_value(fieldGetter, value);
+                }
+            });
+        }
 
-            if (label_TextareaValuesPairs) {
-                label_TextareaValuesPairs.forEach(function (stack) {
-                    if (stack[1] !== null) {
-                        self.verify_value(textareaFieldFoundByLabel(stack[0]), stack[1]);
-                    }
-                });
-            }
-        });
-
+        if (label_TextareaValuesPairs){
+            label_TextareaValuesPairs.forEach(([label, value]) => {
+                if (value !== null) {
+                    const fieldGetter = () =>
+                        column().contains(label).parent('div').find('textarea');
+                    self.verify_value(fieldGetter, value);
+                }
+            });
+        }
         return this;
     }
 
