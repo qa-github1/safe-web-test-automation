@@ -54,11 +54,10 @@ describe('Add Item', function () {
 
         it('1.2. Optional fields disabled -- redirect to View Added Item ' +
             '-- Item Belongs To Shows All People" turned OFF in Org Settings -- multiple values selected for "Item Belongs to" and Tags', function () {
-           //this test is failing in Org #4
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
             D.getItemDataWithReducedFields(D.newCase);
-            api.org_settings.update_org_settings(true, false);
+            api.org_settings.update_org_settings(true, false,false,'');
             api.org_settings.disable_Item_fields([C.itemFields.itemBelongsTo, C.itemFields.tags]);
             D.newItem.itemBelongsToFirstLastName = [S.selectedEnvironment.person.name, S.selectedEnvironment.person_2.name]
             D.newItem.tags = [S.selectedEnvironment.orgTag1.name, S.selectedEnvironment.orgTag2.name]

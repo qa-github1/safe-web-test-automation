@@ -143,6 +143,7 @@ export default class AddItemPage extends BaseAddPage {
     };
 
     verify_Category(selectedCategory) {
+        this.pause(2)
         category().should('contain', selectedCategory);
         return this;
     };

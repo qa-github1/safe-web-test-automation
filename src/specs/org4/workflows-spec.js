@@ -208,12 +208,7 @@ describe('Workflows', function () {
             ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.itemCreated, D.newItem)
         });
 
-        it.only('2.2 Email notification - when Item edited - matching records with "Description equals ..."', function () {
-            //D.editedItem = D.getEditedItemData(D.newCase)
-            D.testRandomNo = D.getRandomNo()
-            D.workflowTriggerDescription = 'desc_edited_' + D.testRandomNo;
-            D.initialItemDescription = 'initial_desc_' + D.testRandomNo;
-
+        it('2.2 Email notification - when Item edited - matching records with "Description equals ..."', function () {
             ui.menu.click_Settings__Workflows();
             ui.workflows.click_(C.buttons.add)
                 .set_up_workflow(
@@ -226,18 +221,13 @@ describe('Workflows', function () {
                 ui.workflows.set_matching_criteria(
                     C.itemFields.description,
                     C.workflows.operators.equals,
-                    D.workflowTriggerDescription)
+                    D.editedItem.description)
                 .click_Save();
 
             D.editedItem = D.getEditedItemData(D.newCase);
-            D.editedItem.description = D.initialItemDescription;
-
-            // D.editedItem = D.getEditedItemData(D.newCase)
             api.org_settings.enable_all_Item_fields();
             api.cases.add_new_case()
             api.items.add_new_item()
-            D.editedItem.description = D.workflowTriggerDescription;
-
             api.items.edit_newly_added_item(false);
 
             ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.itemEdited, D.editedItem)
