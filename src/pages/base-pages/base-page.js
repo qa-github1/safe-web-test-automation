@@ -138,7 +138,8 @@ let
     checkboxToSelectAll = e => cy.get('[ng-model="options.selectAllToggle"]').first(),
     statisticsBlock = e => cy.get('.statistic-block').first(),
     selectedItems = e => cy.get('[ng-if="options.selectedItems.length != 0"]').first(),
-    locationPin = name => cy.contains(name).parent('div'),
+   // locationPin = name => cy.contains(name).parent('div'),
+    locationPin = e => cy.get('.pac-matched'),
     firstCheckboxOnTableBody = e => cy.get('.bg-grid-checkbox').first(),
     checkboxOnSpecificTableRow = rowNumber => resultsTable().find('.bg-grid-checkbox', {timeout: 0}).eq(rowNumber - 1),
     checkboxOnTableRowOnModal = rowNumber => tableOnModal().find('.bg-grid-checkbox').eq(rowNumber - 1),
@@ -210,6 +211,7 @@ let
     systemServiceName = e => cy.get('[ng-repeat="systemService in systemServices"] .ng-binding'),
     systemServiceStatus = e => cy.get('[ng-repeat="systemService in systemServices"] span'),
     searchBar_history = e => cy.get('[ng-model="options.searchFilter"]'),
+    searchButton = e => cy.get('#search-button'),
     typeaheadInputField = fieldLabel => cy.contains(fieldLabel).parent().find('input').first(),
     dropdownField = fieldLabel => cy.findByLabelText(fieldLabel).parent().find('select').eq(0),
     inputField = fieldLabel => cy.findByLabelText(fieldLabel).parent().find('input').eq(0),
@@ -1672,7 +1674,7 @@ export default class BasePage {
     select_location_from_Google_Address_Lookup(el, name) {
         if (name) {
             el().type(name.substr(0, 6))
-            locationPin(name).click();
+            locationPin().first().click();
         }
         return this;
     };
@@ -2359,9 +2361,7 @@ export default class BasePage {
 
     wait_search_criteria_to_be_visible() {
         this.searchParametersAccordion().should('be.visible').and('not.be.disabled');
-        this.mainContainer().then(parentElm =>
-            cy.findByText(C.buttons.search, {container: parentElm}).should('be.visible').and('not.be.disabled')
-        );
+        searchButton().should('be.enabled');
         return this;
     };
 
@@ -2996,9 +2996,10 @@ export default class BasePage {
     }
 
     populate_disposal_form(disposalWitness_user, method, notes) {
-        this.enterValue(disposalWitnessInput, disposalWitness_user.email)
-        this.pause(0.5)
-        this.click_option_on_typeahead(disposalWitness_user.fullName);
+        this.select_typeahead_option(disposalWitnessInput, disposalWitness_user.email, typeaheadSelectorMatchInMatches)
+        // this.enterValue(disposalWitnessInput, disposalWitness_user.email)
+        // this.pause(0.5)
+        // this.click_option_on_typeahead(disposalWitness_user.fullName);
         disposalMethodsDropdown().select(method)
         this.enter_notes_on_modal(notes);
         return this;

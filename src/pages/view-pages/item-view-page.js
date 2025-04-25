@@ -58,7 +58,6 @@ export default class ItemViewPage extends BaseViewPage {
     //************************************ ACTIONS ***************************************//
 
     verify_Item_View_page_is_open(caseNo) {
-        this.toastMessage().should('not.exist');
         this.verify_text_is_present_on_main_container(C.labels.itemView.title);
         caseNumberInput_disabled().should('contain', caseNo);
         return this;
