@@ -134,6 +134,62 @@ Cypress.Commands.add('retryTypeaheadSelect', (
     });
 });
 
+Cypress.Commands.add('clickAndRetryUntilText', (
+    clickSelector,
+    expectedText,
+    {
+        maxAttempts = 10,
+        retryInterval = 1000,
+        clickOptions = {},
+        matchOptions = {}, // Options for `cy.contains`, if needed
+    } = {}
+) => {
+    let attempt = 0;
+
+    const wrappedAction = () => {
+        attempt++;
+        Cypress.log({ name: 'clickAndRetryUntilText', message: `Attempt ${attempt}` });
+
+        return cy.then(() => {
+            return cy.get(clickSelector).click(clickOptions).then(() => {
+                // Use contains with fallback to manual resolve
+                return cy.document().then((doc) => {
+                    const found = Array.from(doc.querySelectorAll('body *'))
+                        .some(el => el.textContent?.includes(expectedText));
+
+                    Cypress.log({
+                        name: 'Text Check',
+                        message: found
+                            ? `[✅] Text "${expectedText}" found`
+                            : `[❌] Text "${expectedText}" not found`,
+                        consoleProps: () => ({ found, expectedText })
+                    });
+
+                    return found;
+                });
+            });
+        });
+    };
+
+    // Use cy.waitUntil to repeat the wrappedAction
+    return cy.waitUntil(wrappedAction, {
+        timeout: maxAttempts * retryInterval,
+        interval: retryInterval,
+        errorMsg: `Text "${expectedText}" was not found after ${maxAttempts} retries.`,
+    });
+});
+
+
+// EXAMPLE
+//cy.clickAndRetryUntilText(
+//   'button[translate="GENERAL.BUTTON_NEXT"]',
+//   ['Welcome', 'Dashboard'],
+//   {
+//     maxAttempts: 20,
+//     retryInterval: 1000
+//   }
+// );
+
 
 const Log = {
     reset: '\x1b[0m',

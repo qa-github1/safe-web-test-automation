@@ -228,7 +228,8 @@ let
     disposalMethodsDropdown = e => cy.get('[ng-options="t.id as t.name for t in data.disposalMethods"]'),
     usePreviousLocationCheckbox = e => cy.get('.icheckbox_square-blue').find('ins'),
     checkoutReason = e => cy.get('[ng-options="r.id as r.name for r in data.checkoutReasons"]'),
-    typeaheadSelectorMatchInMatches = '[ng-repeat="match in matches track by $index"]'
+    typeaheadSelectorMatchInMatches = '[ng-repeat="match in matches track by $index"]',
+    typeaheadSelectorChoicesRow = '.ui-select-choices-row'
 
 let dashboardGetRequests = [
     '/api/users/currentuser?groups=true',
@@ -243,6 +244,7 @@ export default class BasePage {
 
     constructor() {
         this.typeaheadSelectorMatchInMatches = typeaheadSelectorMatchInMatches;
+        this.typeaheadSelectorChoicesRow = typeaheadSelectorChoicesRow;
         this.searchParametersAccordion = searchParametersAccordion;
         this.searchParametersExpandedPanel = searchParametersExpandedPanel;
         this.itemsCountOnSearchGrid = itemsCountOnSearchGrid;
@@ -448,13 +450,13 @@ export default class BasePage {
 
     verify_Error_toast_message_is_NOT_visible() {
         this.wait_until_spinner_disappears()
-        this.wait_all_GET_requests()
+        //this.wait_all_GET_requests()
         this.verify_element_does_NOT_contain_text(toastContainer, 'Error')
     }
 
     verify_specific_toast_message_is_NOT_visible(text) {
         this.wait_until_spinner_disappears()
-        this.wait_all_GET_requests()
+        //this.wait_all_GET_requests()
         this.verify_element_does_NOT_contain_text(toastContainer, text)
     }
 
@@ -655,18 +657,18 @@ export default class BasePage {
     select_typeahead_option(element, value, typeaheadElementSelector, aliasOfEndpointToBeAwaited) {
         if (value) {
             this.enter_value_and_retype_last_character_if_typeahead_did_not_appear(element, value, typeaheadElementSelector)
-        }
 
-        if (aliasOfEndpointToBeAwaited) {
-            //this.wait_response_from_API_call(aliasOfEndpointToBeAwaited)
-            this.wait_until_spinner_disappears();
-        }
+            if (aliasOfEndpointToBeAwaited) {
+                //this.wait_response_from_API_call(aliasOfEndpointToBeAwaited)
+                this.wait_until_spinner_disappears();
+            }
 
-        if (typeaheadElementSelector) {
-            this.pause(1)
-            // element().type('{enter}')
-            cy.get(typeaheadElementSelector).first().click();
-            this.pause(0.5)
+            if (typeaheadElementSelector) {
+                this.pause(1)
+                // element().type('{enter}')
+                cy.get(typeaheadElementSelector).first().click();
+                this.pause(0.5)
+            }
         }
         return this;
     };
@@ -775,28 +777,38 @@ export default class BasePage {
         });
         return this;
     };
+    //
+    // enter_values_on_Item_Belongs_To_typeahead_field(LabelValueArray) {
+    //     let that = this
+    //
+    //     if (LabelValueArray[1]) {
+    //         // if there are multiple values in array, repeat the same action to enter all of them
+    //         for (let i = 0; i < LabelValueArray[1].length; i++) {
+    //             // this.define_API_request_to_be_awaited('GET',
+    //             //     'peopleListFiltered',
+    //             //     "getPeopleList")
+    //             //
+    //             if (typeof LabelValueArray[0] === 'string' || LabelValueArray[0] instanceof String) {
+    //                 typeaheadInputField(LabelValueArray[0]).clear().invoke('val', LabelValueArray[1][i]).trigger('input')
+    //             } else {
+    //                 LabelValueArray[0]().clear().invoke('val', LabelValueArray[1][i]).trigger('input')
+    //             }
+    //             //  this.wait_response_from_API_call("getPeopleList")
+    //
+    //             cy.wait(200)
+    //             //firstPersonOnItemBelongsToTypeahead().should('exist').should('be.visible').click()
+    //             specificPersonOnItemBelongsToTypeahead(LabelValueArray[1][i]).should('exist').should('be.visible').click()
+    //             cy.wait(200)
+    //         }
+    //     }
+    //     return this;
+    // };
 
-    enter_values_on_Item_Belongs_To_typeahead_field(LabelValueArray) {
-        let that = this
 
-        if (LabelValueArray[1]) {
-            // if there are multiple values in array, repeat the same action to enter all of them
-            for (let i = 0; i < LabelValueArray[1].length; i++) {
-                // this.define_API_request_to_be_awaited('GET',
-                //     'peopleListFiltered',
-                //     "getPeopleList")
-                //
-                if (typeof LabelValueArray[0] === 'string' || LabelValueArray[0] instanceof String) {
-                    typeaheadInputField(LabelValueArray[0]).clear().invoke('val', LabelValueArray[1][i]).trigger('input')
-                } else {
-                    LabelValueArray[0]().clear().invoke('val', LabelValueArray[1][i]).trigger('input')
-                }
-                //  this.wait_response_from_API_call("getPeopleList")
-
-                cy.wait(200)
-                //firstPersonOnItemBelongsToTypeahead().should('exist').should('be.visible').click()
-                specificPersonOnItemBelongsToTypeahead(LabelValueArray[1][i]).should('exist').should('be.visible').click()
-                cy.wait(200)
+    enter_values_on_Item_Belongs_To_typeahead_field(element, valuesArray) {
+        if (valuesArray[0]) {
+            for (let i = 0; i < valuesArray.length; i++) {
+            this.select_typeahead_option(element, valuesArray[i], this.typeaheadSelectorChoicesRow);
             }
         }
         return this;
@@ -1180,6 +1192,17 @@ export default class BasePage {
         return this;
     };
 
+    click_button_and_wait_text(buttonCssSelector, text) {
+        cy.clickAndRetryUntilText(
+            buttonCssSelector,
+            [text],
+            {
+                maxAttempts: 20,
+                retryInterval: 1000
+            })
+        return this;
+    };
+
     click(text, container, elementSequentialId = 1) {
 
         let elmIndex = elementSequentialId - 1;
@@ -1365,9 +1388,9 @@ export default class BasePage {
         if (partOfRequestUrl) {
             cy.server();
             this.define_API_request_to_be_mocked('GET', partOfRequestUrl)
-            cy.intercept('GET', '**').as('all_GET_Requests').then(function () {
+          //  cy.intercept('GET', '**').as('all_GET_Requests').then(function () {
                 cy.visit(urlToOpen);
-            })
+          //  })
             cy.wait('@all_GET_Requests')
             this.wait_response_from_API_call(partOfRequestUrl)
         } else {
@@ -2040,7 +2063,7 @@ export default class BasePage {
                 .not('ng-hide')
                 .invoke('index')
                 .then((i) => {
-                    const getCellText = () =>  specificRowInResultsTable(rowNumber).find('td').eq(i)
+                    const getCellText = () => specificRowInResultsTable(rowNumber).find('td').eq(i)
                     self.verify_text(getCellText, cellContent);
                 });
         }
@@ -2186,7 +2209,12 @@ export default class BasePage {
     };
 
     wait_all_GET_requests() {
-        //   cy.wait('@all_GET_Requests')
+         //  cy.wait('@all_GET_Requests')
+        return this;
+    };
+
+    wait_all_POST_requests() {
+         //  cy.wait('@all_POST_Requests')
         return this;
     };
 

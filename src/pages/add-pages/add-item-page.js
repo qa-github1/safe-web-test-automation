@@ -158,7 +158,7 @@ export default class AddItemPage extends BaseAddPage {
 
     populate_all_fields_on_second_form(itemObject, skipStorageLocation = false, skipItemBelongsTo = true) {
 
-        this.select_typeahead_option(recoveredByInput,itemObject.recoveredByName, this.typeaheadSelectorMatchInMatches )
+        this.select_typeahead_option(recoveredByInput, itemObject.recoveredByName, this.typeaheadSelectorMatchInMatches)
 
         this.type_if_values_provided(
             [
@@ -181,7 +181,7 @@ export default class AddItemPage extends BaseAddPage {
         }
 
         if (!skipItemBelongsTo) {
-            this.enter_values_on_Item_Belongs_To_typeahead_field([itemBelongsTo, itemObject.itemBelongsToFirstLastName]);
+            this.enter_values_on_Item_Belongs_To_typeahead_field(itemBelongsTo, itemObject.itemBelongsToFirstLastName);
         }
 
         if (itemObject.custodyReason) custodyReason().select(itemObject.custodyReason);
@@ -190,19 +190,24 @@ export default class AddItemPage extends BaseAddPage {
         return this;
     };
 
+    click_Next(text) {
+        this.pause(1)
+        this.click_button_and_wait_text('button[translate="GENERAL.BUTTON_NEXT"]', 'Storage Location')
+        return this;
+    };
+
 
     populate_all_fields_on_both_forms(itemObject, skipStorageLocation = false, skipItemBelongsTo = true, enterCaseNumber = true, addingItemToClosedCase) {
         if (enterCaseNumber) this.enter_Case_Number_and_select_on_typeahead(itemObject.caseNumber);
         this.pause(2)
         this.select_Category(itemObject.category)
-        this.pause(1)
-        this.click(C.buttons.next)
+        this.click_Next()
 
         if (addingItemToClosedCase) {
             cy.contains('The Case is closed.').should('be.visible')
             this.click_button_on_sweet_alert('OK')
         }
-        this.populate_all_fields_on_second_form(itemObject, skipStorageLocation , skipItemBelongsTo);
+        this.populate_all_fields_on_second_form(itemObject, skipStorageLocation, skipItemBelongsTo);
         return this;
     };
 
