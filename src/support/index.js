@@ -1,5 +1,6 @@
 import '@shelex/cypress-allure-plugin';
 import './commands'
+require('cypress-failed-log');
 
 const C = require('../fixtures/constants');
 const S = require('../fixtures/settings');

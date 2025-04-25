@@ -1393,7 +1393,7 @@ export default class BasePage {
           //  cy.intercept('GET', '**').as('all_GET_Requests').then(function () {
                 cy.visit(urlToOpen);
           //  })
-            cy.wait('@all_GET_Requests')
+           // cy.wait('@all_GET_Requests')
             this.wait_response_from_API_call(partOfRequestUrl)
         } else {
             cy.visit(urlToOpen);
