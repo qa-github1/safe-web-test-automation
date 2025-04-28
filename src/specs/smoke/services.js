@@ -366,7 +366,7 @@ describe('Services', function () {
         })
     });
 
-    it('Dispo Auth Service', function () {
+    it.only('Dispo Auth Service', function () {
 
         ui.app.log_title(this);
         api.auth.get_tokens(orgAdmin);

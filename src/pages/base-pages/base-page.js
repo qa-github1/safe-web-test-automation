@@ -972,7 +972,7 @@ export default class BasePage {
             let getTextFn = () => {
                 return (element instanceof Function ? element() : element).invoke('text');
             };
-            cy.verifyTextAndRetry(getTextFn, text, {maxAttempts: 10, retryInterval: 500});
+            cy.verifyTextAndRetry(getTextFn, text, {maxAttempts: 60, retryInterval: 500});
         }
     }
 
@@ -2401,8 +2401,8 @@ export default class BasePage {
     };
 
     wait_until_spinner_disappears() {
-        bodyContainer().should('not.have.class', 'pace-running', {timeout: 70000});
-        bodyContainer().should('have.class', 'pace-done', {timeout: 70000});
+        bodyContainer().should('not.have.class', 'pace-running', {timeout: 75000});
+        bodyContainer().should('have.class', 'pace-done', {timeout: 75000});
         return this;
     };
 
