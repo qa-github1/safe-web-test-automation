@@ -39,7 +39,6 @@
     "@testing-library/cypress": "8.0.3",
     "allure-commandline": "^2.21.0",
     "cypress": "9.6.1",
-    "cypress-failed-log": "^2.10.0",
     "cypress-intellij-reporter": "0.0.5",
     "cypress-localstorage-commands": "^2.2.1",
     "cypress-wait-until": "^3.0.2",
