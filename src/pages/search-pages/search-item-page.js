@@ -11,6 +11,7 @@ let
     createdByInput = e => cy.get('[translate="ITEM_CREATED_BY"]').parent().find('[ng-model="user.text"]'),
     createdDateSearchCriteria  = e => cy.get('[translate="ITEM_DATE_CREATED"]').parent().find('[ng-model="field.searchCriteria"]'),
     createdDateInput = e => cy.get('[translate="ITEM_DATE_CREATED"]').parent().find('[ng-model="ngModel"]'),
+    descriptionSearchCriteria = e => cy.get('[translate="ITEM_DESCRIPTION"]').parent().find('[ng-model="field.searchCriteria"]'),
     descriptionInput = e => cy.get('[translate="ITEM_DESCRIPTION"]').parent().find('[ng-model="field.model"]'),
     recoveryDateInput = e => cy.get('[translate="ITEM_RECOVERY_DATE"]').parent().find('[ng-model="ngModel"]'),
     recoveredAtInput = e => cy.get('[translate="ITEM_RECOVERED_AT"]').parent().find('[ng-model="field.model"]'),
@@ -38,8 +39,10 @@ export default class SearchItemPage extends BaseSearchPage {
 
 //************************************ ACTIONS ***************************************//
 
-    enter_Description(itemDescription) {
-        this.searchParametersAccordion().should('have.class', 'in');
+    enter_Description(searchCriteria, itemDescription) {
+        this.searchParametersExpandedPanel().should('be.visible');
+        descriptionSearchCriteria().select(searchCriteria);
+        descriptionInput().clear()
         descriptionInput().invoke('val', itemDescription).trigger('input')
         return this;
     };
@@ -126,11 +129,11 @@ export default class SearchItemPage extends BaseSearchPage {
         return this;
     };
 
-    run_search_by_Item_Description(itemDescription) {
+    run_search_by_Item_Description(itemDescription, searchOperator= C.searchCriteria.inputFields.textSearch) {
        // this.define_API_request_to_be_awaited('POST', 'items/search')
         cy.getLocalStorage("newCaseId").then(caseId => {
             menu.click_Search__Item();
-            this.enter_Description(itemDescription || caseId);
+            this.enter_Description(searchOperator, itemDescription || caseId);
             super.click_Search();
         });
         this.wait_until_spinner_disappears();

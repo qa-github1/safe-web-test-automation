@@ -6,12 +6,7 @@ pipeline {
   }
   stages {
 
-    //stage('Preparation') {
-    // steps {
-    // git credentialsId: '7f425df4-0804-4ded-94c8-a75a4b23572e', url: 'https://github.com/TrackerProducts/safe-e2e-tests.git'
-    //  echo "Repository updated"
-    // }
-    // }
+
 
     stage('Dockerizing') {
       steps {

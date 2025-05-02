@@ -1,11 +1,13 @@
 import Menu from "../menu";
 import BaseSearchPage from "../base-pages/base-search-page";
+import C from "../../fixtures/constants";
 
 const menu = new Menu();
 
 //************************************ ELEMENTS ***************************************//
-let
-    descriptionInput = e => cy.get('.col-md-4').eq(3).should('be.visible').children('input');
+let descriptionField = e => cy.get('[translate="GENERAL.DESCRIPTION"]').parent().find('input'),
+    descriptionFieldSearchCriteria = e => cy.get('[translate="GENERAL.DESCRIPTION"]').parent().find('[ng-model="field.searchCriteria"]'),
+    uploadedDateSearchCriteria = e => cy.get('[translate="MEDIA.UPLOADED_DATE"]').parent().find('[ng-model="field.searchCriteria"]')
 
 
 export default class SearchMedia extends BaseSearchPage {
@@ -16,11 +18,18 @@ export default class SearchMedia extends BaseSearchPage {
 
 //************************************ ACTIONS ***************************************//
 
-    run_search_by_Description(description) {
+    run_search_by_Description(note, searchOperator= C.searchCriteria.inputFields.contains) {
         menu.click_Search__Media();
-        this.wait_search_criteria_to_be_visible();
-        descriptionInput().type(description);
-        this.click_Search();
+        this.searchParametersExpandedPanel().should('be.visible');
+        descriptionFieldSearchCriteria().select(searchOperator);
+        descriptionField().type(note);
+        super.click_Search();
         return this;
     };
+
+    enter_Uploaded_Date(searchCriteria, firstInput, secondInput) {
+        this.enter_Date_as_search_criteria('Uploaded Date', searchCriteria, firstInput, secondInput)
+        return this;
+    };
+
 }

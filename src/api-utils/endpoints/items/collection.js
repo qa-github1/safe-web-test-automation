@@ -5,10 +5,29 @@ const cases = require('../cases/collection');
 const body = require('./payload');
 const ui = require("../../../pages/ui-spec");
 
-exports.add_new_item = function (toNewCase = true, locationSuffix = null, propertyToSave = 'newItem') {
+function isObject(variable) {
+    return Object.prototype.toString.call(variable) === '[object Object]'
+}
+
+exports.add_new_item = function (toNewCase = true, locationObjectOrName = null, propertyToSave = 'newItem', itemObject) {
+   let specificLocation
+
+    if (isObject(locationObjectOrName)) {
+        specificLocation = Object.assign({}, locationObjectOrName)
+    }
+    else{
+        specificLocation =  Object.assign({},
+            {
+                "name": locationObjectOrName,
+                "active": true,
+                "parentId": 0,
+                "canStoreHere": true
+            })
+    }
+
     cy.getLocalStorage("newCase").then(newCase => {
         cy.getLocalStorage("newPerson").then(newPerson => {
-            cy.getLocalStorage(locationSuffix).then(location => {
+            cy.getLocalStorage(specificLocation.name).then(location => {
 
                // let caseObject = toNewCase ? JSON.parse(newCase) : null;
                // let locationObject = JSON.parse(location);
@@ -23,7 +42,7 @@ exports.add_new_item = function (toNewCase = true, locationSuffix = null, proper
 
                 generic_request.POST(
                     '/api/items',
-                    body.generate_POST_request_payload_for_creating_new_item(caseObject, locationObject, newPerson),
+                    body.generate_POST_request_payload_for_creating_new_item(itemObject, caseObject, locationObject, newPerson),
                     "New ITEM created via API with ID_______",
                     propertyToSave,
                 )
@@ -128,7 +147,7 @@ exports.get_items_from_specific_case = function (caseNumber, numberOfPagesWith10
 
                     for (let i = 0; i<caseItemsObjects.length; i++){
                         barcodes.push(caseItemsObjects[i].barcode)
-                        if (storeAllItemsToLocalStorage) cy.setLocalStorage("item" + i, JSON.stringify(caseItemsObjects[i]));
+                        if (storeAllItemsToLocalStorage) cy.setLocalStorage("item" + (i +1), JSON.stringify(caseItemsObjects[i]));
                     }
                 });
             });

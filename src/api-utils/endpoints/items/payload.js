@@ -1,9 +1,9 @@
 const S = require('../../../fixtures/settings.js');
 const D = require('../../../fixtures/data.js');
 
-exports.generate_POST_request_payload_for_creating_new_item = function (specificCaseObject, locationObject, newPerson) {
+exports.generate_POST_request_payload_for_creating_new_item = function (itemObject, specificCaseObject, locationObject, newPerson) {
 
-    let itemData = Object.assign({}, D.newItem);
+    let itemData = itemObject ? Object.assign({}, itemObject) : Object.assign({}, D.newItem);
 
     let caseNumber = specificCaseObject? specificCaseObject.caseNumber : itemData.caseNumber;
     let primaryCaseId = specificCaseObject? specificCaseObject.id : itemData.primaryCaseId;
@@ -15,6 +15,7 @@ exports.generate_POST_request_payload_for_creating_new_item = function (specific
     let body = {
         caseNumber: caseNumber,
         description: itemData.description,
+        publicFacingDescription: itemData.description,
         active: itemData.active,
         categoryId: itemData.categoryId,
         recoveredById: person.id,

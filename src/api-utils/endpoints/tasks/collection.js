@@ -65,7 +65,7 @@ exports.add_new_task_template = function (taskTemplate) {
     return this;
 };
 
-exports. add_new_task = function (taskObject, numberOfItemsAttached) {
+exports. add_new_task = function (taskObject = D.newTask, numberOfItemsAttached = 1) {
     cy.getLocalStorage("newCase").then(newCase => {
             cy.getLocalStorage("newItem").then(newItem => {
                 cy.getLocalStorage("newPerson").then(newPerson => {
@@ -74,19 +74,21 @@ exports. add_new_task = function (taskObject, numberOfItemsAttached) {
                     if (newCase !== 'undefined') {
                         taskObject.attachments.push( {entityId: JSON.parse(newCase).id, entityType: 0, taskId: null})
                     }
-                    if (newItem !== 'undefined') {
+                    if (newItem !== 'undefined' && numberOfItemsAttached === 1 ) {
                         taskObject.attachments.push(  {entityId: JSON.parse(newItem).id, entityType: 1, taskId: null})
                     }
                     if (newPerson !== 'undefined') {
                         taskObject.attachments.push(  {entityId: JSON.parse(newPerson).id, entityType: 2, taskId: null})
                     }
 
-                    for (let i = 0; i < numberOfItemsAttached; i++) {
-                        cy.getLocalStorage('item' + i).then(item => {
-                            taskObject.attachments.push({entityId: JSON.parse(item).id, entityType: 1, taskId: null})
-                        })
+                    if (numberOfItemsAttached > 1) {
+                        for (let i = 1; i < (numberOfItemsAttached+1); i++) {
+                            cy.getLocalStorage('item' + i).then(item => {
+                                taskObject.attachments.push({entityId: JSON.parse(item).id, entityType: 1, taskId: null})
+                            })
+                        }
+                        ui.app.pause(5)
                     }
-                    ui.app.pause(5)
 
                     generic_request.POST(
                         '/api/tasks/saveNewTask',

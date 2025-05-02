@@ -1,4 +1,5 @@
 import '@testing-library/cypress/add-commands'
+import 'cypress-wait-until';
 //
 // Cypress.Commands.overwrite('log', (subject, message, color, bgColor) => cy.task('log', message, {
 //     color: color,
@@ -9,17 +10,186 @@ function unquote(str) {
     return str.replace(/(^")|("$)/g, '');
 }
 
-Cypress.Commands.add(
-    'before',
+Cypress.Commands.add('verifyTextAndRetry', (
+    getActualTextFn,
+    expectedValues,
     {
-        prevSubject: 'element',
-    },
-    (el, property) => {
-        const win = el[0].ownerDocument.defaultView;
-        const before = win.getComputedStyle(el[0], 'before');
-        return unquote(before.getPropertyValue(property));
-    },
-);
+        maxAttempts = 60,
+        retryInterval = 1000,
+        ...options
+    } = {}
+) => {
+    // 🛑 Skip if expectedValues is undefined, null, or empty string
+    if (
+        expectedValues === undefined ||
+        expectedValues === null ||
+        (typeof expectedValues === 'string' && expectedValues.trim() === '')
+    ) {
+        Cypress.log({
+            name: 'verifyTextAndRetry',
+            message: `[⚠️ Skipped] No expected text provided, skipping verification.`,
+        });
+        return; // do nothing
+    }
+
+    let attempt = 0;
+
+    const normalizeText = (text) => {
+        if (text == null) return '';
+        return String(text).replace(/\s+/g, ' ').trim();
+    };
+
+    const normalizeExpected = (expected) => {
+        if (Array.isArray(expected)) return expected.map(normalizeText);
+        if (typeof expected === 'object') return Object.values(expected).map(normalizeText);
+        return [normalizeText(expected)];
+    };
+
+    const wrappedCondition = () => {
+        attempt++;
+
+        return getActualTextFn().then(actualText => {
+            const normalizedActual = normalizeText(actualText);
+            const expectedArray = normalizeExpected(expectedValues);
+            const failedMatches = expectedArray.filter(val => !normalizedActual.includes(val));
+            const passed = failedMatches.length === 0;
+
+            Cypress.log({
+                name: 'verifyTextAndRetry',
+                message: passed
+                    ? `[✅ Attempt ${attempt}] Found all expected values: [${expectedArray.join(', ')}]`
+                    : `[❌ Attempt ${attempt}] Missing: [${failedMatches.join(', ')}]`,
+                consoleProps: () => ({
+                    attempt,
+                    expected: expectedArray,
+                    missing: failedMatches,
+                    actual: normalizedActual,
+                })
+            });
+
+            return passed;
+        });
+    };
+
+    return cy.waitUntil(wrappedCondition, {
+        timeout: maxAttempts * retryInterval,
+        interval: retryInterval,
+        ...options
+    });
+});
+
+//EXAMPLE
+// cy.verifyTextAndRetry(
+//     () => mainContainer().invoke('text'),
+//     text,
+//     { maxAttempts: 30, retryInterval: 500 } // OPTIONAL
+// );
+
+Cypress.Commands.add('retryTypeaheadSelect', (
+    inputFn,
+    inputValue,
+    dropdownSelector,
+    {
+        matchText = '',               // optional: match dropdown content
+        maxAttempts = 5,
+        retryInterval = 1000,
+    } = {}
+) => {
+    let attempt = 0;
+
+    const attemptInteraction = () => {
+        attempt++;
+        cy.log(`🔁 [Attempt ${attempt}] Typing: "${inputValue}" and checking for dropdown items...`);
+
+        return cy.wrap(null).then(() => {
+            inputFn().clear().type(inputValue, { delay: 100 });
+
+            return cy.wait(300).then(() => {
+                return cy.document().then((doc) => {
+                    const items = [...doc.querySelectorAll(dropdownSelector)];
+
+                    if (items.length > 0) {
+                        const matchingItem = matchText
+                            ? items.find(el => el.textContent.includes(matchText))
+                            : items[0];
+
+                        if (matchingItem) {
+                            cy.wrap(matchingItem).click({ force: true });
+                            cy.log(`✅ Clicked on: "${matchingItem.textContent.trim()}"`);
+                            return true;
+                        }
+                    }
+
+                    cy.log('❌ No matching dropdown item found');
+                    return false;
+                });
+            });
+        });
+    };
+
+    return cy.waitUntil(attemptInteraction, {
+        timeout: maxAttempts * retryInterval,
+        interval: retryInterval,
+        errorMsg: `❌ Failed to select typeahead value '${inputValue}' after ${maxAttempts} attempts`,
+    });
+});
+
+Cypress.Commands.add('clickAndRetryUntilText', (
+    clickSelector,
+    expectedText,
+    {
+        maxAttempts = 10,
+        retryInterval = 1000,
+        clickOptions = {},
+        matchOptions = {}, // Options for `cy.contains`, if needed
+    } = {}
+) => {
+    let attempt = 0;
+
+    const wrappedAction = () => {
+        attempt++;
+        Cypress.log({ name: 'clickAndRetryUntilText', message: `Attempt ${attempt}` });
+
+        return cy.then(() => {
+            return cy.get(clickSelector).click(clickOptions).then(() => {
+                // Use contains with fallback to manual resolve
+                return cy.document().then((doc) => {
+                    const found = Array.from(doc.querySelectorAll('body *'))
+                        .some(el => el.textContent?.includes(expectedText));
+
+                    Cypress.log({
+                        name: 'Text Check',
+                        message: found
+                            ? `[✅] Text "${expectedText}" found`
+                            : `[❌] Text "${expectedText}" not found`,
+                        consoleProps: () => ({ found, expectedText })
+                    });
+
+                    return found;
+                });
+            });
+        });
+    };
+
+    // Use cy.waitUntil to repeat the wrappedAction
+    return cy.waitUntil(wrappedAction, {
+        timeout: maxAttempts * retryInterval,
+        interval: retryInterval,
+        errorMsg: `Text "${expectedText}" was not found after ${maxAttempts} retries.`,
+    });
+});
+
+
+// EXAMPLE
+//cy.clickAndRetryUntilText(
+//   'button[translate="GENERAL.BUTTON_NEXT"]',
+//   ['Welcome', 'Dashboard'],
+//   {
+//     maxAttempts: 20,
+//     retryInterval: 1000
+//   }
+// );
+
 
 const Log = {
     reset: '\x1b[0m',

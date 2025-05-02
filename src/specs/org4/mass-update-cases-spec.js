@@ -27,7 +27,7 @@ describe('Mass Update Cases', function () {
     ]
 
     context('1. all fields enabled in Org Settings', function () {
-        it.only('1.1 all fields turned on and edited, "overwrite existing values" turned OFF', function () {
+        it('1.1 all fields turned on and edited, "overwrite existing values" turned OFF', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(user);
             D.generateNewDataSet();
@@ -56,7 +56,7 @@ describe('Mass Update Cases', function () {
                 .click_button(C.buttons.actions)
                 .click_option_on_expanded_menu(C.dropdowns.caseActions.massUpdate)
                  .turn_on_and_enter_values_to_all_fields_on_modal(allFieldsLabels, allValues)
-               .verify_text_above_modal_footer('\n        Mass updating\n         2 \n        \n        cases\n    ')
+               .verify_text_above_modal_footer('Mass updating 2 cases')
                .click_Ok()
                .verify_toast_message(C.toastMsgs.saved)
                .quick_search_for_case(D.newCase.caseNumber + ' _1')
@@ -90,7 +90,7 @@ describe('Mass Update Cases', function () {
                 .click_option_on_expanded_menu(C.dropdowns.caseActions.massUpdate)
                 .turn_on_and_enter_values_to_all_fields_on_modal(multiSelectFieldsLabels, multiSelectFieldsValues)
                 .enable_Case_Officers_overwrite()
-                .enable_Tags_overwrite()
+                .click_on_replace_tags()
                 .click_Ok()
                 .verify_toast_message(C.toastMsgs.saved)
                 .quick_search_for_case(D.newCase.caseNumber + ' _1')

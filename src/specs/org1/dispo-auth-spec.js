@@ -49,7 +49,7 @@ describe('Dispo Auth', function () {
             .open_newly_created_task_via_direct_link()
             .select_tab('Items')
             .set_Action___Approve_for_Release([...Array(100).keys()], person, address, false, false, true, false)
-            .click('Submit For Disposition')
+            .click_Submit_for_Disposition()
             .verify_toast_message('Submitted for Disposition')
             .wait_until_spinner_disappears()
             .verify_Disposition_Statuses_on_the_grid(
@@ -62,7 +62,7 @@ describe('Dispo Auth', function () {
     });
 
 
-    it.only('Add Dispo Task with 11 1DA items and assign to Org Admin, ' +
+    it('Add Dispo Task with 11 1DA items and assign to Org Admin, ' +
         '--set different actions for item using all variations' +
         '--using Actions menu and grid, ' +
         '--check statuses and notes upon submission', function () {
@@ -132,7 +132,7 @@ describe('Dispo Auth', function () {
             .set_Action___Hold([10],  'Case Active', false, 10)
             .set_Action___Hold([11],  'Active Warrant', true)
             .set_Action___Timed_Disposal([12], '3y' )
-            .click('Submit For Disposition')
+            .click_Submit_for_Disposition()
             .verify_toast_message('Submitted for Disposition')
             .wait_until_spinner_disappears()
             .verify_Disposition_Statuses_on_the_grid
@@ -192,7 +192,7 @@ describe('Dispo Auth', function () {
             .set_Action___Delayed_Release([154, 204], person1, address1, true, true, false, true)
             .reset_large_view() // we should remove all instances of this method once the issue in card XXX gets fixed
             .set_Action___Hold([205, 255], 'Active Investigation', false, 30)
-            .click('Submit For Disposition')
+            .click_Submit_for_Disposition()
             .verify_toast_message('Submitted for Disposition')
             .wait_until_spinner_disappears()
             .verify_Disposition_Statuses_on_the_grid([

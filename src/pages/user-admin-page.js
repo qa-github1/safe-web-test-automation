@@ -42,6 +42,7 @@ let
     groupInput = e => cy.get('[name="usergroups"] [type="search"]'),
     groupInTypeaheadList = e => cy.get('[ng-repeat="userGroup in $select.items"]'),
     userGroups = e => cy.get('[ng-model="selectedUserGroups.userGroups"]').last(),
+    userGroupsOnReassignModal = e => cy.get('[ng-model="updateModel.newUserGroups""]').find('input'),
     reassign_active_tasks_and_cases_toggle_ON = e => cy.get('[ng-model="updateModel.reassign"]'),
     reassign_active_tasks_and_cases_toggle_OFF = e => cy.get('[class="btn active btn-default btn-sm toggle-off"]')
 
@@ -52,6 +53,12 @@ export default class UserAdminPage extends BasePage {
     }
 
     //************************************ ACTIONS ***************************************//
+
+    enter_values_on_reassign_modal(usersOrGroups, keepDeactivated = true) {
+        this.pause(0.5)
+        this.enter_values_on_single_multi_select_typeahead_field(['New Users/Groups to be added', usersOrGroups, "users/groups" ])
+        return this;
+    };
 
     search_for_user(email) {
         this.define_API_request_to_be_awaited('POST', '/api/users/search', 'searchUsers')
@@ -203,7 +210,7 @@ export default class UserAdminPage extends BasePage {
         login.enter_credentials(D.newUser.email, D.newUser.password)
             .click_Login_button()
 
-        if (S.isOrg2()) {
+        if (S.isOrg2() || S.isOrg3() ) {
             cy.contains('END OF TERMS AND CONDITIONS').scrollIntoView()
             cy.get('[title="Accept"]').click()
         }
@@ -291,9 +298,8 @@ export default class UserAdminPage extends BasePage {
     }
 
 
-
     verify_user_is_not_shown_up_on_grid() {
-        this.verify_items_count_on_grid(0);
+        this.verify_records_count_on_grid(0);
         return this;
     }
 

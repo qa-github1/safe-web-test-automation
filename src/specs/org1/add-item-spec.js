@@ -15,13 +15,15 @@ let permissionGroup_officeAdmin = S.selectedEnvironment.admin_permissionGroup;
 
 before(function () {
     api.auth.get_tokens(orgAdmin);
+    api.org_settings.update_org_settings(false, true, null, "~person.firstName~ ~person.lastName~");
     D.generateNewDataSet();
     api.cases.add_new_case(D.newCase.caseNumber);
     api.org_settings.enable_all_Person_fields();
+    api.org_settings.per
     api.users.update_current_user_settings(orgAdmin.id, C.currentDateTimeFormat)
     api.auth.get_tokens(powerUser);
     api.users.update_current_user_settings(powerUser.id, C.currentDateTimeFormat)
-});
+ });
 
 describe('Add Item', function () {
 
@@ -39,7 +41,7 @@ describe('Add Item', function () {
             ui.app.open_newly_created_case_via_direct_link()
             ui.menu.click_Add__Item()
             ui.addItem.verify_Case_Number_is_populated_on_enabled_input_field(D.newItem.caseNumber)
-                .populate_all_fields_on_both_forms(D.newItem)
+                .populate_all_fields_on_both_forms(D.newItem, false, false)
                 .select_post_save_action(C.postSaveActions.viewAddedItem)
                 .click_Save(D.newItem)
                 .verify_toast_message_(D.newCase);
@@ -57,7 +59,7 @@ describe('Add Item', function () {
             D.getItemDataWithReducedFields(D.newCase);
             api.org_settings.update_org_settings(true, false);
             api.org_settings.disable_Item_fields([C.itemFields.itemBelongsTo, C.itemFields.tags]);
-            D.newItem.itemBelongsTo = [S.selectedEnvironment.person.name, S.selectedEnvironment.person_2.name]
+            D.newItem.itemBelongsToFirstLastName = [S.selectedEnvironment.person.name, S.selectedEnvironment.person_2.name]
             D.newItem.tags = [S.selectedEnvironment.orgTag1.name, S.selectedEnvironment.orgTag2.name]
             api.auth.get_tokens(orgAdmin);
 
@@ -65,7 +67,7 @@ describe('Add Item', function () {
             ui.menu.click_Add__Item()
             ui.addItem.enter_Case_Number_and_select_on_typeahead(D.newItem.caseNumber)
                 .select_Category(D.newItem.category)
-                .click(C.buttons.next)
+                .click_Next()
                 .verify_text_is_present_on_main_container('You must have a Person in this case before you can add a value to this field')
 
             D.newItem.caseNumber = oldCase.caseNumber
@@ -73,7 +75,7 @@ describe('Add Item', function () {
             ui.addItem.select_tab(C.tabs.items)
                 .click_element_on_active_tab(C.buttons.addItem)
                 .verify_Add_Item_page_is_open()
-                .populate_all_fields_on_both_forms(D.newItem, false, true )
+                .populate_all_fields_on_both_forms(D.newItem, false, false)
                  .select_post_save_action(C.postSaveActions.viewAddedItem)
                  .click_Save(D.newItem)
                  .verify_toast_message_(oldCase)
@@ -84,7 +86,7 @@ describe('Add Item', function () {
             ui.addItem.verify_Case_Number_is_populated_on_enabled_input_field(D.newItem.caseNumber)
         });
 
-        it.only('1.3. Add Item from Case View /Items tab -- redirect to Add Item page again', function () {
+        it('1.3. Add Item from Case View /Items tab -- redirect to Add Item page again', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
             D.getItemDataWithReducedFields(D.newCase);
@@ -192,7 +194,7 @@ describe('Add Item', function () {
                 .verify_text_is_present_on_main_container(C.labels.addItem.title)
                 .verify_Case_Number_is_populated_on_enabled_input_field(D.newItem.caseNumber)
                 .verify_Category(D.newItem.category)
-                .click(C.buttons.next)
+                .click_Next()
                 .verify_location(D.newItem.location)
                 .verify_text_on_main_Form(C.labels.addItem.confirmItemDuplication)
                 .select_checkbox()
@@ -219,7 +221,7 @@ describe('Add Item', function () {
                 .verify_text_is_present_on_main_container(C.labels.addItem.title)
                 .verify_Case_Number_is_populated_on_enabled_input_field(D.newItem.caseNumber)
                 .verify_Category(D.newItem.category)
-                .click(C.buttons.next)
+                .click_Next()
                 .verify_location(D.newItem.location)
                 .verify_text_on_main_Form(C.labels.addItem.confirmItemSplit)
                 .select_checkbox()
@@ -288,7 +290,7 @@ describe('Add Item', function () {
             ui.addItem.verify_Case_Number_is_populated_on_enabled_input_field(oldCase.caseNumber)
                 .enter_Case_Number_and_select_on_typeahead(D.newItem.caseNumber)
                 .select_Category(D.newItem.category)
-                .click(C.buttons.next)
+                .click_Next()
                 .enter_storage_location(inaccessibleLocation.name)
                 .verify_storage_location_typeahead_is_not_shown(inaccessibleLocation.name)
                 // .enter_storage_location(inaccessibleLocation.guid)
@@ -321,7 +323,7 @@ describe('Add Item', function () {
                 D.newItem.category = D.newItem.categoryLinkedToRequiredForm1
                 D.newCase.categoryId = D.newItem.categoryIdLinkedToRequiredForm1
                 ui.menu.click_Add__Item()
-                ui.addItem.populate_all_fields_on_both_forms(D.newItem, false)
+                ui.addItem.populate_all_fields_on_both_forms(D.newItem)
                     .verify_number_of_required_fields_marked_with_asterisk(12)
                     .verify_Save_button_is_disabled()
                     .populate_all_fields_on_Custom_Form(D.newCustomFormData)
@@ -348,7 +350,7 @@ describe('Add Item', function () {
             D.newItem.category = D.newItem.categoryLinkedToRequiredForm2
             D.newCase.categoryId = D.newItem.categoryIdLinkedToRequiredForm2
             ui.menu.click_Add__Item()
-            ui.addItem.populate_all_fields_on_both_forms(D.newItem, false)
+            ui.addItem.populate_all_fields_on_both_forms(D.newItem)
                 .verify_number_of_required_fields_marked_with_asterisk(0)
                 .select_post_save_action(C.postSaveActions.addItem)
                 .click_Save(D.newItem)
@@ -423,7 +425,7 @@ describe('Add Item', function () {
             D.newItem.category = 'Currency'
             ui.app.open_newly_created_case_via_direct_link()
             ui.menu.click_Add__Item()
-            ui.addItem.populate_all_fields_on_both_forms(D.newItem, false)
+            ui.addItem.populate_all_fields_on_both_forms(D.newItem)
                 .enter_value_to_input_field('$100s', 4)
                 .select_post_save_action(C.postSaveActions.splitItem)
                 .click_Save(D.newItem)
@@ -431,7 +433,7 @@ describe('Add Item', function () {
                 .verify_text_is_present_on_main_container(C.labels.addItem.title)
                 .verify_Case_Number_is_populated_on_enabled_input_field(D.newItem.caseNumber)
                 .verify_Category(D.newItem.category)
-                .click(C.buttons.next)
+                .click_Next()
                 .verify_location(D.newItem.location)
                 .verify_text_on_main_Form(C.labels.addItem.confirmItemSplit)
                 .select_checkbox()

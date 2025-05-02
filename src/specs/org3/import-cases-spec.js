@@ -54,7 +54,7 @@ describe('Import Cases', function () {
         D.newItem.caseNumber = D.newCase.caseNumber
         ui.menu.click_Add__Item();
         ui.addItem.enter_Case_Number_and_select_on_typeahead(D.newCase.caseNumber)
-            .populate_all_fields_on_both_forms(D.newItem, false)
+            .populate_all_fields_on_both_forms(D.newItem, false, false)
             .select_post_save_action(C.postSaveActions.viewAddedItem)
             .click_Save(D.newItem)
             .verify_Error_toast_message_is_NOT_visible();

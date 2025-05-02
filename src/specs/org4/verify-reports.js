@@ -15,15 +15,22 @@ describe('Reports', function () {
     context('Verify generating and opening Report "Primary Label 4X3"', function () {
 
         it.only('1. Report from Case View page - Items tab', function () {
-         //   api.auth.get_tokens(S.userAccounts.orgAdmin);
-            // ui.app.open_case_url(S.selectedEnvironment.oldActiveCase.id)
-            //     .select_tab(C.tabs.items)
-            //     .select_checkbox_for_all_records()
-            //     .click_element_on_active_tab(C.buttons.reports)
-            //     .click_option_on_expanded_menu(C.reports.primaryLabel4x3)
-            //     .verify_toast_message(C.toastMsgs.reportRunning);
-          //   cy.verify_report_gets_open_in_new_tab_with_xvfb('CaseView_ItemsTab_Report_' + C.reports.primaryLabel4x3)
-            ui.app.verify_content_of_PDF_file()
+
+
+            api.auth.get_tokens(S.userAccounts.orgAdmin);
+            cy.window().then((win) => {
+                cy.stub(win, 'open').as('windowOpen');
+            });
+            ui.app.open_case_url(S.selectedEnvironment.oldActiveCase.id)
+                .select_tab(C.tabs.items)
+                .select_checkbox_for_all_records()
+                .click_element_on_active_tab(C.buttons.reports)
+                .click_option_on_expanded_menu(C.reports.primaryLabel4x3)
+            cy.get('@windowOpen').should('have.been.called');
+            cy.get('@windowOpen').should('have.been.calledWithMatch', /Report.*\.pdf/);
+                ui.app.verify_toast_message(C.toastMsgs.reportRunning);
+            // cy.verify_report_gets_open_in_new_tab_with_xvfb('CaseView_ItemsTab_Report_' + C.reports.primaryLabel4x3)
+            // ui.app.verify_content_of_PDF_file()
         });
 
         // it('2. Report from Item View page - Cases tab', function () {

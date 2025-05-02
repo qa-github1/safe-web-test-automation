@@ -258,6 +258,17 @@ exports.generate_request_payload_for_setting_visible_and_required_Item_fields = 
         )
     }
 
+    if (shouldFieldBeDisabled(fieldsToDisable, C.itemFields.dispositionStatus)) {
+        body.push(
+            {
+                "orgFieldId": S.selectedEnvironment.fieldIds.item.dispositionAuthorizationStatus,
+                "entityType": 1,
+                "name": "DISPO_AUTH_STATUS",
+                "recordType": 1
+            }
+        )
+    }
+
     if (shouldFieldBeDisabled(fieldsToDisable, C.itemFields.publicFacingDescription)) {
         body.push(
             {
@@ -333,6 +344,7 @@ exports.generate_request_payload_for_setting_visible_and_required_Item_fields = 
             })
     }
 
+
     // Setting optional fields
     if (shouldFieldBeOptional(optionalFields, C.itemFields.description)) {
         body.push(
@@ -378,6 +390,8 @@ exports.generate_request_payload_for_setting_visible_and_required_Item_fields = 
             "recordType": 0
         })
     }
+
+
 
     return body;
 };
@@ -545,7 +559,6 @@ exports.generate_request_payload_for_disabling_Item_fields = function (fieldsToE
         })
     }
 
-
     if (!shouldFieldBeEnabled(fieldsToEnable, C.itemFields.dispositionStatus)) {
         body.push({
             "orgFieldId": S.selectedEnvironment.fieldIds.item.dispositionAuthorizationStatus,
@@ -678,6 +691,7 @@ exports.generate_request_payload_for_editing_Org = function (
     useCLP = true,
     itemBelongsToShowsAllPeople = true,
     touchScreenSignature = false,
+    personFormattingString = "~person.firstName~ ~person.lastName~"
 ) {
     let body = Object.assign({}, orgSettings)
 
@@ -690,8 +704,8 @@ exports.generate_request_payload_for_editing_Org = function (
     body.signatureConfiguration.defaultSignatureDevice = defaultSignatureDevice;
     body.signatureConfiguration.noSignatureDeviceSelected = noSignature;
     body.signatureConfiguration.topazSignatureDeviceSelected = false;
-    body.signatureConfiguration.touchScreenSignatureDeviceSelected = touchScreenSignature;
-    body.personViewConfiguration.formattingString = '';
+    body.signatureConfiguration.touchScreenSignatureDeviceSelected = touchScreenSignature? touchScreenSignature : false;
+    body.personViewConfiguration.formattingString = personFormattingString;
 
     return body
 };

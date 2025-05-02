@@ -20,6 +20,17 @@ D.getCurrentDateAndRandomNumber = function (randomNumberLenght) {
     return helper.mediumDate + '_' + helper.getRandomNo(randomNumberLenght);
 }
 
+
+D.getStorageLocationData = function (locationName, parentId = 0, canStore = true, isActive = true) {
+    D[locationName] = {
+            "name": D.currentDateAndRandomNumber + '_' + locationName,
+            "active": isActive,
+            "parentId": parentId,
+            "canStoreHere": canStore
+        }
+    return D[locationName]
+}
+
 D.getNewCaseData = function (caseNumber, autoDispoOff = false) {
     api.cases.get_most_recent_case();
     caseNumber = caseNumber || this.setNewRandomNo();
@@ -60,7 +71,7 @@ D.getNewCaseData = function (caseNumber, autoDispoOff = false) {
         caseOfficerGroupIds: [],
         caseOfficer: S.userAccounts.orgAdmin.email,
         caseOfficers: [S.userAccounts.orgAdmin.name],
-        caseOfficers_importFormat:  S.userAccounts.orgAdmin.guid,
+        caseOfficers_importFormat: S.userAccounts.orgAdmin.guid,
         caseOfficers_names: [S.userAccounts.orgAdmin.name],
         caseOfficerEmail: S.userAccounts.orgAdmin.name,
         caseOfficerName: S.userAccounts.orgAdmin.name,
@@ -161,6 +172,7 @@ D.getNewItemData = function (specificCaseObject, locationObject, newPerson) {
         primaryCaseId: specificCaseObject.id,
         caseNumber: specificCaseObject.caseNumber,
         description: 'description_' + D.getRandomNo(),
+        //publicFacingDescription: D.newItem.description,
         status: C.itemStatuses.checkedIn,
         updateMadeBy: S.userAccounts.orgAdmin.lastName,
         updateDate: helper.setDate(C.currentDateTimeFormat.dateOnly),
@@ -173,9 +185,12 @@ D.getNewItemData = function (specificCaseObject, locationObject, newPerson) {
         categoryLinkedToRequiredForm2: S.selectedEnvironment.categorylinkedToRequiredForm2.name,
         recoveredById: person.id,
         recoveredBy: person.email,
-        recoveredByName: person.name,
+        recoveredByName: person.fullName,
         recoveredByGuid: person.guid,
-        custodianGuid: person.guid,
+        custodianGuid: '',
+        custodian: '',
+        custodianEmail: '',
+        submittedByEmail: S.userAccounts.orgAdmin.email,
         submittedByGuid: S.userAccounts.orgAdmin.guid,
         submittedById: S.userAccounts.orgAdmin.id,
         submittedByName: `${S.userAccounts.orgAdmin.firstName} ${S.userAccounts.orgAdmin.lastName}`,
@@ -206,9 +221,11 @@ D.getNewItemData = function (specificCaseObject, locationObject, newPerson) {
         custodyReason: S.selectedEnvironment.custodyReason.name,
         peopleIds: [person.id],
         itemBelongsTo: [person.name],
+        itemBelongsToEmail: [person.email],
         itemBelongsToFirstLastName: [person.fullName],
         itemBelongsToOnHistory: [person.name],
         itemBelongsToGuid: [person.guid],
+        itemBelongsToEmail: [person.email],
         barcodes: [{id: 0, value: randomNo}],
         //additionalBarcodes: [randomNo],
         actualDisposedDate: '',
@@ -313,6 +330,7 @@ D.getEditedItemData = function (specificCaseObject, locationObject, newPerson) {
         updateMadeBy: S.userAccounts.orgAdmin.name,
         submittedById: S.userAccounts.orgAdmin.id,
         submittedByName: `${S.userAccounts.orgAdmin.firstName} ${S.userAccounts.orgAdmin.lastName}`,
+        submittedByEmail: S.userAccounts.orgAdmin.email,
         updateDate: helper.setDate(C.currentDateTimeFormat.dateOnly),
         description: 'desc_edited' + randomNo,
         status: C.itemStatuses.checkedIn,
@@ -321,7 +339,7 @@ D.getEditedItemData = function (specificCaseObject, locationObject, newPerson) {
         category: S.selectedEnvironment.category2.name,
         recoveredById: Person_2.id,
         recoveredBy: Person_2.email,
-        recoveredByName: Person_2.name,
+        recoveredByName: Person_2.fullName,
         recoveryLocation: 'Kentucky, USA',
         locationId: locationObject.id,
         location: locationObject.name,
@@ -336,7 +354,8 @@ D.getEditedItemData = function (specificCaseObject, locationObject, newPerson) {
         officeName: S.selectedEnvironment.office_1.name,
         recoveredByGuid: Person_2.guid,
         returnedByGuid: Person_2.guid,
-        custodianGuid: Person_2.guid,
+        custodianGuid: '',
+        custodianEmail: '',
         formData: [],
         cases: [],
         tags: ['eligible for disposal'],
@@ -356,6 +375,7 @@ D.getEditedItemData = function (specificCaseObject, locationObject, newPerson) {
         itemBelongsTo: [Person_2.name],
         itemBelongsToOnHistory: [Person_2.name],
         itemBelongsToGuid: [Person_2.guid],
+        itemBelongsToEmail: [Person_2.email],
         additionalBarcodes: [randomNo + 2],
         actualDisposedDate: '',
         disposedDate: '',
@@ -369,6 +389,7 @@ D.getEditedItemData = function (specificCaseObject, locationObject, newPerson) {
         checkedOutTo_name: '',
         checkedOutNotes: '',
         expectedReturnDate: '',
+        publicFacingDescription: D.newItem.description
     });
     return D.editedItem;
 };
@@ -511,7 +532,8 @@ D.getNewUserData = function (officeId) {
 
     D.newUser = {
         firstName: 'F' + randomNo,
-        middleName: 'M' + randomNo,
+        middleName: '',
+        //  middleName: 'M' + randomNo,
         lastName: 'L' + randomNo,
         fullName: 'F' + randomNo + ' ' + 'M' + randomNo + ' ' + 'L' + randomNo,
         personnelNumber: randomNo,
@@ -958,16 +980,6 @@ D.getDataForMultipleCases = function (numberOfCases) {
 }
 
 D.currentDateAndRandomNumber = helper.mediumDate + '_' + helper.getRandomNo(3);
-
-D.buildStorageLocationData = function (locationSuffix, parentId = null, canStore = true, isActive = true) {
-
-    return D['newLocation' + locationSuffix] = [{
-        "name": D.currentDateAndRandomNumber + '_' + locationSuffix,
-        "active": isActive,
-        "parentId": parentId,
-        "canStoreHere": canStore
-    }]
-}
 
 
 module.exports = D;

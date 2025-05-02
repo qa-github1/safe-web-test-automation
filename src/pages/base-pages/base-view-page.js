@@ -7,6 +7,8 @@ import BasePage from "./base-page";
 //************************************ ELEMENTS ***************************************//
 let
     active_form = e => cy.get('.form-horizontal').not('.ng-hide'),
+    // resultsTable = (tableIndex = 0) => cy.get('.table-striped').eq(tableIndex).find('tbody'),
+    // firstRowInResultsTable = (tableIndex = 0) => resultsTable(tableIndex).children('tr').first(),
     textareaFieldFoundByLabelOnSpecificContainer = (container, fieldLabel) => container().contains(fieldLabel).parent('div').find('textarea'),
     textareaFieldFoundByLabel = (fieldLabel) => cy.contains(fieldLabel).parent('div').find('textarea'),
     inputFieldFoundByLabelOnSpecificContainer = (container, fieldLabel) => container().contains(fieldLabel).parent('div').find('input'),
@@ -18,7 +20,6 @@ let
     redFieldsOnHistoryColumn = e => cy.get('.modal-content').find('.red-field'),
     active_tab = e => cy.get('.nav-tabs').find('.active'),
     edit_form = e => cy.get('[name="frmEdit"]'),
-    active_tab_container = e => cy.get('[class="tab-pane ng-scope active"]'),
     customFormContainerOnEdit = e => cy.get('[ng-repeat="form in formsEdit track by $index"]'),
     detailsButton = e => cy.get('[translate="GENERAL.DETAILS"]'),
     historyView_leftColumn = e => cy.get('[ng-class="previousHistory ? \'col-md-6\' : \'col-md-12\'"]'),
@@ -37,7 +38,8 @@ let
     customDateOnHistory = (form = historyView_rightColumn) => form().contains('Date').parent('div').find('input'),
     customFormContainerOnHistoryLeft = e => historyView_leftColumn().children().find('form').children().find('[ng-repeat="form in forms"]'),
     customFormContainerOnHistoryRight = e => historyView_rightColumn().children().find('form').children().find('[ng-repeat="form in forms"]'),
-    element_on_active_tab = text => active_tab_container().children().contains(text),
+    element_on_active_tab = text => active_tab_container().children().contains(text).first(),
+    active_tab_container = e => cy.get('[class="tab-pane ng-scope active"]'),
     edit_button_on_active_tab = text => active_tab_container().children().find('[translate="GENERAL.EDIT"]'),
     save_button_on_active_tab = text => active_tab_container().children().find('[button-text="\'GENERAL.BUTTON_SAVE\'"]').find('button'),
     mediaDescriptionField = e => cy.get('[stop-event="touchend"]'),
@@ -126,11 +128,11 @@ export default class BaseViewPage extends BasePage {
     }
 
     open_last_history_record(tableIndex) {
+        this.wait_until_spinner_disappears()
         this.select_tab(C.tabs.history)
             .set_visibility_of_table_column(C.tableColumns.details, true)
             .verify_title_on_active_tab(C.tabs.history)
-        // this method is used in a lot of tests. I changed the index from 1 to 0. Need to check if this method will be fine for all usages
-            this.click(C.buttons.details, this.firstRowInResultsTable(tableIndex))
+            .click_first_matching_table_element_on_active_tab('Details')
         //    .verify_element_is_visible('History View')
 
         return this;
@@ -162,6 +164,11 @@ export default class BaseViewPage extends BasePage {
         return this;
     }
 
+    click_first_matching_table_element_on_active_tab(text) {
+        active_tab_container().find('tbody').contains(text).first().click()
+        return this;
+    }
+
     click_Save() {
         save_button_on_active_tab().click();
         return this;
@@ -183,8 +190,15 @@ export default class BaseViewPage extends BasePage {
     }
 
     click_Edit() {
-        edit_button_on_active_tab().click();
-        cy.wait(1000)
+       this.pause(0.5)
+       // edit_button_on_active_tab().click();
+
+        //cy.get('.tab-pane.ng-scope.active').within(() => {
+            cy.get('[translate="GENERAL.EDIT"]').first().should('exist') // or .should('exist') for presence check
+            cy.get('[translate="GENERAL.EDIT"]').first().click(); // or .should('exist') for presence check
+       // });
+
+        this.pause(1)
         this.wait_element_to_be_visible(save_button_on_active_tab)
         this.verify_Save_isPresent()
         return this;
@@ -242,14 +256,29 @@ export default class BaseViewPage extends BasePage {
     //
     // }
 
-    verify_edited_or_old_text_on_multi_select_field(labelsOfEditedFields, label, fieldSelector, editedValue, initialValue, oldValueOverwritten = false) {
-        const isPentest = Cypress.env('env') === 'pentest';
-        const verifyMethod = isPentest ? this.verify_text : this.verify_text_2;
+    // verify_edited_or_old_text_on_multi_select_field(labelsOfEditedFields, label, fieldSelector, editedValue, initialValue, oldValueOverwritten = false) {
+    //     const isPentest = Cypress.env('env') === 'pentest';
+    //     const verifyMethod = isPentest ? this.verify_text : this.verify_text_2;
+    //
+    //     if (labelsOfEditedFields.includes(label) && editedValue !== null) {
+    //         verifyMethod.call(this, fieldSelector, editedValue);
+    //     } else if (initialValue) {
+    //         verifyMethod.call(this, fieldSelector, initialValue);
+    //     }
+    // }
 
+    verify_edited_or_old_text_on_multi_select_field(labelsOfEditedFields, label, fieldSelector, editedValue, initialValue, oldValueOverwritten = false) {
         if (labelsOfEditedFields.includes(label) && editedValue !== null) {
-            verifyMethod.call(this, fieldSelector, editedValue);
-        } else if (initialValue) {
-            verifyMethod.call(this, fieldSelector, initialValue);
+            this.verify_text(fieldSelector, editedValue);
+            // if (oldValueOverwritten) {
+            //     this.verify_element_does_NOT_contain_text(fieldSelector, initialValue);
+            // }
+           //  else {
+           //     this.verify_text(fieldSelector, initialValue);
+           // }
+        }
+        else if (initialValue) {
+            this.verify_text(fieldSelector, initialValue);
         }
     }
 
@@ -366,37 +395,36 @@ export default class BaseViewPage extends BasePage {
             column = this.historyView_rightColumn;
         }
         let self = this;
-        const isDev = S.selectedEnvironment.name === 'dev';
-        const isPentest = S.selectedEnvironment.name === 'pentest';
 
-        column().within(($form) => {
-            label_TextPairs.forEach(function (stack) {
-                if (stack[1] !== null) {
-                    if (isDev) {
-                        self.verify_text_2(fieldValueFoundByLabel(stack[0]), stack[1]);
-                    } else if (isPentest) {
-                        self.verify_text(fieldValueFoundByLabel(stack[0]), stack[1]);
-                    }
+        if(label_TextPairs){
+            label_TextPairs.forEach(([label, text]) => {
+                if (text !== null) {
+                    const fieldGetter = () =>
+                        column().contains(label).parent('div').find('ng-transclude');
+                    self.verify_text(fieldGetter, text); // ✅ now passing a function
                 }
             });
+        }
 
-            if (label_InputValuePairs) {
-                label_InputValuePairs.forEach(function (stack) {
-                    if (stack[1] !== null) {
-                        self.verify_value(inputFieldFoundByLabel(stack[0]), stack[1]);
-                    }
-                });
-            }
+        if (label_InputValuePairs){
+            label_InputValuePairs.forEach(([label, value]) => {
+                if (value !== null) {
+                    const fieldGetter = () =>
+                        column().contains(label).parent('div').find('input');
+                    self.verify_value(fieldGetter, value);
+                }
+            });
+        }
 
-            if (label_TextareaValuesPairs) {
-                label_TextareaValuesPairs.forEach(function (stack) {
-                    if (stack[1] !== null) {
-                        self.verify_value(textareaFieldFoundByLabel(stack[0]), stack[1]);
-                    }
-                });
-            }
-        });
-
+        if (label_TextareaValuesPairs){
+            label_TextareaValuesPairs.forEach(([label, value]) => {
+                if (value !== null) {
+                    const fieldGetter = () =>
+                        column().contains(label).parent('div').find('textarea');
+                    self.verify_value(fieldGetter, value);
+                }
+            });
+        }
         return this;
     }
 

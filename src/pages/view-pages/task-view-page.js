@@ -8,6 +8,7 @@ import BaseViewPage from "../base-pages/base-view-page";
 //************************************ ELEMENTS ***************************************//
 
 let
+    submitForDisposition = e => cy.get('[ng-click="submitForDisposition()"]'),
     noteInput = e => cy.get('[ng-model="vm.newTaskNote"]'),
     actionsButton = e => cy.get('[title="Select an item or items for which you would like to perform Action."]'),
     dispositionAuthorizationActionOnModal = e => cy.get('[ng-model="itemsActions.actionId"]'),
@@ -41,6 +42,13 @@ export default class TaskViewPage extends BaseViewPage {
     verify_Task_View_page_is_open() {
         this.toastMessage().should('not.exist');
         noteInput().should('be.visible');
+        return this;
+    };
+
+    click_Submit_for_Disposition() {
+        submitForDisposition().scrollIntoView()
+        submitForDisposition().should('be.visible');
+        submitForDisposition().click()
         return this;
     };
 
@@ -80,7 +88,6 @@ export default class TaskViewPage extends BaseViewPage {
         this.pause(1)
         this.wait_until_modal_disappears()
         this.wait_until_spinner_disappears()
-        //cy.contains('Actions').click()
         actionsButton().click()
         return this;
     };
@@ -218,6 +225,12 @@ export default class TaskViewPage extends BaseViewPage {
                 this.verify_content_of_specified_cell_in_specified_table_row(array[0], 'Disposition Status', array[1])
             }
         })
+        return this;
+    };
+
+    verify_Dispo_Auth_Job_Status(status) {
+        this.verify_text(dispoAuthJobStatus, status)
+        this.pause(1)
         return this;
     };
 

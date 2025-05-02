@@ -131,7 +131,7 @@ describe('Import People', function () {
         ui.searchPeople.enter_Business_Name(D.newPerson.businessName)
             .click_button(C.buttons.search)
             .wait_until_spinner_disappears()
-            .verify_items_count_on_grid(0);
+            .verify_records_count_on_grid(0);
     });
 
 

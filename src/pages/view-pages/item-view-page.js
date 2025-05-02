@@ -15,20 +15,11 @@ let
     fieldFoundByLabelOnHistoryColumn = (container, fieldLabel) => container().contains(fieldLabel).parent('div').find('ng-transclude'),
     active_tab_container = e => cy.get('[class="tab-pane ng-scope active"]'),
     additionalBarcodeInput = e => cy.get('input[name="barcodes"]'),
+    categoryOnEditForm = e => cy.get('[ng-model="itemEdit.categoryId"]'),
     additionalBarcodeOldValue = e => cy.get('[label="\'ITEM_BARCODES\'"]').eq(2),
     additionalBarcodeNewValue = e => cy.get('[label="\'ITEM_BARCODES\'"]').eq(1),
     additionalBarcodes = e => cy.get('[ng-model="newItem.barcodes[0].value"]'),
     save_button_on_active_tab = text => active_tab_container().children().find('[ng-click="doPreSave()"]'),
-    takenByInput = e => cy.get('[ng-model="person.text"]'),
-    transferFrom = e => cy.get('[name="transferredFrom"]'),
-    transferTo = e => cy.get('[name="transferredTo"]'),
-    expectedReturnDateInput = e => cy.get('[ng-class="{invalidFutureDate: futureDateViolated, datePickerOnly: isDatePickerOnly}"]'),
-    returnedByInput = e => cy.get('[ng-model="person.text"]'),
-    transferToInput = e => cy.get('[ng-model="person.text"]'),
-    locationInputOnModal = e => cy.get('.modal-content').find('.locationInput'),
-    disposalWitnessInput = e => cy.get('span[ng-model="disposal.witnessId"]').find('input'),
-    usePreviousLocationCheckbox = e => cy.get('.icheckbox_square-blue').find('ins'),
-    checkoutReason = e => cy.get('[ng-options="r.id as r.name for r in data.checkoutReasons"]'),
     caseNumberInput_disabled = e => cy.get('[ng-model="item.primaryCaseId"]'),
     recoveryLocationInput = e => cy.get('[ng-model="itemEdit.recoveryLocation"]'),
     recoveryDateInput = e => cy.get('[ng-model="itemEdit.recoveryDate"]').find('.input-group').find('[ng-model="ngModel"]'),
@@ -67,9 +58,8 @@ export default class ItemViewPage extends BaseViewPage {
     //************************************ ACTIONS ***************************************//
 
     verify_Item_View_page_is_open(caseNo) {
-        this.toastMessage().should('not.exist');
-        caseNumberInput_disabled().should('contain', caseNo);
         this.verify_text_is_present_on_main_container(C.labels.itemView.title);
+        caseNumberInput_disabled().should('contain', caseNo);
         return this;
     };
 
@@ -102,7 +92,7 @@ export default class ItemViewPage extends BaseViewPage {
 
         this.verify_text_on_multiple_elements(
             [
-                [categoryDropdown_selectedOption(itemObject.category), itemObject.category],
+                [categoryOnEditForm, itemObject.category],
                 [this.tagsField, itemObject.tags],
                 [custodyReasonDropdown_selectedOption, itemObject.custodyReason]
 
@@ -213,11 +203,11 @@ export default class ItemViewPage extends BaseViewPage {
     };
 
     edit_all_values(newItemObject) {
-        this.edit_fields_if_new_values_provided(
+        this.type_if_values_provided(
             [
                 [recoveryLocationInput, newItemObject.recoveryLocation],
                 [recoveryDateInput, newItemObject.recoveryDate],
-                [recoveredByInput, newItemObject.recoveredBy, recoveredByTypeahead],
+                [recoveredByInput, newItemObject.recoveredByName, recoveredByTypeahead],
                 [serialNoInput, newItemObject.serialNumber],
                 [makeInput, newItemObject.make],
                 [modelInput, newItemObject.model],
@@ -335,6 +325,7 @@ export default class ItemViewPage extends BaseViewPage {
             ],
             [['Update Made By', dataObject.updateMadeBy]],
             [['Description', dataObject.description]]
+            [['Public Facing Description', dataObject.publicFacingDescription]]
         )
 
         if (customFormName) {
@@ -349,107 +340,6 @@ export default class ItemViewPage extends BaseViewPage {
         return this;
     }
 
-    populate_CheckIn_form(returnedBy, usePreviousLocation, note) {
-        takenByInput().type(returnedBy.email);
-        this.click_option_on_typeahead(returnedBy.email);
-        if (usePreviousLocation) {
-            usePreviousLocationCheckbox().click();
-        }
-        this.enter_note_on_modal(note);
-        return this;
-    }
-
-    populate_CheckOut_form(takenBy_personOrUserObject, checkoutReason, notes, expectedReturnDate) {
-        takenByInput().type(takenBy_personOrUserObject.email);
-        this.click_option_on_typeahead(takenBy_personOrUserObject.email);
-        this.select_dropdown_option_on_modal(checkoutReason);
-        this.enter_notes_on_modal(notes);
-
-        if (expectedReturnDate) {
-            expectedReturnDateInput().type(expectedReturnDate);
-        }
-        return this;
-    }
-
-    populate_Transfer_form(transferTo_user, transferFrom_user, notes) {
-        transferTo().type(transferTo_user.email);
-        this.click_option_on_typeahead(transferTo_user.email);
-        transferFrom().type(transferFrom_user.email)
-        this.click_option_on_typeahead(transferFrom_user.email)
-        this.enter_notes_on_modal(notes);
-        return this;
-    }
-
-    populate_Move_form(location, notes) {
-        locationInputOnModal().type('/');
-        this.click_option_on_typeahead(location.name);
-        this.enter_notes_on_modal(notes);
-        return this;
-    }
-
-    populate_disposal_form(disposalWitness_user, method, notes) {
-        disposalWitnessInput().type(disposalWitness_user.email);
-        this.click_option_on_typeahead(disposalWitness_user.email);
-        this.select_dropdown_option_on_modal(method);
-        this.enter_notes_on_modal(notes);
-        return this;
-    }
-
-    check_In_the_item(returnedBy_userObject, usePreviousLocation, note) {
-        this.click_button_on_active_tab(C.buttons.actions)
-            .click_option_on_expanded_menu(C.dropdowns.itemActions.checkItemIn)
-            .populate_CheckIn_form(returnedBy_userObject, usePreviousLocation, note)
-            .click_button_on_modal(C.buttons.ok)
-            .verify_toast_message('Saved');
-        return this;
-    }
-
-    undispose_the_item(returnedBy_userObject, usePreviousLocation, note) {
-        this.click_button_on_active_tab(C.buttons.actions)
-            .click_option_on_expanded_menu(C.dropdowns.itemActions.undisposeItem)
-            .populate_CheckIn_form(returnedBy_userObject, usePreviousLocation, note)
-            .click_button_on_modal(C.buttons.ok)
-            .verify_toast_message('Saved');
-        return this;
-    }
-
-    check_Out_the_item(takenBy_personOrUserObject, checkOutReason, notes, expectedReturnDate) {
-        this.click_button_on_active_tab(C.buttons.actions)
-            .click_option_on_expanded_menu(C.dropdowns.itemActions.checkItemOut)
-            .populate_CheckOut_form(takenBy_personOrUserObject, checkOutReason, notes, expectedReturnDate)
-            .click_button_on_modal(C.buttons.ok)
-            .verify_toast_message('Saved');
-        return this;
-    }
-
-    transfer_the_item(transferTo_userObject, transferFrom_userObject, notes) {
-        this.define_API_request_to_be_awaited('POST', 'api/transfers/V2')
-        this.click_button_on_active_tab(C.buttons.actions)
-            .click_option_on_expanded_menu(C.dropdowns.itemActions.transferItem)
-            .populate_Transfer_form(transferTo_userObject, transferFrom_userObject,  notes)
-            .click_button_on_modal(C.buttons.ok)
-            .wait_response_from_API_call('api/transfers/V2')
-            .verify_toast_message('Saved');
-        return this;
-    }
-
-    move_the_item(location, notes) {
-        this.click_button_on_active_tab(C.buttons.actions)
-            .click_option_on_expanded_menu(C.dropdowns.itemActions.moveItem)
-            .populate_Move_form(location, notes)
-            .click_button_on_modal(C.buttons.ok)
-            .verify_toast_message('Saved');
-        return this;
-    }
-
-    dispose_the_item(witness_userObject, method, notes) {
-        this.click_button_on_active_tab(C.buttons.actions)
-            .click_option_on_expanded_menu(C.dropdowns.itemActions.disposeItem)
-            .populate_disposal_form(witness_userObject, method, notes)
-            .click_button_on_modal(C.buttons.ok)
-            .verify_toast_message('Saved');
-        return this;
-    }
 
     verify_Items_Status(status) {
         itemStatus().should('have.text', status);
@@ -470,5 +360,11 @@ export default class ItemViewPage extends BaseViewPage {
         }
         return this;
     };
+
+
+    verify_data_on_Chain_of_Custody(columnValuePairs) {
+        this.verify_values_on_multiple_rows_on_the_grid(columnValuePairs, true)
+        return this;
+    }
 
 }

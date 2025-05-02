@@ -21,6 +21,10 @@ S.isOrg2 = function () {
     return Cypress.env('orgNum') === 2
 }
 
+S.isOrg3 = function () {
+    return Cypress.env('orgNum') === 3
+}
+
 S.getCurrentDate = function (mask) {
     S.currentDateAndTime = helper.getCurrentDateInCurrentFormat(C.currentDateTimeFormat);
     S.currentDate = helper.getCurrentDateInCurrentFormat(C.currentDateFormat);
@@ -324,8 +328,8 @@ S.DEV_1 = {
     },
     locations: [
         {
-            id: 476096,
-            guid: '67d3a4e4-8c55-4ee4-ab66-e225b114dc35',
+            id: 531860,
+            guid: 'c8792633-0a0e-4bc7-a67c-5b8c72175a86',
             name: "CypressLocation1"
         },
         {
@@ -359,21 +363,30 @@ S.DEV_1 = {
         offenseDate: '05/15/2009',
         reviewDate: '01/18/2023'
     },
-    taskTemplate: {
-        taskTypeId: {
-            errorCorrection: 1106,
-
+    taskTemplates: {
+        dispoAuth: {
+            templateId: 4524,
+            type: 'Disposition Authorization',
+            subtype: '',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 5,
+            useDispositionAuthorizationActions: true,
+            title: 'Disposition Authorization',
         },
-        taskSubTypeId: {
-            packagingAndLabeling: 2902,
-
+        other: {
+            templateId: 4523,
+            type: 'Other',
+            subtype: '',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 10,
+            useDispositionAuthorizationActions: true,
+            title: 'Title--forAutomatedTests',
+            message: 'Message-forAutomatedTests'
         },
-        taskActionId: {
-            packageMustBeSealed: 1667,
-            mustBeRenderedSafe: 533,
-
-        },
-        otherTaskTemplateId: 3605,
     },
     recentCase: {
         id: 5446732,
@@ -383,18 +396,18 @@ S.DEV_1 = {
     person: {
         name: 'Person_1',
         fullName: 'Cypress Person_1',
-        id: 6606993,
+        id: 5076012,
         get organizationId() {
             return S.DEV_1.orgSettings.id
         },
         userId: null,
-        guid: '6e2e9db2-48ab-4769-9eca-d678e6d77351',
+        guid: '4341bc26-96cd-45a2-a1d6-e88dd4b18a39',
         email: 'qa+person_1@trackerproducts.com'
     },
     person_2: {
         name: 'Person_2',
         fullName: 'Cypress Person_2',
-        id: 6606994,
+        id: 5076223,
         get organizationId() {
             return S.DEV_1.orgSettings.id
         },
@@ -780,14 +793,14 @@ S.DEV_3 = {
     },
     users: {
         systemAdminId: 40357,
-        orgAdminId: 43666,
+        orgAdminId: 74201,
         systemAdmin: {
             id: 40357,
             guid: '0cfa7c01-2f2e-ea11-aa3a-062d5b58f56e'
         },
         orgAdmin: {
-            id: 43666,
-            guid: 'f58daaef-7880-ed11-832d-021f02b7478f'
+            id: 74201,
+            guid: '127ca944-0821-f011-8367-0254a7906fb1'
         },
         // org2Admin: {
         //     id: 40727,
@@ -796,8 +809,8 @@ S.DEV_3 = {
         //     officeId: 1054
         // },
         powerUser: {
-            id: 43683,
-            guid: '19330c4f-8c86-ed11-832d-021f02b7478f'
+            id: 74212,
+            guid: '22205855-d021-f011-8367-0254a7906fb1'
         },
         // clpUser: {
         //     id: 43529,
@@ -806,6 +819,10 @@ S.DEV_3 = {
         basicUser: {
             id: 43684,
             guid: '6729d18f-8e86-ed11-832d-021f02b7478f'
+        },
+        blockedUser: {
+            id: 54357, // needs to be updated
+            guid: 'a484b498-75c9-ed11-8334-021f02b7478f' // needs to be updated
         },
     },
     divisions: {
@@ -2513,6 +2530,32 @@ S.PENTEST_1 = {
         name: 'Cypress ReadOnly Group',
         id: 2541
     },
+    taskTemplates: {
+        dispoAuth: {
+            templateId: 3747,
+            type: 'Disposition Authorization',
+            subtype: '',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 5,
+            useDispositionAuthorizationActions: true,
+            title: 'Disposition Authorization',
+            message: 'Message-forAutomatedTests'
+        },
+        other: {
+            templateId: 3381,
+            type: 'Other',
+            subtype: '',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 10,
+            useDispositionAuthorizationActions: true,
+            title: 'Title--forAutomatedTests',
+            message: 'Message-forAutomatedTests'
+        },
+    },
     orgTag1: {tagModelId: 6548, name: 'sensitive information', color: "#ad2355", tagUsedBy: 1},
     orgTag2: {tagModelId: 6714, name: 'eligible for disposal', color: "#4b9b62", tagUsedBy: 1},
     tagA: {tagModelId: 16806, name: 'Tag_A__', color: "#4b9b62", tagUsedBy: 1},
@@ -2788,7 +2831,6 @@ S.PENTEST_2 = {
         name: 'Cypress ReadOnly Group',
         id: 2898
     },
-
     taskTemplates: {
         dispoAuth: {
             templateId: 3511,
@@ -2802,7 +2844,6 @@ S.PENTEST_2 = {
             title: 'Disposition Authorization',
             message: 'Message-forAutomatedTests'
         },
-
         other: {
             templateId: 3381,
             type: 'Other',
@@ -2841,14 +2882,16 @@ S.PENTEST_3 = {
     },
     office_2: {
         id: 1130,
-        name: "Web Test Automtion #3 - Cypress Office 2"
+        guid: '3d054095-8b86-ed11-832d-021f02b7478f',
+        name: "Cypress Office 2",
+        orgAndOfficeName: "Web Test Automtion #3 - Cypress Office 2"
     },
     org2: {
         office_1: {
-            id: 1054,
-            guid: 'a9e131e6-3d36-eb11-aa49-062d5b58f56e',
+            id: 1119,
+            guid: 'f36bc8a3-4630-ed11-832b-021f02b7478f',
             name: "Cypress Office 1",
-            orgAndOfficeName: "Web Test Automation - Cypress Office 1"
+            orgAndOfficeName: "Web Test Automtion #4 - Cypress Office 1"
         },
         id: 546,
         orgName: "Web Test Automation",
@@ -2856,6 +2899,7 @@ S.PENTEST_3 = {
         officeName: "Cypress Office 1",
         orgAndOfficeName: "Web Test Automation - Cypress Office 1"
     },
+
     users: {
         systemAdminId: 40357,
         orgAdminId: 43666,
@@ -2885,6 +2929,10 @@ S.PENTEST_3 = {
             id: 43684,
             guid: '6729d18f-8e86-ed11-832d-021f02b7478f'
         },
+        blockedUser: {
+            id: 97282,
+            guid: '3b61822f-9f1a-f011-8371-021f02b7478f'
+        },
     },
     divisions: {
         div1: {
@@ -2910,12 +2958,12 @@ S.PENTEST_3 = {
             id: 89
         }
     },
-    // forms: {
-    //     userFormWithRequiredFields: 2542,
-    //     userFormWithOptionalFields: 2546,
-    //     taskFormWithRequiredFields: 2547,
-    //     taskFormWithOptionalFields: 2548
-    // },
+    forms: {
+        userFormWithRequiredFields: 24206,
+        userFormWithOptionalFields: 24207,
+        taskFormWithRequiredFields: 2547,
+        taskFormWithOptionalFields: 2548
+    },
     locations: [
         {
             id: 487927,
@@ -2939,22 +2987,22 @@ S.PENTEST_3 = {
     //     id: 105156,
     // },
     oldClosedCase: {
-        id: 7743098,
-        caseNumber: 'AutomatedTest-Closed Case',
+        id: 7743123,
+        caseNumber: 'Closed Case-AutomatedTest',
         createdDate: '12/28/2022',
         offenseDate: '12/21/2022',
         reviewDate: '12/30/2022',
-        closedDate: '12/29/2022',
+        closedDate: '12/28/2022',
     },
     oldActiveCase: {
         id: 7743205,
         caseNumber: 'AutomatedTest-Active Case',
         createdDate: '12/28/2022',
         offenseDate: '12/20/2022',
-        reviewDate: '01/03/2023',
+        reviewDate: '12/30/2022',
         caseReviewNotes: 'reviewNotes_122822788007',
     },
-    otherTaskTemplateId: 3605,
+    //otherTaskTemplateId: 3388,
     recentCase: {
         id: 7743099,
         caseNumber: 'AutomatedTest-Active Case'
@@ -3075,7 +3123,7 @@ S.PENTEST_3 = {
             title: 'Disposition Authorization',
         },
         other: {
-            templateId: 3388,
+            templateId: 3382,
             type: 'Other',
             subtype: '',
             active: true,
@@ -3106,14 +3154,16 @@ S.PENTEST_4 = {
     },
     office_2: {
         id: 1138,
-        name: "Web Test Automtion #4 - Cypress Office 2"
+        name: "Web Test Automtion #4 - Cypress Office 2",
+        orgAndOfficeName: "Web Test Automtion #4 - Cypress Office 2"
+
     },
     org2: {
         office_1: {
-            id: 1054,
+            id: 1118,
             guid: 'a9e131e6-3d36-eb11-aa49-062d5b58f56e',
             name: "Cypress Office 1",
-            orgAndOfficeName: "Web Test Automation - Cypress Office 1"
+            orgAndOfficeName: "Web Test Automtion #3 - Cypress Office 1"
         },
         id: 546,
         orgName: "Web Test Automation",
@@ -3144,7 +3194,11 @@ S.PENTEST_4 = {
         },
         basicUser: {
             id: 43722,
-            guid: '9fbf2a88-de8c-ed11-832e-021f02b7478f'
+            guid: '9fbf2a88-de8c-ed11-832e-021f02b7478',
+        },
+        blockedUser: {
+            id: 97339,
+            guid: 'db569414-481c-f011-8371-021f02b7478f'
         },
     },
     divisions: {
@@ -3214,7 +3268,7 @@ S.PENTEST_4 = {
         offenseDate: '12/20/2022',
         reviewDate: '11/15/2025'
     },
-    otherTaskTemplateId: 3383,
+    otherTaskTemplateId: 3390,
     // recentCase: {
     //     id: 7744372,
     //     caseNumber: 'AutomatedTest-Active Case'
@@ -3275,8 +3329,8 @@ S.PENTEST_4 = {
     // },
     regularUser_permissionGroup: {
         name: 'Cypress - Regular User',
-        id: 4477,
-        startingIndexForViewPermissions: 66645,
+        id: 4596,
+        startingIndexForViewPermissions: 92329,
         get startingIndexForCreatePermissions() {
             return S.PENTEST_4.regularUser_permissionGroup.startingIndexForViewPermissions + 22
         },
@@ -3287,6 +3341,7 @@ S.PENTEST_4 = {
             return S.PENTEST_4.regularUser_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
+
     readOnly_permissionGroup: {
         name: 'Cypress - ReadOnly',
         id: 4478,
@@ -3309,13 +3364,38 @@ S.PENTEST_4 = {
         name: 'Cypress Admin Group',
         id: 2912
     },
-    // blocked_userGroup: {
-    //     name: 'Cypress Blocked Group',
-    //     id: 2904
-    // },
+    blocked_userGroup: {
+        name: 'Cypress Blocked Group',
+        id: 2904
+    },
     readOnly_userGroup: {
         name: 'Cypress ReadOnly Group',
-        id: 2913
+        id: 3146
+    },
+    taskTemplates: {
+        dispoAuth: {
+            templateId: 4308,
+            type: 'Disposition Authorization',
+            subtype: '',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 5,
+            useDispositionAuthorizationActions: true,
+            title: 'Disposition Authorization',
+        },
+        other: {
+            templateId: 3390,
+            type: 'Other',
+            subtype: '',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 10,
+            useDispositionAuthorizationActions: true,
+            title: 'Title--forAutomatedTests',
+            message: 'Message-forAutomatedTests'
+        }
     },
     orgTag1: {tagModelId: 16872, name: 'sensitive information', color: "#ad2355", tagUsedBy: 1},
     orgTag2: {tagModelId: 16873, name: 'eligible for disposal', color: "#4b9b62", tagUsedBy: 1},
@@ -3356,7 +3436,7 @@ S.chainOfCustody = {
         },
         checkin: (itemObject) => {
             return {
-                type: 'in',
+                type: 'In',
                 date: itemObject.checkInDate,
                 issuedFrom: itemObject.returnedByName_name,
                 issuedTo: itemObject.returnedByName_name,
@@ -3378,7 +3458,7 @@ S.chainOfCustody = {
         },
         checkout: (itemObject) => {
             return {
-                type: 'out',
+                type: 'Out',
                 date: itemObject.checkoutDate,
                 issuedFrom: itemObject.checkedOutBy_name,
                 issuedTo: itemObject.checkedOutTo_name,
@@ -3446,6 +3526,10 @@ S.getUserData = function (userAcc) {
 S.getCurrentUrl = function () {
     return S.currentUrl;
 };
+
+S.isDispoStatusEnabled  = function () {
+    return S.selectedEnvironment.dispoStatusEnabled
+}
 
 
 module.exports = S;

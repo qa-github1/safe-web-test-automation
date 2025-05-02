@@ -43,7 +43,7 @@ export default class AddCasePage extends BaseAddPage {
 
     populate_all_fields_on_second_form(caseObject) {
 
-        this.select_location(offenseLocationInput, caseObject.offenseLocation)
+        this.select_location_from_Google_Address_Lookup(offenseLocationInput, caseObject.offenseLocation)
 
         this.type_if_values_provided(
             [
@@ -58,7 +58,6 @@ export default class AddCasePage extends BaseAddPage {
                 [caseOfficerInput, caseObject.caseOfficers, "users/groups"],
                 [tagsInput, caseObject.tags, this.lastTagOnTypeahead],
             ]);
-
 
 
         this.define_API_request_to_be_awaited('POST', 'api/cases', 'addCase', 'newCase')

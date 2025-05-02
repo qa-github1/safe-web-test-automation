@@ -11,7 +11,7 @@ const D = require('../../fixtures/data');
 let
     category = e => cy.get('[id="newItemCategorySelect"]'),
     caseNumberInput_enabled = e => cy.get('[for="primaryCaseId"]').parent('div').find('input'),
-    recoveredBy = e => cy.contains('Recovered By').parent('div').find('input'),
+    recoveredByInput = e => cy.contains('Recovered By').parent('div').find('input'),
     recoveryDate = e => cy.get('div[name="recoveryDate"]').find('[min-date="minDate"]'),
     custodyReason = e => cy.get('[name="custodyReason"]'),
     make = e => cy.get('[ng-model="newItem.make"]'),
@@ -26,7 +26,7 @@ let
     itemBelongsTo = e => cy.get('.form-horizontal').contains('Item Belongs to').parent('div').find('input'),
     additionalBarcodes = e => cy.get('[ng-model="newItem.barcodes[0].value"]'),
     serialNumber = e => cy.findByPlaceholderText(C.placeholders.addItem.itemSerialNumber),
-    storageLocation = e => cy.findByPlaceholderText(C.placeholders.addItem.storageLocation),
+    storageLocationInput = e => cy.findByPlaceholderText(C.placeholders.addItem.storageLocation).parent('div').find('input'),
     arrowDownForStorageLocations = e => cy.get('[title="View next location level."]'),
     tagsInput = e => cy.findAllByPlaceholderText(C.placeholders.addCase.addTags).eq(1),
     addItemHeader = e => cy.get('[translate="ITEMS.ADD.MODAL_HEADING"]'),
@@ -156,11 +156,12 @@ export default class AddItemPage extends BaseAddPage {
         return this;
     }
 
-    populate_all_fields_on_second_form(itemObject, skipStorageLocation, skipItemBelongsTo) {
+    populate_all_fields_on_second_form(itemObject, skipStorageLocation = false, skipItemBelongsTo = true) {
+
+        this.select_typeahead_option(recoveredByInput, itemObject.recoveredByName, this.typeaheadSelectorMatchInMatches)
 
         this.type_if_values_provided(
             [
-                [recoveredBy, itemObject.recoveredBy, recoveredByTypeahead],
                 [recoveredAt, itemObject.recoveryLocation],
                 [recoveryDate, itemObject.recoveryDate],
                 [itemDescription, itemObject.description],
@@ -176,13 +177,12 @@ export default class AddItemPage extends BaseAddPage {
             ]);
 
         if (!skipStorageLocation) {
-            this.type_if_value_provided(storageLocation, itemObject.location, this.firstLocationOnTypeahead);
+            this.select_typeahead_option(storageLocationInput, itemObject.location, this.typeaheadSelectorMatchInMatches)
         }
 
         if (!skipItemBelongsTo) {
-            this.enter_values_on_Item_Belongs_To_typeahead_field([itemBelongsTo, itemObject.itemBelongsToFirstLastName]);
+            this.enter_values_on_Item_Belongs_To_typeahead_field(itemBelongsTo, itemObject.itemBelongsToFirstLastName);
         }
-
 
         if (itemObject.custodyReason) custodyReason().select(itemObject.custodyReason);
 
@@ -190,13 +190,18 @@ export default class AddItemPage extends BaseAddPage {
         return this;
     };
 
+    click_Next(text) {
+        this.pause(1)
+        this.click_button_and_wait_text('button[translate="GENERAL.BUTTON_NEXT"]', 'Storage Location')
+        return this;
+    };
 
-    populate_all_fields_on_both_forms(itemObject, skipStorageLocation, skipItemBelongsTo, enterCaseNumber = true, addingItemToClosedCase) {
+
+    populate_all_fields_on_both_forms(itemObject, skipStorageLocation = false, skipItemBelongsTo = true, enterCaseNumber = true, addingItemToClosedCase) {
         if (enterCaseNumber) this.enter_Case_Number_and_select_on_typeahead(itemObject.caseNumber);
         this.pause(2)
         this.select_Category(itemObject.category)
-        this.pause(1)
-        this.click(C.buttons.next)
+        this.click_Next()
 
         if (addingItemToClosedCase) {
             cy.contains('The Case is closed.').should('be.visible')
@@ -207,13 +212,13 @@ export default class AddItemPage extends BaseAddPage {
     };
 
     enter_storage_location(location) {
-        storageLocation().clear().type(location);
+        storageLocationInput().clear().type(location);
         this.pause(2)
         return this;
     };
 
     select_Storage_Locations_with_arrow_icon(locationName) {
-        storageLocation().clear()
+        storageLocationInput().clear()
         this.pause(1)
         arrowDownForStorageLocations().click()
 
@@ -227,12 +232,12 @@ export default class AddItemPage extends BaseAddPage {
     };
 
     verify_location(location) {
-        storageLocation().should('have.value', location);
+        storageLocationInput().should('have.value', location);
         return this;
     };
 
     enter_recoveredBy(value) {
-        recoveredBy().clear().type(value);
+        recoveredByInput().clear().type(value);
         this.wait_until_spinner_disappears();
         return this;
     };
