@@ -20,9 +20,9 @@ let
     makeInput = e => cy.get('[translate="ITEM_MAKE"]').parent().find('[ng-model="field.model"]'),
     modelInput = e => cy.get('[translate="ITEM_MODEL"]').parent().find('[ng-model="field.model"]'),
     serialNoInput = e => cy.get('[translate="ITEM_SERIAL_NUMBER"]').parent().find('[ng-model="field.model"]'),
-    orgItemNoInput = e => cy.get('[translate="ITEM_SEQUENTIAL_ORG_ID"]').parent().find('[ng-model="field.model"]'),
-    custodyReasonDropdown = e => cy.get('[translate="ITEM_CUSTODY_REASON"]').parent().find('select').eq(1),
+    orgItemNoInput = e => cy.get('[translate="ITEM_SEQUENTIAL_ORG_ID"]').parent().find('[ng-model="field.model"]'),custodyReasonDropdown = e => cy.get('[translate="ITEM_CUSTODY_REASON"]').parent().find('select').eq(1),
     statusDropdown = e => cy.get('[translate="ITEM_STATUS"]').parent().find('select').eq(1),
+    actionsOnSearchResultsButton = e => cy.get('[ng-disabled="!isAdmin || !canUpdateByQuery"]'),
     categoryDropdown = e => cy.get('[class="btn btn-default form-control ui-select-toggle"]').eq(1),
     categoryDropdownOption = e => cy.get('[id="ui-select-choices-row-6-0"]'),
     //categoryDropdown = e => cy.get('[translate="ITEM_CATEGORY"]').parent().find('select').eq(1),
@@ -119,6 +119,17 @@ export default class SearchItemPage extends BaseSearchPage {
     select_Status(option) {
         statusDropdown().select(option);
         statusDropdown().should('contain', option);
+        return this;
+    };
+
+    click_Actions_On_Search_Results() {
+        actionsOnSearchResultsButton().click()
+        return this;
+    };
+
+    select_option_on_Actions_On_Search_Results(option) {
+        actionsOnSearchResultsButton().click()
+        this.click_option_on_expanded_menu(option)
         return this;
     };
 

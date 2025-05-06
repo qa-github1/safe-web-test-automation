@@ -20,7 +20,6 @@ let
     fieldEditedDropdown = e => cy.get('[ng-model="workflow.selectedExecutionEditedField"]'),
     filterByOfficeCheckbox = e => cy.get('[ng-model="workflow.filterByOffice"]'),
     officeTextbox = e => cy.get('input[placeholder="Select an office..."]'),
-    highlightedOffice = e => cy.get('.ui-select-highlight'),
     customFieldEditedTypeaheadInput = e => cy.get('[ng-model="workflowFieldTypeahead"]'),
     customFieldTypeaheadDropdown = e => cy.get('[ng-repeat="match in matches track by $index"]')
 
@@ -81,7 +80,7 @@ export default class WorkflowsPage extends BasePage {
         if (officeName) {
             filterByOfficeCheckbox().click();
             officeTextbox().type(officeName);
-            highlightedOffice().click();
+            this.click_highlighted_option_on_typeahead()
         }
 
         return this;

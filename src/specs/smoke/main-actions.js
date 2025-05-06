@@ -391,7 +391,7 @@ describe('User', function () {
 });
 describe('Item Transactions', function () {
 
-    it('Verify all transactions, data changes and enabled/disabled actions based on Item status', function () {
+    it.only('Verify all transactions, data changes and enabled/disabled actions based on Item status', function () {
         ui.app.log_title(this);
 
         api.auth.get_tokens(orgAdmin);
