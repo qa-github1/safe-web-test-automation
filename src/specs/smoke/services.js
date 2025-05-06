@@ -492,8 +492,7 @@ describe('Services', function () {
             .verify_content_of_first_row_in_results_table(['Done', 'Download'])
     })
 
-    it.only('(Trans)Actions on Search Results', function () {
-        // test not finished yet
+    it('(Trans)Actions on Search Results', function () {
 
         api.auth.get_tokens(orgAdmin);
         D.getNewItemData()
