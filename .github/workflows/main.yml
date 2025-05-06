@@ -76,17 +76,13 @@ jobs:
           cd external-repo
           gitleaks detect --source=. --report-format=json --report-path=gitleaks-report.json || true
 
-      - name: Redact Secrets in Allure JSON files safely
+      - name: Redact Secrets in Allure JSON files
         run: |
           cd external-repo
-          sudo apt-get update && sudo apt-get install -y python3-pip
-          pip install --quiet jq
-
-          echo "🔏 Redacting flagged secrets in Allure JSON files..."
+          sudo apt-get update && sudo apt-get install -y python3
           for file in $(find . -name "*.json"); do
-            python3 redact_secrets.py "$file"
+            python3 ../redact_secrets.py "$file"
           done
-
 
       - name: Commit and push redacted results
         run: |
@@ -104,67 +100,65 @@ jobs:
       - name: Set environment variable
         run: echo "NOW=$(date +'%B_%d')" >> $GITHUB_ENV
 
-                                  - name: Clone and prepare gh-pages
-                                    run: |
-                                      git config --global user.email "github-actions@github.com"
-                                      git config --global user.name "github-actions"
-                                      
-                                      git clone https://x-access-token:${{ secrets.TOKEN }}@github.com/Safe-QA/report_${NOW}.git merged-repo
-                                      cd merged-repo
-                                      git checkout gh-pages || git checkout -b gh-pages
-                                      
-                                      rm -rf *
-                                      mkdir -p allure-results
-                                      git add .
-                                      git commit -m "Clean gh-pages before merging report branches" || echo "Nothing to commit"
-                                      git push origin gh-pages
+      - name: Clone and prepare gh-pages
+        run: |
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "github-actions"
 
-                                  - name: Merge report-1 directly into gh-pages
-                                    run: |
-                                      cd merged-repo
-                                      git fetch origin report-1
-                                      git checkout gh-pages
-                                      
-                                      git merge origin/report-1 --allow-unrelated-histories --no-ff -m "Merge report-1 into gh-pages" || true
-                                      git checkout --theirs .
-                                      git add .
-                                      git commit -m "Resolve merge conflict by keeping report-1 files" || echo "No changes"
-                                      git push origin gh-pages
+          git clone https://x-access-token:${{ secrets.TOKEN }}@github.com/Safe-QA/report_${NOW}.git merged-repo
+          cd merged-repo
+          git checkout gh-pages || git checkout -b gh-pages
 
-                                  - name: Merge report-2 directly into gh-pages
-                                    run: |
-                                      cd merged-repo
-                                      git fetch origin report-2
-                                      git checkout gh-pages
-                                      
-                                      git merge origin/report-2 --allow-unrelated-histories --no-ff -m "Merge report-2 into gh-pages" || true
-                                      git checkout --theirs .
-                                      git add .
-                                      git commit -m "Resolve merge conflict by keeping report-2 files" || echo "No changes"
-                                      git push origin gh-pages
+          rm -rf *
+          mkdir -p allure-results
+          git add .
+          git commit -m "Clean gh-pages before merging report branches" || echo "Nothing to commit"
+          git push origin gh-pages
 
-                                  - name: Install Allure CLI
-                                    run: npm install -g allure-commandline
+      - name: Merge report-1 directly into gh-pages
+        run: |
+          cd merged-repo
+          git fetch origin report-1
+          git checkout gh-pages
+          git merge origin/report-1 --allow-unrelated-histories --no-ff -m "Merge report-1 into gh-pages" || true
+          git checkout --theirs .
+          git add .
+          git commit -m "Resolve merge conflict by keeping report-1 files" || echo "No changes"
+          git push origin gh-pages
 
-                                  - name: Generate Final Allure Report
-                                    run: |
-                                      cd merged-repo
-                                      git checkout gh-pages
-                                      git pull origin gh-pages
-                                      
-                                      mkdir -p allure-results
-                                      mv *.json allure-results/ || echo "No .json files to move"
-                                      mv *.png allure-results/ || echo "No .png files to move"
-                                      
-                                      allure generate allure-results -o allure-report
-                                      rsync -a allure-report/ ./
+      - name: Merge report-2 directly into gh-pages
+        run: |
+          cd merged-repo
+          git fetch origin report-2
+          git checkout gh-pages
+          git merge origin/report-2 --allow-unrelated-histories --no-ff -m "Merge report-2 into gh-pages" || true
+          git checkout --theirs .
+          git add .
+          git commit -m "Resolve merge conflict by keeping report-2 files" || echo "No changes"
+          git push origin gh-pages
 
-                                  - name: Push Final Allure Report
-                                    run: |
-                                      cd merged-repo
-                                      git add .
-                                      git commit -m "Final Allure Report generated from all org reports" || echo "No changes"
-                                      git push origin gh-pages
+      - name: Install Allure CLI
+        run: npm install -g allure-commandline
+
+      - name: Generate Final Allure Report
+        run: |
+          cd merged-repo
+          git checkout gh-pages
+          git pull origin gh-pages
+
+          mkdir -p allure-results
+          mv *.json allure-results/ || echo "No .json files to move"
+          mv *.png allure-results/ || echo "No .png files to move"
+
+          allure generate allure-results -o allure-report
+          rsync -a allure-report/ ./
+
+      - name: Push Final Allure Report
+        run: |
+          cd merged-repo
+          git add .
+          git commit -m "Final Allure Report generated from all org reports" || echo "No changes"
+          git push origin gh-pages
 
   slack-notification:
     runs-on: ubuntu-latest

@@ -2,28 +2,24 @@ import json
 import re
 import sys
 
-def redact_secrets(path):
-    secret_regex = re.compile(r'(A3T|AKIA|AGPA|AIDA|ANPA|AROA|ASIA)[A-Z0-9]{16}')
-
+path = sys.argv[1]
+with open(path, 'r', encoding='utf-8') as f:
     try:
-        with open(path, 'r', encoding='utf-8') as f:
-            data = json.load(f)
+        data = json.load(f)
+    except json.JSONDecodeError:
+        print(f"Skipping non-JSON file: {path}")
+        sys.exit(0)
 
-        def redact(obj):
-            if isinstance(obj, dict):
-                return {k: redact(v) for k, v in obj.items()}
-            elif isinstance(obj, list):
-                return [redact(i) for i in obj]
-            elif isinstance(obj, str):
-                return secret_regex.sub('[REDACTED]', obj)
-            return obj
+secret_pattern = re.compile(r'(A3T|AKIA|AGPA|AIDA|ANPA|AROA|ASIA)[A-Z0-9]{16}')
+def redact(value):
+    if isinstance(value, str) and secret_pattern.search(value):
+        return secret_pattern.sub('REDACTED', value)
+    elif isinstance(value, list):
+        return [redact(v) for v in value]
+    elif isinstance(value, dict):
+        return {k: redact(v) for k, v in value.items()}
+    return value
 
-        with open(path, 'w', encoding='utf-8') as f:
-            json.dump(redact(data), f, indent=2)
-
-    except Exception as e:
-        print(f"Error processing {path}: {str(e)}")
-
-if __name__ == "__main__":
-    file_path = sys.argv[1]
-    redact_secrets(file_path)
+data = redact(data)
+with open(path, 'w', encoding='utf-8') as f:
+    json.dump(data, f, indent=2)
