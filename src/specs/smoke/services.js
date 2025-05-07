@@ -17,6 +17,8 @@ before(function () {
     api.org_settings.enable_all_Item_fields();
     api.org_settings.enable_all_Person_fields();
     api.org_settings.update_org_settings(false, true);
+    api.org_settings.update_org_settings_by_specifying_property_and_value('containerAutoDeactivate', true)
+    api.users.update_current_user_settings(orgAdmin.id, C.currentDateTimeFormat, C.currentDateFormat)
 });
 
 describe('Dispo Auth', function () {

@@ -42,8 +42,8 @@ let
 
     // search Criteria dropdowns
     createdBySearchCriteria = e => cy.contains('Created By').parent().find('[ng-model="field.searchCriteria"]'),
-    createdDateSearchCriteria = e => cy.contains('Created Date').parent().find('[ng-model="field.searchCriteria"]'),
-    caseNumberSearchCriteria = e => cy.contains('Case Number').parent().find('[ng-model="field.searchCriteria"]'),
+    createdDateSearchCriteria = e => cy.get('[translate="GENERAL.CREATED_DATE"]').parent().find('[ng-model="field.searchCriteria"]'),
+    caseNumberSearchCriteria = e => cy.get('[translate="CASE_NUMBER"]').parent().find('[ng-model="field.searchCriteria"]'),
     caseOfficersSearchCriteria = e => cy.contains('Case Officer(s)').parent().find('[ng-model="field.searchCriteria"]'),
     offenseTypeSearchCriteria = e => cy.contains('Offense Type').parent().find('[ng-model="field.searchCriteria"]'),
     offenseLocationSearchCriteria = e => cy.contains('Offense Location').parent().find('[ng-model="field.searchCriteria"]'),

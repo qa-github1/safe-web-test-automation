@@ -518,6 +518,7 @@ export default class BasePage {
         cy.contains('Menu Customization').click()
         optionsDropdownUnderMenuCustomization().click()
         pageSizesUnderMenuCustomization().contains(pageSize).click()
+        this.wait_until_spinner_disappears()
         return this;
     }
 
@@ -1852,7 +1853,7 @@ export default class BasePage {
     };
 
     enter_notes_on_modal(note) {
-        notesOnModal().type(note);
+        this.enterValue(notesOnModal, note)
         return this;
     };
 
@@ -2990,16 +2991,16 @@ export default class BasePage {
     }
 
     populate_CheckOut_form(takenBy_personOrUserObject, checkoutReason, notes, expectedReturnDate) {
-        checkedOutToInput().type(takenBy_personOrUserObject.email);
+        checkedOutToInput().invoke('val', takenBy_personOrUserObject.email).trigger('input')
+       // checkedOutToInput().type(takenBy_personOrUserObject.email);
         this.pause(0.5)
         this.click_option_on_typeahead(takenBy_personOrUserObject.fullName);
 
         checkedReasonSelect().select(checkoutReason)
-      //  this.select_dropdown_option_on_modal(checkoutReason);
         this.enter_notes_on_modal(notes);
 
         if (expectedReturnDate) {
-            expectedReturnDateInput().type(expectedReturnDate);
+            this.enterValue(expectedReturnDateInput, expectedReturnDate)
         }
         return this;
     }
@@ -3077,8 +3078,8 @@ export default class BasePage {
             .populate_CheckOut_form(takenBy_personOrUserObject, checkOutReason, notes, expectedReturnDate)
 
         if (isActionOnSearchResults) {
-            this.verify_modal_content(' Warning! This action will check out all items found by the current search\n' +
-                'Items shared among Organizations are not included in the transaction')
+            this.verify_modal_content(' Warning! This action will check out all items found by the current search')
+            this.verify_modal_content('Items shared among Organizations are not included in the transaction')
         }
 
         this.click_button_on_modal(C.buttons.ok)
