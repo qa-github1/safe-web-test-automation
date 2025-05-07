@@ -518,6 +518,7 @@ export default class BasePage {
         cy.contains('Menu Customization').click()
         optionsDropdownUnderMenuCustomization().click()
         pageSizesUnderMenuCustomization().contains(pageSize).click()
+        this.wait_until_spinner_disappears()
         return this;
     }
 
