@@ -53,14 +53,8 @@ S.headers = {
     refreshtoken: null,
 };
 
-S.DEV = {
-    // user from Org#2
-    org2Admin: {
-        id: 39,
-        guid: '54f39f56-03d9-eb11-82f2-068f48eb83b1',
-        organizationId: 4,
-        officeId: 13
-    },
+
+S.ALL_ENVS = {
     fieldIds: {
         case: {
             offenseLocation: 29,
@@ -81,9 +75,9 @@ S.DEV = {
             description: 36,
             recoveryDate: 37,
             itemBelongsTo: 38,
+            releasedTo: 47,
             expectedReturnDate: 41,
             actualDisposedDate: 42,
-            releasedTo: 47,
             publicFacingDescription: 46,
             dispositionAuthorizationStatus: 44,
             latestTransactionNotes: 48,
@@ -105,7 +99,6 @@ S.DEV = {
             address: 40,
         },
     },
-    caseOfficerId: () => S.userAccounts.powerUser.id,
     offenseType: {
         name: C.offenseTypes.burglary,
         id: 4
@@ -193,40 +186,6 @@ S.DEV = {
     race2: {
         name: C.races.hispanic,
         id: 7
-    },
-    caseCustomForm: {
-        name: "Optional fields - Cypress Cases Form",
-        id: 3422,
-        checkboxListId: "field4498",
-        radioButtonListId: "field4500",
-        selectListId: "field4502",
-        dropdownTypeahead: "field4504",
-        user: "field4506",
-        person: "field4508",
-        number: "field4490",
-        password: "field4492",
-        textbox: "field4486",
-        email: "field4488",
-        textarea: "field4494",
-        checkbox: "field4496",
-        date: "field4510",
-    },
-    itemCustomForm: {
-        name: "Optional fields - Cypress Items Form",
-        id: 3424,
-        checkboxListId: "field4810",
-        radioButtonListId: "field4812",
-        selectListId: "field4814",
-        dropdownTypeahead: "field4816",
-        user: "field4818",
-        person: "field4820",
-        number: "field4802",
-        password: "field4804",
-        textbox: "field4798",
-        email: "field4800",
-        textarea: "field4806",
-        checkbox: "field4808",
-        date: "field4822",
     },
 }
 
@@ -1260,174 +1219,14 @@ S.DEV_4 = {
     tagC: {tagModelId: 16876, name: 'Tag_C__', color: "#4b9b62", tagUsedBy: 1},
 };
 
-S.DEV_1 = {...S.DEV, ...S.DEV_1};
+S.DEV_1 = {...S.ALL_ENVS, ...S.DEV_1};
 
-S.DEV_2 = {...S.DEV, ...S.DEV_2};
+S.DEV_2 = {...S.ALL_ENVS, ...S.DEV_2};
 
-S.DEV_3 = {...S.DEV, ...S.DEV_3};
+S.DEV_3 = {...S.ALL_ENVS, ...S.DEV_3};
 
-S.DEV_4 = {...S.DEV, ...S.DEV_4};
+S.DEV_4 = {...S.ALL_ENVS, ...S.DEV_4};
 
-S.QA = {
-    org2: {
-        id: 1,
-        orgName: "Tracker HQ",
-        officeId: 1,
-        officeName: "Main",
-        orgAndOfficeName: "Tracker HQ - Main"
-    },
-    // user from Org#2
-    org2Admin: {
-        id: 39,
-        guid: '54f39f56-03d9-eb11-82f2-068f48eb83b1',
-        organizationId: 4,
-        officeId: 13
-    },
-    fieldIds: {
-        case: {
-            offenseLocation: 1,
-            offenseDescription: 2,
-            tags: 3,
-            offenseDate: 4
-        },
-        item: {
-            recoveredAt: 5,
-            custodyReason: 6,
-            recoveredBy: 7,
-            make: 8,
-            model: 9,
-            serialNumber: 10,
-            tags: 11,
-            description: 12,
-            recoveryDate: 13,
-            itemBelongsTo: 14,
-            barcodes: 15,
-            expectedReturnDate: 16,
-            actualDisposedDate: 17,
-        },
-        person: {
-            businessName: 18,
-            middleName: 19,
-            alias: 20,
-            dob: 21,
-            driverLicense: 22,
-            race: 23,
-            gender: 24,
-            mobilePhone: 25,
-            otherPhone: 26,
-            deceased: 27,
-            juvenile: 28,
-            email: 29,
-            address: 30,
-        }
-    },
-    caseOfficerId: () => S.userAccounts.powerUser.id,
-    offenseType: {
-        name: C.offenseTypes.burglary,
-        id: 77
-    },
-    offenseType2: {
-        name: C.offenseTypes.arson,
-        id: 33
-    },
-    offenseTypelinkedToRequiredForm1: {
-        name: C.offenseTypes.vandalism,
-        id: 0
-    },
-    offenseTypelinkedToRequiredForm2: {
-        name: C.offenseTypes.accident,
-        id: 0
-    },
-    category: {
-        name: C.itemCategories.alcohol,
-        id: 12
-    },
-    category2: {
-        name: C.itemCategories.computer,
-        id: 108
-    },
-    categorylinkedToRequiredForm1: {
-        name: C.itemCategories.vehicle,
-        id: 0
-    },
-    categorylinkedToRequiredForm2: {
-        name: C.itemCategories.ammunition,
-        id: 0
-    },
-    custodyReason: {
-        name: C.custodyReason.asset,
-        id: 8
-    },
-    custodyReason2: {
-        name: C.custodyReason.investigation,
-        id: 54
-    },
-    checkoutReason: {
-        name: C.checkoutReasons.court,
-        id: 13
-    },
-    checkoutReason2: {
-        name: C.checkoutReasons.lab,
-        id: 39
-    },
-    personType: {
-        name: C.personTypes.suspect,
-        id: 145
-    },
-    personType2: {
-        name: C.personTypes.victim,
-        id: 142
-    },
-    personTypelinkedToRequiredForm1: {
-        name: C.personTypes.wife,
-        id: 0
-    },
-    personTypelinkedToRequiredForm2: {
-        name: C.personTypes.witness,
-        id: 0
-    },
-    race: {
-        name: C.races.asian,
-        id: 4
-    },
-    race2: {
-        name: C.races.hispanic,
-        id: 7
-    },
-    caseCustomForm: {
-        name: "Cypress Case Form",
-        id: 28,
-        checkboxListId: "field2094",
-        radioButtonListId: "field2096",
-        selectListId: "field2098",
-        number: "field2071",
-        password: "field2088",
-        textbox: "field5746",
-        email: "field2069",
-        textarea: "field3227",
-        checkbox: "field2092",
-        date: "field2104",
-        user: "field2100",
-        person: "field2102",
-    },
-    // need to modify some other shared Item form and adjust data here
-    itemCustomForm: {
-        name: "Cypress Item Form",
-        id: 2,
-        checkboxListId: "field2295",
-        radioButtonListId: "field2297",
-        selectListId: "field2299",
-        number: "field2287",
-        password: "field2289",
-        textbox: "field2283",
-        email: "field2285",
-        textarea: "field2291",
-        checkbox: "field2293",
-        date: "field2305",
-        user: "field2301",
-        person: "field2303",
-    },
-};
 
 S.QA_1 = {
     orgSettings: {
@@ -2107,190 +1906,14 @@ S.QA_4 = {
     },
 };
 
-S.QA_1 = {...S.QA, ...S.QA_1};
+S.QA_1 = {...S.ALL_ENVS, ...S.QA_1};
 
-S.QA_2 = {...S.QA, ...S.QA_2};
+S.QA_2 = {...S.ALL_ENVS, ...S.QA_2};
 
-S.QA_3 = {...S.QA, ...S.QA_3};
+S.QA_3 = {...S.ALL_ENVS, ...S.QA_3};
 
-S.QA_4 = {...S.QA, ...S.QA_4};
+S.QA_4 = {...S.ALL_ENVS, ...S.QA_4};
 
-S.PENTEST = {
-    // user from Org#2
-    org2Admin: {
-        id: 39,
-        guid: '54f39f56-03d9-eb11-82f2-068f48eb83b1',
-        organizationId: 4,
-        officeId: 13
-    },
-    fieldIds: {
-        case: {
-            offenseLocation: 29,
-            offenseDescription: 30,
-            tags: 31,
-            offenseDate: 34,
-            linkedCases: 45
-        },
-        item: {
-            recoveredAt: 20,
-            custodyReason: 21,
-            recoveredBy: 23,
-            make: 24,
-            model: 25,
-            serialNumber: 26,
-            barcodes: 27,
-            tags: 28,
-            description: 36,
-            recoveryDate: 37,
-            itemBelongsTo: 38,
-            releasedTo: 47,
-            expectedReturnDate: 41,
-            actualDisposedDate: 42,
-            publicFacingDescription: 46,
-            dispositionAuthorizationStatus: 44,
-            latestTransactionNotes: 48,
-            checkInNotes: 43,
-        },
-        person: {
-            businessName: 9,
-            middleName: 10,
-            alias: 11,
-            dob: 12,
-            driverLicense: 13,
-            race: 14,
-            gender: 15,
-            mobilePhone: 16,
-            otherPhone: 17,
-            deceased: 18,
-            juvenile: 19,
-            email: 39,
-            address: 40,
-        },
-    },
-    caseOfficerId: () => S.userAccounts.powerUser.id,
-    offenseType: {
-        name: C.offenseTypes.burglary,
-        id: 4
-    },
-    offenseType2: {
-        name: C.offenseTypes.arson,
-        id: 2
-    },
-    offenseTypelinkedToRequiredForm1: {
-        name: C.offenseTypes.vandalism,
-        id: 28
-    },
-    offenseTypelinkedToRequiredForm2: {
-        name: C.offenseTypes.accident,
-        id: 158
-    },
-    category: {
-        name: C.itemCategories.alcohol,
-        id: 31
-    },
-    categorylinkedToRequiredForm1: {
-        name: C.itemCategories.vehicle,
-        id: 22
-    },
-    categorylinkedToRequiredForm2: {
-        name: C.itemCategories.ammunition,
-        id: 2
-    },
-    category2: {
-        name: C.itemCategories.computer,
-        id: 26
-    },
-    custodyReason: {
-        name: C.custodyReason.asset,
-        id: 7
-    },
-    custodyReason2: {
-        name: C.custodyReason.investigation,
-        id: 10
-    },
-    checkoutReason: {
-        name: C.checkoutReasons.court,
-        id: 1
-    },
-    checkoutReason2: {
-        name: C.checkoutReasons.lab,
-        id: 11
-    },
-    disposalMethod: {
-        name: C.disposalMethods.auctioned,
-        id: 4
-    },
-    disposalMethod2: {
-        name: C.disposalMethods.destroyed,
-        id: 2
-    },
-    personType: {
-        name: C.personTypes.suspect,
-        id: 1
-    },
-    personTypelinkedToRequiredForm1: {
-        name: C.personTypes.wife,
-        id: 813
-    },
-    personTypelinkedToRequiredForm2: {
-        name: C.personTypes.witness,
-        id: 3
-    },
-    personType2: {
-        name: C.personTypes.victim,
-        id: 2
-    },
-    titleRank: {
-        name: 'Police Officer',
-        id: 1
-    },
-    titleRank2: {
-        name: 'Deputy Chief',
-        id: 7
-    },
-    race: {
-        name: C.races.asian,
-        id: 4
-    },
-    race2: {
-        name: C.races.hispanic,
-        id: 7
-    },
-    caseCustomForm: {
-        name: "Optional fields - Cypress Cases Form",
-        id: 3422,
-        checkboxListId: "field4498",
-        radioButtonListId: "field4500",
-        selectListId: "field4502",
-        dropdownTypeahead: "field4504",
-        user: "field4506",
-        person: "field4508",
-        number: "field4490",
-        password: "field4492",
-        textbox: "field4486",
-        email: "field4488",
-        textarea: "field4494",
-        checkbox: "field4496",
-        date: "field4510",
-    },
-    itemCustomForm: {
-        name: "Optional fields - Cypress Items Form",
-        id: 3424,
-        checkboxListId: "field4810",
-        radioButtonListId: "field4812",
-        selectListId: "field4814",
-        dropdownTypeahead: "field4816",
-        user: "field4818",
-        person: "field4820",
-        number: "field4802",
-        password: "field4804",
-        textbox: "field4798",
-        email: "field4800",
-        textarea: "field4806",
-        checkbox: "field4808",
-        date: "field4822",
-    },
-}
 
 S.PENTEST_1 = {
     newUser: {},
@@ -3355,190 +2978,14 @@ S.PENTEST_4 = {
     tagC: {tagModelId: 16876, name: 'Tag_C__', color: "#4b9b62", tagUsedBy: 1},
 };
 
-S.PENTEST_1 = {...S.PENTEST, ...S.PENTEST_1};
+S.PENTEST_1 = {...S.ALL_ENVS, ...S.PENTEST_1};
 
-S.PENTEST_2 = {...S.PENTEST, ...S.PENTEST_2};
+S.PENTEST_2 = {...S.ALL_ENVS, ...S.PENTEST_2};
 
-S.PENTEST_3 = {...S.PENTEST, ...S.PENTEST_3};
+S.PENTEST_3 = {...S.ALL_ENVS, ...S.PENTEST_3};
 
-S.PENTEST_4 = {...S.PENTEST, ...S.PENTEST_4};
+S.PENTEST_4 = {...S.ALL_ENVS, ...S.PENTEST_4};
 
-S.SECURE = {
-    // user from Org#2
-    org2Admin: {
-        id: 39,
-        guid: '54f39f56-03d9-eb11-82f2-068f48eb83b1',
-        organizationId: 4,
-        officeId: 13
-    },
-    fieldIds: {
-        case: {
-            offenseLocation: 29,
-            offenseDescription: 30,
-            tags: 31,
-            offenseDate: 34,
-            linkedCases: 45
-        },
-        item: {
-            recoveredAt: 20,
-            custodyReason: 21,
-            recoveredBy: 23,
-            make: 24,
-            model: 25,
-            serialNumber: 26,
-            barcodes: 27,
-            tags: 28,
-            description: 36,
-            recoveryDate: 37,
-            itemBelongsTo: 38,
-            releasedTo: 47,
-            expectedReturnDate: 41,
-            actualDisposedDate: 42,
-            publicFacingDescription: 46,
-            dispositionAuthorizationStatus: 44,
-            latestTransactionNotes: 48,
-            checkInNotes: 43,
-        },
-        person: {
-            businessName: 9,
-            middleName: 10,
-            alias: 11,
-            dob: 12,
-            driverLicense: 13,
-            race: 14,
-            gender: 15,
-            mobilePhone: 16,
-            otherPhone: 17,
-            deceased: 18,
-            juvenile: 19,
-            email: 39,
-            address: 40,
-        },
-    },
-    caseOfficerId: () => S.userAccounts.powerUser.id,
-    offenseType: {
-        name: C.offenseTypes.burglary,
-        id: 4
-    },
-    offenseType2: {
-        name: C.offenseTypes.arson,
-        id: 2
-    },
-    offenseTypelinkedToRequiredForm1: {
-        name: C.offenseTypes.vandalism,
-        id: 28
-    },
-    offenseTypelinkedToRequiredForm2: {
-        name: C.offenseTypes.accident,
-        id: 158
-    },
-    category: {
-        name: C.itemCategories.alcohol,
-        id: 31
-    },
-    categorylinkedToRequiredForm1: {
-        name: C.itemCategories.vehicle,
-        id: 22
-    },
-    categorylinkedToRequiredForm2: {
-        name: C.itemCategories.ammunition,
-        id: 2
-    },
-    category2: {
-        name: C.itemCategories.computer,
-        id: 26
-    },
-    custodyReason: {
-        name: C.custodyReason.asset,
-        id: 7
-    },
-    custodyReason2: {
-        name: C.custodyReason.investigation,
-        id: 10
-    },
-    checkoutReason: {
-        name: C.checkoutReasons.court,
-        id: 1
-    },
-    checkoutReason2: {
-        name: C.checkoutReasons.lab,
-        id: 11
-    },
-    disposalMethod: {
-        name: C.disposalMethods.auctioned,
-        id: 4
-    },
-    disposalMethod2: {
-        name: C.disposalMethods.destroyed,
-        id: 2
-    },
-    personType: {
-        name: C.personTypes.suspect,
-        id: 1
-    },
-    personTypelinkedToRequiredForm1: {
-        name: C.personTypes.wife,
-        id: 813
-    },
-    personTypelinkedToRequiredForm2: {
-        name: C.personTypes.witness,
-        id: 3
-    },
-    personType2: {
-        name: C.personTypes.victim,
-        id: 2
-    },
-    titleRank: {
-        name: 'Police Officer',
-        id: 1
-    },
-    titleRank2: {
-        name: 'Deputy Chief',
-        id: 7
-    },
-    race: {
-        name: C.races.asian,
-        id: 4
-    },
-    race2: {
-        name: C.races.hispanic,
-        id: 7
-    },
-    caseCustomForm: {
-        name: "Optional fields - Cypress Cases Form",
-        id: 3422,
-        checkboxListId: "field4498",
-        radioButtonListId: "field4500",
-        selectListId: "field4502",
-        dropdownTypeahead: "field4504",
-        user: "field4506",
-        person: "field4508",
-        number: "field4490",
-        password: "field4492",
-        textbox: "field4486",
-        email: "field4488",
-        textarea: "field4494",
-        checkbox: "field4496",
-        date: "field4510",
-    },
-    itemCustomForm: {
-        name: "Optional fields - Cypress Items Form",
-        id: 3424,
-        checkboxListId: "field4810",
-        radioButtonListId: "field4812",
-        selectListId: "field4814",
-        dropdownTypeahead: "field4816",
-        user: "field4818",
-        person: "field4820",
-        number: "field4802",
-        password: "field4804",
-        textbox: "field4798",
-        email: "field4800",
-        textarea: "field4806",
-        checkbox: "field4808",
-        date: "field4822",
-    },
-}
 
 S.SECURE_1 = {
     newUser: {},
@@ -3852,14 +3299,14 @@ S.SECURE_2 = {
         //     id: 40383,
         //     guid: '7801ce14-fc36-eb11-aa49-062d5b58f56e'
         // },
-        // basicUser: {
-        //     id: 118004,
-        //     guid: 'e44a930d-742a-f011-ad1f-0e9868aeff83'
-        // },
-        // blockedUser: {
-        //     id: 54357,
-        //     guid: 'a484b498-75c9-ed11-8334-021f02b7478f'
-        // },
+        basicUser: {
+            id: 118004,
+            guid: 'e44a930d-742a-f011-ad1f-0e9868aeff83'
+        },
+        blockedUser: {
+            id: 118015,
+            guid: 'a484b498-75c9-ed11-8334-021f02b7478f'
+        },
     },
     divisions: {
         div1: {
@@ -4601,13 +4048,13 @@ S.SECURE_2 = {
 //     tagC: {tagModelId: 16876, name: 'Tag_C__', color: "#4b9b62", tagUsedBy: 1},
 // };
 
-S.SECURE_1 = {...S.SECURE, ...S.SECURE_1};
+S.SECURE_1 = {...S.ALL_ENVS, ...S.SECURE_1};
 
-S.SECURE_2 = {...S.SECURE, ...S.SECURE_2};
+S.SECURE_2 = {...S.ALL_ENVS, ...S.SECURE_2};
 
-S.SECURE_3 = {...S.SECURE, ...S.SECURE_3};
+S.SECURE_3 = {...S.ALL_ENVS, ...S.SECURE_3};
 
-S.SECURE_4 = {...S.SECURE, ...S.SECURE_4};
+S.SECURE_4 = {...S.ALL_ENVS, ...S.SECURE_4};
 
 
 S.setEnvironmentProperties = function (orgNum) {

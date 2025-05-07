@@ -42,6 +42,12 @@
       "apiUrl": "https://devapi.trackerproducts.com",
       "domain": "DEV",
       "runPreconditionForSpecificEnv": true
+    },
+    "secure": {
+      "baseUrl": "https://secure.trackerproducts.com",
+      "apiUrl": "https://securelb.trackerproducts.com",
+      "domain": "SECURE",
+      "runPreconditionForSpecificEnv": true
     }
   },
   "retries": 0,

@@ -28,15 +28,15 @@ exports.getTestAccounts = function (environment, orgNum = 1) {
             id: environment.users.orgAdmin.id,
             guid: environment.users.orgAdmin.guid
         },
-        org2Admin: {
-            title: exports.userRoles.orgAdmin,
-            email: `qa+orgadmin${orgNum}@trackerproducts.com`,
-            password: 'Qwerty123!',
-            officeId: environment.org2Admin.officeId,
-            organizationId: environment.org2Admin.organizationId,
-            id: environment.org2Admin.id,
-            guid: environment.org2Admin.guid
-        },
+        // org2Admin: {
+        //     title: exports.userRoles.orgAdmin,
+        //     email: `qa+orgadmin${orgNum}@trackerproducts.com`,
+        //     password: 'Qwerty123!',
+        //     officeId: environment.org2Admin.officeId,
+        //     organizationId: environment.org2Admin.organizationId,
+        //     id: environment.org2Admin.id,
+        //     guid: environment.org2Admin.guid
+        // },
         powerUser: {
             title: exports.userRoles.powerUser,
             email: `qa+org${orgNum}_poweruser@trackerproducts.com`,
@@ -74,18 +74,18 @@ exports.getTestAccounts = function (environment, orgNum = 1) {
             id: environment.users.blockedUser.id,
             guid: environment.users.blockedUser.guid
         },
-        systemAdmin: {
-            title: exports.userRoles.systemAdmin,
-            email: 'qa+systemadmin@trackerproducts.com',
-            password: 'Qwerty123!',
-            name: 'QA',
-            firstName: 'SystemAdmin',
-            lastName: 'SystemAdmin',
-            officeId: environment.users.systemAdmin.officeId,
-            organizationId: environment.users.systemAdmin.organizationId,
-            id: environment.users.systemAdmin.id,
-            guid: environment.users.systemAdmin.guid
-        }
+        // systemAdmin: {
+        //     title: exports.userRoles.systemAdmin,
+        //     email: 'qa+systemadmin@trackerproducts.com',
+        //     password: 'Qwerty123!',
+        //     name: 'QA',
+        //     firstName: 'SystemAdmin',
+        //     lastName: 'SystemAdmin',
+        //     officeId: environment.users.systemAdmin.officeId,
+        //     organizationId: environment.users.systemAdmin.organizationId,
+        //     id: environment.users.systemAdmin.id,
+        //     guid: environment.users.systemAdmin.guid
+        // }
     }
     return exports.userAccounts['orgNum' + orgNum];
 };
