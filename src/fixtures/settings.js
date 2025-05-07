@@ -3592,123 +3592,123 @@ S.SECURE = {
 S.SECURE_1 = {
     newUser: {},
     orgSettings: {
-        id: 541,
-        name: 'Web Test Automation',
-        license: '/XKvU4HQo2Nupg5mO6mqE3F9Yzdw/IN13DomjvcyC1yA=',
-        guid: 'a8e131e6-3d36-eb11-aa49-062d5b58f56e',
+        id: 1028,
+        name: 'Web Test Automation #1',
+        license: 'XKvU4HQo2Nupg5mO6mqE3KIKd4KNkb+2uf9k1jbKGMo=',
+        guid: 'a1b68f8b-b929-f011-ad1f-0e9868aeff83',
         cals: 10
     },
     office_1: {
-        id: 1027,
-        guid: 'a9e131e6-3d36-eb11-aa49-062d5b58f56e',
+        id: 2216,
+        guid: 'a2b68f8b-b929-f011-ad1f-0e9868aeff83',
         name: "Cypress Office 1",
-        orgAndOfficeName: "Web Test Automation - Cypress Office 1"
+        orgAndOfficeName: "Web Test Automation #1 - Cypress Office 1"
     },
     office_2: {
-        id: 137,
+        id: 2222,
         name: "Cypress Office 2"
     },
     org2: {
         office_1: {
-            id: 1054,
-            guid: '690a16e8-59ba-eb11-aa4f-062d5b58f56e',
-            name: "Cypress Office 1",
-            orgAndOfficeName: "Web Test Automtion #2 - Cypress Office 1"
+            id: 2217,
+            guid: '570fbb9a-b929-f011-ad1f-0e9868aeff83',
+            name: "Default Office",
+            orgAndOfficeName: "Web Test Automation #2 - Default Office"
         },
-        id: 546,
-        orgName: "Web Test Automtion #2",
+        id: 1029,
+        orgName: "Web Test Automation #2",
         officeId: 1054,
-        officeName: "Cypress Office 1",
-        orgAndOfficeName: "Web Test Automtion #2 - Cypress Office 1"
+        officeName: "Default Office",
+        orgAndOfficeName: "Web Test Automation #2 - Default Office"
     },
     users: {
-        systemAdminId: 40357,
-        orgAdminId: 43275,
+      //  systemAdminId: 40357,  //we don't have sys adm on Secure
+        orgAdminId: 118001,
         systemAdmin: {
             id: 40357,
             guid: '0cfa7c01-2f2e-ea11-aa3a-062d5b58f56e'
         },
         orgAdmin: {
-            id: 43275,
-            guid: 'f3c2c442-0855-ed11-832b-021f02b7478f'
+            id: 118001,
+            guid: '5cc413f7-6f2a-f011-ad1f-0e9868aeff83'
         },
-        org2Admin: {
-            id: 40727,
-            guid: '10589878-e7bb-eb11-aa4f-062d5b58f56e',
-            organizationId: 546,
-            officeId: 1054
-        },
+        // org2Admin: { //need to change password
+        //     id: 66515,
+        //     guid: 'b9bd4818-d6e3-eb11-aaaa-0686e4578f20',
+        //     organizationId: 1028,
+        //     officeId: 2216
+        // },
         powerUser: {
-            id: 43356,
-            guid: '7801ce14-fc36-eb11-aa49-062d5b58f56e'
+            id: 118005,
+            guid: 'd1270088-782a-f011-ad1f-0e9868aeff83'
         },
-        clpUser: {
-            id: 40383,
-            guid: '7801ce14-fc36-eb11-aa49-062d5b58f56e'
-        },
+    //     clpUser: {
+    //         id: 40383,
+    //         guid: '7801ce14-fc36-eb11-aa49-062d5b58f56e'
+    //     },
         basicUser: {
-            id: 43530,
-            guid: '2af70873-db6f-ed11-832d-021f02b7478f'
+            id: 118006,
+            guid: '44312f6c-7d2a-f011-ad1f-0e9868aeff83'
         },
-        blockedUser: {
-            id: 54357,
-            guid: 'a484b498-75c9-ed11-8334-021f02b7478f'
-        },
-    },
+    //     blockedUser: {
+    //         id: 54357,
+    //         guid: 'a484b498-75c9-ed11-8334-021f02b7478f'
+    //     },
+     },
     divisions: {
         div1: {
             name: 'Patrol',
-            id: 11
+            id: 178
         },
         div2: {
             name: 'Investigations',
-            id: 132
+            id: 179
         }
     },
     units: {
         unit1: {
             name: 'UnitA',
-            id: 63
+            id: 1762
         },
         unit2: {
             name: 'UnitB',
-            id: 64
+            id: 1763
         },
         unit3: {
             name: 'UnitC',
-            id: 85
+            id: 1764
         }
     },
     forms: {
-        userFormWithRequiredFields: 3425,
-        userFormWithOptionalFields: 3426,
-        taskFormWithRequiredFields: 2547,
-        taskFormWithOptionalFields: 2548
+        userFormWithRequiredFields: 5575,
+        userFormWithOptionalFields: 5576,
+        taskFormWithRequiredFields: 5577,
+        taskFormWithOptionalFields: 5578
     },
     locations: [
         {
-            id: 476096,
-            guid: '67d3a4e4-8c55-4ee4-ab66-e225b114dc35',
+            id: 825260,
+            guid: '4445c2ee-4d60-49d5-b66f-8e3fee1fb345',
             name: "CypressLocation1"
         },
         {
-            id: 510384,
-            guid: '7a706961-0771-42da-9d49-a72dffc9c3f2',
+            id: 825261,
+            guid: '06e31508-e23f-4786-ada5-4385d0db9a3e',
             name: "CypressLocation2"
         }
     ],
-    caseForReport: {
-        id: 120799,
-    },
-    itemForReport: {
-        id: 1726599,
-        description: 'Item for Automated Tests - DON\'T CHANGE ANYTHING'
-    },
-    personForReport: {
-        id: 105156,
-    },
+    //  caseForReport: {
+    //      id: 120799,
+    //  },
+    // itemForReport: {
+    //     id: 1726599,
+    //     description: 'Item for Automated Tests - DON\'T CHANGE ANYTHING'
+    // },
+    // personForReport: {
+    //     id: 105156,
+    // },
     oldClosedCase: {
-        id: 7199043,
+        id: 110933057,
         caseNumber: 'TestCase1',
         createdDate: '04/27/2022',
         offenseDate: '04/27/2022',
@@ -3716,7 +3716,7 @@ S.SECURE_1 = {
         closedDate: '10/27/2022',
     },
     oldActiveCase: {
-        id: 7733747,
+        id: 110933080,
         caseNumber: 'AutomatedTest-Active Case',
         createdDate: '05/17/2009',
         offenseDate: '05/15/2009',
@@ -3724,45 +3724,45 @@ S.SECURE_1 = {
     },
     taskTemplate: {
         taskTypeId: {
-            errorCorrection: 1106,
+            errorCorrection: 6438,
 
         },
         taskSubTypeId: {
-            packagingAndLabeling: 2902,
+            packagingAndLabeling: 6982,
 
         },
         taskActionId: {
-            packageMustBeSealed: 1667,
-            mustBeRenderedSafe: 533,
+            packageMustBeSealed: 3207,
+            mustBeRenderedSafe: 3205,
 
         },
-        otherTaskTemplateId: 3605,
+        otherTaskTemplateId: 6442,
     },
     recentCase: {
-        id: 5446732,
+        id: 110933057,
         caseNumber: 'TestCase1'
     },
-    existingItems_1kBarcodes: [],
+    // existingItems_1kBarcodes: [],
     person: {
         name: 'Person_1',
         fullName: 'Cypress Person_1',
-        id: 6606993,
+        id: 57333753,
         get organizationId() {
             return S.SECURE_1.orgSettings.id
         },
         userId: null,
-        guid: '6e2e9db2-48ab-4769-9eca-d678e6d77351',
+        guid: 'de7bbabc-73a1-43e3-9a2b-ee14e47186dd',
         email: 'qa+person_1@trackerproducts.com'
     },
     person_2: {
         name: 'Person_2',
         fullName: 'Cypress Person_2',
-        id: 6606994,
+        id: 57333760,
         get organizationId() {
             return S.SECURE_1.orgSettings.id
         },
         userId: null,
-        guid: 'bd59c56c-65c7-4ace-aa5d-986c258dee2f',
+        guid: 'b557cc43-69c4-4520-827e-0d3826ed6288',
         email: 'qa+person_2@trackerproducts.com'
     },
     get recoveredById() {
@@ -3770,8 +3770,8 @@ S.SECURE_1 = {
     },
     admin_permissionGroup: {
         name: 'Cypress - ADMIN',
-        id: 4429,
-        startingIndexForViewPermissions: 64539,
+        id: 4387,
+        startingIndexForViewPermissions: 115963,
         get startingIndexForCreatePermissions() {
             return S.SECURE_1.admin_permissionGroup.startingIndexForViewPermissions + 22
         },
@@ -3784,8 +3784,8 @@ S.SECURE_1 = {
     },
     regularUser_permissionGroup: {
         name: 'Cypress - Regular User',
-        id: 4437,
-        startingIndexForViewPermissions: 65073,
+        id: 4388,
+        startingIndexForViewPermissions: 116038,
         get startingIndexForCreatePermissions() {
             return S.SECURE_1.regularUser_permissionGroup.startingIndexForViewPermissions + 22
         },
@@ -3796,39 +3796,39 @@ S.SECURE_1 = {
             return S.SECURE_1.regularUser_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
-    // readOnly_permissionGroup: {
-    //     name: 'Cypress - ReadOnly',
-    //     id: 2053,
-    //     startingIndexForViewPermissions: 59816,
-    //     get startingIndexForCreatePermissions() {
-    //         return S.SECURE_1.readOnly_permissionGroup.startingIndexForViewPermissions + 22
-    //     },
-    //     get startingIndexForUpdatePermissions() {
-    //         return S.SECURE_1.readOnly_permissionGroup.startingIndexForViewPermissions + 45
-    //     },
-    //     get startingIndexForDeletePermissions() {
-    //         return S.SECURE_1.readOnly_permissionGroup.startingIndexForViewPermissions + 67
-    //     }
-    // },
+    readOnly_permissionGroup: {
+        name: 'Cypress - ReadOnly',
+        id: 4389,
+        startingIndexForViewPermissions: 116113,
+        get startingIndexForCreatePermissions() {
+            return S.SECURE_1.readOnly_permissionGroup.startingIndexForViewPermissions + 22
+        },
+        get startingIndexForUpdatePermissions() {
+            return S.SECURE_1.readOnly_permissionGroup.startingIndexForViewPermissions + 45
+        },
+        get startingIndexForDeletePermissions() {
+            return S.SECURE_1.readOnly_permissionGroup.startingIndexForViewPermissions + 67
+        }
+    },
     permissionGroup_noAutoDispo: {
         name: 'All permissions except AutoDispo',
-        id: 4247
+        id: 4390
     },
     admin_userGroup: {
         name: 'Cypress Admin Group',
-        id: 2539
+        id: 16402
     },
     blocked_userGroup: {
         name: 'Cypress Blocked Group',
-        id: 2540
+        id: 16403
     },
     readOnly_userGroup: {
         name: 'Cypress ReadOnly Group',
-        id: 2541
+        id: 16404
     },
     taskTemplates: {
         dispoAuth: {
-            templateId: 3747,
+            templateId: 8145,
             type: 'Disposition Authorization',
             subtype: '',
             active: true,
@@ -3840,7 +3840,7 @@ S.SECURE_1 = {
             message: 'Message-forAutomatedTests'
         },
         other: {
-            templateId: 3381,
+            templateId: 8144,
             type: 'Other',
             subtype: '',
             active: true,
