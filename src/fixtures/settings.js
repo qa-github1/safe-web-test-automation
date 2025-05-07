@@ -3251,11 +3251,12 @@ S.SECURE_1 = {
             message: 'Message-forAutomatedTests'
         },
     },
-    orgTag1: {tagModelId: 6548, name: 'sensitive information', color: "#ad2355", tagUsedBy: 1},
-    orgTag2: {tagModelId: 6714, name: 'eligible for disposal', color: "#4b9b62", tagUsedBy: 1},
-    tagA: {tagModelId: 16806, name: 'Tag_A__', color: "#4b9b62", tagUsedBy: 1},
-    tagB: {tagModelId: 16807, name: 'Tag_B__', color: "#4b9b62", tagUsedBy: 1},
-    tagC: {tagModelId: 16812, name: 'Tag_C__', color: "#4b9b62", tagUsedBy: 1},
+    orgTag1: {tagModelId: 17561, name: 'sensitive information', color: "#ad2355", tagUsedBy: 1},
+    orgTag2: {tagModelId: 17562, name: 'eligible for disposal', color: "#4b9b62", tagUsedBy: 1},
+    tagA: {tagModelId: 17563, name: 'Tag_A__', color: "#4b749b", tagUsedBy: 1},
+    tagB: {tagModelId: 17564, name: 'Tag_B__', color: "#4b749b", tagUsedBy: 1},
+    tagC: {tagModelId: 17565, name: 'Tag_C__', color: "#4b749b", tagUsedBy: 1},
+    orgTag3: {tagModelId: 17566, name: 'cold_case', color: "#217ed6", tagUsedBy: 1},
 };
 
 S.SECURE_2 = {
@@ -3271,12 +3272,12 @@ S.SECURE_2 = {
         id: 2217,
         guid: '570fbb9a-b929-f011-ad1f-0e9868aeff83',
         name: "Cypress Office 1",
-        orgAndOfficeName: "Web Test Automtion #2 - Cypress Office 1"
+        orgAndOfficeName: "Web Test Automation #2 - Cypress Office 1"
     },
     office_2: {
         id: 2223,
         name: "Cypress Office 2",
-        orgAndOfficeName: "Web Test Automtion #2 - Cypress Office 2"
+        orgAndOfficeName: "Web Test Automation #2 - Cypress Office 2"
     },
     // org2: {
     //     office_1: {
@@ -3527,118 +3528,118 @@ S.SECURE_2 = {
     tagC: {tagModelId: 17558, name: 'Tag_C__', color: "#4b9b62", tagUsedBy: 1},
 
 };
-//
-// S.SECURE_3 = {
-//     newUser: {},
-//     orgSettings: {
-//         id: 556,
-//         name: 'Web Test Automtion #3',
-//         license: 'CH9byWyGCZWALMV9S5V4BYE9T5DsquRUSa7zh+wF+zc=',
-//         guid: '51554d99-4630-ed11-832b-021f02b7478f',
-//         cals: 10
-//     },
-//     office_1: {
-//         id: 1118,
-//         guid: '52554d99-4630-ed11-832b-021f02b7478f',
-//         name: "Cypress Office 1",
-//         orgAndOfficeName: "Web Test Automtion #3 - Cypress Office 1"
-//     },
-//     office_2: {
-//         id: 1130,
-//         guid: '3d054095-8b86-ed11-832d-021f02b7478f',
-//         name: "Cypress Office 2",
-//         orgAndOfficeName: "Web Test Automtion #3 - Cypress Office 2"
-//     },
-//     org2: {
-//         office_1: {
-//             id: 1119,
-//             guid: 'f36bc8a3-4630-ed11-832b-021f02b7478f',
-//             name: "Cypress Office 1",
-//             orgAndOfficeName: "Web Test Automtion #4 - Cypress Office 1"
-//         },
-//         id: 546,
-//         orgName: "Web Test Automation",
-//         officeId: 1054,
-//         officeName: "Cypress Office 1",
-//         orgAndOfficeName: "Web Test Automation - Cypress Office 1"
-//     },
-//
-//     users: {
-//         systemAdminId: 40357,
-//         orgAdminId: 43666,
-//         systemAdmin: {
-//             id: 40357,
-//             guid: '0cfa7c01-2f2e-ea11-aa3a-062d5b58f56e'
-//         },
-//         orgAdmin: {
-//             id: 43666,
-//             guid: 'f58daaef-7880-ed11-832d-021f02b7478f'
-//         },
+
+S.SECURE_3 = {
+    newUser: {},
+    orgSettings: {
+        id: 1030,
+        name: 'Web Test Automation #3',
+        license: 'XKvU4HQo2Nupg5mO6mqE3D4Oqayey1ksgpRCFHjPp4k=',
+        guid: 'b06627a6-b929-f011-ad1f-0e9868aeff83',
+        cals: 10
+    },
+    office_1: {
+        id: 2218,
+        guid: 'b16627a6-b929-f011-ad1f-0e9868aeff83\n',
+        name: "Cypress Office 1",
+        orgAndOfficeName: "Web Test Automation #3 - Cypress Office 1"
+    },
+    office_2: {
+        id: 2224,
+        guid: 'b0b76e5c-422b-f011-ad1f-0e9868aeff83\n',
+        name: "Cypress Office 2",
+        orgAndOfficeName: "Web Test Automation #3 - Cypress Office 2"
+    },
+    org2: {
+        office_1: {
+            id: 2219,
+            guid: '96b931b1-b929-f011-ad1f-0e9868aeff83',
+            name: "Cypress Office 1",
+            orgAndOfficeName: "Web Test Automation #4 - Cypress Office 1"
+        },
+        id: 1028,
+        orgName: "Web Test Automation #1",
+        officeId: 2216,
+        officeName: "Cypress Office 1",
+        orgAndOfficeName: "Web Test Automation #1 - Cypress Office 1"
+    },
+
+    users: {
+        //systemAdminId: 40357, //we don't have sys adm on Secure
+        orgAdminId: 118065,
+        // systemAdmin: {
+        //     id: 40357,
+        //     guid: '0cfa7c01-2f2e-ea11-aa3a-062d5b58f56e'
+        // },
+        orgAdmin: {
+            id: 118065,
+            guid: '254b01fb-442b-f011-ad1f-0e9868aeff83'
+        },
 //         // org2Admin: {
 //         //     id: 40727,
 //         //     guid: '10589878-e7bb-eb11-aa4f-062d5b58f56e',
 //         //     organizationId: 546,
 //         //     officeId: 1054
 //         // },
-//         powerUser: {
-//             id: 43683,
-//             guid: '19330c4f-8c86-ed11-832d-021f02b7478f'
-//         },
+        powerUser: {
+            id: 118068,
+            guid: '3af62a21-462b-f011-ad1f-0e9868aeff83'
+        },
 //         // clpUser: {
 //         //     id: 43529,
 //         //     guid: '99aa4fce-da6f-ed11-832d-021f02b7478f'
 //         // },
-//         basicUser: {
-//             id: 43684,
-//             guid: '6729d18f-8e86-ed11-832d-021f02b7478f'
-//         },
-//         blockedUser: {
-//             id: 97282,
-//             guid: '3b61822f-9f1a-f011-8371-021f02b7478f'
-//         },
-//     },
-//     divisions: {
-//         div1: {
-//             name: 'Patrol',
-//             id: 129
-//         },
-//         div2: {
-//             name: 'Investigations',
-//             id: 134
-//         }
-//     },
-//     units: {
-//         unit1: {
-//             name: 'UnitA',
-//             id: 88
-//         },
-//         unit2: {
-//             name: 'UnitB',
-//             id: 83
-//         },
-//         unit3: {
-//             name: 'UnitC',
-//             id: 89
-//         }
-//     },
-//     forms: {
-//         userFormWithRequiredFields: 24206,
-//         userFormWithOptionalFields: 24207,
-//         taskFormWithRequiredFields: 2547,
-//         taskFormWithOptionalFields: 2548
-//     },
-//     locations: [
-//         {
-//             id: 487927,
-//             guid: '2047e0e8-e536-4b4b-acbd-03300c734617',
-//             name: "CypressLocation1"
-//         },
-//         {
-//             id: 487928,
-//             guid: '21e4c916-a184-4189-b139-e2235833540d',
-//             name: "CypressLocation2"
-//         }
-//     ],
+        basicUser: {
+            id: 118069,
+            guid: '042ac096-462b-f011-ad1f-0e9868aeff83'
+        },
+        blockedUser: {
+            id: 118070,
+            guid: '015eabf1-462b-f011-ad1f-0e9868aeff83'
+        },
+    },
+    divisions: {
+        div1: {
+            name: 'Patrol',
+            id: 180
+        },
+        div2: {
+            name: 'Investigations',
+            id: 181
+        }
+    },
+    units: {
+        unit1: {
+            name: 'UnitA',
+            id: 1769
+        },
+        unit2: {
+            name: 'UnitB',
+            id: 1770
+        },
+        unit3: {
+            name: 'UnitC',
+            id: 1771
+        }
+    },
+    forms: {
+        userFormWithRequiredFields: 5585,
+        userFormWithOptionalFields: 5586,
+        taskFormWithRequiredFields: 5587,
+        taskFormWithOptionalFields: 5588
+    },
+    locations: [
+        {
+            id: 825425,
+            guid: '74cca18a-b93f-4e27-a3a1-61b9983c8a5e',
+            name: "CypressLocation1"
+        },
+        {
+            id: 825427,
+            guid: '8cb3fb80-c13d-4ac6-87f4-c978773ad6e1',
+            name: "CypressLocation2"
+        }
+    ],
 //     // caseForReport: {
 //     //     id: 120799,
 //     // },
@@ -3649,156 +3650,175 @@ S.SECURE_2 = {
 //     // personForReport: {
 //     //     id: 105156,
 //     // },
-//     oldClosedCase: {
-//         id: 7743123,
-//         caseNumber: 'Closed Case-AutomatedTest',
-//         createdDate: '12/28/2022',
-//         offenseDate: '12/21/2022',
-//         reviewDate: '12/30/2022',
-//         closedDate: '12/28/2022',
-//     },
-//     oldActiveCase: {
-//         id: 7743205,
-//         caseNumber: 'AutomatedTest-Active Case',
-//         createdDate: '12/28/2022',
-//         offenseDate: '12/20/2022',
-//         reviewDate: '12/30/2022',
-//         caseReviewNotes: 'reviewNotes_122822788007',
-//     },
-//     recentCase: {
-//         id: 7743099,
-//         caseNumber: 'AutomatedTest-Active Case'
-//     },
+    oldClosedCase: {
+        id: 110934753,
+        caseNumber: 'Closed Case-AutomatedTest',
+        createdDate: '12/28/2022',
+        offenseDate: '12/21/2022',
+        reviewDate: '12/30/2022',
+        closedDate: '12/28/2022',
+    },
+    oldActiveCase: {
+        id: 110934775,
+        caseNumber: 'AutomatedTest-Active Case',
+        createdDate: '12/28/2022',
+        offenseDate: '12/20/2022',
+        reviewDate: '12/30/2022',
+        caseReviewNotes: 'reviewNotes_122822788007',
+    },
+    recentCase: {
+        id: 110934775,
+        caseNumber: 'AutomatedTest-Active Case'
+    },
 //     existingItems_1kBarcodes: [],
-//     person: {
-//         name: 'Person_1',
-//         fullName: 'Cypress Person_1',
-//         id: 6608222,
-//         get organizationId() {
-//             return S.SECURE_3.orgSettings.id
-//         },
-//         userId: null,
-//         guid: '5c11a259-d0fc-43c9-a42f-28b500ae5e6b',
-//         email: 'qa+person_1@trackerproducts.com'
-//     },
-//     person_2: {
-//         name: 'Person_2',
-//         fullName: 'Cypress Person_2',
-//         id: 6608223,
-//         get organizationId() {
-//             return S.SECURE_3.orgSettings.id
-//         },
-//         userId: null,
-//         guid: 'd3cb6e62-e01a-4c49-ae6b-9aca6a9222f1',
-//         email: 'qa+person_2@trackerproducts.com'
-//     },
-//     get recoveredById() {
-//         return S.SECURE_3.person.id
-//     },
-//     admin_permissionGroup: {
-//         name: 'Cypress - ADMIN',
-//         id: 4587,
-//         startingIndexForViewPermissions: 81974,
-//         get startingIndexForCreatePermissions() {
-//             return S.SECURE_3.admin_permissionGroup.startingIndexForViewPermissions + 22
-//         },
-//         get startingIndexForUpdatePermissions() {
-//             return S.SECURE_3.admin_permissionGroup.startingIndexForViewPermissions + 45
-//         },
-//         get startingIndexForDeletePermissions() {
-//             return S.SECURE_3.admin_permissionGroup.startingIndexForViewPermissions + 67
-//         }
-//     },
-//     blocked_permissionGroup: {
-//         name: 'Cypress - Blocked',
-//         id: 4588,
-//         startingIndexForViewPermissions: 82049,
-//         get startingIndexForCreatePermissions() {
-//             return S.SECURE_3.blocked_permissionGroup.startingIndexForViewPermissions + 22
-//         },
-//         get startingIndexForUpdatePermissions() {
-//             return S.SECURE_3.blocked_permissionGroup.startingIndexForViewPermissions + 45
-//         },
-//         get startingIndexForDeletePermissions() {
-//             return S.SECURE_3.blocked_permissionGroup.startingIndexForViewPermissions + 67
-//         }
-//     },
-//     regularUser_permissionGroup: {
-//         name: 'Cypress - Regular User',
-//         id: 4589,
-//         startingIndexForViewPermissions: 82124,
-//         get startingIndexForCreatePermissions() {
-//             return S.SECURE_3.regularUser_permissionGroup.startingIndexForViewPermissions + 22
-//         },
-//         get startingIndexForUpdatePermissions() {
-//             return S.SECURE_3.regularUser_permissionGroup.startingIndexForViewPermissions + 45
-//         },
-//         get startingIndexForDeletePermissions() {
-//             return S.SECURE_3.regularUser_permissionGroup.startingIndexForViewPermissions + 67
-//         }
-//     },
-//     // readOnly_permissionGroup: {
-//     //     name: 'Cypress - ReadOnly',
-//     //     id: 4421,
-//     //     startingIndexForViewPermissions: 64293,
-//     //     get startingIndexForCreatePermissions() {
-//     //         return S.SECURE_3.readOnly_permissionGroup.startingIndexForViewPermissions + 22
-//     //     },
-//     //     get startingIndexForUpdatePermissions() {
-//     //         return S.SECURE_3.readOnly_permissionGroup.startingIndexForViewPermissions + 45
-//     //     },
-//     //     get startingIndexForDeletePermissions() {
-//     //         return S.SECURE_3.readOnly_permissionGroup.startingIndexForViewPermissions + 67
-//     //     }
-//     // },
-//     // permissionGroup_noAutoDispo: {
-//     //     name: 'All permissions except AutoDispo',
-//     //     id: 4422
-//     // },
-//     admin_userGroup: {
-//         name: 'Cypress Admin Group',
-//         id: 3138
-//     },
-//     blocked_userGroup: {
-//         name: 'Cypress Blocked Group',
-//         id: 3139
-//     },
-//     readOnly_userGroup: {
-//         name: 'Cypress ReadOnly Group',
-//         id: 3140
-//     },
-//     orgTag1: {tagModelId: 16827, name: 'sensitive information', color: "#ad2355", tagUsedBy: 1},
-//     orgTag2: {tagModelId: 16828, name: 'eligible for disposal', color: "#4b9b62", tagUsedBy: 1},
-//     tagA: {tagModelId: 16829, name: 'Tag_A__', color: "#4b9b62", tagUsedBy: 1},
-//     tagB: {tagModelId: 16830, name: 'Tag_B__', color: "#4b9b62", tagUsedBy: 1},
-//     tagC: {tagModelId: 16831, name: 'Tag_C__', color: "#4b9b62", tagUsedBy: 1},
-//     taskTemplates: {
-//         dispoAuth: {
-//             templateId: 4308,
-//             type: 'Disposition Authorization',
-//             subtype: '',
-//             active: true,
-//             emailUser: true,
-//             taskEscalation: true,
-//             dueDays: 5,
-//             useDispositionAuthorizationActions: true,
-//             title: 'Disposition Authorization',
-//         },
-//         other: {
-//             templateId: 3382,
-//             type: 'Other',
-//             subtype: '',
-//             active: true,
-//             emailUser: true,
-//             taskEscalation: true,
-//             dueDays: 10,
-//             useDispositionAuthorizationActions: true,
-//             title: 'Title--forAutomatedTests',
-//             message: 'Message-forAutomatedTests'
-//         },
-//     },
-// },
-//
+    person: {
+        name: 'Person_1',
+        fullName: 'Cypress Person_1',
+        id: 57335413,
+        get organizationId() {
+            return S.SECURE_3.orgSettings.id
+        },
+        userId: null,
+        guid: '01eb1f8d-6316-4c6b-bb2b-84c02b73804e',
+        email: 'qa+person_1@trackerproducts.com'
+    },
+    person_2: {
+        name: 'Person_2',
+        fullName: 'Cypress Person_2',
+        id: 57335416,
+        get organizationId() {
+            return S.SECURE_3.orgSettings.id
+        },
+        userId: null,
+        guid: '1e337a45-efe6-49fd-8d26-7bbc0d97ab4c',
+        email: 'qa+person_2@trackerproducts.com'
+    },
+    get recoveredById() {
+        return S.SECURE_3.person.id
+    },
+    admin_permissionGroup: {
+        name: 'Cypress - ADMIN',
+        id: 4397,
+        startingIndexForViewPermissions: 116490,
+        get startingIndexForCreatePermissions() {
+            return S.SECURE_3.admin_permissionGroup.startingIndexForViewPermissions + 22
+        },
+        get startingIndexForUpdatePermissions() {
+            return S.SECURE_3.admin_permissionGroup.startingIndexForViewPermissions + 45
+        },
+        get startingIndexForDeletePermissions() {
+            return S.SECURE_3.admin_permissionGroup.startingIndexForViewPermissions + 67
+        }
+    },
+    blocked_permissionGroup: {
+        name: 'Cypress - Blocked',
+        id: 4398,
+        startingIndexForViewPermissions: 116565,
+        get startingIndexForCreatePermissions() {
+            return S.SECURE_3.blocked_permissionGroup.startingIndexForViewPermissions + 22
+        },
+        get startingIndexForUpdatePermissions() {
+            return S.SECURE_3.blocked_permissionGroup.startingIndexForViewPermissions + 45
+        },
+        get startingIndexForDeletePermissions() {
+            return S.SECURE_3.blocked_permissionGroup.startingIndexForViewPermissions + 67
+        }
+    },
+    regularUser_permissionGroup: {
+        name: 'Cypress - Regular User',
+        id: 4399,
+        startingIndexForViewPermissions: 116640,
+        get startingIndexForCreatePermissions() {
+            return S.SECURE_3.regularUser_permissionGroup.startingIndexForViewPermissions + 22
+        },
+        get startingIndexForUpdatePermissions() {
+            return S.SECURE_3.regularUser_permissionGroup.startingIndexForViewPermissions + 45
+        },
+        get startingIndexForDeletePermissions() {
+            return S.SECURE_3.regularUser_permissionGroup.startingIndexForViewPermissions + 67
+        }
+    },
+    readOnly_permissionGroup: {
+        name: 'Cypress - ReadOnly',
+        id: 4400,
+        startingIndexForViewPermissions: 116715,
+        get startingIndexForCreatePermissions() {
+            return S.SECURE_3.readOnly_permissionGroup.startingIndexForViewPermissions + 22
+        },
+        get startingIndexForUpdatePermissions() {
+            return S.SECURE_3.readOnly_permissionGroup.startingIndexForViewPermissions + 45
+        },
+        get startingIndexForDeletePermissions() {
+            return S.SECURE_3.readOnly_permissionGroup.startingIndexForViewPermissions + 67
+        }
+    },
+    permissionGroup_noAutoDispo: {
+        name: 'All permissions except AutoDispo',
+        id: 4401
+    },
+    admin_userGroup: {
+        name: 'Cypress Admin Group',
+        id: 16409
+    },
+    blocked_userGroup: {
+        name: 'Cypress Blocked Group',
+        id: 16410
+    },
+    readOnly_userGroup: {
+        name: 'Cypress ReadOnly Group',
+        id: 16411
+    },
+    orgTag1: {tagModelId: 17571, name: 'sensitive information', color: "#ad2355", tagUsedBy: 1},
+    orgTag2: {tagModelId: 17572, name: 'eligible for disposal', color: "#4b9b62", tagUsedBy: 1},
+    orgTag3: {tagModelId: 17573, name: 'cold_case', color: "#217ed6", tagUsedBy: 1},
+    tagA: {tagModelId: 17574, name: 'Tag_A__', color: "#4b9b62", tagUsedBy: 1},
+    tagB: {tagModelId: 17575, name: 'Tag_B__', color: "#4b9b62", tagUsedBy: 1},
+    tagC: {tagModelId: 17576, name: 'Tag_C__', color: "#4b9b62", tagUsedBy: 1},
+
+    taskTemplates: {
+        dispoAuth: {
+            templateId: 8151,
+            type: 'Disposition Authorization',
+            subtype: '',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 5,
+            useDispositionAuthorizationActions: true,
+            title: 'Disposition Authorization',
+            message: 'Message-forAutomatedTests'
+        },
+        other: {
+            templateId: 8150,
+            type: 'Other',
+            subtype: '',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 10,
+            useDispositionAuthorizationActions: true,
+            title: 'Title--forAutomatedTests',
+            message: 'Message-forAutomatedTests'
+        },
+    },
+    taskTemplate: {
+        taskTypeId: {
+            errorCorrection: 6450,
+
+        },
+        taskSubTypeId: {
+            packagingAndLabeling: 6992,
+
+        },
+        taskActionId: {
+            packageMustBeSealed: 3213,
+            mustBeRenderedSafe: 3211,
+
+        },
+        otherTaskTemplateId: 8150,
+    },
+},
+
 // S.SECURE_4 = {
 //     newUser: {},
 //     orgSettings: {
