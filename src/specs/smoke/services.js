@@ -107,7 +107,7 @@ describe('Services', function () {
         api.items.add_new_item()
     });
 
-    it('Reporter', function () {
+    it('1. Reporter', function () {
 
         api.auth.get_tokens(S.userAccounts.orgAdmin);
         cy.window().then((win) => {
@@ -123,7 +123,7 @@ describe('Services', function () {
         ui.app.verify_toast_message(C.toastMsgs.popupBlocked);
     });
 
-    it('Exporter', function () {
+    it('2. Exporter', function () {
 
         api.auth.get_tokens(S.userAccounts.orgAdmin);
         ui.app.open_newly_created_case_via_direct_link()
@@ -135,7 +135,7 @@ describe('Services', function () {
             .verify_content_of_first_row_in_results_table('Download')
     });
 
-    it('Importer', function () {
+    it('3. Importer', function () {
         let fileName = 'CaseImport_allFields_' + S.domain;
         api.auth.get_tokens(S.userAccounts.orgAdmin);
 
@@ -179,7 +179,7 @@ describe('Services', function () {
         ui.itemView.verify_Item_View_page_is_open(D.newCase.caseNumber)
     })
 
-    it('Workflow Service', function () {
+    it('4. Workflow Service', function () {
         api.auth.get_tokens(S.userAccounts.orgAdmin);
         D.generateNewDataSet();
         api.workflows.delete_all_workflows();
@@ -204,7 +204,7 @@ describe('Services', function () {
         ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.caseCreated, D.newCase, null, 1, false)
     })
 
-    it('Container Moves', function () {
+    it('5. Container Moves', function () {
 
         api.auth.get_tokens(orgAdmin);
         D.generateNewDataSet();
@@ -270,7 +270,7 @@ describe('Services', function () {
         })
     })
 
-    it('Container Auto Deactivate', function () {
+    it('6. Container Auto Deactivate', function () {
 
         api.auth.get_tokens(orgAdmin);
         D.generateNewDataSet();
@@ -297,7 +297,7 @@ describe('Services', function () {
 
     });
 
-    it('Task/Case Reassignment', function () {
+    it('7. Task/Case Reassignment', function () {
 
         api.auth.get_tokens(orgAdmin);
         D.generateNewDataSet();
@@ -325,7 +325,7 @@ describe('Services', function () {
         })
     });
 
-    it('People Merge', function () {
+    it('8. People Merge', function () {
 
         api.auth.get_tokens(orgAdmin);
         D.generateNewDataSet();
@@ -368,7 +368,7 @@ describe('Services', function () {
         })
     });
 
-    it('Dispo Auth Service', function () {
+    it('9. Dispo Auth Service', function () {
 
         ui.app.log_title(this);
         api.auth.get_tokens(orgAdmin);
@@ -410,7 +410,7 @@ describe('Services', function () {
                 [[...Array(50).keys()], 'Approved for Disposal']])
     });
 
-    it('Auto Reports - Release Letters', function () {
+    it('10. Auto Reports - Release Letters', function () {
 
         ui.app.log_title(this);
         api.auth.get_tokens(orgAdmin);
@@ -421,7 +421,7 @@ describe('Services', function () {
             .verify_text_is_present_and_check_X_more_times_after_waiting_for_Y_seconds(approvedForReleaseItem.description, 10)
     });
 
-    xit('Auto Disposition', function () {
+    xit('11. Auto Disposition', function () {
 
         api.auth.get_tokens(user);
         ui.menu.click_Settings__Organization()
@@ -477,7 +477,7 @@ describe('Services', function () {
         ui.caseView.verify_values_on_Edit_form(D.case3);
     });
 
-    it('Media Mass Download', function () {
+    it('12. Media Mass Download', function () {
 
         api.auth.get_tokens(orgAdmin);
         api.items.add_new_item()
@@ -494,7 +494,7 @@ describe('Services', function () {
             .verify_content_of_first_row_in_results_table(['Done', 'Download'])
     })
 
-    it('(Trans)Actions on Search Results', function () {
+    it('13. (Trans)Actions on Search Results', function () {
 
         api.auth.get_tokens(orgAdmin);
         D.getNewItemData()
