@@ -60,55 +60,23 @@ jobs:
           fi
 
           rm -rf *
+
           cp -r ../report/allure-results-${{ matrix.org_number }}/* ./
 
           echo "🔍 Skipping files larger than 100MB..."
           find . -type f -size +100M -print -delete
 
-      - name: Install Gitleaks
-        if: always()
-        run: |
-          curl -sSL https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks-linux-amd64 -o gitleaks
-          chmod +x gitleaks
-          mv gitleaks /usr/local/bin/
-
-      - name: Run Gitleaks Scan
-        if: always()
-        run: |
-          cd external-repo
-          gitleaks detect --source=. --report-format=json --report-path=gitleaks-report.json || true
-
-      - name: Install Python and jq
-        if: always()
-        run: |
-          # Install Python without sudo
-          curl -sSL https://www.python.org/ftp/python/3.9.6/Python-3.9.6.tgz | tar xz
-          cd Python-3.9.6
-          ./configure --prefix=/usr/local
-          make
-          make install
-
-          # Install pip and jq
-          curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-          python3 get-pip.py
-          pip3 install --quiet jq
-
-      - name: Redact Secrets in Allure JSON files
-        if: always()
-        run: |
-          cd external-repo
-          # Assuming the 'redact_secrets.py' script is already in the root of the external repo
-          for file in $(find . -name "*.json"); do
-            python3 ../redact_secrets.py "$file"
+          echo "🔐 Scanning .json files for secret-like patterns..."
+          for file in $(find . -type f -name "*.json"); do
+            if grep -qE '(A3T|AKIA|AGPA|AIDA|ANPA|AROA|ASIA)[A-Z0-9]{16}' "$file"; then
+              echo "🚨 Removing suspicious file: $file"
+              git rm -f --ignore-unmatch "$file"
+            fi
           done
 
-      - name: Commit and push redacted results
-        if: always()
-        run: |
-          cd external-repo
           git add .
-          git commit -m "Allure results for org-${{ matrix.org_number }} (secrets safely redacted)" || echo "No changes to commit"
-          git push origin $REPORT_BRANCH || echo "🔁 Push failed. Manual intervention may be needed."
+          git commit -m "Allure results for org-${{ matrix.org_number }} (with secret-suspect .json files removed)" || echo "No changes to commit"
+          git push origin $REPORT_BRANCH || echo "🔁 Push failed again. Manual intervention may be needed."
 
   merge-and-deploy-final-report:
     runs-on: ubuntu-latest
@@ -120,7 +88,6 @@ jobs:
         run: echo "NOW=$(date +'%B_%d')" >> $GITHUB_ENV
 
       - name: Clone and prepare gh-pages
-        if: always()
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "github-actions"
@@ -128,7 +95,7 @@ jobs:
           git clone https://x-access-token:${{ secrets.TOKEN }}@github.com/Safe-QA/report_${NOW}.git merged-repo
           cd merged-repo
           git checkout gh-pages || git checkout -b gh-pages
-
+          
           rm -rf *
           mkdir -p allure-results
           git add .
@@ -136,11 +103,11 @@ jobs:
           git push origin gh-pages
 
       - name: Merge report-1 directly into gh-pages
-        if: always()
         run: |
           cd merged-repo
           git fetch origin report-1
           git checkout gh-pages
+
           git merge origin/report-1 --allow-unrelated-histories --no-ff -m "Merge report-1 into gh-pages" || true
           git checkout --theirs .
           git add .
@@ -148,11 +115,11 @@ jobs:
           git push origin gh-pages
 
       - name: Merge report-2 directly into gh-pages
-        if: always()
         run: |
           cd merged-repo
           git fetch origin report-2
           git checkout gh-pages
+
           git merge origin/report-2 --allow-unrelated-histories --no-ff -m "Merge report-2 into gh-pages" || true
           git checkout --theirs .
           git add .
@@ -160,11 +127,9 @@ jobs:
           git push origin gh-pages
 
       - name: Install Allure CLI
-        if: always()
         run: npm install -g allure-commandline
 
       - name: Generate Final Allure Report
-        if: always()
         run: |
           cd merged-repo
           git checkout gh-pages
@@ -178,7 +143,6 @@ jobs:
           rsync -a allure-report/ ./
 
       - name: Push Final Allure Report
-        if: always()
         run: |
           cd merged-repo
           git add .
@@ -191,11 +155,9 @@ jobs:
     if: always()
     steps:
       - name: Set date
-        if: always()
         run: echo "NOW=$(date +'%B_%d')" >> $GITHUB_ENV
 
       - name: Send Slack Notification
-        if: always()
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}

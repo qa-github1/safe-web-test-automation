@@ -62,18 +62,18 @@ exports.getTestAccounts = function (environment, orgNum = 1) {
             id: environment.users.basicUser.id,
             guid: environment.users.basicUser.guid
         },
-        blockedUser: {
-            title: exports.userRoles.blockedUser,
-            email: `qa+org${orgNum}_blockedUser@trackerproducts.com`,
-            name: 'Blocked CypressUser',
-            firstName: 'Blocked',
-            lastName: 'CypressUser',
-            password: 'Qwerty123!',
-            officeId: environment.office_1.id,
-            organizationId: environment.orgSettings.id,
-            id: environment.users.blockedUser.id,
-            guid: environment.users.blockedUser.guid
-        },
+        // blockedUser: {
+        //     title: exports.userRoles.blockedUser,
+        //     email: `qa+org${orgNum}_blockedUser@trackerproducts.com`,
+        //     name: 'Blocked CypressUser',
+        //     firstName: 'Blocked',
+        //     lastName: 'CypressUser',
+        //     password: 'Qwerty123!',
+        //     officeId: environment.office_1.id,
+        //     organizationId: environment.orgSettings.id,
+        //     id: environment.users.blockedUser.id,
+        //     guid: environment.users.blockedUser.guid
+        // },
         // systemAdmin: {
         //     title: exports.userRoles.systemAdmin,
         //     email: 'qa+systemadmin@trackerproducts.com',

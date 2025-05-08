@@ -15,6 +15,8 @@
     "openRunnerPentest-org4": "cypress open --env environment=pentest,orgNum=4",
     "openRunnerSecure-org1": "cypress open --env environment=secure,orgNum=1",
     "openRunnerSecure-org2": "cypress open --env environment=secure,orgNum=2",
+    "openRunnerSecure-org3": "cypress open --env environment=secure,orgNum=3",
+    "openRunnerSecure-org4": "cypress open --env environment=secure,orgNum=4",
     "pentest-all-tests": "cypress run --headless --browser chrome --spec 'src/specs/org1/add-item-spec.js' --env environment=pentest,orgNum=2",
     "dev-smoke-test": "cypress run --headless --browser chrome --spec 'src/specs/smoke/main-actions.js' --env environment=dev,orgNum=2 ",
     "dev-smoke-test-parallel": "cypress run --headless --browser chrome --record",
