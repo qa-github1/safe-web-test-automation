@@ -695,7 +695,7 @@ export default class BasePage {
                     if (stack[3]) {
                         self.wait_response_from_API_call(stack[3])
                     }
-                    self.pause(1)
+                    self.pause(1.2)
                     stack[2]().click();
                     self.pause(0.5)
                 } else {
