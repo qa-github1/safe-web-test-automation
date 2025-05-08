@@ -8,6 +8,8 @@ const S = require('../../fixtures/settings');
 //************************************ ELEMENTS ***************************************//
 
 let searchCriteriaBasedOnFieldLabel = fieldLabel => cy.contains(fieldLabel).parent().find('select[ng-model="field.searchCriteria"]'),
+    removeAllButtonForOffices = e => cy.get('[translate="SEARCH.OFFICE_SELECTION"]').parents('.form-group').find('[translate="ORGS.SETTINGS.FORMS.LISTBOX.REMOVE_ALL_BUTTON"]'),
+    inputForOffices = e => cy.get('[translate="SEARCH.OFFICE_SELECTION"]').parents('.form-group').find('input[placeholder="Select an office..."]'),
     dateInputField = fieldLabel => cy.contains(fieldLabel).parent().find('input').first(),
     dateInputField_2 = fieldLabel => cy.contains(fieldLabel).parent().find('input').eq(1),
     dateField_calendar = fieldLabel => cy.contains(fieldLabel).parent('div').find('.glyphicon-calendar'),
@@ -29,6 +31,13 @@ export default class BaseSearchPage extends BasePage {
 
     click_on_Items_count() {
         this.itemsCountOnSearchGrid().click();
+        return this;
+    };
+
+    select_Office(officeName) {
+        removeAllButtonForOffices().click()
+        this.enterValue(inputForOffices, officeName)
+        this.click_highlighted_option_on_typeahead()
         return this;
     };
 

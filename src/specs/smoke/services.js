@@ -17,6 +17,8 @@ before(function () {
     api.org_settings.enable_all_Item_fields();
     api.org_settings.enable_all_Person_fields();
     api.org_settings.update_org_settings(false, true);
+    api.org_settings.update_org_settings_by_specifying_property_and_value('containerAutoDeactivate', true)
+    api.users.update_current_user_settings(orgAdmin.id, C.currentDateTimeFormat, C.currentDateFormat)
 });
 
 describe('Dispo Auth', function () {
@@ -414,7 +416,8 @@ describe('Services', function () {
         api.auth.get_tokens(orgAdmin);
 
         ui.menu.click_Tools__Auto_Reports()
-        ui.app.sort_by_descending_order('Delivery Time')
+        ui.app.set_visibility_of_table_column('Public Facing Description', true)
+            .sort_by_descending_order('Delivery Time')
             .verify_text_is_present_and_check_X_more_times_after_waiting_for_Y_seconds(approvedForReleaseItem.description, 10)
     });
 
@@ -489,6 +492,35 @@ describe('Services', function () {
             .verify_text_is_present_on_main_container('Download Jobs')
             .sort_by_descending_order('Start Date')
             .verify_content_of_first_row_in_results_table(['Done', 'Download'])
+    })
+
+    it('(Trans)Actions on Search Results', function () {
+
+        api.auth.get_tokens(orgAdmin);
+        D.getNewItemData()
+        api.items.add_new_item(true, null, 'newItem1')
+        api.items.add_new_item(true, null, 'newItem1')
+
+        ui.menu.click_Search__Item()
+        ui.searchItem
+            .select_Status('Checked In')
+            .select_Office(S.selectedEnvironment.office_1.name)
+            .enter_Description('contains', D.newItem.description)
+            .click_Search()
+            .click_Actions_On_Search_Results()
+            .perform_Item_Check_Out_transaction(powerUser, C.checkoutReasons.lab, 'Check Out from Actions on Search Results', null, true, true)
+            .verify_text_is_present_on_main_container('Actions on Search Results Jobs')
+            .sort_by_descending_order('Start Date')
+            .verify_content_of_first_row_in_results_table('Completed')
+
+        cy.getLocalStorage('newItem1').then(item => {
+            ui.app.open_item_url(JSON.parse(item).id)
+            ui.itemView.select_tab(C.tabs.chainOfCustody)
+                .verify_data_on_Chain_of_Custody([
+                    [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', powerUser.name], ['Notes', 'Check Out from Actions on Search Results']],
+                    [['Type', 'In'], ['Issued From', orgAdmin.name], ['Issued To', 'New Item Entry'], ['Notes', `Item entered into system.`]],
+                ])
+        })
     })
 
 })

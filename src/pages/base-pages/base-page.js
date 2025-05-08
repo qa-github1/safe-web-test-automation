@@ -138,7 +138,7 @@ let
     checkboxToSelectAll = e => cy.get('[ng-model="options.selectAllToggle"]').first(),
     statisticsBlock = e => cy.get('.statistic-block').first(),
     selectedItems = e => cy.get('[ng-if="options.selectedItems.length != 0"]').first(),
-   // locationPin = name => cy.contains(name).parent('div'),
+    // locationPin = name => cy.contains(name).parent('div'),
     locationPin = e => cy.get('.pac-matched'),
     firstCheckboxOnTableBody = e => cy.get('.bg-grid-checkbox').first(),
     checkboxOnSpecificTableRow = rowNumber => resultsTable().find('.bg-grid-checkbox', {timeout: 0}).eq(rowNumber - 1),
@@ -220,6 +220,7 @@ let
     storageLocationInput = fieldLabel => cy.get('[placeholder="type ‘/‘ or start typing a location name"]').last(),
     returnedByInput = e => cy.get('[label="\'ITEMS.CHECK_IN.RETURNED_BY\'"]').find('[typeahead="l.id as l.text for l in getPerson($viewValue) | limitTo: 10"]'),
     checkedOutToInput = e => cy.get('[label="\'ITEMS.CHECK_OUT.TAKEN_BY\'"]').find('[typeahead="l.id as l.text for l in getPerson($viewValue) | limitTo: 10"]'),
+    checkedReasonSelect = e => cy.get('[ng-model="checkout.reasonId"]'),
     transferFrom = e => cy.get('[name="transferredFrom"]'),
     transferFromInput = e => cy.get('[name="transferredFrom"]').find('input'),
     transferTo = e => cy.get('[name="transferredTo"]'),
@@ -517,6 +518,7 @@ export default class BasePage {
         cy.contains('Menu Customization').click()
         optionsDropdownUnderMenuCustomization().click()
         pageSizesUnderMenuCustomization().contains(pageSize).click()
+        this.wait_until_spinner_disappears()
         return this;
     }
 
@@ -779,6 +781,7 @@ export default class BasePage {
         });
         return this;
     };
+
     //
     // enter_values_on_Item_Belongs_To_typeahead_field(LabelValueArray) {
     //     let that = this
@@ -810,7 +813,7 @@ export default class BasePage {
     enter_values_on_Item_Belongs_To_typeahead_field(element, valuesArray) {
         if (valuesArray[0]) {
             for (let i = 0; i < valuesArray.length; i++) {
-            this.select_typeahead_option(element, valuesArray[i], this.typeaheadSelectorChoicesRow);
+                this.select_typeahead_option(element, valuesArray[i], this.typeaheadSelectorChoicesRow);
             }
         }
         return this;
@@ -1390,10 +1393,10 @@ export default class BasePage {
         if (partOfRequestUrl) {
             cy.server();
             this.define_API_request_to_be_mocked('GET', partOfRequestUrl)
-          //  cy.intercept('GET', '**').as('all_GET_Requests').then(function () {
-                cy.visit(urlToOpen);
-          //  })
-           // cy.wait('@all_GET_Requests')
+            //  cy.intercept('GET', '**').as('all_GET_Requests').then(function () {
+            cy.visit(urlToOpen);
+            //  })
+            // cy.wait('@all_GET_Requests')
             this.wait_response_from_API_call(partOfRequestUrl)
         } else {
             cy.visit(urlToOpen);
@@ -1730,21 +1733,47 @@ export default class BasePage {
         return this;
     };
 
+
     uncheck_all_rows() {
-        checkboxToSelectAll().scrollIntoView()
-        statisticsBlock().invoke('text').then(function (text) {
+        statisticsBlock().invoke('text').then((text) => {
             if (text.includes('Selected')) {
-                checkboxToSelectAll().click();
-                statisticsBlock().invoke('text').then(function (text) {
-                    if (text.includes('Selected')) {
-                        checkboxToSelectAll().click();
+                const selector = '[ng-model="options.selectAllToggle"]';
+
+                const clickCheckbox = () => {
+                    statisticsBlock().scrollIntoView().should('be.visible')
+                    cy.document().then((doc) => {
+                        const checkbox = doc.querySelector(selector);
+                        if (checkbox) {
+                            cy.wrap(checkbox).click({force: true});
+                        } else {
+                            throw new Error('Checkbox not found in DOM');
+                        }
+                    });
+                };
+
+                // First click
+                clickCheckbox();
+                cy.wait(1000)
+
+                // Re-check the text and potentially click again
+                statisticsBlock().invoke('text').then((newText) => {
+                    if (newText.includes('Selected')) {
+                        clickCheckbox(); // Second click if needed
                     }
-                })
-                checkboxToSelectAll().should('have.class', 'ng-empty');
+                });
+
+                cy.wait(1000)
+                // Final assertion to ensure it's unchecked
+                cy.document().then((doc) => {
+                    const checkbox = doc.querySelector(selector);
+                    if (checkbox) {
+                        cy.wrap(checkbox).should('have.class', 'ng-empty');
+                    }
+                });
             }
-        })
+        });
         return this;
-    };
+    }
 
     click_checkbox_to_select_specific_row(rowNumber) {
         this.wait_until_spinner_disappears()
@@ -1824,7 +1853,7 @@ export default class BasePage {
     };
 
     enter_notes_on_modal(note) {
-        notesOnModal().type(note);
+        this.enterValue(notesOnModal, note)
         return this;
     };
 
@@ -2211,12 +2240,12 @@ export default class BasePage {
     };
 
     wait_all_GET_requests() {
-         //  cy.wait('@all_GET_Requests')
+        //  cy.wait('@all_GET_Requests')
         return this;
     };
 
     wait_all_POST_requests() {
-         //  cy.wait('@all_POST_Requests')
+        //  cy.wait('@all_POST_Requests')
         return this;
     };
 
@@ -2962,14 +2991,16 @@ export default class BasePage {
     }
 
     populate_CheckOut_form(takenBy_personOrUserObject, checkoutReason, notes, expectedReturnDate) {
-        checkedOutToInput().type(takenBy_personOrUserObject.email);
+        checkedOutToInput().invoke('val', takenBy_personOrUserObject.email).trigger('input')
+       // checkedOutToInput().type(takenBy_personOrUserObject.email);
         this.pause(0.5)
         this.click_option_on_typeahead(takenBy_personOrUserObject.fullName);
-        this.select_dropdown_option_on_modal(checkoutReason);
+
+        checkedReasonSelect().select(checkoutReason)
         this.enter_notes_on_modal(notes);
 
         if (expectedReturnDate) {
-            expectedReturnDateInput().type(expectedReturnDate);
+            this.enterValue(expectedReturnDateInput, expectedReturnDate)
         }
         return this;
     }
@@ -3005,10 +3036,17 @@ export default class BasePage {
         return this;
     }
 
-    perform_Item_CheckIn_transaction(returnedBy_userObject, usePreviousLocation, fullLocationPath, note) {
-        this.click_option_on_expanded_menu(C.dropdowns.itemActions.checkItemIn)
+    perform_Item_CheckIn_transaction(returnedBy_userObject, usePreviousLocation, fullLocationPath, note, isActionOnSearchResults, multipleItems) {
+        const label = multipleItems ? C.dropdowns.itemActions.checkItemsIn : C.dropdowns.itemActions.checkItemIn
+        this.click_option_on_expanded_menu(label)
             .populate_CheckIn_form(returnedBy_userObject, usePreviousLocation, fullLocationPath, note)
-            .click_button_on_modal(C.buttons.ok)
+
+        if (isActionOnSearchResults) {
+            this.verify_modal_content(' Warning! This action will check out all items found by the current search\n' +
+                'Items shared among Organizations are not included in the transaction')
+        }
+
+        this.click_button_on_modal(C.buttons.ok)
             .verify_toast_message('Saved')
             .wait_until_spinner_disappears()
         D.editedItem.status = 'Checked In'
@@ -3016,10 +3054,17 @@ export default class BasePage {
         return this;
     }
 
-    perform_Item_Undisposal_transaction(returnedBy_userObject, usePreviousLocation, fullLocationPath, note) {
-        this.click_option_on_expanded_menu(C.dropdowns.itemActions.undisposeItem)
+    perform_Item_Undisposal_transaction(returnedBy_userObject, usePreviousLocation, fullLocationPath, note, isActionOnSearchResults, multipleItems) {
+        const label = multipleItems ? C.dropdowns.itemActions.undisposeItems : C.dropdowns.itemActions.undisposeItem
+        this.click_option_on_expanded_menu(label)
             .populate_CheckIn_form(returnedBy_userObject, usePreviousLocation, fullLocationPath, note)
-            .click_button_on_modal(C.buttons.ok)
+
+        if (isActionOnSearchResults) {
+            this.verify_modal_content(' Warning! This action will check out all items found by the current search\n' +
+                'Items shared among Organizations are not included in the transaction')
+        }
+
+        this.click_button_on_modal(C.buttons.ok)
             .verify_toast_message('Saved')
             .wait_until_spinner_disappears()
         D.editedItem.status = 'Checked In'
@@ -3027,23 +3072,38 @@ export default class BasePage {
         return this;
     }
 
-    perform_Item_Check_Out_transaction(takenBy_personOrUserObject, checkOutReason, notes, expectedReturnDate) {
-        this.click_option_on_expanded_menu(C.dropdowns.itemActions.checkItemOut)
+    perform_Item_Check_Out_transaction(takenBy_personOrUserObject, checkOutReason, notes, expectedReturnDate, isActionOnSearchResults, multipleItems) {
+        const label = multipleItems ? C.dropdowns.itemActions.checkItemsOut : C.dropdowns.itemActions.checkItemOut
+        this.click_option_on_expanded_menu(label)
             .populate_CheckOut_form(takenBy_personOrUserObject, checkOutReason, notes, expectedReturnDate)
-            .click_button_on_modal(C.buttons.ok)
+
+        if (isActionOnSearchResults) {
+            this.verify_modal_content(' Warning! This action will check out all items found by the current search')
+            this.verify_modal_content('Items shared among Organizations are not included in the transaction')
+        }
+
+        this.click_button_on_modal(C.buttons.ok)
             .verify_toast_message('Saved')
             .wait_until_spinner_disappears()
         D.editedItem.status = 'Checked Out'
         D.editedItem.location = ''
         D.editedItem.custodian = takenBy_personOrUserObject.fullName
+
         return this;
     }
 
-    perform_Item_Transfer_transaction(transferTo_userObject, transferFrom_userObject, notes) {
+    perform_Item_Transfer_transaction(transferTo_userObject, transferFrom_userObject, notes, isActionOnSearchResults, multipleItems) {
+        const label = multipleItems ? C.dropdowns.itemActions.transferItems : C.dropdowns.itemActions.transferItem
         this.define_API_request_to_be_awaited('POST', 'api/transfers/V2')
-        this.click_option_on_expanded_menu(C.dropdowns.itemActions.transferItem)
+        this.click_option_on_expanded_menu(label)
             .populate_Transfer_form(transferTo_userObject, transferFrom_userObject, notes)
-            .click_button_on_modal(C.buttons.ok)
+
+        if (isActionOnSearchResults) {
+            this.verify_modal_content(' Warning! This action will check out all items found by the current search\n' +
+                'Items shared among Organizations are not included in the transaction')
+        }
+
+        this.click_button_on_modal(C.buttons.ok)
             .wait_response_from_API_call('api/transfers/V2')
             .verify_toast_message('Saved')
             .wait_until_spinner_disappears()
@@ -3053,10 +3113,17 @@ export default class BasePage {
         return this;
     }
 
-    perform_Item_Move_transaction(fullLocationPath, notes) {
-        this.click_option_on_expanded_menu(C.dropdowns.itemActions.moveItem)
+    perform_Item_Move_transaction(fullLocationPath, notes, isActionOnSearchResults, multipleItems) {
+        const label = multipleItems ? C.dropdowns.itemActions.moveItems : C.dropdowns.itemActions.moveItem
+        this.click_option_on_expanded_menu(label)
             .populate_Move_form(fullLocationPath, notes)
-            .click_button_on_modal(C.buttons.ok)
+
+        if (isActionOnSearchResults) {
+            this.verify_modal_content(' Warning! This action will check out all items found by the current search\n' +
+                'Items shared among Organizations are not included in the transaction')
+        }
+
+        this.click_button_on_modal(C.buttons.ok)
             .verify_toast_message('Saved')
             .wait_until_spinner_disappears()
         D.editedItem.status = 'Checked In'
@@ -3064,15 +3131,22 @@ export default class BasePage {
         return this;
     }
 
-    perform_Item_Disposal_transaction(witness_userObject, method, notes, isItemInContainer) {
-        this.click_option_on_expanded_menu(C.dropdowns.itemActions.disposeItem)
+    perform_Item_Disposal_transaction(witness_userObject, method, notes, isItemInContainer, isActionOnSearchResults, multipleItems) {
+        const label = multipleItems ? C.dropdowns.itemActions.disposeItems : C.dropdowns.itemActions.disposeItem
+        this.click_option_on_expanded_menu(label)
         if (isItemInContainer) {
             this.pause(1)
             this.click_button_on_sweet_alert('Ok')
         }
 
         this.populate_disposal_form(witness_userObject, method, notes, isItemInContainer)
-            .click_button_on_modal(C.buttons.ok)
+
+        if (isActionOnSearchResults) {
+            this.verify_modal_content(' Warning! This action will check out all items found by the current search\n' +
+                'Items shared among Organizations are not included in the transaction')
+        }
+
+        this.click_button_on_modal(C.buttons.ok)
             .verify_toast_message('Saved')
             .wait_until_spinner_disappears()
         D.editedItem.status = 'Disposed'

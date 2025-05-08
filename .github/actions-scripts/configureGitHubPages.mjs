@@ -6,7 +6,7 @@ import { fileURLToPath } from "url";
 
 dotenv.config();
 
-const octokit = new Octokit({ auth: process.env.TOKEN });
+const octokit = new Octokit({ auth: process.env.GHP2_TOKEN });
 
 const org = 'Safe-QA';
 

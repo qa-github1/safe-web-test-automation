@@ -273,11 +273,17 @@ C = {
     dropdowns: {
         itemActions: {
             checkItemIn: "Check Item In",
+            checkItemsIn: "Check Items In",
             checkItemOut: "Check Item Out",
+            checkItemsOut: "Check Items Out",
             moveItem: "Move Item",
+            moveItems: "Move Items",
             transferItem: "Transfer Item",
+            transferItems: "Transfer Item",
             disposeItem: "Dispose Item",
+            disposeItems: "Dispose Items",
             undisposeItem: "Undispose Item",
+            undisposeItems: "Undispose Items",
             duplicate: "Duplicate",
             split: "Split",
             addToCase: "Add To Case",

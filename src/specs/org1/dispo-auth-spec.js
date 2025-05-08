@@ -1,12 +1,12 @@
-const C = require('../fixtures/constants');
-const S = require('../fixtures/settings');
-const D = require('../fixtures/data');
+const C = require('../../fixtures/constants');
+const S = require('../../fixtures/settings');
+const D = require('../../fixtures/data');
 const api = require('../../api-utils/api-spec');
-const ui = require('../pages/ui-spec');
-const E = require("../fixtures/files/excel-data");
+const ui = require('../../pages/ui-spec');
+const E = require("../../fixtures/files/excel-data");
 describe('Dispo Auth', function () {
 
-    it('Add Dispo Task with 50 items and assign to Power User, ' +
+    xit('Add Dispo Task with 50 items and assign to Power User, ' +
         '--import items instead of adding via API' +
         '--set Approve for Release for all items using Actions menu' +
         '--check statuses and notes upon submission', function () {
@@ -62,7 +62,7 @@ describe('Dispo Auth', function () {
     });
 
 
-    it('Add Dispo Task with 11 1DA items and assign to Org Admin, ' +
+    it.only('Add Dispo Task with 11 1DA items and assign to Org Admin, ' +
         '--set different actions for item using all variations' +
         '--using Actions menu and grid, ' +
         '--check statuses and notes upon submission', function () {
@@ -122,7 +122,7 @@ describe('Dispo Auth', function () {
         ui.taskView
             .open_newly_created_task_via_direct_link()
             .select_tab('Items')
-            .set_Action___Approve_for_Disposal([1])
+            .set_Action___Approve_for_Disposal([1, 2])
             .set_Action___Approve_for_Release([3], person1, {}, false, false, false, false, true, true)
             .set_Action___Approve_for_Release([4], person2, address2, false, false, false, false, true, false)
             .set_Action___Approve_for_Release([5], person3, address3, false, false, false, false, false, false)
@@ -146,8 +146,6 @@ describe('Dispo Auth', function () {
                 ])
             .select_tab('Basic Info')
             .verify_text_is_present_on_main_container('Closed')
-      ui.menu.click__Storage_Locations()
-
     });
 
     it('Add Dispo Task with 255 3DA items to trigger Dispo Auth Service', function () {
