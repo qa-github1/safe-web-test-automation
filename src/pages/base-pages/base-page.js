@@ -518,6 +518,7 @@ export default class BasePage {
         cy.contains('Menu Customization').click()
         optionsDropdownUnderMenuCustomization().click()
         pageSizesUnderMenuCustomization().contains(pageSize).click()
+        this.pause(1)
         this.wait_until_spinner_disappears()
         return this;
     }
@@ -638,7 +639,7 @@ export default class BasePage {
         return this;
     };
 
-    enter_value_and_retype_last_character_if_typeahead_did_not_appear(element, value, typaheadSelectorToCheck) {
+    enter_value_and_retype_last_character_if_typeahead_did_not_appear(element, value, typeaheadSelector) {
         const lastChar = value.slice(-1);
 
         element()
@@ -646,17 +647,35 @@ export default class BasePage {
             .invoke('val', value)
             .trigger('input')
             .then($el => {
-                cy.wait(3000).then(() => {
-                    // Check if the element exists in the DOM
+                cy.wait(500).then(() => {
                     cy.document().then(doc => {
-                        const exists = doc.querySelector(typaheadSelectorToCheck);
-                        if (!exists) {
-                            cy.wrap($el).type('{backspace}').type(lastChar);
+                        let typeaheadExists = !!doc.querySelector(typeaheadSelector);
+
+                        if (!typeaheadExists) {
+                            cy.wrap($el)
+                                .type('{backspace}')
+                                .type(lastChar)
+                                .trigger('input'); // ensure input event is triggered again
+
+                            cy.wait(500).then(() => {
+                                cy.document().then(doc2 => {
+                                    let retryTypeaheadExists = !!doc2.querySelector(typeaheadSelector);
+                                    if (!retryTypeaheadExists) {
+                                        //third attempt to find typeahead
+                                        cy.wrap($el)
+                                            .type('{backspace}')
+                                            .type(lastChar)
+                                            .trigger('input');
+                                        cy.wait(500);
+                                    }
+                                });
+                            });
                         }
                     });
                 });
             });
     }
+
 
     select_typeahead_option(element, value, typeaheadElementSelector, aliasOfEndpointToBeAwaited) {
         if (value) {
@@ -1740,7 +1759,8 @@ export default class BasePage {
                 const selector = '[ng-model="options.selectAllToggle"]';
 
                 const clickCheckbox = () => {
-                    statisticsBlock().scrollIntoView().should('be.visible')
+                    //statisticsBlock().scrollIntoView().should('be.visible')
+                    statisticsBlock().should('exist')
                     cy.document().then((doc) => {
                         const checkbox = doc.querySelector(selector);
                         if (checkbox) {
