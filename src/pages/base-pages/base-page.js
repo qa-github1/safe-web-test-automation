@@ -647,12 +647,22 @@ export default class BasePage {
             .invoke('val', value)
             .trigger('input')
             .then($el => {
-                cy.wait(3000).then(() => {
+                cy.wait(500).then(() => {
                     // Check if the element exists in the DOM
                     cy.document().then(doc => {
                         const exists = doc.querySelector(typaheadSelectorToCheck);
                         if (!exists) {
                             cy.wrap($el).type('{backspace}').type(lastChar);
+                            cy.wait(500)
+                        }
+                        else{
+                            cy.document().then(doc => {
+                                const exists = doc.querySelector(typaheadSelectorToCheck);
+                                if (!exists) {
+                                    cy.wrap($el).type('{backspace}').type(lastChar);
+                                    cy.wait(500)
+                                }
+                            });
                         }
                     });
                 });
