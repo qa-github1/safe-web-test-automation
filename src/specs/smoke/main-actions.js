@@ -130,8 +130,7 @@ describe('Case', function () {
 });
 describe('Item', function () {
 
-    for (let i = 0; i<10; i++){
-    it.only(i +
+    it(
         '*** Add/Edit/Search/MassUpdate Item ' +
         '*** Add/Search Item Note  ' +
         '*** Add/Search Item Media', function () {
@@ -270,8 +269,7 @@ describe('Item', function () {
                     .verify_all_values_on_history(D.editedItem, D.newItem2)
                     .verify_red_highlighted_history_records(allUpdatedFieldsOnHistory)
             })
-         });
-    }
+        });
 });
 describe('Person', function () {
 
@@ -413,7 +411,7 @@ describe('Item Transactions', function () {
             .verify_edited_and_not_edited_values('view', ["Status", "Storage Location"], D.editedItem, D.newItem)
             .select_tab(C.tabs.chainOfCustody)
             .verify_data_on_Chain_of_Custody([
-                [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ``],  ['Check out Reason', `Lab`], ['Note', `test-note1`]],
+                [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ``], ['Check out Reason', `Lab`], ['Note', `test-note1`]],
                 [['Type', 'In'], ['Issued From', orgAdmin.name], ['Issued To', 'New Item Entry'], ['Storage Location', initialItem.location], ['Notes', `Item entered into system.`]],
             ])
             .select_tab(C.tabs.basicInfo)
@@ -438,8 +436,8 @@ describe('Item Transactions', function () {
             .verify_edited_and_not_edited_values('view', ["Custodian"], D.editedItem, D.newItem)
             .select_tab(C.tabs.chainOfCustody)
             .verify_data_on_Chain_of_Custody([
-                [['Type', 'Transfer'], ['Issued From', orgAdmin.name], ['Issued To', powerUser.name], ['Storage Location', ``],  ['Check out Reason', ``], ['Note', `test-note2`]],
-                [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ``],  ['Check out Reason', `Lab`], ['Note', `test-note1`]],
+                [['Type', 'Transfer'], ['Issued From', orgAdmin.name], ['Issued To', powerUser.name], ['Storage Location', ``], ['Check out Reason', ``], ['Note', `test-note2`]],
+                [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ``], ['Check out Reason', `Lab`], ['Note', `test-note1`]],
                 [['Type', 'In'], ['Issued From', orgAdmin.name], ['Issued To', 'New Item Entry'], ['Storage Location', initialItem.location], ['Notes', `Item entered into system.`]],
             ])
             .select_tab(C.tabs.basicInfo)
@@ -484,9 +482,9 @@ describe('Item Transactions', function () {
             .verify_edited_and_not_edited_values('view', ["Status", "Storage Location"], D.editedItem, D.newItem)
             .select_tab(C.tabs.chainOfCustody)
             .verify_data_on_Chain_of_Custody([
-                [['Type', 'In'], ['Issued From', powerUser.name], ['Issued To', orgAdmin.name], ['Storage Location', D.box2.name],  ['Check out Reason', ``], ['Note', `test-note3`]],
-                [['Type', 'Transfer'], ['Issued From', orgAdmin.name], ['Issued To', powerUser.name], ['Storage Location', ``],  ['Check out Reason', ``], ['Note', `test-note2`]],
-                [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ``],  ['Check out Reason', `Lab`], ['Note', `test-note1`]],
+                [['Type', 'In'], ['Issued From', powerUser.name], ['Issued To', orgAdmin.name], ['Storage Location', D.box2.name], ['Check out Reason', ``], ['Note', `test-note3`]],
+                [['Type', 'Transfer'], ['Issued From', orgAdmin.name], ['Issued To', powerUser.name], ['Storage Location', ``], ['Check out Reason', ``], ['Note', `test-note2`]],
+                [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ``], ['Check out Reason', `Lab`], ['Note', `test-note1`]],
                 [['Type', 'In'], ['Issued From', orgAdmin.name], ['Issued To', 'New Item Entry'], ['Storage Location', initialItem.location], ['Notes', `Item entered into system.`]],
             ])
             .select_tab(C.tabs.basicInfo)
@@ -497,10 +495,10 @@ describe('Item Transactions', function () {
             .verify_edited_and_not_edited_values('view', ["Status", "Storage Location"], D.editedItem, D.newItem)
             .select_tab(C.tabs.chainOfCustody)
             .verify_data_on_Chain_of_Custody([
-                [['Type', 'Disposal'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location',''],  ['Check out Reason', ``], ['Note', `test-note4`]],
-                [['Type', 'In'], ['Issued From', powerUser.name], ['Issued To', orgAdmin.name], ['Storage Location', D.box2.name],  ['Check out Reason', ``], ['Note', `test-note3`]],
-                [['Type', 'Transfer'], ['Issued From', orgAdmin.name], ['Issued To', powerUser.name], ['Storage Location', ``],  ['Check out Reason', ``], ['Note', `test-note2`]],
-                [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ``],  ['Check out Reason', `Lab`], ['Note', `test-note1`]],
+                [['Type', 'Disposal'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ''], ['Check out Reason', ``], ['Note', `test-note4`]],
+                [['Type', 'In'], ['Issued From', powerUser.name], ['Issued To', orgAdmin.name], ['Storage Location', D.box2.name], ['Check out Reason', ``], ['Note', `test-note3`]],
+                [['Type', 'Transfer'], ['Issued From', orgAdmin.name], ['Issued To', powerUser.name], ['Storage Location', ``], ['Check out Reason', ``], ['Note', `test-note2`]],
+                [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ``], ['Check out Reason', `Lab`], ['Note', `test-note1`]],
                 [['Type', 'In'], ['Issued From', orgAdmin.name], ['Issued To', 'New Item Entry'], ['Storage Location', initialItem.location], ['Notes', `Item entered into system.`]],
             ])
             .select_tab(C.tabs.basicInfo)
@@ -524,11 +522,11 @@ describe('Item Transactions', function () {
             .verify_edited_and_not_edited_values('view', ["Status", "Storage Location"], D.editedItem, D.newItem)
             .select_tab(C.tabs.chainOfCustody)
             .verify_data_on_Chain_of_Custody([
-                [['Type', 'In'], ['Issued From', powerUser.name], ['Issued To', orgAdmin.name], ['Storage Location', D.box2.name],  ['Check out Reason', ``], ['Note', `test-note5`]],
-                [['Type', 'Disposal'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location',''],  ['Witness', powerUser.name], ['Storage Location',''],  ['Check out Reason', ``], ['Note', `test-note4`]],
-                [['Type', 'In'], ['Issued From', powerUser.name], ['Issued To', orgAdmin.name], ['Storage Location', D.box2.name],  ['Check out Reason', ``], ['Note', `test-note3`]],
-                [['Type', 'Transfer'], ['Issued From', orgAdmin.name], ['Issued To', powerUser.name], ['Storage Location', ``],  ['Check out Reason', ``], ['Note', `test-note2`]],
-                [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ``],  ['Check out Reason', `Lab`], ['Note', `test-note1`]],
+                [['Type', 'In'], ['Issued From', powerUser.name], ['Issued To', orgAdmin.name], ['Storage Location', D.box2.name], ['Check out Reason', ``], ['Note', `test-note5`]],
+                [['Type', 'Disposal'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ''], ['Witness', powerUser.name], ['Storage Location', ''], ['Check out Reason', ``], ['Note', `test-note4`]],
+                [['Type', 'In'], ['Issued From', powerUser.name], ['Issued To', orgAdmin.name], ['Storage Location', D.box2.name], ['Check out Reason', ``], ['Note', `test-note3`]],
+                [['Type', 'Transfer'], ['Issued From', orgAdmin.name], ['Issued To', powerUser.name], ['Storage Location', ``], ['Check out Reason', ``], ['Note', `test-note2`]],
+                [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ``], ['Check out Reason', `Lab`], ['Note', `test-note1`]],
                 [['Type', 'In'], ['Issued From', orgAdmin.name], ['Issued To', 'New Item Entry'], ['Storage Location', initialItem.location], ['Notes', `Item entered into system.`]],
             ])
             .select_tab(C.tabs.basicInfo)
