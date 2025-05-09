@@ -69,7 +69,10 @@ describe('Add Item', function () {
                 .select_Category(D.newItem.category)
                 .click_Next()
                 .verify_text_is_present_on_main_container('You must have a Person in this case before you can add a value to this field')
-
+// The test is not stable due to performance issue when navigating to the old Case -> Items tab with large number of items
+ //  Possible solutions:
+ //option 1: Use new case and person
+ //option 2: Use an existing case, but move the item to another case in the after block to clear the Items tab and prevent item accumulation
             D.newItem.caseNumber = oldCase.caseNumber
             ui.app.open_case_url(oldCase.id)
             ui.addItem.select_tab(C.tabs.items)
