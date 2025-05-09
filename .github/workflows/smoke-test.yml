@@ -1,5 +1,4 @@
 on:
-
   workflow_dispatch:
     inputs:
       environment:
@@ -42,20 +41,19 @@ jobs:
 
       - name: Run Cypress tests
         run: |
-          
           ENVIRONMENT="${{ github.event.inputs.environment }}"
+          ENVIRONMENT=${ENVIRONMENT:-dev}
 
           echo "Running tests for Environment: $ENVIRONMENT"
           echo "Running tests for Org Number: ${{ matrix.org_number }}"
 
-#          if [ "${{ github.event_name }}" = "schedule" ]; then
-#          echo "Running with Cypress Dashboard recording..."
-          npx cypress run --headless --browser chrome --record -- --spec ${{ matrix.spec_group }} --env environment=$ENVIRONMENT,orgNum=${{ matrix.org_number }}
-#          else
-#          echo "Running WITHOUT Cypress Dashboard recording..."
-#          npx cypress run --headless --browser chrome --spec ${{ matrix.spec_group }} --env environment=$ENVIRONMENT,orgNum=${{ matrix.org_number }}
-#          fi
-
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            echo "Running with Cypress Dashboard recording..."
+            npx cypress run --headless --browser chrome --record -- --spec ${{ matrix.spec_group }} --env environment=$ENVIRONMENT,orgNum=${{ matrix.org_number }}
+          else
+            echo "Running WITHOUT Cypress Dashboard recording..."
+            npx cypress run --headless --browser chrome --spec ${{ matrix.spec_group }} --env environment=$ENVIRONMENT,orgNum=${{ matrix.org_number }}
+          fi
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           CI: true
