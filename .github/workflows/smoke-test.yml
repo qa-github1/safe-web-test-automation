@@ -1,9 +1,17 @@
 name: Cypress Tests
 
 on:
-  push:
-  schedule:
-    - cron: '0 21 * * *'  # Runs daily at 9PM UTC
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Choose the environment'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - pentest
+          - secure
 
 permissions: write-all
 
@@ -38,12 +46,14 @@ jobs:
 
       - name: Run Cypress tests
         run: |
+          
           if [[ "${{ github.event_name }}" == "schedule" ]]; then
             echo "Running with Cypress Dashboard recording..."
-            npx cypress run --headless --browser chrome --record -- --spec ${{ matrix.spec_group }} --env environment=secure,orgNum=${{ matrix.org_number }}
+            npx cypress run --headless --browser chrome --record -- --spec ${{ matrix.spec_group }} --env environment=${{ github.event.inputs.environment }}, orgNum=${{ matrix.org_number }}
           else
             echo "Running WITHOUT Cypress Dashboard recording..."
-            npx cypress run --headless --browser chrome --spec ${{ matrix.spec_group }} --env environment=secure,orgNum=${{ matrix.org_number }}
+            npx cypress run --headless --browser chrome --spec ${{ matrix.spec_group }} --env environment=${{ github.event.inputs.environment }},orgNum=${{ matrix.org_number }}
+
           fi
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}

@@ -1,9 +1,20 @@
-name: Cypress Tests
+name: Cypress Test Workflow
 
 on:
-  push:
   schedule:
     - cron: '0 21 * * *'  # Runs daily at 9PM UTC
+
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Choose the environment'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - pentest
+          - secure
 
 permissions: write-all
 
@@ -18,10 +29,15 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - spec_group: src/specs/smoke/services.js
-            org_number: 2
-          - spec_group: src/specs/smoke/main-actions.js
+          - spec_group: src/specs/org1/**/*.js
             org_number: 1
+          - spec_group: src/specs/org2/**/*.js
+            org_number: 2
+          - spec_group: src/specs/org3/**/*.js
+            org_number: 3
+          - spec_group: src/specs/org4/**/*.js
+            org_number: 4
+
     steps:
       - uses: actions/checkout@v2
 
@@ -30,12 +46,14 @@ jobs:
 
       - name: Run Cypress tests
         run: |
+          ENVIRONMENT="${{ github.event.inputs.environment || 'dev' }}"
+
           if [[ "${{ github.event_name }}" == "schedule" ]]; then
             echo "Running with Cypress Dashboard recording..."
-            npm run dev-smoke-test-parallel -- --spec ${{ matrix.spec_group }} --env environment=dev,orgNum=${{ matrix.org_number }}
+            npx cypress run --headless --browser chrome --record -- --spec ${{ matrix.spec_group }} --env environment=${ENVIRONMENT},orgNum=${{ matrix.org_number }}
           else
             echo "Running WITHOUT Cypress Dashboard recording..."
-            npx cypress run --headless --browser chrome --spec ${{ matrix.spec_group }} --env environment=dev,orgNum=${{ matrix.org_number }}
+            npx cypress run --headless --browser chrome --spec ${{ matrix.spec_group }} --env environment=${ENVIRONMENT},orgNum=${{ matrix.org_number }}
           fi
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
@@ -60,7 +78,6 @@ jobs:
           fi
 
           rm -rf *
-
           cp -r ../report/allure-results-${{ matrix.org_number }}/* ./
 
           echo "🔍 Skipping files larger than 100MB..."
@@ -107,7 +124,6 @@ jobs:
           cd merged-repo
           git fetch origin report-1
           git checkout gh-pages
-
           git merge origin/report-1 --allow-unrelated-histories --no-ff -m "Merge report-1 into gh-pages" || true
           git checkout --theirs .
           git add .
@@ -119,11 +135,32 @@ jobs:
           cd merged-repo
           git fetch origin report-2
           git checkout gh-pages
-
           git merge origin/report-2 --allow-unrelated-histories --no-ff -m "Merge report-2 into gh-pages" || true
           git checkout --theirs .
           git add .
           git commit -m "Resolve merge conflict by keeping report-2 files" || echo "No changes"
+          git push origin gh-pages
+
+      - name: Merge report-3 directly into gh-pages
+        run: |
+          cd merged-repo
+          git fetch origin report-3
+          git checkout gh-pages
+          git merge origin/report-3 --allow-unrelated-histories --no-ff -m "Merge report-3 into gh-pages" || true
+          git checkout --theirs .
+          git add .
+          git commit -m "Resolve merge conflict by keeping report-3 files" || echo "No changes"
+          git push origin gh-pages
+
+      - name: Merge report-4 directly into gh-pages
+        run: |
+          cd merged-repo
+          git fetch origin report-4
+          git checkout gh-pages
+          git merge origin/report-4 --allow-unrelated-histories --no-ff -m "Merge report-4 into gh-pages" || true
+          git checkout --theirs .
+          git add .
+          git commit -m "Resolve merge conflict by keeping report-4 files" || echo "No changes"
           git push origin gh-pages
 
       - name: Install Allure CLI
