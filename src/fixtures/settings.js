@@ -1292,6 +1292,44 @@ S.QA_1 = {
             guid: '77f14214-e5d8-eb11-82f2-068f48eb83b1'
         },
     },
+    divisions: {
+        div1: {
+            name: 'Patrol',
+            id: 3
+        },
+        div2: {
+            name: 'Investigations',
+            id: 4
+        }
+    },
+    units: {
+        unit1: {
+            name: 'UnitA',
+            id: 3
+        },
+        unit2: {
+            name: 'UnitB',
+            id: 4
+        },
+    },
+    forms: {
+        userFormWithRequiredFields: 3425,
+        userFormWithOptionalFields: 3426,
+        taskFormWithRequiredFields: 2547,
+        taskFormWithOptionalFields: 2548
+    },
+    locations: [
+        {
+            id: 476096,
+            guid: '67d3a4e4-8c55-4ee4-ab66-e225b114dc35',
+            name: "CypressLocation1"
+        },
+        {
+            id: 510384,
+            guid: '7a706961-0771-42da-9d49-a72dffc9c3f2',
+            name: "CypressLocation2"
+        }
+    ],
     caseForReport: {
         id: null,
     },
@@ -1476,6 +1514,32 @@ S.QA_1 = {
     readOnly_userGroup: {
         name: 'Cypress ReadOnly Group',
         id: 5
+    },
+    taskTemplates: {
+        dispoAuth: {
+            templateId: 70,
+            type: 'Disposition Authorization',
+            subtype: '',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 5,
+            useDispositionAuthorizationActions: true,
+            title: 'Disposition Authorization',
+            message: 'Message-forAutomatedTests'
+        },
+        other: {
+            templateId: 48,
+            type: 'Other',
+            subtype: '',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 10,
+            useDispositionAuthorizationActions: true,
+            title: 'Title--forAutomatedTests',
+            message: 'Message-forAutomatedTests'
+        },
     },
 };
 

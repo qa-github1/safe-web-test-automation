@@ -20,7 +20,6 @@ D.getCurrentDateAndRandomNumber = function (randomNumberLenght) {
     return helper.mediumDate + '_' + helper.getRandomNo(randomNumberLenght);
 }
 
-
 D.getStorageLocationData = function (locationName, parentId = 0, canStore = true, isActive = true) {
     D[locationName] = {
             "name": D.currentDateAndRandomNumber + '_' + locationName,
