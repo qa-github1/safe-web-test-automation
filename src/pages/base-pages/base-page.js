@@ -3026,14 +3026,17 @@ export default class BasePage {
     }
 
     populate_Transfer_form(transferTo_user, transferFrom_user, notes) {
-        this.enterValue(transferFromInput, transferFrom_user.email)
-        this.pause(0.5)
-        this.click_option_on_typeahead(transferFrom_user.fullName)
+        // this.enterValue(transferFromInput, transferFrom_user.email)
+        // this.pause(0.5)
+        // this.click_option_on_typeahead(transferFrom_user.fullName)
 
-        this.enterValue(transferToInput, transferTo_user.email)
-        this.pause(0.5)
-        this.click_option_on_typeahead(transferTo_user.fullName);
+        this.select_typeahead_option(transferFromInput, transferFrom_user.email, this.typeaheadSelectorMatchInMatches)
 
+        // this.enterValue(transferToInput, transferTo_user.email)
+        // this.pause(0.5)
+        // this.click_option_on_typeahead(transferTo_user.fullName);
+
+        this.select_typeahead_option(transferToInput, transferTo_user.email, this.typeaheadSelectorMatchInMatches)
         this.enter_notes_on_modal(notes);
         return this;
     }

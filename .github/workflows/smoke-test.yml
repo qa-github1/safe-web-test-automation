@@ -18,90 +18,46 @@ on:
 permissions: write-all
 
 jobs:
-  cypress-tests:
-    runs-on: ubuntu-latest
-    timeout-minutes: 250
-    container:
-      image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
-      options: --user 1001
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - spec_group: src/specs/smoke/main-actions-org1.js
-            org_number: 1
+  run-org1:
+    name: Cypress Tests - Org1
+    uses: ./.github/workflows/reusable-test.yaml
+    with:
+      spec_group: src/specs/smoke/main-actions-org1.js
+      org_number: 1
+      environment: ${{ github.event.inputs.environment || 'dev' }}
+    secrets: inherit
 
-          - spec_group: src/specs/smoke/main-actions-org2.js
-            org_number: 2
+  run-org2:
+    name: Cypress Tests - Org2
+    uses: ./.github/workflows/reusable-test.yaml
+    with:
+      spec_group: src/specs/smoke/main-actions-org2.js
+      org_number: 2
+      environment: ${{ github.event.inputs.environment || 'dev' }}
+    secrets: inherit
 
-          - spec_group: src/specs/smoke/services-org3.js
-            org_number: 3
+  run-org3:
+    name: Cypress Tests - Org3
+    uses: ./.github/workflows/reusable-test.yaml
+    with:
+      spec_group: src/specs/smoke/services-org3.js
+      org_number: 3
+      environment: ${{ github.event.inputs.environment || 'dev' }}
+    secrets: inherit
 
-          - spec_group: src/specs/smoke/services-org4.js
-            org_number: 4
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run Cypress tests
-        run: |
-          
-          if [[ "${{ github.event_name }}" == "schedule" ]]; then
-            echo "Running with Cypress Dashboard recording..."
-            npx cypress run --headless --browser chrome --record -- --spec ${{ matrix.spec_group }} --env environment=${{ github.event.inputs.environment }}, orgNum=${{ matrix.org_number }}
-          else
-            echo "Running WITHOUT Cypress Dashboard recording..."
-            npx cypress run --headless --browser chrome --spec ${{ matrix.spec_group }} --env environment=${{ github.event.inputs.environment }},orgNum=${{ matrix.org_number }}
-
-          fi
-        env:
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          CI: true
-
-      - name: Push report folder to external report-${{ matrix.org_number }} branch
-        if: always()
-        run: |
-          git config --global user.email "github-actions@github.com"
-          git config --global user.name "github-actions"
-
-          REPORT_BRANCH=report-${{ matrix.org_number }}
-          NOW=$(date +'%B_%d')
-
-          git clone https://x-access-token:${{ secrets.TOKEN }}@github.com/Safe-QA/report_${NOW}.git external-repo
-          cd external-repo
-
-          if git ls-remote --heads origin $REPORT_BRANCH | grep $REPORT_BRANCH; then
-            git checkout $REPORT_BRANCH
-          else
-            git checkout -b $REPORT_BRANCH
-          fi
-
-          rm -rf *
-
-          cp -r ../report/allure-results-${{ matrix.org_number }}/* ./
-
-          echo "🔍 Skipping files larger than 100MB..."
-          find . -type f -size +100M -print -delete
-
-          echo "🔐 Scanning .json files for secret-like patterns..."
-          for file in $(find . -type f -name "*.json"); do
-            if grep -qE '(A3T|AKIA|AGPA|AIDA|ANPA|AROA|ASIA)[A-Z0-9]{16}' "$file"; then
-              echo "🚨 Removing suspicious file: $file"
-              git rm -f --ignore-unmatch "$file"
-            fi
-          done
-
-          git add .
-          git commit -m "Allure results for org-${{ matrix.org_number }} (with secret-suspect .json files removed)" || echo "No changes to commit"
-          git push origin $REPORT_BRANCH || echo "🔁 Push failed again. Manual intervention may be needed."
+  run-org4:
+    name: Cypress Tests - Org4
+    uses: ./.github/workflows/reusable-test.yaml
+    with:
+      spec_group: src/specs/smoke/services-org4.js
+      org_number: 4
+      environment: ${{ github.event.inputs.environment || 'dev' }}
+    secrets: inherit
 
   merge-and-deploy-final-report:
     runs-on: ubuntu-latest
     timeout-minutes: 250
-    needs: [cypress-tests]
+    needs: [run-org1, run-org2, run-org3, run-org4]
     if: always()
     steps:
       - name: Set environment variable
@@ -115,60 +71,25 @@ jobs:
           git clone https://x-access-token:${{ secrets.TOKEN }}@github.com/Safe-QA/report_${NOW}.git merged-repo
           cd merged-repo
           git checkout gh-pages || git checkout -b gh-pages
-          
           rm -rf *
           mkdir -p allure-results
           git add .
           git commit -m "Clean gh-pages before merging report branches" || echo "Nothing to commit"
           git push origin gh-pages
 
-      - name: Merge report-1 directly into gh-pages
+      - name: Merge all report-* branches into gh-pages
         run: |
           cd merged-repo
-          git fetch origin report-1
-          git checkout gh-pages
-
-          git merge origin/report-1 --allow-unrelated-histories --no-ff -m "Merge report-1 into gh-pages" || true
-          git checkout --theirs .
-          git add .
-          git commit -m "Resolve merge conflict by keeping report-1 files" || echo "No changes"
-          git push origin gh-pages
-
-      - name: Merge report-2 directly into gh-pages
-        run: |
-          cd merged-repo
-          git fetch origin report-2
-          git checkout gh-pages
-
-          git merge origin/report-2 --allow-unrelated-histories --no-ff -m "Merge report-2 into gh-pages" || true
-          git checkout --theirs .
-          git add .
-          git commit -m "Resolve merge conflict by keeping report-2 files" || echo "No changes"
-          git push origin gh-pages
-
-      - name: Merge report-3 directly into gh-pages
-        run: |
-          cd merged-repo
-          git fetch origin report-3
-          git checkout gh-pages
-
-          git merge origin/report-3 --allow-unrelated-histories --no-ff -m "Merge report-3 into gh-pages" || true
-          git checkout --theirs .
-          git add .
-          git commit -m "Resolve merge conflict by keeping report-3 files" || echo "No changes"
-          git push origin gh-pages
-
-      - name: Merge report-4 directly into gh-pages
-        run: |
-          cd merged-repo
-          git fetch origin report-4
-          git checkout gh-pages
-
-          git merge origin/report-4 --allow-unrelated-histories --no-ff -m "Merge report-4 into gh-pages" || true
-          git checkout --theirs .
-          git add .
-          git commit -m "Resolve merge conflict by keeping report-4 files" || echo "No changes"
-          git push origin gh-pages
+          for i in {1..4}; do
+            echo "\uD83D\uDD00 Merging report-$i into gh-pages"
+            git fetch origin report-$i
+            git checkout gh-pages
+            git merge origin/report-$i --allow-unrelated-histories --no-ff -m "Merge report-$i into gh-pages" || true
+            git checkout --theirs .
+            git add .
+            git commit -m "Resolve merge conflict by keeping report-$i files" || echo "No changes"
+            git push origin gh-pages
+          done
 
       - name: Install Allure CLI
         run: npm install -g allure-commandline
@@ -195,7 +116,7 @@ jobs:
 
   slack-notification:
     runs-on: ubuntu-latest
-    needs: [cypress-tests, merge-and-deploy-final-report]
+    needs: [run-org1, run-org2, run-org3, run-org4, merge-and-deploy-final-report]
     if: always()
     steps:
       - name: Set date
