@@ -47,7 +47,14 @@ jobs:
           echo "Running tests for Environment: $ENVIRONMENT"
           echo "Running tests for Org Number: ${{ matrix.org_number }}"
 
-          npx cypress run --headless --browser chrome --record --spec ${{ matrix.spec_group }} --env environment=$ENVIRONMENT,orgNum=${{ matrix.org_number }}
+          npx cypress run \
+            --headless \
+            --browser chrome \
+            --record \
+            --group "org-${{ matrix.org_number }}" \
+            --ci-build-id "${{ github.run_id }}" \
+            --spec ${{ matrix.spec_group }} \
+            --env environment=$ENVIRONMENT,orgNum=${{ matrix.org_number }}
 
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
