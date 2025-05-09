@@ -42,15 +42,26 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Set environment variable
+        run: |
+          if [ "${{ github.event_name }}" == "push" ]; then
+            ENVIRONMENT="dev"
+          else
+            ENVIRONMENT="${{ github.event.inputs.environment }}"
+          fi
+          echo "Using environment: $ENVIRONMENT"
+
       - name: Run Cypress tests
         run: |
+          echo "Running tests for Environment: $ENVIRONMENT"
           echo "Running tests for Org Number: ${{ matrix.org_number }}"
+
           if [[ "${{ github.event_name }}" == "schedule" ]]; then
             echo "Running with Cypress Dashboard recording..."
-            npx cypress run --headless --browser chrome --record -- --spec ${{ matrix.spec_group }} --env environment=${{ github.event.inputs.environment }},orgNum=${{ matrix.org_number }}
+            npx cypress run --headless --browser chrome --record -- --spec ${{ matrix.spec_group }} --env environment=$ENVIRONMENT,orgNum=${{ matrix.org_number }}
           else
             echo "Running WITHOUT Cypress Dashboard recording..."
-            npx cypress run --headless --browser chrome --spec ${{ matrix.spec_group }} --env environment=${{ github.event.inputs.environment }},orgNum=${{ matrix.org_number }}
+            npx cypress run --headless --browser chrome --spec ${{ matrix.spec_group }} --env environment=$ENVIRONMENT,orgNum=${{ matrix.org_number }}
           fi
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
