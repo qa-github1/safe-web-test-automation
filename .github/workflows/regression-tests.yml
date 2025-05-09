@@ -1,4 +1,4 @@
-name: Cypress Test Workflow
+name: Regression Test Suite
 
 on:
   schedule:
