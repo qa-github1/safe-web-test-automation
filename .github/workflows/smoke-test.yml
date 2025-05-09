@@ -1,5 +1,5 @@
 on:
-  push:
+
   workflow_dispatch:
     inputs:
       environment:
@@ -59,7 +59,7 @@ jobs:
             echo "Running WITHOUT Cypress Dashboard recording..."
             npx cypress run --headless --browser chrome --spec ${{ matrix.spec_group }} --env environment=$ENVIRONMENT,orgNum=${{ matrix.org_number }}
           fi
-          
+
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           CI: true
