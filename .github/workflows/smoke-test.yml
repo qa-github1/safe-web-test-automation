@@ -64,7 +64,6 @@ jobs:
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           CI: true
-          orgNum: ${{ matrix.org_number }}  # Ensure orgNum is available as an environment variable
 
       - name: Debugging: Check if report directory exists
         run: |
