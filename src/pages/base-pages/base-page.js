@@ -639,7 +639,7 @@ export default class BasePage {
         return this;
     };
 
-    enter_value_and_retype_last_character_if_typeahead_did_not_appear(element, value, typaheadSelectorToCheck) {
+    enter_value_and_retype_last_character_if_typeahead_did_not_appear(element, value, typeaheadSelector) {
         const lastChar = value.slice(-1);
 
         element()
@@ -648,26 +648,34 @@ export default class BasePage {
             .trigger('input')
             .then($el => {
                 cy.wait(500).then(() => {
-                    // Check if the element exists in the DOM
                     cy.document().then(doc => {
-                        const exists = doc.querySelector(typaheadSelectorToCheck);
-                        if (!exists) {
-                            cy.wrap($el).type('{backspace}').type(lastChar);
-                            cy.wait(500)
-                        }
-                        else{
-                            cy.document().then(doc => {
-                                const exists = doc.querySelector(typaheadSelectorToCheck);
-                                if (!exists) {
-                                    cy.wrap($el).type('{backspace}').type(lastChar);
-                                    cy.wait(500)
-                                }
+                        let typeaheadExists = !!doc.querySelector(typeaheadSelector);
+
+                        if (!typeaheadExists) {
+                            cy.wrap($el)
+                                .type('{backspace}')
+                                .type(lastChar)
+                                .trigger('input'); // ensure input event is triggered again
+
+                            cy.wait(500).then(() => {
+                                cy.document().then(doc2 => {
+                                    let retryTypeaheadExists = !!doc2.querySelector(typeaheadSelector);
+                                    if (!retryTypeaheadExists) {
+                                        //third attempt to find typeahead
+                                        cy.wrap($el)
+                                            .type('{backspace}')
+                                            .type(lastChar)
+                                            .trigger('input');
+                                        cy.wait(500);
+                                    }
+                                });
                             });
                         }
                     });
                 });
             });
     }
+
 
     select_typeahead_option(element, value, typeaheadElementSelector, aliasOfEndpointToBeAwaited) {
         if (value) {

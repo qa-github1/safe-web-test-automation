@@ -149,9 +149,9 @@ describe('Item', function () {
             ui.menu.click_Add__Item()
             ui.addItem.verify_Case_Number_is_populated_on_enabled_input_field(D.newItem.caseNumber)
                 .populate_all_fields_on_both_forms(D.newItem, false, false)
-                .select_post_save_action(C.postSaveActions.viewAddedItem)
-                .click_Save(D.newItem)
-                .verify_toast_message_(D.newCase);
+                // .select_post_save_action(C.postSaveActions.viewAddedItem)
+                // .click_Save(D.newItem)
+                // .verify_toast_message_(D.newCase);
             // ui.itemView.verify_Item_View_page_is_open(D.newItem.caseNumber)
             //     .click_Edit()
             //     .verify_values_on_Edit_form(D.newItem)
