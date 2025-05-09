@@ -17,8 +17,7 @@ on:
 permissions: write-all
 
 jobs:
-  run:
-    name: Run Cypress Tests (${{ matrix.org_number }})
+  cypress-tests:
     runs-on: ubuntu-latest
     timeout-minutes: 250
     container:
@@ -43,8 +42,18 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Debugging: Check matrix values and environment variable
+        run: |
+          echo "Debugging: Checking matrix values"
+          echo "Spec Group: ${{ matrix.spec_group }}"
+          echo "Org Number: ${{ matrix.org_number }}"
+          echo "Environment: ${{ github.event.inputs.environment }}"
+
       - name: Run Cypress tests
         run: |
+          echo "Debugging: Running Cypress tests"
+          echo "Running with spec group: ${{ matrix.spec_group }}"
+          echo "Org number: ${{ matrix.org_number }}"
           if [[ "${{ github.event_name }}" == "schedule" ]]; then
             echo "Running with Cypress Dashboard recording..."
             npx cypress run --headless --browser chrome --record -- --spec ${{ matrix.spec_group }} --env environment=${{ github.event.inputs.environment }},orgNum=${{ matrix.org_number }}
@@ -55,16 +64,24 @@ jobs:
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           CI: true
+          orgNum: ${{ matrix.org_number }}  # Ensure orgNum is available as an environment variable
+
+      - name: Debugging: Check if report directory exists
+        run: |
+          echo "Debugging: Checking if report directory exists"
+          ls -alh ../report/
 
       - name: Push report folder to external report-${{ matrix.org_number }} branch
         if: always()
         run: |
+          echo "Debugging: Pushing report folder to external branch"
           git config --global user.email "github-actions@github.com"
           git config --global user.name "github-actions"
 
           REPORT_BRANCH=report-${{ matrix.org_number }}
           NOW=$(date +'%B_%d')
 
+          echo "Cloning external repository..."
           git clone https://x-access-token:${{ secrets.TOKEN }}@github.com/Safe-QA/report_${NOW}.git external-repo
           cd external-repo
 
@@ -74,6 +91,7 @@ jobs:
             git checkout -b $REPORT_BRANCH
           fi
 
+          echo "Cleaning up old files..."
           rm -rf *
           cp -r ../report/allure-results-${{ matrix.org_number }}/* ./
 
@@ -95,39 +113,49 @@ jobs:
   merge-and-deploy-final-report:
     runs-on: ubuntu-latest
     timeout-minutes: 250
-    needs: run
+    needs: [cypress-tests]
     if: always()
     steps:
       - name: Set environment variable
         run: echo "NOW=$(date +'%B_%d')" >> $GITHUB_ENV
+
+      - name: Debugging: Check merged repo setup
+        run: |
+          echo "Debugging: Cloning merged repo"
+          echo "Using report branch: $REPORT_BRANCH"
+          echo "Current directory: $(pwd)"
+          ls -alh
 
       - name: Clone and prepare gh-pages
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "github-actions"
 
+          echo "Cloning report repo..."
           git clone https://x-access-token:${{ secrets.TOKEN }}@github.com/Safe-QA/report_${NOW}.git merged-repo
           cd merged-repo
           git checkout gh-pages || git checkout -b gh-pages
+          
           rm -rf *
           mkdir -p allure-results
           git add .
           git commit -m "Clean gh-pages before merging report branches" || echo "Nothing to commit"
           git push origin gh-pages
 
-      - name: Merge all report-* branches into gh-pages
+      - name: Debugging: Fetch report-1 and merge into gh-pages
         run: |
+          echo "Debugging: Merging report-1 into gh-pages"
           cd merged-repo
-          for i in {1..4}; do
-            echo "🔀 Merging report-$i into gh-pages"
-            git fetch origin report-$i
-            git checkout gh-pages
-            git merge origin/report-$i --allow-unrelated-histories --no-ff -m "Merge report-$i into gh-pages" || true
-            git checkout --theirs .
-            git add .
-            git commit -m "Resolve merge conflict by keeping report-$i files" || echo "No changes"
-            git push origin gh-pages
-          done
+          git fetch origin report-1
+          git checkout gh-pages
+
+          git merge origin/report-1 --allow-unrelated-histories --no-ff -m "Merge report-1 into gh-pages" || true
+          git checkout --theirs .
+          git add .
+          git commit -m "Resolve merge conflict by keeping report-1 files" || echo "No changes"
+          git push origin gh-pages
+
+      # Repeat for other reports...
 
       - name: Install Allure CLI
         run: npm install -g allure-commandline
@@ -154,7 +182,7 @@ jobs:
 
   slack-notification:
     runs-on: ubuntu-latest
-    needs: [run, merge-and-deploy-final-report]
+    needs: [cypress-tests, merge-and-deploy-final-report]
     if: always()
     steps:
       - name: Set date
