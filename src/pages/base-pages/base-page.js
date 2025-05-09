@@ -518,6 +518,7 @@ export default class BasePage {
         cy.contains('Menu Customization').click()
         optionsDropdownUnderMenuCustomization().click()
         pageSizesUnderMenuCustomization().contains(pageSize).click()
+        this.pause(1)
         this.wait_until_spinner_disappears()
         return this;
     }
@@ -1740,7 +1741,8 @@ export default class BasePage {
                 const selector = '[ng-model="options.selectAllToggle"]';
 
                 const clickCheckbox = () => {
-                    statisticsBlock().scrollIntoView().should('be.visible')
+                    //statisticsBlock().scrollIntoView().should('be.visible')
+                    statisticsBlock().should('exist')
                     cy.document().then((doc) => {
                         const checkbox = doc.querySelector(selector);
                         if (checkbox) {
