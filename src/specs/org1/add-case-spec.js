@@ -146,8 +146,7 @@ describe('Add Case', function () {
             ui.addCase.populate_all_fields_on_both_forms(D.newCase)
                 .check_if_Review_Date_and_Notes_fields_are_present(false)
                 .select_post_save_action(C.postSaveActions.viewAddedCase)
-                cy.wait(2000) // static wait is needed before clicking the Save button to improve test stability
-            ui.addCase.click_Save()
+                .click_Save()
                 .verify_toast_message(C.toastMsgs.addedNewCase + D.newCase.caseNumber);
             ui.caseView.verify_Case_View_page_is_open(D.newCase.caseNumber)
                 .check_if_Review_Date_and_Notes_fields_are_present(false)
