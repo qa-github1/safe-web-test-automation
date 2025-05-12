@@ -206,20 +206,21 @@ S.DEV_1 = {
     },
     office_2: {
         id: 11090,
-        name: "Cypress Office 2"
+        name: "Cypress Office 2",
+        orgAndOfficeName: "Web Test Automation #1 - Cypress Office 2"
     },
     org2: {
         office_1: {
             id: 1054,
             guid: '690a16e8-59ba-eb11-aa4f-062d5b58f56e',
             name: "Cypress Office 1",
-            orgAndOfficeName: "Web Test Automtion #2 - Cypress Office 1"
+            orgAndOfficeName: "Web Test Automation #2 - Cypress Office 1"
         },
         id: 546,
-        orgName: "Web Test Automtion #2",
+        orgName: "Web Test Automation #2",
         officeId: 1054,
         officeName: "Cypress Office 1",
-        orgAndOfficeName: "Web Test Automtion #2 - Cypress Office 1"
+        orgAndOfficeName: "Web Test Automation #2 - Cypress Office 1"
     },
     users: {
         systemAdminId: 40357,
@@ -393,8 +394,8 @@ S.DEV_1 = {
     },
     regularUser_permissionGroup: {
         name: 'Cypress - Regular User',
-        id: 4437,
-        startingIndexForViewPermissions: 65073,
+        id: 2162,
+        startingIndexForViewPermissions: 65155,
         get startingIndexForCreatePermissions() {
             return S.DEV_1.regularUser_permissionGroup.startingIndexForViewPermissions + 22
         },
