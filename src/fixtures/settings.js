@@ -2407,6 +2407,7 @@ S.PENTEST_2 = {
         name: 'Cypress ReadOnly Group',
         id: 2898
     },
+
     taskTemplates: {
         dispoAuth: {
             templateId: 3511,
@@ -2432,7 +2433,37 @@ S.PENTEST_2 = {
             title: 'Title--forAutomatedTests',
             message: 'Message-forAutomatedTests'
         },
-    },
+        errorCorrection: {
+            templateId: 4983,
+            type: 'Error Correction',
+            subtype: 'Packaging and Labeling',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 5,
+            useDispositionAuthorizationActions: false,
+            title: 'Title--forAutomatedTests',
+            message: 'Message-forAutomatedTests'
+        },
+        },
+
+        taskTemplate: {
+            taskTypeId: {
+                errorCorrection: 1120,
+
+            },
+            taskSubTypeId: {
+                packagingAndLabeling: 557,
+
+            },
+            taskActionId: {
+                packageMustBeSealed: 1681,
+                mustBeRenderedSafe: 547,
+
+            },
+            otherTaskTemplateId: 3381,
+        },
+
     orgTag1: {tagModelId: 6751, name: 'sensitive information', color: "#ad2355", tagUsedBy: 1},
     orgTag2: {tagModelId: 6752, name: 'eligible for disposal', color: "#4b9b62", tagUsedBy: 1},
     tagA: {tagModelId: 16809, name: 'Tag_A__', color: "#4b9b62", tagUsedBy: 1},

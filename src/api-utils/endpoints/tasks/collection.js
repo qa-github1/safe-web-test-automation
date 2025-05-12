@@ -65,6 +65,17 @@ exports.add_new_task_template = function (taskTemplate) {
     return this;
 };
 
+exports.edit_task_template = function (taskTemplate) {
+    generic_request.PUT(
+        '/api/taskTemplates/' + taskTemplate.templateId,
+        body.generate_PUT_request_payload_for_editing_existing_task_template(taskTemplate),
+        'Creating new task template via API and saving to local storage __ ',
+        'newTaskTemplateId',
+    );
+    return this;
+};
+
+
 exports. add_new_task = function (taskObject = D.newTask, numberOfItemsAttached = 1) {
     cy.getLocalStorage("newCase").then(newCase => {
             cy.getLocalStorage("newItem").then(newItem => {

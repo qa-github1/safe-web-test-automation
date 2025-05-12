@@ -225,7 +225,7 @@ D.getNewItemData = function (specificCaseObject, locationObject, newPerson) {
         itemBelongsToFirstLastName: [person.fullName],
         itemBelongsToOnHistory: [person.name],
         itemBelongsToGuid: [person.guid],
-        itemBelongsToEmail: [person.email],
+        //itemBelongsToEmail: [person.email],
         barcodes: [{id: 0, value: randomNo}],
         //additionalBarcodes: [randomNo],
         actualDisposedDate: '',
@@ -532,8 +532,8 @@ D.getNewUserData = function (officeId) {
 
     D.newUser = {
         firstName: 'F' + randomNo,
-        middleName: '',
-        //  middleName: 'M' + randomNo,
+        //middleName: '',
+        middleName: 'M' + randomNo,
         lastName: 'L' + randomNo,
         fullName: 'F' + randomNo + ' ' + 'M' + randomNo + ' ' + 'L' + randomNo,
         personnelNumber: randomNo,
@@ -626,6 +626,7 @@ D.getNewTaskTemplateData = function () {
     D.newTaskTemplate = {
         type: 'Error Correction',
         subtype: 'Packaging and Labeling',
+        template: 'Error Correction - Packaging and Labeling',
         title: D.randomNo + '_title',
         message: D.randomNo + '_message',
         taskActions: ['Must be Rendered Safe', 'Package Must be Sealed'],
@@ -633,6 +634,41 @@ D.getNewTaskTemplateData = function () {
     }
 
     return D.newTaskTemplate;
+};
+
+D.getEditedTaskTemplateData = function (templateId, typeId, subtypeId, taskActionId) {
+    templateId = templateId || S.selectedEnvironment.taskTemplates.errorCorrection.templateId
+    typeId = typeId || S.selectedEnvironment.taskTemplate.taskTypeId.errorCorrection
+    subtypeId = subtypeId || S.selectedEnvironment.taskTemplate.taskSubTypeId.packagingAndLabeling
+    taskActionId = taskActionId || S.selectedEnvironment.taskTemplate.taskActionId.mustBeRenderedSafe
+
+    D.editedTaskTemplate = {
+        templateId: templateId,
+        typeId: typeId,
+        subtypeId: subtypeId,
+        taskActionId: taskActionId,
+        type: 'Error Correction',
+        subtype: 'Packaging and Labeling',
+        template: 'Error Correction - Packaging and Labeling',
+        title: D.randomNo + '_title',
+        message: D.randomNo + '_message',
+        taskActions: ['Must be Rendered Safe'],
+        dueDateDays: 5,
+        isDispositionActionAllowed: false,
+        isActionAllowedForType: true,
+        tasActionsProperties:[{
+            id: taskActionId,
+            name: "Package Must be Sealed",
+            organizationId: S.selectedEnvironment.orgSettings.id,
+            route: "taskActions",
+            reqParams: null,
+            restangularized: true,
+            fromServer: true,
+            parentResource: null,
+            restangularCollection: false}],
+    }
+
+    return D.editedTaskTemplate;
 };
 
 D.getNewTaskData = function (user_assignee, userGroup_assignee, createdBy = S.userAccounts.orgAdmin, dueDate_daysAfterToday = 14, linkedObjects) {
@@ -652,9 +688,10 @@ D.getNewTaskData = function (user_assignee, userGroup_assignee, createdBy = S.us
         closedDate: '',
         title: 'title_' + helper.setNewRandomString(),
         message: 'message_' + helper.setNewRandomString(),
-        userEmail: user_assignee ? user_assignee.email : null,
-        userName: user_assignee ? user_assignee.name : null,
-        userGroupName: userGroup_assignee ? userGroup_assignee.name : null,
+        userEmail: user_assignee ? user_assignee.email : '',
+        userName: user_assignee ? user_assignee.name : '',
+        userGroupName: userGroup_assignee ? userGroup_assignee.name : '',
+        assignees: user_assignee ? user_assignee.name : userGroup_assignee ? userGroup_assignee.name : '',
         assignedTo: assignedTo,
         linkedObjects: linkedObjects || 'There aren\'t any linked objects',
         createdBy: createdBy ? createdBy.name : null,
