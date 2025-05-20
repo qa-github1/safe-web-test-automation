@@ -10,13 +10,12 @@ function isObject(variable) {
 }
 
 exports.add_new_item = function (toNewCase = true, locationObjectOrName = null, propertyToSave = 'newItem', itemObject) {
-   let specificLocation
+    let specificLocation
 
     if (isObject(locationObjectOrName)) {
         specificLocation = Object.assign({}, locationObjectOrName)
-    }
-    else{
-        specificLocation =  Object.assign({},
+    } else {
+        specificLocation = Object.assign({},
             {
                 "name": locationObjectOrName,
                 "active": true,
@@ -29,8 +28,8 @@ exports.add_new_item = function (toNewCase = true, locationObjectOrName = null, 
         cy.getLocalStorage("newPerson").then(newPerson => {
             cy.getLocalStorage(specificLocation.name).then(location => {
 
-               // let caseObject = toNewCase ? JSON.parse(newCase) : null;
-               // let locationObject = JSON.parse(location);
+                // let caseObject = toNewCase ? JSON.parse(newCase) : null;
+                // let locationObject = JSON.parse(location);
                 //if (newPerson !== 'undefined') newPerson = JSON.parse(newPerson);
 
                 // we had issue with parse so I changed this commented part
@@ -124,35 +123,42 @@ exports.get_item_data = function (itemId) {
 exports.get_items_from_specific_case = function (caseNumber, numberOfPagesWith1000Items = 1, storeAllItemsToLocalStorage = false) {
     let barcodes = []
 
-    cases.quick_case_search(caseNumber)
-    cy.getLocalStorage("currentCase").then(caseData => {
-        for (let i = 1; i < numberOfPagesWith1000Items + 1; i++) {
-
-            cy.getLocalStorage("headers").then(headers => {
-                cy.request({
-                    url: S.api_url + '/api/cases/' + JSON.parse(caseData).cases[0].id + '/items',
-                    method: "POST",
-                    json: true,
-                    body: {
-                        "orderBy": "SequentialCaseId",
-                        "orderByAsc": true,
-                        "thenOrderBy": "",
-                        "thenOrderByAsc": false,
-                        "pageSize": 1000,
-                        "pageNumber": i
-                    },
-                    headers: JSON.parse(headers),
-                }).then(response => {
-                    let caseItemsObjects = response.body.entities
-
-                    for (let i = 0; i<caseItemsObjects.length; i++){
-                        barcodes.push(caseItemsObjects[i].barcode)
-                        if (storeAllItemsToLocalStorage) cy.setLocalStorage("item" + (i +1), JSON.stringify(caseItemsObjects[i]));
-                    }
-                });
-            });
+    cy.getLocalStorage("newCase").then(caseData => {
+        if (caseNumber === 'newCase') {
+            caseNumber = JSON.parse(caseData).caseNumber
         }
-        cy.setLocalStorage('barcodes', barcodes)
+
+        cases.quick_case_search(caseNumber)
+
+        cy.getLocalStorage("currentCase").then(caseData => {
+            for (let i = 1; i < numberOfPagesWith1000Items + 1; i++) {
+
+                cy.getLocalStorage("headers").then(headers => {
+                    cy.request({
+                        url: S.api_url + '/api/cases/' + JSON.parse(caseData).cases[0].id + '/items',
+                        method: "POST",
+                        json: true,
+                        body: {
+                            "orderBy": "SequentialCaseId",
+                            "orderByAsc": true,
+                            "thenOrderBy": "",
+                            "thenOrderByAsc": false,
+                            "pageSize": 1000,
+                            "pageNumber": i
+                        },
+                        headers: JSON.parse(headers),
+                    }).then(response => {
+                        let caseItemsObjects = response.body.entities
+
+                        for (let i = 0; i < caseItemsObjects.length; i++) {
+                            barcodes.push(caseItemsObjects[i].barcode)
+                            if (storeAllItemsToLocalStorage) cy.setLocalStorage("item" + (i + 1), JSON.stringify(caseItemsObjects[i]));
+                        }
+                    });
+                });
+            }
+            cy.setLocalStorage('barcodes', barcodes)
+        })
     })
 };
 

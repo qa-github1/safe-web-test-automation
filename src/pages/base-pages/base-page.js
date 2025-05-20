@@ -142,6 +142,7 @@ let
     locationPin = e => cy.get('.pac-matched'),
     firstCheckboxOnTableBody = e => cy.get('.bg-grid-checkbox').first(),
     checkboxOnSpecificTableRow = rowNumber => resultsTable().find('.bg-grid-checkbox', {timeout: 0}).eq(rowNumber - 1),
+    bsGridCheckboxes = rowNumber => cy.get('.bg-grid-checkbox', {timeout: 0}).eq(rowNumber - 1),
     checkboxOnTableRowOnModal = rowNumber => tableOnModal().find('.bg-grid-checkbox').eq(rowNumber - 1),
     checkboxOnTableHeader = e => resultsTableHeader().find('[type="checkbox"]'),
     caseNumberOnTypeahead = e => cy.get('[ng-repeat="match in matches track by $index"]').first(),
@@ -518,7 +519,7 @@ export default class BasePage {
         cy.contains('Menu Customization').click()
         optionsDropdownUnderMenuCustomization().click()
         pageSizesUnderMenuCustomization().contains(pageSize).click()
-        this.pause(1)
+        this.pause(3)
         this.wait_until_spinner_disappears()
         return this;
     }
@@ -526,6 +527,8 @@ export default class BasePage {
     click_number_on_pagination(pageNumber) {
         this.wait_until_spinner_disappears()
         cy.get('.pagination-sm').first().findByText(pageNumber).click()
+        this.pause(3)
+        this.wait_until_spinner_disappears()
         return this;
     }
 
@@ -535,8 +538,8 @@ export default class BasePage {
         this.pause(2)
         largeView().click();
         this.verify_element_has_class(largeView, 'btn-multi')
+        this.pause(2)
         this.wait_until_spinner_disappears()
-        this.pause(1)
         return this;
     }
 
@@ -553,6 +556,7 @@ export default class BasePage {
         this.pause(2)
         largeView().click();
         this.verify_element_has_class(largeView, 'btn-multi')
+        this.wait_until_spinner_disappears()
         return this;
     }
 
@@ -989,12 +993,15 @@ export default class BasePage {
     //     }
     // }
 
-    check_text(element, text) {
+    check_text(element, text, timeoutInSeconds = 60) {
         if (text) {
             let getTextFn = () => {
                 return (element instanceof Function ? element() : element).invoke('text');
             };
-            cy.verifyTextAndRetry(getTextFn, text, {maxAttempts: 60, retryInterval: 500});
+            const retryInterval = 500
+            let timeout = timeoutInSeconds * 1000
+            let maxAttempts = timeout/retryInterval
+            cy.verifyTextAndRetry(getTextFn, text, {maxAttempts: maxAttempts, retryInterval: retryInterval});
         }
     }
 
@@ -1051,18 +1058,18 @@ export default class BasePage {
         }
     }
 
-    verify_text(element, expectedText) {
+    verify_text(element, expectedText, timeoutInSeconds) {
         let self = this
         if (this.isObject(expectedText)) {
             for (let property in expectedText) {
-                self.check_text(element, expectedText[property])
+                self.check_text(element, expectedText[property], timeoutInSeconds)
             }
         } else if (Array.isArray(expectedText)) {
             expectedText.forEach(function (value) {
-                self.check_text(element, value)
+                self.check_text(element, value, timeoutInSeconds)
             })
         } else {
-            self.check_text(element, expectedText)
+            self.check_text(element, expectedText, timeoutInSeconds)
         }
         return this;
     };
@@ -1728,10 +1735,27 @@ export default class BasePage {
         return this;
     };
 
-    press_shift_and_click_row(rowNumber) {
+    press_shift_and_click_row(rowNumber, tableIndex = 0) {
         if (rowNumber) {
             cy.get("body").type("{shift}", {release: false});
-            checkboxOnSpecificTableRow(rowNumber).click();
+
+            if(tableIndex === 0){
+
+                cy.document().then((doc) => {
+                    const checkbox = doc.querySelector('.bg-grid-checkbox');
+                    if (checkbox) {
+                        cy.get('.bg-grid-checkbox').eq(rowNumber-1).click({force: true});
+                    } else {
+                        throw new Error('Checkbox not found in DOM');
+                    }
+                });
+
+                //  bsGridCheckboxes(rowNumber).click();
+            }
+            else{
+                checkboxOnSpecificTableRow(rowNumber).click();
+            }
+
             cy.get("body").type("{shift}");
         }
         return this;
@@ -1795,12 +1819,27 @@ export default class BasePage {
         return this;
     }
 
-    click_checkbox_to_select_specific_row(rowNumber) {
-        this.wait_until_spinner_disappears()
+    click_checkbox_to_select_specific_row(rowNumber, tableIndex = 0) {
         this.pause(1)
+        this.wait_until_spinner_disappears()
         firstCheckboxOnTableBody().should('be.visible')
-        checkboxOnSpecificTableRow(rowNumber).scrollIntoView()
-        checkboxOnSpecificTableRow(rowNumber).click();
+
+        if(tableIndex === 0){
+
+            cy.document().then((doc) => {
+                const checkbox = doc.querySelector('.bg-grid-checkbox');
+                if (checkbox) {
+                    cy.get('.bg-grid-checkbox').eq(rowNumber-1).click({force: true});
+                } else {
+                    throw new Error('Checkbox not found in DOM');
+                }
+            });
+
+          //  bsGridCheckboxes(rowNumber).click();
+        }
+        else{
+            checkboxOnSpecificTableRow(rowNumber).click();
+        }
         return this;
     };
 
