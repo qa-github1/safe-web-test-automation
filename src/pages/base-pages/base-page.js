@@ -1000,7 +1000,7 @@ export default class BasePage {
             };
             const retryInterval = 500
             let timeout = timeoutInSeconds * 1000
-            let maxAttempts = timeout/retryInterval
+            let maxAttempts = timeout / retryInterval
             cy.verifyTextAndRetry(getTextFn, text, {maxAttempts: maxAttempts, retryInterval: retryInterval});
         }
     }
@@ -1739,20 +1739,19 @@ export default class BasePage {
         if (rowNumber) {
             cy.get("body").type("{shift}", {release: false});
 
-            if(tableIndex === 0){
+            if (tableIndex === 0) {
 
                 cy.document().then((doc) => {
                     const checkbox = doc.querySelector('.bg-grid-checkbox');
                     if (checkbox) {
-                        cy.get('.bg-grid-checkbox').eq(rowNumber-1).click({force: true});
+                        cy.get('.bg-grid-checkbox').eq(rowNumber - 1).click({force: true});
                     } else {
                         throw new Error('Checkbox not found in DOM');
                     }
                 });
 
                 //  bsGridCheckboxes(rowNumber).click();
-            }
-            else{
+            } else {
                 checkboxOnSpecificTableRow(rowNumber).click();
             }
 
@@ -1824,20 +1823,19 @@ export default class BasePage {
         this.wait_until_spinner_disappears()
         firstCheckboxOnTableBody().should('be.visible')
 
-        if(tableIndex === 0){
+        if (tableIndex === 0) {
 
             cy.document().then((doc) => {
                 const checkbox = doc.querySelector('.bg-grid-checkbox');
                 if (checkbox) {
-                    cy.get('.bg-grid-checkbox').eq(rowNumber-1).click({force: true});
+                    cy.get('.bg-grid-checkbox').eq(rowNumber - 1).click({force: true});
                 } else {
                     throw new Error('Checkbox not found in DOM');
                 }
             });
 
-          //  bsGridCheckboxes(rowNumber).click();
-        }
-        else{
+            //  bsGridCheckboxes(rowNumber).click();
+        } else {
             checkboxOnSpecificTableRow(rowNumber).click();
         }
         return this;
@@ -3040,7 +3038,7 @@ export default class BasePage {
     populate_CheckIn_form(returnedBy, usePreviousLocation, fullLocationPath, note) {
         returnedByInput().type(returnedBy.email);
         this.click_option_on_typeahead(returnedBy.fullName);
-        if (usePreviousLocation) {
+        if (usePreviousLocation === true) {
             usePreviousLocationCheckbox().click();
         } else {
             this.select_Storage_location(fullLocationPath)
@@ -3051,7 +3049,7 @@ export default class BasePage {
 
     populate_CheckOut_form(takenBy_personOrUserObject, checkoutReason, notes, expectedReturnDate) {
         checkedOutToInput().invoke('val', takenBy_personOrUserObject.email).trigger('input')
-       // checkedOutToInput().type(takenBy_personOrUserObject.email);
+        // checkedOutToInput().type(takenBy_personOrUserObject.email);
         this.pause(0.5)
         this.click_option_on_typeahead(takenBy_personOrUserObject.fullName);
 

@@ -24,6 +24,9 @@ S.isOrg2 = function () {
 S.isOrg3 = function () {
     return Cypress.env('orgNum') === 3
 }
+S.isOrg4 = function () {
+    return Cypress.env('orgNum') === 4
+}
 
 S.getCurrentDate = function (mask) {
     S.currentDateAndTime = helper.getCurrentDateInCurrentFormat(C.currentDateTimeFormat);
@@ -2794,7 +2797,7 @@ S.PENTEST_4 = {
     },
     office_2: {
         id: 1138,
-        name: "Web Test Automtion #4 - Cypress Office 2",
+        name: "Cypress Office 2",
         orgAndOfficeName: "Web Test Automtion #4 - Cypress Office 2"
 
     },
@@ -2865,12 +2868,12 @@ S.PENTEST_4 = {
             id: 91
         }
     },
-    // // forms: {
-    // //     userFormWithRequiredFields: 2542,
-    // //     userFormWithOptionalFields: 2546,
-    // //     taskFormWithRequiredFields: 2547,
-    // //     taskFormWithOptionalFields: 2548
-    // // },
+    forms: {
+        userFormWithRequiredFields: 24214,
+        userFormWithOptionalFields: 24215,
+        taskFormWithRequiredFields: 2547,
+        taskFormWithOptionalFields: 2548
+    },
     locations: [
         {
             id: 487942,
@@ -2916,12 +2919,12 @@ S.PENTEST_4 = {
     person: {
         name: 'Person_1',
         fullName: 'Cypress Person_1',
-        id: 6608222,
+        id: 6608613,
         get organizationId() {
-            return S.PENTEST_3.orgSettings.id
+            return S.PENTEST_4.orgSettings.id
         },
         userId: null,
-        guid: '5c11a259-d0fc-43c9-a42f-28b500ae5e6b',
+        guid: '1cd84bfd-eee9-4001-8973-9baaac20f681',
         email: 'qa+person_1@trackerproducts.com'
     },
     person_2: {
@@ -2940,8 +2943,8 @@ S.PENTEST_4 = {
     },
     admin_permissionGroup: {
         name: 'Cypress - ADMIN',
-        id: 4476,
-        startingIndexForViewPermissions: 66572,
+        id: 4597,
+        startingIndexForViewPermissions: 92404,
         get startingIndexForCreatePermissions() {
             return S.PENTEST_4.admin_permissionGroup.startingIndexForViewPermissions + 22
         },
@@ -3024,7 +3027,7 @@ S.PENTEST_4 = {
             title: 'Disposition Authorization',
         },
         other: {
-            templateId: 3390,
+            templateId: 3383,
             type: 'Other',
             subtype: '',
             active: true,

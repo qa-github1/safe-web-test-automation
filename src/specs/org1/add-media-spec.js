@@ -30,7 +30,7 @@ describe('Add Media', function () {
 
         api.auth.get_tokens(user);
         D.generateNewDataSet();
-
+        api.org_settings.update_org_settings(false,true)
         api.cases.add_new_case(D.newCase.caseNumber);
         api.people.add_new_person();
         api.items.add_new_item(true);

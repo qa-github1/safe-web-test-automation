@@ -57,7 +57,7 @@ describe('Add Item', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
             D.getItemDataWithReducedFields(D.newCase);
-            api.org_settings.update_org_settings(true, false);
+            api.org_settings.update_org_settings(true, false,false,'');
             api.org_settings.disable_Item_fields([C.itemFields.itemBelongsTo, C.itemFields.tags]);
             D.newItem.itemBelongsToFirstLastName = [S.selectedEnvironment.person.name, S.selectedEnvironment.person_2.name]
             D.newItem.tags = [S.selectedEnvironment.orgTag1.name, S.selectedEnvironment.orgTag2.name]
@@ -236,6 +236,7 @@ describe('Add Item', function () {
             api.auth.get_tokens(orgAdmin);
             D.getNewItemData(D.newCase);
             api.org_settings.enable_all_Item_fields();
+            D.newUser.middleName = 'M' + D.randomNo
             api.users.add_new_user('new_user');
 
             ui.menu.click_Add__Item();
