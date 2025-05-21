@@ -216,7 +216,8 @@ let
     typeaheadInputField = fieldLabel => cy.contains(fieldLabel).parent().find('input').first(),
     dropdownField = fieldLabel => cy.findByLabelText(fieldLabel).parent().find('select').eq(0),
     inputField = fieldLabel => cy.findByLabelText(fieldLabel).parent().find('input').eq(0),
-    textareaField = fieldLabel => cy.contains('span', fieldLabel).parents('labels').parent('div').find('textarea').eq(0),
+   // textareaField = fieldLabel => cy.contains('span', fieldLabel).parents('labels').parent('div').find('textarea').eq(0),
+    textareaField = fieldLabel => cy.contains('label', fieldLabel).parent().find('textarea').eq(0),
     typeaheadOption = fieldLabel => cy.contains(fieldLabel).parent().find('ul').find('li').eq(0),
     storageLocationInput = fieldLabel => cy.get('[placeholder="type ‘/‘ or start typing a location name"]').last(),
     returnedByInput = e => cy.get('[label="\'ITEMS.CHECK_IN.RETURNED_BY\'"]').find('[typeahead="l.id as l.text for l in getPerson($viewValue) | limitTo: 10"]'),
@@ -743,15 +744,19 @@ export default class BasePage {
     }
 
     enter_values_on_single_multi_select_typeahead_field(LabelValueArray) {
+
         if (LabelValueArray[1]) {
             // if there are multiple values in array, repeat the same action to enter all of them
             for (let i = 0; i < LabelValueArray[1].length; i++) {
+                // skip getUserinTypeahead if string is empty
+                const searchValue = LabelValueArray[1][i] == null ? '' : String(LabelValueArray[1][i]).trim();
+                if (searchValue === '') continue;
                 if (["users/groups", "usersCF"].includes(LabelValueArray[2])) {
                     this.define_API_request_to_be_awaited('GET',
-                        'api/users/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + LabelValueArray[1][i].replace(/\s+/g, '%20'),
+                        'api/users/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + searchValue.replace(/\s+/g, '%20'),
                         "getUserInTypeahead")
                     this.define_API_request_to_be_awaited('GET',
-                        '/api/userGroups/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + LabelValueArray[1][i].replace(/\s+/g, '%20'),
+                        '/api/userGroups/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + searchValue.replace(/\s+/g, '%20'),
                         "getUserGroupInTypeahead")
                 } else if (["people", "peopleCF"].includes(LabelValueArray[2])) {
                     this.define_API_request_to_be_awaited('GET',
@@ -759,6 +764,7 @@ export default class BasePage {
                         "getPeopleInTypeahead")
 
                 }
+
 
                 if (typeof LabelValueArray[0] === 'string' || LabelValueArray[0] instanceof String) {
                     // typeaheadInputField(LabelValueArray[0]).clear().invoke('val', LabelValueArray[1][i]).trigger('input')
@@ -792,6 +798,8 @@ export default class BasePage {
 
             }
         }
+
+
         return this;
     };
 
@@ -1262,6 +1270,7 @@ export default class BasePage {
     };
 
     click_Save() {
+        this.pause(2) // static wait is needed before clicking the Save button to improve test stability
         saveButton().should('be.enabled');
         saveButton().click();
         return this;

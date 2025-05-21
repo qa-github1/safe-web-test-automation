@@ -52,3 +52,40 @@ exports.generate_POST_request_payload_for_creating_new_task_template = function 
     }
     return body;
 };
+
+exports.generate_PUT_request_payload_for_editing_existing_task_template = function (taskTemplate) {
+
+    let body = {
+        "id": taskTemplate.templateId,
+        "active": true,
+        "emailUser": true,
+        "taskDeliveryOption": 0,
+        "taskEscalation": false,
+        "taskTemplateUserGroups": [],
+        "taskTemplateUsers": [],
+        "useDispositionAuthorizationActions": taskTemplate.isDispositionActionAllowed,
+        "usersAndGroups": {items: []},
+        "taskTypeId": taskTemplate.typeId,
+        "taskType": {
+            "id": taskTemplate.typeId,
+            "isActionAllowed": taskTemplate.isActionAllowed,
+            "name": taskTemplate.type,
+            "taskDeliveryOption": 0
+        },
+        "taskSubTypeId": taskTemplate.subtypeId,
+        "taskSubType": {
+            "id": taskTemplate.subtypeId,
+            "name": taskTemplate.subtype,
+            "taskTypeId": taskTemplate.typeId,
+            "taskTypeName": null
+        },
+        "title": taskTemplate.title,
+        "message": taskTemplate.message,
+        "dueDays": taskTemplate.dueDateDays,
+        "isActionAllowedForType": true,
+        "taskActions": taskTemplate.tasActionsProperties
+    }
+    return body;
+
+
+};

@@ -11,8 +11,9 @@ let
     dueDateInput = e => cy.get('[name="DUEDate"]').find('input').first(),
     plusIcon = e => cy.get('[ng-click="attachToTask()"]'),
     attachmentTypeDropdown = e => cy.get('#taskAttachmentType'),
-    itemTypeaheadInputField = e => cy.get('input[placeholder="Type an item description, org #, or item # within your case..."]'),
+    itemTypeaheadInputField = e => cy.get('#attach-item'),
     itemTypeaheadDivField = e => cy.get('[aria-label="Select box activate"]').last(),
+    itemObjectTypeahead = e => cy.get('[repeat="task in availableItems"]'),
     personInputField = e => cy.get('[ng-model="person.text"]').last(),
     usersAndGroupsInput = e => cy.contains('Users and groups').parent('div').find('input'),
     saveButton = e => cy.findAllByText('Save').last()
@@ -40,13 +41,16 @@ export default class AddTaskPage extends BasePage {
 
         this.select_dropdown_option('Task Template', taskObject.template)
 
-        this.verify_value_in_textarea_field('Title', templateObject.title)
-        this.verify_value_in_textarea_field('Message', templateObject.message)
+        if(keepTemplateValues){
+            this.verify_value_in_textarea_field('Title', templateObject.title)
+            this.verify_value_in_textarea_field('Message', templateObject.message)
+        }
 
         if (!keepTemplateValues) {
             this.clearAndEnterValue(titleInput, taskObject.title)
                 .clearAndEnterValue(messageInput, taskObject.message)
         }
+
 
         if (!keepDefaultDueDate) {
             dueDateInput().clear().type(taskObject.dueDate).then(function (value) {
@@ -54,10 +58,13 @@ export default class AddTaskPage extends BasePage {
             });
         }
 
-       this.enter_value_to_Users_and_Groups_field([taskObject.userName])
+       this.enter_value_to_Users_and_Groups_field([taskObject.assignees])
 
         if (taskObject.linkedObjects) {
-            taskObject.linkedObjects.forEach(object => {
+            const linkedObjects = Array.isArray(taskObject.linkedObjects)
+                ? taskObject.linkedObjects : [taskObject.linkedObjects];
+
+            linkedObjects.forEach(object => {
                 if (object.type === 'case') {
                     plusIcon().click()
                     this.findElementByLabelEnterValueAndPressEnter('Case', object.caseNumber)
@@ -69,9 +76,9 @@ export default class AddTaskPage extends BasePage {
                     attachmentTypeDropdown().select('Item')
                     this.findElementByLabelEnterValueAndPressEnter('Case', object.caseNumber)
                     this.caseNumberOnTypeahead().click()
-                    this.pause(1)
-                    itemTypeaheadDivField().click()
-                    cy.contains(object.orgNumber).click()
+                    itemTypeaheadInputField().click()
+                    itemObjectTypeahead().should('be.visible')
+                    itemTypeaheadInputField().type('{enter}')
                     this.click_button_on_modal('Add')
                     this.verify_toast_message('Added!')
                     this.click_button_on_modal('Finish Adding')
@@ -79,7 +86,7 @@ export default class AddTaskPage extends BasePage {
                 if (object.type === 'person') {
                     plusIcon().click()
                     attachmentTypeDropdown().select('Person')
-                    personInputField().type(object.personName.name)
+                    personInputField().type(object.personName)
                     this.dropdownTypeaheadOption().click()
                     this.click_button_on_modal('Add')
                 }
