@@ -637,9 +637,9 @@ D.getNewTaskTemplateData = function () {
 
 D.getEditedTaskTemplateData = function (templateId, typeId, subtypeId, taskActionId) {
     templateId = templateId || S.selectedEnvironment.taskTemplates.errorCorrection.templateId
-    typeId = typeId || S.selectedEnvironment.taskTemplate.taskTypeId.errorCorrection
-    subtypeId = subtypeId || S.selectedEnvironment.taskTemplate.taskSubTypeId.packagingAndLabeling
-    taskActionId = taskActionId || S.selectedEnvironment.taskTemplate.taskActionId.mustBeRenderedSafe
+    typeId = typeId || S.selectedEnvironment.taskTemplates.errorCorrection.typeId
+    subtypeId = subtypeId || S.selectedEnvironment.taskTemplates.errorCorrection.subtypeId
+    taskActionId = taskActionId || S.selectedEnvironment.taskTemplates.errorCorrection.taskActionId
 
     D.editedTaskTemplate = {
         templateId: templateId,
@@ -657,7 +657,7 @@ D.getEditedTaskTemplateData = function (templateId, typeId, subtypeId, taskActio
         isActionAllowedForType: true,
         tasActionsProperties:[{
             id: taskActionId,
-            name: "Package Must be Sealed",
+            name: S.selectedEnvironment.taskTemplates.errorCorrection.taskAction,
             organizationId: S.selectedEnvironment.orgSettings.id,
             route: "taskActions",
             reqParams: null,
