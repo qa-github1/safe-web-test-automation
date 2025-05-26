@@ -216,7 +216,7 @@ let
     typeaheadInputField = fieldLabel => cy.contains(fieldLabel).parent().find('input').first(),
     dropdownField = fieldLabel => cy.findByLabelText(fieldLabel).parent().find('select').eq(0),
     inputField = fieldLabel => cy.findByLabelText(fieldLabel).parent().find('input').eq(0),
-   // textareaField = fieldLabel => cy.contains('span', fieldLabel).parents('labels').parent('div').find('textarea').eq(0),
+    // textareaField = fieldLabel => cy.contains('span', fieldLabel).parents('labels').parent('div').find('textarea').eq(0),
     textareaField = fieldLabel => cy.contains('label', fieldLabel).parent().find('textarea').eq(0),
     typeaheadOption = fieldLabel => cy.contains(fieldLabel).parent().find('ul').find('li').eq(0),
     storageLocationInput = fieldLabel => cy.get('[placeholder="type ‘/‘ or start typing a location name"]').last(),
@@ -1998,10 +1998,12 @@ export default class BasePage {
         return this;
     };
 
-    verify_content_of_first_row_in_results_table(content) {
+    verify_content_of_first_row_in_results_table(content, clickReloadIconBetweenAttempts = false) {
+        this.wait_until_spinner_disappears()
         cy.verifyTextAndRetry(() =>
                 firstRowInResultsTable().invoke('text'),
-            content
+            content,
+            {clickReloadIconBetweenAttempts: true}
         );
         return this;
     }
@@ -2363,11 +2365,12 @@ export default class BasePage {
         cy.getLocalStorage("newCase").then(newCase => {
             newCase = JSON.parse(newCase);
 
-            //cy.log('Opening Case URL: ' + S.base_url + '/#/cases/' + newCase.id.toString() + '/view')
+            cy.log('Opening Case URL: ' + S.base_url + '/#/cases/' + newCase.id.toString() + '/view')
             cy.server();
             cy.intercept(S.api_url + '/api/organizations/useCaseLevelPermissions').as('getSettingsOfCLP');
 
             cy.visit(S.base_url + '/#/cases/' + newCase.id.toString() + '/view')
+            this.verify_url_contains_some_value(`/#/cases/${newCase.id.toString()}/view`)
             //   cy.wait('@getSettingsOfCLP');
         });
         return this;
@@ -2834,14 +2837,6 @@ export default class BasePage {
         });
     }
 
-    //
-    // get_text_from_grid_and_save_in_local_storage(columnTitle, object, propertyName, headerCellTag = 'th') {
-    //     resultsTableHeader().contains(headerCellTag, columnTitle).invoke('index').then((i) => {
-    //         firstRowInResultsTable().find('td').eq(i).invoke('text').then(function (text) {
-    //             return object[propertyName] = text
-    //         });
-    //     })
-    // }
 
     get_text_from_grid_and_save_in_local_storage(columnTitle, propertyName, headerCellTag = 'th') {
         resultsTableHeader().contains(headerCellTag, columnTitle).invoke('index').then((i) => {
@@ -2922,57 +2917,6 @@ export default class BasePage {
         })
         return this
     }
-
-    // enable_columns_for_specific__Custom_Form_on_the_grid(customFormName) {
-    //     menuCustomization().click()
-    //     customFormsSectionOnMenuCustomization().click()
-    //     this.enterValue(searchCustomFormsOnMenuCustomization, customFormName)
-    //
-    //     cy.get('[ng-if="customFieldsToggle.isOpen"]')
-    //         .then(($body) => {
-    //             if ($body.find('.glyphicon-remove').length > 0) {
-    //                 disabledColumnsOsOnMenuCustomization().its('length').then(function (length) {
-    //                     for (let i = 0; i < length; i++) {
-    //                         disabledColumnsOsOnMenuCustomization().first().click()
-    //                         if (i < length - 1) {
-    //                             menuCustomization().click()
-    //                         }
-    //                     }
-    //                 })
-    //             } else {
-    //                 menuCustomization().click()
-    //             }
-    //         })
-    //     return this
-    // }
-
-    // enable_columns_for_specific__Custom_Form_on_the_grid(customFormName) {
-    //     menuCustomization().click();
-    //     customFormsSectionOnMenuCustomization().click();
-    //     this.enterValue(searchCustomFormsOnMenuCustomization, customFormName);
-    //
-    //     cy.get('[ng-if="customFieldsToggle.isOpen"]').then(($body) => {
-    //         if ($body.find('.glyphicon-remove').length > 0) {
-    //             cy.get('body').then(($page) => {
-    //                 let selectorToUse = $page.find(disabledColumnsOsOnMenuCustomization().selector).length > 0
-    //                     ? disabledColumnsOsOnMenuCustomization_PENTEST
-    //                     : disabledColumnsOsOnMenuCustomization;
-    //
-    //                 selectorToUse().its('length').then((length) => {
-    //                     for (let i = 0; i < length; i++) {
-    //                         selectorToUse().first().should('be.visible').click();
-    //                         if (i < length - 1) {
-    //                             menuCustomization().click();
-    //                         }
-    //                     }
-    //                 });
-    //             });
-    //         } else {
-    //             menuCustomization().click();
-    //         }
-    //     });
-    //     return this;
-    // }
 
     enable_columns_for_specific__Custom_Form_on_the_grid(customFormName, count) {
         menuCustomization().click();
@@ -3072,24 +3016,13 @@ export default class BasePage {
     }
 
     populate_Transfer_form(transferTo_user, transferFrom_user, notes) {
-        // this.enterValue(transferFromInput, transferFrom_user.email)
-        // this.pause(0.5)
-        // this.click_option_on_typeahead(transferFrom_user.fullName)
-
         this.select_typeahead_option(transferFromInput, transferFrom_user.email, this.typeaheadSelectorMatchInMatches)
-
-        // this.enterValue(transferToInput, transferTo_user.email)
-        // this.pause(0.5)
-        // this.click_option_on_typeahead(transferTo_user.fullName);
-
         this.select_typeahead_option(transferToInput, transferTo_user.email, this.typeaheadSelectorMatchInMatches)
         this.enter_notes_on_modal(notes);
         return this;
     }
 
     populate_Move_form(locationName, notes) {
-        // locationInputOnModal().type('/');
-        // this.click_option_on_typeahead(location.name);
         this.select_Storage_location(locationName)
         this.enter_notes_on_modal(notes);
         return this;
@@ -3097,9 +3030,6 @@ export default class BasePage {
 
     populate_disposal_form(disposalWitness_user, method, notes) {
         this.select_typeahead_option(disposalWitnessInput, disposalWitness_user.email, typeaheadSelectorMatchInMatches)
-        // this.enterValue(disposalWitnessInput, disposalWitness_user.email)
-        // this.pause(0.5)
-        // this.click_option_on_typeahead(disposalWitness_user.fullName);
         disposalMethodsDropdown().select(method)
         this.enter_notes_on_modal(notes);
         return this;
