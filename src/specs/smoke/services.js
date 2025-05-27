@@ -317,10 +317,11 @@ describe('Services', function () {
                 .enter_values_on_reassign_modal([orgAdmin.fullName])
                 .click_Ok()
                 .verify_toast_message('Processing...')
+                .click_Actions()
                 .verify_content_of_first_row_in_results_table([newUser.email, 'Complete'])
                 .open_newly_created_case_via_direct_link()
                 .click_Edit()
-            D.newCase.caseOfficers = [newUser.name, orgAdmin.name]
+            D.newCase.caseOfficers = [newUser.firstLastName, orgAdmin.name]
             ui.caseView.verify_values_on_Edit_form(D.newCase)
         })
     });

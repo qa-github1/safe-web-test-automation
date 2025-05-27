@@ -24,11 +24,11 @@ describe('1. Case Level Permissions', function () {
             api.auth.get_tokens(orgAdmin);
             D.getNewCaseData()
 
-        for (let i =0; i<5000; i++){
+        for (let i =2429; i<5000; i++){
             cy.log('Setting CLP for Case ' + i);
-            let caseNumber = 'Henderson PD CLP_' + i  +''
+            let caseNumber = 'Henderson CLP_' + i  +''
             api.cases.add_new_case(caseNumber)
-                .assign_Case_Level_Permissions(readOnly_permissionGroup, null, null, admin_permissionGroup);
+                .assign_Case_Level_Permissions(readOnly_permissionGroup, null, readOnly_userGroup, admin_permissionGroup);
         }
     });
 });
