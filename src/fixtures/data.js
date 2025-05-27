@@ -525,10 +525,11 @@ D.getEditedPersonData = function () {
     return D.editedPerson;
 };
 
-D.getNewUserData = function (officeId) {
+D.getNewUserData = function (officeId, organizationId) {
 
     let randomNo = helper.setNewRandomString();
     officeId = officeId || S.selectedEnvironment.office_1.id;
+   // organizationId = organizationId || S.selectedEnvironment.organizationId;
 
     D.newUser = {
         firstName: 'F' + randomNo,
@@ -544,6 +545,7 @@ D.getNewUserData = function (officeId) {
         otherPhone: '+1 270-543-4444',
         office: S.selectedEnvironment.office_1.name,
         officeId: officeId,
+       // organizationId: organizationId,
         officeGuid: S.selectedEnvironment.office_1.guid,
         active: true,
         password: 'Test12345.',
@@ -551,7 +553,7 @@ D.getNewUserData = function (officeId) {
         permissionGroups: [],
         userGroups: [],
         division: 'Patrol',
-        divisionId: S.selectedEnvironment.divisions.div1.id,
+        divisionId: S.selectedEnvironment.divisions.div1.id ,
         unit: 'UnitA',
         unitId: S.selectedEnvironment.units.unit1.id,
         external: 'Internal',
