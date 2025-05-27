@@ -350,6 +350,22 @@ S.DEV_1 = {
             title: 'Title--forAutomatedTests',
             message: 'Message-forAutomatedTests'
         },
+        errorCorrection: {
+            templateId: 4543,
+            typeId: 3388,
+            type: 'Error Correction',
+            subtypeId: 2808,
+            subtype: 'Packaging and Labeling',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 5,
+            useDispositionAuthorizationActions: false,
+            title: 'Title--forAutomatedTests',
+            message: 'Message-forAutomatedTests',
+            taskAction: 'Must be Rendered Safe',
+            taskActionId: 1688,
+        },
     },
     recentCase: {
         id: 5446732,
@@ -383,8 +399,8 @@ S.DEV_1 = {
     },
     admin_permissionGroup: {
         name: 'Cypress - ADMIN',
-        id: 4429,
-        startingIndexForViewPermissions: 64539,
+        id: 2159,
+        startingIndexForViewPermissions: 64846,
         get startingIndexForCreatePermissions() {
             return S.DEV_1.admin_permissionGroup.startingIndexForViewPermissions + 22
         },
@@ -604,6 +620,22 @@ S.DEV_2 = {
             title: 'Title--forAutomatedTests',
             message: 'Message-forAutomatedTests'
         },
+        errorCorrection: {
+            templateId: 4543,
+            typeId: 3388,
+            type: 'Error Correction',
+            subtypeId: 2808,
+            subtype: 'Packaging and Labeling',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 5,
+            useDispositionAuthorizationActions: false,
+            title: 'Title--forAutomatedTests',
+            message: 'Message-forAutomatedTests',
+            taskAction: 'Must be Rendered Safe',
+            taskActionId: 1688,
+        },
     },
     recentCase: {
         id: 5446732,
@@ -635,10 +667,24 @@ S.DEV_2 = {
     get recoveredById() {
         return S.DEV_2.person.id
     },
-    admin_permissionGroup: {
-        name: 'Cypress - ADMIN',
+    clp_permissionGroup: {
+        name: 'CLP Group',
         id: 2145,
         startingIndexForViewPermissions: 64088,
+        get startingIndexForCreatePermissions() {
+            return S.DEV_2.clp_permissionGroup.startingIndexForViewPermissions + 22
+        },
+        get startingIndexForUpdatePermissions() {
+            return S.DEV_2.clp_permissionGroup.startingIndexForViewPermissions + 45
+        },
+        get startingIndexForDeletePermissions() {
+            return S.DEV_2.clp_permissionGroup.startingIndexForViewPermissions + 67
+        }
+    },
+    admin_permissionGroup: {
+        name: 'Cypress - ADMIN',
+        id: 2164,
+        startingIndexForViewPermissions: 65283,
         get startingIndexForCreatePermissions() {
             return S.DEV_2.admin_permissionGroup.startingIndexForViewPermissions + 22
         },

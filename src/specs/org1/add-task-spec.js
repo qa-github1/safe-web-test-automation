@@ -20,6 +20,7 @@ describe('Add Task', function () {
         api.permissions.assign_user_to_User_Group(powerUser, admin_userGroup)
         api.users.update_current_user_settings(orgAdmin.id, C.currentDateTimeFormat, C.currentDateFormat)
         api.org_settings.enable_all_Item_fields();
+        api.org_settings.enable_all_Person_fields()
         api.auto_disposition.edit(true)
     });
 
