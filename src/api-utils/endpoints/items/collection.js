@@ -95,30 +95,6 @@ exports.edit_newly_added_item = function (withCustomFormData = true) {
     return this;
 };
 
-// exports.edit_newly_added_item = function (withCustomFormData = true) {
-//     cy.getLocalStorage("newCase").then(newCase => {
-//         cy.getLocalStorage("newItem").then(newItem => {
-//             const parsedCase = JSON.parse(newCase);
-//             const parsedItem = JSON.parse(newItem);
-//
-//             D.editedItem = D.getEditedItemData(parsedCase);
-//
-//             const itemObject = Object.assign({}, parsedItem, D.editedItem);
-//             itemObject.tags = D.editedItem.tagsForApi;
-//
-//
-//             generic_request.PUT(
-//                 '/api/items/' + itemObject.id,
-//                 body.generate_PUT_request_payload_for_editing_existing_item(itemObject, withCustomFormData),
-//                 'Editing existing item via API with ID_______' + itemObject.id
-//             );
-//         });
-//     });
-//
-//     return this;
-// };
-
-
 exports.get_item_history = function (item) {
     cy.getLocalStorage("headers").then(headers => {
         cy.request({
