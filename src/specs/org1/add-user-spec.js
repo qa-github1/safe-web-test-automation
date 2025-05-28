@@ -137,7 +137,7 @@ describe('Add User', function () {
         });
 
         if (S.orgNum !== 3) {
-        it.only('A.U_3. Add External User', function () {
+        it('A.U_3. Add External User', function () {
             ui.app.log_title(this);
             let org2Admin = S.getUserData(S.userAccounts.org2Admin);
             let externalOffice_id = org2Admin.officeId;
