@@ -507,10 +507,10 @@ S.DEV_2 = {
             guid: 'eb306a6b-2295-ef11-8350-0254a7906fb1'
         },
         org2Admin: {
-            id: 40727,
-            guid: '10589878-e7bb-eb11-aa4f-062d5b58f56e',
-            organizationId: 546,
-            officeId: 1054
+            id: 63328,
+            guid: 'eb306a6b-2295-ef11-8350-0254a7906fb1',
+            organizationId: 558,
+            officeId: 11082
         },
         powerUser: {
             id: 63329,
@@ -540,17 +540,29 @@ S.DEV_2 = {
         }
     },
     units: {
-        unit1: {
+        div1_unit1: {
             name: 'UnitA',
             id: 49
         },
-        unit2: {
+        div1_unit2: {
             name: 'UnitB',
             id: 50
         },
-        unit3: {
+        div1_unit3: {
             name: 'UnitC',
             id: 51
+        },
+        div2_unit1: {
+            name: 'UnitA',
+            id: 58
+        },
+        div2_unit2: {
+            name: 'UnitB',
+            id: 59
+        },
+        div2_unit3: {
+            name: 'UnitC',
+            id: 60
         }
     },
     forms: {
