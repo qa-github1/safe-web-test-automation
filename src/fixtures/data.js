@@ -3,7 +3,8 @@ const D = exports;
 const S = require('../fixtures/settings.js');
 const C = require('../fixtures/constants.js');
 const helper = require('../support/e2e-helper.js');
-const {randomNo} = require("../support/e2e-helper");
+const {randomNo, getRandomNo} = require("../support/e2e-helper");
+const {testRandomNo} = require("./data");
 
 D.setNewRandomNo = function () {
     return helper.setNewRandomNo();
@@ -323,9 +324,9 @@ D.getEditedItemData = function (specificCaseObject, locationObject, newPerson) {
     let Person_2 = (newPerson && newPerson.id !== '') ? newPerson : S.selectedEnvironment.person_2;
     locationObject = locationObject || S.selectedEnvironment.locations[0];
     specificCaseObject = specificCaseObject || S.selectedEnvironment.oldClosedCase;
-    let randomNo = D.getRandomNo();
 
-    D.editedItem = Object.assign({}, D.editedCustomFormData, {
+    let randomNo = getRandomNo()
+        D.editedItem = Object.assign({}, D.editedCustomFormData, {
         updateMadeBy: S.userAccounts.orgAdmin.name,
         submittedById: S.userAccounts.orgAdmin.id,
         submittedByName: `${S.userAccounts.orgAdmin.firstName} ${S.userAccounts.orgAdmin.lastName}`,
@@ -638,9 +639,9 @@ D.getNewTaskTemplateData = function () {
 
 D.getEditedTaskTemplateData = function (templateId, typeId, subtypeId, taskActionId) {
     templateId = templateId || S.selectedEnvironment.taskTemplates.errorCorrection.templateId
-    typeId = typeId || S.selectedEnvironment.taskTemplate.taskTypeId.errorCorrection
-    subtypeId = subtypeId || S.selectedEnvironment.taskTemplate.taskSubTypeId.packagingAndLabeling
-    taskActionId = taskActionId || S.selectedEnvironment.taskTemplate.taskActionId.mustBeRenderedSafe
+    typeId = typeId || S.selectedEnvironment.taskTemplates.errorCorrection.typeId
+    subtypeId = subtypeId || S.selectedEnvironment.taskTemplates.errorCorrection.subtypeId
+    taskActionId = taskActionId || S.selectedEnvironment.taskTemplates.errorCorrection.taskActionId
 
     D.editedTaskTemplate = {
         templateId: templateId,
@@ -658,7 +659,7 @@ D.getEditedTaskTemplateData = function (templateId, typeId, subtypeId, taskActio
         isActionAllowedForType: true,
         tasActionsProperties:[{
             id: taskActionId,
-            name: "Package Must be Sealed",
+            name: S.selectedEnvironment.taskTemplates.errorCorrection.taskAction,
             organizationId: S.selectedEnvironment.orgSettings.id,
             route: "taskActions",
             reqParams: null,

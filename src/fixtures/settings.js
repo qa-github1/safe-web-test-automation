@@ -350,6 +350,22 @@ S.DEV_1 = {
             title: 'Title--forAutomatedTests',
             message: 'Message-forAutomatedTests'
         },
+        errorCorrection: {
+            templateId: 4543,
+            typeId: 3388,
+            type: 'Error Correction',
+            subtypeId: 2808,
+            subtype: 'Packaging and Labeling',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 5,
+            useDispositionAuthorizationActions: false,
+            title: 'Title--forAutomatedTests',
+            message: 'Message-forAutomatedTests',
+            taskAction: 'Must be Rendered Safe',
+            taskActionId: 1688,
+        },
     },
     recentCase: {
         id: 5446732,
@@ -383,8 +399,8 @@ S.DEV_1 = {
     },
     admin_permissionGroup: {
         name: 'Cypress - ADMIN',
-        id: 4429,
-        startingIndexForViewPermissions: 64539,
+        id: 2159,
+        startingIndexForViewPermissions: 64846,
         get startingIndexForCreatePermissions() {
             return S.DEV_1.admin_permissionGroup.startingIndexForViewPermissions + 22
         },
@@ -604,6 +620,22 @@ S.DEV_2 = {
             title: 'Title--forAutomatedTests',
             message: 'Message-forAutomatedTests'
         },
+        errorCorrection: {
+            templateId: 4543,
+            typeId: 3388,
+            type: 'Error Correction',
+            subtypeId: 2808,
+            subtype: 'Packaging and Labeling',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 5,
+            useDispositionAuthorizationActions: false,
+            title: 'Title--forAutomatedTests',
+            message: 'Message-forAutomatedTests',
+            taskAction: 'Must be Rendered Safe',
+            taskActionId: 1688,
+        },
     },
     recentCase: {
         id: 5446732,
@@ -635,10 +667,24 @@ S.DEV_2 = {
     get recoveredById() {
         return S.DEV_2.person.id
     },
-    admin_permissionGroup: {
-        name: 'Cypress - ADMIN',
+    clp_permissionGroup: {
+        name: 'CLP Group',
         id: 2145,
         startingIndexForViewPermissions: 64088,
+        get startingIndexForCreatePermissions() {
+            return S.DEV_2.clp_permissionGroup.startingIndexForViewPermissions + 22
+        },
+        get startingIndexForUpdatePermissions() {
+            return S.DEV_2.clp_permissionGroup.startingIndexForViewPermissions + 45
+        },
+        get startingIndexForDeletePermissions() {
+            return S.DEV_2.clp_permissionGroup.startingIndexForViewPermissions + 67
+        }
+    },
+    admin_permissionGroup: {
+        name: 'Cypress - ADMIN',
+        id: 2164,
+        startingIndexForViewPermissions: 65283,
         get startingIndexForCreatePermissions() {
             return S.DEV_2.admin_permissionGroup.startingIndexForViewPermissions + 22
         },
@@ -2479,6 +2525,7 @@ S.PENTEST_2 = {
     taskTemplates: {
         dispoAuth: {
             templateId: 3511,
+            typeId: 2254,
             type: 'Disposition Authorization',
             subtype: '',
             active: true,
@@ -2491,6 +2538,7 @@ S.PENTEST_2 = {
         },
         other: {
             templateId: 3381,
+            typeId: 3388,
             type: 'Other',
             subtype: '',
             active: true,
@@ -2503,7 +2551,9 @@ S.PENTEST_2 = {
         },
         errorCorrection: {
             templateId: 4983,
+            typeId: 1120,
             type: 'Error Correction',
+            subtypeId: 557,
             subtype: 'Packaging and Labeling',
             active: true,
             emailUser: true,
@@ -2511,25 +2561,10 @@ S.PENTEST_2 = {
             dueDays: 5,
             useDispositionAuthorizationActions: false,
             title: 'Title--forAutomatedTests',
-            message: 'Message-forAutomatedTests'
+            message: 'Message-forAutomatedTests',
+            taskAction: 'Must be Rendered Safe',
+            taskActionId: '547',
         },
-        },
-
-        taskTemplate: {
-            taskTypeId: {
-                errorCorrection: 1120,
-
-            },
-            taskSubTypeId: {
-                packagingAndLabeling: 557,
-
-            },
-            taskActionId: {
-                packageMustBeSealed: 1681,
-                mustBeRenderedSafe: 547,
-
-            },
-            otherTaskTemplateId: 3381,
         },
 
     orgTag1: {tagModelId: 6751, name: 'sensitive information', color: "#ad2355", tagUsedBy: 1},
@@ -2784,9 +2819,11 @@ S.PENTEST_3 = {
     tagA: {tagModelId: 16829, name: 'Tag_A__', color: "#4b9b62", tagUsedBy: 1},
     tagB: {tagModelId: 16830, name: 'Tag_B__', color: "#4b9b62", tagUsedBy: 1},
     tagC: {tagModelId: 16831, name: 'Tag_C__', color: "#4b9b62", tagUsedBy: 1},
+
     taskTemplates: {
         dispoAuth: {
             templateId: 4308,
+            typeId: 2255,
             type: 'Disposition Authorization',
             subtype: '',
             active: true,
@@ -2795,9 +2832,11 @@ S.PENTEST_3 = {
             dueDays: 5,
             useDispositionAuthorizationActions: true,
             title: 'Disposition Authorization',
+            message: 'Message-forAutomatedTests'
         },
         other: {
             templateId: 3382,
+            typeId: 3388,
             type: 'Other',
             subtype: '',
             active: true,
@@ -2807,6 +2846,22 @@ S.PENTEST_3 = {
             useDispositionAuthorizationActions: true,
             title: 'Title--forAutomatedTests',
             message: 'Message-forAutomatedTests'
+        },
+        errorCorrection: {
+            templateId: 4991,
+            typeId: 3619,
+            type: 'Error Correction',
+            subtypeId: 558,
+            subtype: 'Packaging and Labeling',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 5,
+            useDispositionAuthorizationActions: false,
+            title: 'Title--forAutomatedTests',
+            message: 'Message-forAutomatedTests',
+            taskAction: 'Must be Rendered Safe',
+            taskActionId: 548,
         },
     },
 },
@@ -3047,7 +3102,8 @@ S.PENTEST_4 = {
     },
     taskTemplates: {
         dispoAuth: {
-            templateId: 4308,
+            templateId: 4309,
+            typeId: 2256,
             type: 'Disposition Authorization',
             subtype: '',
             active: true,
@@ -3056,9 +3112,11 @@ S.PENTEST_4 = {
             dueDays: 5,
             useDispositionAuthorizationActions: true,
             title: 'Disposition Authorization',
+            message: 'Message-forAutomatedTests'
         },
         other: {
             templateId: 3383,
+            typeId: 3390,
             type: 'Other',
             subtype: '',
             active: true,
@@ -3068,7 +3126,23 @@ S.PENTEST_4 = {
             useDispositionAuthorizationActions: true,
             title: 'Title--forAutomatedTests',
             message: 'Message-forAutomatedTests'
-        }
+        },
+        errorCorrection: {
+            templateId: 4992,
+            typeId: 1122,
+            type: 'Error Correction',
+            subtypeId: 559,
+            subtype: 'Packaging and Labeling',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 5,
+            useDispositionAuthorizationActions: false,
+            title: 'Title--forAutomatedTests',
+            message: 'Message-forAutomatedTests',
+            taskAction: 'Must be Rendered Safe',
+            taskActionId: 549,
+        },
     },
     orgTag1: {tagModelId: 16872, name: 'sensitive information', color: "#ad2355", tagUsedBy: 1},
     orgTag2: {tagModelId: 16873, name: 'eligible for disposal', color: "#4b9b62", tagUsedBy: 1},
