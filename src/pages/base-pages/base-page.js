@@ -1,6 +1,7 @@
 import authApi from "../../api-utils/endpoints/auth";
 import orgSettingsApi from "../../api-utils/endpoints/org-settings/collection";
 import '../../support/commands';
+import {selectedEnvironment} from "../../fixtures/settings";
 
 let S = require('../../fixtures/settings');
 let D = require('../../fixtures/data');
@@ -950,18 +951,31 @@ export default class BasePage {
 
     verify_multiple_text_values_in_one_container(container, arrayOfProperties) {
         container().should('exist');
+
         arrayOfProperties.forEach(function (prop) {
             if (prop !== null) {
                 if (prop === '') {
-                    container({timeout: 5000}).invoke('text').should('eq', prop);
-                }
-                {
-                    container({timeout: 5000}).should('contain.text', prop);
+                    container({ timeout: 5000 }).invoke('text').should('eq', '');
+                } else {
+                    // we have issues with trimming on DEV, so I had to add like this
+                    cy.url().then(url => {
+                        if (url.includes('dev')) {
+                            container({ timeout: 5000 }).invoke('text').then(text => {
+                                const normalizedText = text.replace(/\s+/g, ' ').trim();
+                                const normalizedProp = prop.replace(/\s+/g, ' ').trim();
+                                expect(normalizedText).to.include(normalizedProp);
+                            });
+                        } else {
+                            container({ timeout: 5000 }).should('contain.text', prop);
+                        }
+                    });
                 }
             }
         });
+
         return this;
-    };
+    }
+
 
     verify_text_on_element_found_by_label(element, expectedText, elementLabel,) {
         if (this.isObject(expectedText)) {

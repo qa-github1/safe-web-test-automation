@@ -28,15 +28,15 @@ exports.getTestAccounts = function (environment, orgNum = 1) {
             id: environment.users.orgAdmin.id,
             guid: environment.users.orgAdmin.guid
         },
-        // org2Admin: {
-        //     title: exports.userRoles.orgAdmin,
-        //     email: `qa+orgadmin${orgNum}@trackerproducts.com`,
-        //     password: 'Qwerty123!',
-        //     officeId: environment.org2Admin.officeId,
-        //     organizationId: environment.org2Admin.organizationId,
-        //     id: environment.org2Admin.id,
-        //     guid: environment.org2Admin.guid
-        // },
+         org2Admin: {
+             title: exports.userRoles.orgAdmin,
+             email: `qa+org3admin@trackerproducts.com`,
+             password: 'Qwerty123!',
+             officeId: environment.users.org2Admin.officeId,
+             organizationId: environment.users.org2Admin.organizationId,
+             id: environment.users.org2Admin.id,
+            guid: environment.users.org2Admin.guid
+         },
         powerUser: {
             title: exports.userRoles.powerUser,
             email: `qa+org${orgNum}_poweruser@trackerproducts.com`,

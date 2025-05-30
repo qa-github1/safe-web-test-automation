@@ -507,10 +507,10 @@ S.DEV_2 = {
             guid: 'eb306a6b-2295-ef11-8350-0254a7906fb1'
         },
         org2Admin: {
-            id: 40727,
-            guid: '10589878-e7bb-eb11-aa4f-062d5b58f56e',
-            organizationId: 546,
-            officeId: 1054
+            id: 74201,
+            guid: '127ca944-0821-f011-8367-0254a7906fb1',
+            organizationId: 559,
+            officeId: 11083
         },
         powerUser: {
             id: 63329,
@@ -540,17 +540,29 @@ S.DEV_2 = {
         }
     },
     units: {
-        unit1: {
+        div1_unit1: {
             name: 'UnitA',
             id: 49
         },
-        unit2: {
+        div1_unit2: {
             name: 'UnitB',
             id: 50
         },
-        unit3: {
+        div1_unit3: {
             name: 'UnitC',
             id: 51
+        },
+        div2_unit1: {
+            name: 'UnitA',
+            id: 58
+        },
+        div2_unit2: {
+            name: 'UnitB',
+            id: 59
+        },
+        div2_unit3: {
+            name: 'UnitC',
+            id: 60
         }
     },
     forms: {
@@ -2301,7 +2313,7 @@ S.PENTEST_2 = {
     office_2: {
         id: 1123,
         name: "Cypress Office 2",
-        orgAndOfficeName: "Web Test Automtion #2 - Cypress Office 2"
+        orgAndOfficeName: "Web Test Autotion #2 - Cypress Office 2"
     },
     org2: {
         office_1: {
@@ -2311,7 +2323,10 @@ S.PENTEST_2 = {
             orgAndOfficeName: "Web Test Automtion #3 - Cypress Office 1"
         },
         id: 556,
-        orgName: "Web Test Automation #3",
+        orgName: "Web Test Automtion #3",
+        guid: '51554d99-4630-ed11-832b-021f02b7478f',
+        cals: 10,
+        license: 'CH9byWyGCZWALMV9S5V4BYE9T5DsquRUSa7zh+wF+zc=',
         officeId: 1118,
         officeName: "Cypress Office 1",
         orgAndOfficeName: "Web Test Automtion #3 - Cypress Office 1"
@@ -2328,10 +2343,10 @@ S.PENTEST_2 = {
             guid: 'a87ad8b6-0855-ed11-832b-021f02b7478f'
         },
         org2Admin: {
-            id: 40727,
-            guid: '10589878-e7bb-eb11-aa4f-062d5b58f56e',
-            organizationId: 546,
-            officeId: 1054
+            id: 43666,
+            guid: 'f58daaef-7880-ed11-832d-021f02b7478f',
+            organizationId: 556,
+            officeId: 1118
         },
         powerUser: {
             id: 43277,
