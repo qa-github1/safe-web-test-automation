@@ -57,7 +57,7 @@ describe('Add Item', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
             D.getItemDataWithReducedFields(D.newCase);
-            api.org_settings.update_org_settings(true, false);
+            api.org_settings.update_org_settings(true, false,false,'');
             api.org_settings.disable_Item_fields([C.itemFields.itemBelongsTo, C.itemFields.tags]);
             D.newItem.itemBelongsToFirstLastName = [S.selectedEnvironment.person.name, S.selectedEnvironment.person_2.name]
             D.newItem.tags = [S.selectedEnvironment.orgTag1.name, S.selectedEnvironment.orgTag2.name]
@@ -69,7 +69,10 @@ describe('Add Item', function () {
                 .select_Category(D.newItem.category)
                 .click_Next()
                 .verify_text_is_present_on_main_container('You must have a Person in this case before you can add a value to this field')
-
+// The test is not stable due to performance issue when navigating to the old Case -> Items tab with large number of items
+ //  Possible solutions:
+ //option 1: Use new case and person
+ //option 2: Use an existing case, but move the item to another case in the after block to clear the Items tab and prevent item accumulation
             D.newItem.caseNumber = oldCase.caseNumber
             ui.app.open_case_url(oldCase.id)
             ui.addItem.select_tab(C.tabs.items)
@@ -236,6 +239,7 @@ describe('Add Item', function () {
             api.auth.get_tokens(orgAdmin);
             D.getNewItemData(D.newCase);
             api.org_settings.enable_all_Item_fields();
+            D.newUser.middleName = 'M' + D.randomNo
             api.users.add_new_user('new_user');
 
             ui.menu.click_Add__Item();

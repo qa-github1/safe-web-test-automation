@@ -59,7 +59,7 @@ describe('Auto-Disposition', function () {
             api.users.update_current_user_settings(user.id, DF.dateTimeFormats.long)
         });
 
-        it.only('3.1 Verify "Re-Distribute" for "Past Due" cases', function () {
+        it('3.1 Verify "Re-Distribute" for "Past Due" cases', function () {
             api.auth.get_tokens(user);
            // api.users.update_current_user_settings(user.id)
             ui.menu.click_Settings__Organization()
@@ -73,14 +73,15 @@ describe('Auto-Disposition', function () {
             let fileName = 'Case_pastDueReview';
             D.case1.reviewDate = '';
             D.case2.reviewDate = helper.getSpecificDateInSpecificFormat(DF.dateTimeFormats.long.mask, '01/08/2019');
-            D.case3.reviewDate = helper.getSpecificDateInSpecificFormat(DF.dateTimeFormats.short.mask, '01/08/2030');
+            D.case3.reviewDate = helper.getSpecificDateInSpecificFormat(DF.dateTimeFormats.long.mask, '01/08/2030');
 
             // import 3 cases (NO Review Date, Review Date past due and Upcoming Review Date )
             E.generateDataFor_CASES_Importer([D.case1, D.case2, D.case3]);
             ui.app.generate_excel_file(fileName, E.caseImportDataWithAllFields);
             ui.menu.click_Tools__Data_Import();
             ui.importer.upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.cases, null, 1, null,
-                ['Some Review Dates are blank. They will be auto-applied. Select Import to proceed.'])
+                ['Some Review Dates are blank. They will be auto-applied. Select Import to proceed.']
+                )
                 .verify_toast_message([
                     C.toastMsgs.importComplete,
                     3 + C.toastMsgs.recordsImported])
@@ -100,9 +101,13 @@ describe('Auto-Disposition', function () {
                 .click_button(C.buttons.updateCases)
                 .verify_toast_message(C.toastMsgs.saved)
                 .verify_Redistribute_Case_Review_Date_labels(true, 0, 3)
-                .quick_search_for_case(D.case2.caseNumber)
+            D.case2.reviewDate = helper.getSpecificDateInSpecificFormat(
+                DF.dateTimeFormats.long.mask,
+                '11/15/2025 12:00 AM'
+            );
+            ui.app.quick_search_for_case(D.case2.caseNumber)
                 .click_button(C.buttons.edit);
-            ui.caseView.verify_values_on_Edit_form(D.case2);
+                ui.caseView.verify_values_on_Edit_form(D.case2);
 
             // // verify change is not applied for Case with 'No Review Date'
             // ui.app.quick_search_for_case(D.case1.caseNumber)
@@ -110,7 +115,7 @@ describe('Auto-Disposition', function () {
             // ui.caseView.verify_values_on_Edit_form(D.case1);
 
             // verify change is not applied for Case with 'Upcoming Review Date'
-            ui.app.quick_search_for_case(D.case3.caseNumber)
+                ui.app.quick_search_for_case(D.case3.caseNumber)
                 .click_button(C.buttons.edit);
             ui.caseView.verify_values_on_Edit_form(D.case3);
         });
@@ -136,8 +141,13 @@ describe('Auto-Disposition', function () {
                 .click_button(C.buttons.updateCases)
                 .verify_toast_message(C.toastMsgs.saved)
                 .wait_until_label_disappears(C.labels.autoDisposition.pleaseWait, 360)
-                .open_newly_created_case_via_direct_link()
+            D.newCase.reviewDate = helper.getSpecificDateInSpecificFormat(
+                DF.dateTimeFormats.long.mask,
+                'November 15, 2025 12:00 AM'
+            );
+                ui.app.open_newly_created_case_via_direct_link()
                 .click_button(C.buttons.edit);
+            D.newCase.offenseDate = 'April 15, 2020 02:18 PM'
             ui.caseView.verify_values_on_Edit_form(D.newCase);
         });
     });
@@ -190,11 +200,12 @@ describe('Auto-Disposition', function () {
         D.getNewCaseData();
         D.newCase.offenseDate = 'Jan 8, 2019';
         D.newCase.reviewDate = 'May 8, 2019';
-        E.generateDataFor_CASES_Importer(D.newCase);
-        cy.generate_excel_file(fileName, E.caseImportDataWithAllFields);
+        E.generateDataFor_CASES_Importer([D.newCase]);
+        ui.app.generate_excel_file(fileName, E.caseImportDataWithAllFields);
 
         ui.menu.click_Settings__Organization()
             .click_element_containing_link(C.labels.organization.tabs.autoDisposition);
+        ui.autoDispo.click_disposition_Configuration_For_Case_Offense_Types();
         ui.autoDispo.get_number_of_cases_without_task();
 
         // import case with Review Date in past and open tab again to fetch a new data
@@ -205,8 +216,9 @@ describe('Auto-Disposition', function () {
                 1 + C.toastMsgs.recordsImported]);
 
         ui.menu.click_Settings__Organization()
-            .click_element_containing_link(C.labels.organization.tabs.orgSettings)
+            ui.app.click_element_containing_link(C.labels.organization.tabs.orgSettings)
             .click_element_containing_link(C.labels.organization.tabs.autoDisposition);
+        ui.autoDispo.click_disposition_Configuration_For_Case_Offense_Types();
 
         ui.autoDispo.verify_label_for_cases_without_open_tasks(1)
             .get_number_of_cases_without_task()

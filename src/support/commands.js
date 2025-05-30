@@ -9,17 +9,17 @@ import 'cypress-wait-until';
 function unquote(str) {
     return str.replace(/(^")|("$)/g, '');
 }
-
 Cypress.Commands.add('verifyTextAndRetry', (
     getActualTextFn,
     expectedValues,
     {
         maxAttempts = 60,
         retryInterval = 1000,
+        clickReloadIconBetweenAttempts = false,
+        reloadSelector = '.fa-refresh',
         ...options
     } = {}
 ) => {
-    // 🛑 Skip if expectedValues is undefined, null, or empty string
     if (
         expectedValues === undefined ||
         expectedValues === null ||
@@ -29,7 +29,7 @@ Cypress.Commands.add('verifyTextAndRetry', (
             name: 'verifyTextAndRetry',
             message: `[⚠️ Skipped] No expected text provided, skipping verification.`,
         });
-        return; // do nothing
+        return;
     }
 
     let attempt = 0;
@@ -67,6 +67,11 @@ Cypress.Commands.add('verifyTextAndRetry', (
                 })
             });
 
+            // 🔁 If not passed and reload icon should be clicked
+            if (!passed && clickReloadIconBetweenAttempts) {
+                cy.get(reloadSelector, { timeout: 1000 }).click({ force: true });
+            }
+
             return passed;
         });
     };
@@ -79,10 +84,15 @@ Cypress.Commands.add('verifyTextAndRetry', (
 });
 
 //EXAMPLE
-// cy.verifyTextAndRetry(
+//cy.verifyTextAndRetry(
 //     () => mainContainer().invoke('text'),
-//     text,
-//     { maxAttempts: 30, retryInterval: 500 } // OPTIONAL
+//     'Expected Text',
+//     {
+//         maxAttempts: 30,
+//         retryInterval: 500,
+//         clickReloadIconBetweenAttempts: true,
+//         reloadSelector: '[data-testid="reload-icon"]'
+//     }
 // );
 
 Cypress.Commands.add('retryTypeaheadSelect', (

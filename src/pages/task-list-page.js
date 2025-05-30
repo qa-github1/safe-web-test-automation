@@ -42,13 +42,14 @@ export default class TaskListPage extends BasePage {
             ['Title', taskObject.title]
         ])
 
-        if (taskObject.linkedObjects) {
+        if (Array.isArray(taskObject.linkedObjects) && taskObject.linkedObjects.length > 0) {
             taskObject.linkedObjects.forEach(object => {
                 this.verify_values_on_the_grid([
                     ['Linked Objects', object.caseNumber],
                     ['Linked Objects', object.orgNumber],
-                    ['Linked Objects', object.personName]])
-            })
+                    ['Linked Objects', object.personName]
+                ]);
+            });
         }
         return this;
     }

@@ -17,6 +17,21 @@ let powerUser = S.getUserData(S.userAccounts.powerUser);
 let clpUser = S.getUserData(S.userAccounts.clpUser);
 
 let office_1 = S.selectedEnvironment.office_1;
+
+describe('1. Case Level Permissions', function () {
+    it('Set CLP for 5k cases', function () {
+
+            api.auth.get_tokens(orgAdmin);
+            D.getNewCaseData()
+
+        for (let i =2429; i<5000; i++){
+            cy.log('Setting CLP for Case ' + i);
+            let caseNumber = 'Henderson CLP_' + i  +''
+            api.cases.add_new_case(caseNumber)
+                .assign_Case_Level_Permissions(readOnly_permissionGroup, null, readOnly_userGroup, admin_permissionGroup);
+        }
+    });
+});
 //
 // describe('1. Case Level Permissions', function () {
 //

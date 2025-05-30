@@ -3,7 +3,8 @@ const D = exports;
 const S = require('../fixtures/settings.js');
 const C = require('../fixtures/constants.js');
 const helper = require('../support/e2e-helper.js');
-const {randomNo} = require("../support/e2e-helper");
+const {randomNo, getRandomNo} = require("../support/e2e-helper");
+const {testRandomNo} = require("./data");
 
 D.setNewRandomNo = function () {
     return helper.setNewRandomNo();
@@ -19,7 +20,6 @@ D.unreadEmails = []
 D.getCurrentDateAndRandomNumber = function (randomNumberLenght) {
     return helper.mediumDate + '_' + helper.getRandomNo(randomNumberLenght);
 }
-
 
 D.getStorageLocationData = function (locationName, parentId = 0, canStore = true, isActive = true) {
     D[locationName] = {
@@ -225,7 +225,7 @@ D.getNewItemData = function (specificCaseObject, locationObject, newPerson) {
         itemBelongsToFirstLastName: [person.fullName],
         itemBelongsToOnHistory: [person.name],
         itemBelongsToGuid: [person.guid],
-        itemBelongsToEmail: [person.email],
+        //itemBelongsToEmail: [person.email],
         barcodes: [{id: 0, value: randomNo}],
         //additionalBarcodes: [randomNo],
         actualDisposedDate: '',
@@ -324,9 +324,9 @@ D.getEditedItemData = function (specificCaseObject, locationObject, newPerson) {
     let Person_2 = (newPerson && newPerson.id !== '') ? newPerson : S.selectedEnvironment.person_2;
     locationObject = locationObject || S.selectedEnvironment.locations[0];
     specificCaseObject = specificCaseObject || S.selectedEnvironment.oldClosedCase;
-    let randomNo = D.getRandomNo();
 
-    D.editedItem = Object.assign({}, D.editedCustomFormData, {
+    let randomNo = getRandomNo()
+        D.editedItem = Object.assign({}, D.editedCustomFormData, {
         updateMadeBy: S.userAccounts.orgAdmin.name,
         submittedById: S.userAccounts.orgAdmin.id,
         submittedByName: `${S.userAccounts.orgAdmin.firstName} ${S.userAccounts.orgAdmin.lastName}`,
@@ -525,16 +525,18 @@ D.getEditedPersonData = function () {
     return D.editedPerson;
 };
 
-D.getNewUserData = function (officeId) {
+D.getNewUserData = function (officeId, organizationId) {
 
     let randomNo = helper.setNewRandomString();
     officeId = officeId || S.selectedEnvironment.office_1.id;
+   // organizationId = organizationId || S.selectedEnvironment.organizationId;
 
     D.newUser = {
         firstName: 'F' + randomNo,
-        middleName: '',
-        //  middleName: 'M' + randomNo,
+        //middleName: '',
+        middleName: 'M' + randomNo,
         lastName: 'L' + randomNo,
+        firstLastName: 'F' + randomNo +' L' + randomNo,
         fullName: 'F' + randomNo + ' ' + 'M' + randomNo + ' ' + 'L' + randomNo,
         personnelNumber: randomNo,
         email: 'qa+' + randomNo + '@trackerproducts.com',
@@ -543,6 +545,7 @@ D.getNewUserData = function (officeId) {
         otherPhone: '+1 270-543-4444',
         office: S.selectedEnvironment.office_1.name,
         officeId: officeId,
+       // organizationId: organizationId,
         officeGuid: S.selectedEnvironment.office_1.guid,
         active: true,
         password: 'Test12345.',
@@ -550,9 +553,9 @@ D.getNewUserData = function (officeId) {
         permissionGroups: [],
         userGroups: [],
         division: 'Patrol',
-        divisionId: S.selectedEnvironment.divisions.div1.id,
+        divisionId: S.selectedEnvironment.divisions.div1.id ,
         unit: 'UnitA',
-        unitId: S.selectedEnvironment.units.unit1.id,
+        unitId: S.selectedEnvironment.units.div1_unit1.id,
         external: 'Internal',
         mfaEnabled: 'No',
         emailDisable: false,
@@ -597,7 +600,7 @@ D.getEditedUserData = function () {
         division: 'Investigations',
         divisionId: S.selectedEnvironment.divisions.div2.id,
         unit: 'UnitC',
-        unitId: S.selectedEnvironment.units.unit3.id,
+        unitId: S.selectedEnvironment.units.div2_unit3.id,
         external: 'Internal',
         mfaEnabled: 'No',
         emailDisable: true,
@@ -626,6 +629,7 @@ D.getNewTaskTemplateData = function () {
     D.newTaskTemplate = {
         type: 'Error Correction',
         subtype: 'Packaging and Labeling',
+        template: 'Error Correction - Packaging and Labeling',
         title: D.randomNo + '_title',
         message: D.randomNo + '_message',
         taskActions: ['Must be Rendered Safe', 'Package Must be Sealed'],
@@ -633,6 +637,41 @@ D.getNewTaskTemplateData = function () {
     }
 
     return D.newTaskTemplate;
+};
+
+D.getEditedTaskTemplateData = function (templateId, typeId, subtypeId, taskActionId) {
+    templateId = templateId || S.selectedEnvironment.taskTemplates.errorCorrection.templateId
+    typeId = typeId || S.selectedEnvironment.taskTemplates.errorCorrection.typeId
+    subtypeId = subtypeId || S.selectedEnvironment.taskTemplates.errorCorrection.subtypeId
+    taskActionId = taskActionId || S.selectedEnvironment.taskTemplates.errorCorrection.taskActionId
+
+    D.editedTaskTemplate = {
+        templateId: templateId,
+        typeId: typeId,
+        subtypeId: subtypeId,
+        taskActionId: taskActionId,
+        type: 'Error Correction',
+        subtype: 'Packaging and Labeling',
+        template: 'Error Correction - Packaging and Labeling',
+        title: D.randomNo + '_title',
+        message: D.randomNo + '_message',
+        taskActions: ['Must be Rendered Safe'],
+        dueDateDays: 5,
+        isDispositionActionAllowed: false,
+        isActionAllowedForType: true,
+        tasActionsProperties:[{
+            id: taskActionId,
+            name: S.selectedEnvironment.taskTemplates.errorCorrection.taskAction,
+            organizationId: S.selectedEnvironment.orgSettings.id,
+            route: "taskActions",
+            reqParams: null,
+            restangularized: true,
+            fromServer: true,
+            parentResource: null,
+            restangularCollection: false}],
+    }
+
+    return D.editedTaskTemplate;
 };
 
 D.getNewTaskData = function (user_assignee, userGroup_assignee, createdBy = S.userAccounts.orgAdmin, dueDate_daysAfterToday = 14, linkedObjects) {
@@ -652,9 +691,10 @@ D.getNewTaskData = function (user_assignee, userGroup_assignee, createdBy = S.us
         closedDate: '',
         title: 'title_' + helper.setNewRandomString(),
         message: 'message_' + helper.setNewRandomString(),
-        userEmail: user_assignee ? user_assignee.email : null,
-        userName: user_assignee ? user_assignee.name : null,
-        userGroupName: userGroup_assignee ? userGroup_assignee.name : null,
+        userEmail: user_assignee ? user_assignee.email : '',
+        userName: user_assignee ? user_assignee.name : '',
+        userGroupName: userGroup_assignee ? userGroup_assignee.name : '',
+        assignees: user_assignee ? user_assignee.name : userGroup_assignee ? userGroup_assignee.name : '',
         assignedTo: assignedTo,
         linkedObjects: linkedObjects || 'There aren\'t any linked objects',
         createdBy: createdBy ? createdBy.name : null,

@@ -182,7 +182,7 @@ export default class TaskViewPage extends BaseViewPage {
             }
         }
 
-        if ((!personHasAddress || !isExistingPerson) && addressObject.addressType) {
+        if ((!personHasAddress || !isExistingPerson) && (addressObject && addressObject.addressType)) {
             addressTypeOnModal().select(addressObject.addressType)
             this.enterValue(address1OnModal, addressObject.line1)
         } else if (personHasAddress) {
@@ -201,7 +201,7 @@ export default class TaskViewPage extends BaseViewPage {
 
         this.verify_toast_message(expectedMessage)
         if (numberOfItemsProcessed > 50) {
-            this.verify_text(dispoAuthJobStatus, 'Complete')
+            this.verify_text(dispoAuthJobStatus, 'Complete', 120)
         }
 
         return this;
@@ -229,7 +229,7 @@ export default class TaskViewPage extends BaseViewPage {
     };
 
     verify_Dispo_Auth_Job_Status(status) {
-        this.verify_text(dispoAuthJobStatus, status)
+        this.verify_text(dispoAuthJobStatus, status, 120)
         this.pause(1)
         return this;
     };

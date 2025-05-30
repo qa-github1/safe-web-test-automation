@@ -24,6 +24,9 @@ S.isOrg2 = function () {
 S.isOrg3 = function () {
     return Cypress.env('orgNum') === 3
 }
+S.isOrg4 = function () {
+    return Cypress.env('orgNum') === 4
+}
 
 S.getCurrentDate = function (mask) {
     S.currentDateAndTime = helper.getCurrentDateInCurrentFormat(C.currentDateTimeFormat);
@@ -206,20 +209,21 @@ S.DEV_1 = {
     },
     office_2: {
         id: 11090,
-        name: "Cypress Office 2"
+        name: "Cypress Office 2",
+        orgAndOfficeName: "Web Test Automation #1 - Cypress Office 2"
     },
     org2: {
         office_1: {
             id: 1054,
             guid: '690a16e8-59ba-eb11-aa4f-062d5b58f56e',
             name: "Cypress Office 1",
-            orgAndOfficeName: "Web Test Automtion #2 - Cypress Office 1"
+            orgAndOfficeName: "Web Test Automation #2 - Cypress Office 1"
         },
         id: 546,
-        orgName: "Web Test Automtion #2",
+        orgName: "Web Test Automation #2",
         officeId: 1054,
         officeName: "Cypress Office 1",
-        orgAndOfficeName: "Web Test Automtion #2 - Cypress Office 1"
+        orgAndOfficeName: "Web Test Automation #2 - Cypress Office 1"
     },
     users: {
         systemAdminId: 40357,
@@ -258,25 +262,25 @@ S.DEV_1 = {
     divisions: {
         div1: {
             name: 'Patrol',
-            id: 54
+            id: 59
         },
         div2: {
             name: 'Investigations',
-            id: 55
+            id: 62
         }
     },
     units: {
         unit1: {
             name: 'UnitA',
-            id: 49
+            id: 54
         },
         unit2: {
             name: 'UnitB',
-            id: 50
+            id: 56
         },
         unit3: {
             name: 'UnitC',
-            id: 51
+            id: 57
         }
     },
     forms: {
@@ -316,7 +320,7 @@ S.DEV_1 = {
         closedDate: '10/27/2022',
     },
     oldActiveCase: {
-        id: 7733747,
+        id: 8997654,
         caseNumber: 'AutomatedTest-Active Case',
         createdDate: '05/17/2009',
         offenseDate: '05/15/2009',
@@ -345,6 +349,22 @@ S.DEV_1 = {
             useDispositionAuthorizationActions: true,
             title: 'Title--forAutomatedTests',
             message: 'Message-forAutomatedTests'
+        },
+        errorCorrection: {
+            templateId: 4543,
+            typeId: 3388,
+            type: 'Error Correction',
+            subtypeId: 2808,
+            subtype: 'Packaging and Labeling',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 5,
+            useDispositionAuthorizationActions: false,
+            title: 'Title--forAutomatedTests',
+            message: 'Message-forAutomatedTests',
+            taskAction: 'Must be Rendered Safe',
+            taskActionId: 1688,
         },
     },
     recentCase: {
@@ -379,8 +399,8 @@ S.DEV_1 = {
     },
     admin_permissionGroup: {
         name: 'Cypress - ADMIN',
-        id: 4429,
-        startingIndexForViewPermissions: 64539,
+        id: 2159,
+        startingIndexForViewPermissions: 64846,
         get startingIndexForCreatePermissions() {
             return S.DEV_1.admin_permissionGroup.startingIndexForViewPermissions + 22
         },
@@ -393,8 +413,8 @@ S.DEV_1 = {
     },
     regularUser_permissionGroup: {
         name: 'Cypress - Regular User',
-        id: 4437,
-        startingIndexForViewPermissions: 65073,
+        id: 2162,
+        startingIndexForViewPermissions: 65155,
         get startingIndexForCreatePermissions() {
             return S.DEV_1.regularUser_permissionGroup.startingIndexForViewPermissions + 22
         },
@@ -487,10 +507,10 @@ S.DEV_2 = {
             guid: 'eb306a6b-2295-ef11-8350-0254a7906fb1'
         },
         org2Admin: {
-            id: 40727,
-            guid: '10589878-e7bb-eb11-aa4f-062d5b58f56e',
-            organizationId: 546,
-            officeId: 1054
+            id: 74201,
+            guid: '127ca944-0821-f011-8367-0254a7906fb1',
+            organizationId: 559,
+            officeId: 11083
         },
         powerUser: {
             id: 63329,
@@ -520,17 +540,29 @@ S.DEV_2 = {
         }
     },
     units: {
-        unit1: {
+        div1_unit1: {
             name: 'UnitA',
             id: 49
         },
-        unit2: {
+        div1_unit2: {
             name: 'UnitB',
             id: 50
         },
-        unit3: {
+        div1_unit3: {
             name: 'UnitC',
             id: 51
+        },
+        div2_unit1: {
+            name: 'UnitA',
+            id: 58
+        },
+        div2_unit2: {
+            name: 'UnitB',
+            id: 59
+        },
+        div2_unit3: {
+            name: 'UnitC',
+            id: 60
         }
     },
     forms: {
@@ -600,6 +632,22 @@ S.DEV_2 = {
             title: 'Title--forAutomatedTests',
             message: 'Message-forAutomatedTests'
         },
+        errorCorrection: {
+            templateId: 4543,
+            typeId: 3388,
+            type: 'Error Correction',
+            subtypeId: 2808,
+            subtype: 'Packaging and Labeling',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 5,
+            useDispositionAuthorizationActions: false,
+            title: 'Title--forAutomatedTests',
+            message: 'Message-forAutomatedTests',
+            taskAction: 'Must be Rendered Safe',
+            taskActionId: 1688,
+        },
     },
     recentCase: {
         id: 5446732,
@@ -631,10 +679,24 @@ S.DEV_2 = {
     get recoveredById() {
         return S.DEV_2.person.id
     },
-    admin_permissionGroup: {
-        name: 'Cypress - ADMIN',
+    clp_permissionGroup: {
+        name: 'CLP Group',
         id: 2145,
         startingIndexForViewPermissions: 64088,
+        get startingIndexForCreatePermissions() {
+            return S.DEV_2.clp_permissionGroup.startingIndexForViewPermissions + 22
+        },
+        get startingIndexForUpdatePermissions() {
+            return S.DEV_2.clp_permissionGroup.startingIndexForViewPermissions + 45
+        },
+        get startingIndexForDeletePermissions() {
+            return S.DEV_2.clp_permissionGroup.startingIndexForViewPermissions + 67
+        }
+    },
+    admin_permissionGroup: {
+        name: 'Cypress - ADMIN',
+        id: 2164,
+        startingIndexForViewPermissions: 65283,
         get startingIndexForCreatePermissions() {
             return S.DEV_2.admin_permissionGroup.startingIndexForViewPermissions + 22
         },
@@ -1292,6 +1354,44 @@ S.QA_1 = {
             guid: '77f14214-e5d8-eb11-82f2-068f48eb83b1'
         },
     },
+    divisions: {
+        div1: {
+            name: 'Patrol',
+            id: 3
+        },
+        div2: {
+            name: 'Investigations',
+            id: 4
+        }
+    },
+    units: {
+        unit1: {
+            name: 'UnitA',
+            id: 3
+        },
+        unit2: {
+            name: 'UnitB',
+            id: 4
+        },
+    },
+    forms: {
+        userFormWithRequiredFields: 3425,
+        userFormWithOptionalFields: 3426,
+        taskFormWithRequiredFields: 2547,
+        taskFormWithOptionalFields: 2548
+    },
+    locations: [
+        {
+            id: 476096,
+            guid: '67d3a4e4-8c55-4ee4-ab66-e225b114dc35',
+            name: "CypressLocation1"
+        },
+        {
+            id: 510384,
+            guid: '7a706961-0771-42da-9d49-a72dffc9c3f2',
+            name: "CypressLocation2"
+        }
+    ],
     caseForReport: {
         id: null,
     },
@@ -1476,6 +1576,32 @@ S.QA_1 = {
     readOnly_userGroup: {
         name: 'Cypress ReadOnly Group',
         id: 5
+    },
+    taskTemplates: {
+        dispoAuth: {
+            templateId: 70,
+            type: 'Disposition Authorization',
+            subtype: '',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 5,
+            useDispositionAuthorizationActions: true,
+            title: 'Disposition Authorization',
+            message: 'Message-forAutomatedTests'
+        },
+        other: {
+            templateId: 48,
+            type: 'Other',
+            subtype: '',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 10,
+            useDispositionAuthorizationActions: true,
+            title: 'Title--forAutomatedTests',
+            message: 'Message-forAutomatedTests'
+        },
     },
 };
 
@@ -2187,7 +2313,7 @@ S.PENTEST_2 = {
     office_2: {
         id: 1123,
         name: "Cypress Office 2",
-        orgAndOfficeName: "Web Test Automtion #2 - Cypress Office 2"
+        orgAndOfficeName: "Web Test Autotion #2 - Cypress Office 2"
     },
     org2: {
         office_1: {
@@ -2197,7 +2323,10 @@ S.PENTEST_2 = {
             orgAndOfficeName: "Web Test Automtion #3 - Cypress Office 1"
         },
         id: 556,
-        orgName: "Web Test Automation #3",
+        orgName: "Web Test Automtion #3",
+        guid: '51554d99-4630-ed11-832b-021f02b7478f',
+        cals: 10,
+        license: 'CH9byWyGCZWALMV9S5V4BYE9T5DsquRUSa7zh+wF+zc=',
         officeId: 1118,
         officeName: "Cypress Office 1",
         orgAndOfficeName: "Web Test Automtion #3 - Cypress Office 1"
@@ -2214,10 +2343,10 @@ S.PENTEST_2 = {
             guid: 'a87ad8b6-0855-ed11-832b-021f02b7478f'
         },
         org2Admin: {
-            id: 40727,
-            guid: '10589878-e7bb-eb11-aa4f-062d5b58f56e',
-            organizationId: 546,
-            officeId: 1054
+            id: 43666,
+            guid: 'f58daaef-7880-ed11-832d-021f02b7478f',
+            organizationId: 556,
+            officeId: 1118
         },
         powerUser: {
             id: 43277,
@@ -2407,9 +2536,11 @@ S.PENTEST_2 = {
         name: 'Cypress ReadOnly Group',
         id: 2898
     },
+
     taskTemplates: {
         dispoAuth: {
             templateId: 3511,
+            typeId: 2254,
             type: 'Disposition Authorization',
             subtype: '',
             active: true,
@@ -2422,6 +2553,7 @@ S.PENTEST_2 = {
         },
         other: {
             templateId: 3381,
+            typeId: 3388,
             type: 'Other',
             subtype: '',
             active: true,
@@ -2432,7 +2564,24 @@ S.PENTEST_2 = {
             title: 'Title--forAutomatedTests',
             message: 'Message-forAutomatedTests'
         },
-    },
+        errorCorrection: {
+            templateId: 4983,
+            typeId: 1120,
+            type: 'Error Correction',
+            subtypeId: 557,
+            subtype: 'Packaging and Labeling',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 5,
+            useDispositionAuthorizationActions: false,
+            title: 'Title--forAutomatedTests',
+            message: 'Message-forAutomatedTests',
+            taskAction: 'Must be Rendered Safe',
+            taskActionId: '547',
+        },
+        },
+
     orgTag1: {tagModelId: 6751, name: 'sensitive information', color: "#ad2355", tagUsedBy: 1},
     orgTag2: {tagModelId: 6752, name: 'eligible for disposal', color: "#4b9b62", tagUsedBy: 1},
     tagA: {tagModelId: 16809, name: 'Tag_A__', color: "#4b9b62", tagUsedBy: 1},
@@ -2685,9 +2834,11 @@ S.PENTEST_3 = {
     tagA: {tagModelId: 16829, name: 'Tag_A__', color: "#4b9b62", tagUsedBy: 1},
     tagB: {tagModelId: 16830, name: 'Tag_B__', color: "#4b9b62", tagUsedBy: 1},
     tagC: {tagModelId: 16831, name: 'Tag_C__', color: "#4b9b62", tagUsedBy: 1},
+
     taskTemplates: {
         dispoAuth: {
             templateId: 4308,
+            typeId: 2255,
             type: 'Disposition Authorization',
             subtype: '',
             active: true,
@@ -2696,9 +2847,11 @@ S.PENTEST_3 = {
             dueDays: 5,
             useDispositionAuthorizationActions: true,
             title: 'Disposition Authorization',
+            message: 'Message-forAutomatedTests'
         },
         other: {
             templateId: 3382,
+            typeId: 3388,
             type: 'Other',
             subtype: '',
             active: true,
@@ -2708,6 +2861,22 @@ S.PENTEST_3 = {
             useDispositionAuthorizationActions: true,
             title: 'Title--forAutomatedTests',
             message: 'Message-forAutomatedTests'
+        },
+        errorCorrection: {
+            templateId: 4991,
+            typeId: 3619,
+            type: 'Error Correction',
+            subtypeId: 558,
+            subtype: 'Packaging and Labeling',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 5,
+            useDispositionAuthorizationActions: false,
+            title: 'Title--forAutomatedTests',
+            message: 'Message-forAutomatedTests',
+            taskAction: 'Must be Rendered Safe',
+            taskActionId: 548,
         },
     },
 },
@@ -2729,7 +2898,7 @@ S.PENTEST_4 = {
     },
     office_2: {
         id: 1138,
-        name: "Web Test Automtion #4 - Cypress Office 2",
+        name: "Cypress Office 2",
         orgAndOfficeName: "Web Test Automtion #4 - Cypress Office 2"
 
     },
@@ -2800,12 +2969,12 @@ S.PENTEST_4 = {
             id: 91
         }
     },
-    // // forms: {
-    // //     userFormWithRequiredFields: 2542,
-    // //     userFormWithOptionalFields: 2546,
-    // //     taskFormWithRequiredFields: 2547,
-    // //     taskFormWithOptionalFields: 2548
-    // // },
+    forms: {
+        userFormWithRequiredFields: 24214,
+        userFormWithOptionalFields: 24215,
+        taskFormWithRequiredFields: 2547,
+        taskFormWithOptionalFields: 2548
+    },
     locations: [
         {
             id: 487942,
@@ -2851,12 +3020,12 @@ S.PENTEST_4 = {
     person: {
         name: 'Person_1',
         fullName: 'Cypress Person_1',
-        id: 6608222,
+        id: 6608613,
         get organizationId() {
-            return S.PENTEST_3.orgSettings.id
+            return S.PENTEST_4.orgSettings.id
         },
         userId: null,
-        guid: '5c11a259-d0fc-43c9-a42f-28b500ae5e6b',
+        guid: '1cd84bfd-eee9-4001-8973-9baaac20f681',
         email: 'qa+person_1@trackerproducts.com'
     },
     person_2: {
@@ -2875,8 +3044,8 @@ S.PENTEST_4 = {
     },
     admin_permissionGroup: {
         name: 'Cypress - ADMIN',
-        id: 4476,
-        startingIndexForViewPermissions: 66572,
+        id: 4597,
+        startingIndexForViewPermissions: 92404,
         get startingIndexForCreatePermissions() {
             return S.PENTEST_4.admin_permissionGroup.startingIndexForViewPermissions + 22
         },
@@ -2948,7 +3117,8 @@ S.PENTEST_4 = {
     },
     taskTemplates: {
         dispoAuth: {
-            templateId: 4308,
+            templateId: 4309,
+            typeId: 2256,
             type: 'Disposition Authorization',
             subtype: '',
             active: true,
@@ -2957,9 +3127,11 @@ S.PENTEST_4 = {
             dueDays: 5,
             useDispositionAuthorizationActions: true,
             title: 'Disposition Authorization',
+            message: 'Message-forAutomatedTests'
         },
         other: {
-            templateId: 3390,
+            templateId: 3383,
+            typeId: 3390,
             type: 'Other',
             subtype: '',
             active: true,
@@ -2969,7 +3141,23 @@ S.PENTEST_4 = {
             useDispositionAuthorizationActions: true,
             title: 'Title--forAutomatedTests',
             message: 'Message-forAutomatedTests'
-        }
+        },
+        errorCorrection: {
+            templateId: 4992,
+            typeId: 1122,
+            type: 'Error Correction',
+            subtypeId: 559,
+            subtype: 'Packaging and Labeling',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 5,
+            useDispositionAuthorizationActions: false,
+            title: 'Title--forAutomatedTests',
+            message: 'Message-forAutomatedTests',
+            taskAction: 'Must be Rendered Safe',
+            taskActionId: 549,
+        },
     },
     orgTag1: {tagModelId: 16872, name: 'sensitive information', color: "#ad2355", tagUsedBy: 1},
     orgTag2: {tagModelId: 16873, name: 'eligible for disposal', color: "#4b9b62", tagUsedBy: 1},
@@ -3279,19 +3467,19 @@ S.SECURE_2 = {
         name: "Cypress Office 2",
         orgAndOfficeName: "Web Test Automation #2 - Cypress Office 2"
     },
-    // org2: {
-    //     office_1: {
-    //         id: 1118,
-    //         guid: 'a9e131e6-3d36-eb11-aa49-062d5b58f56e',
-    //         name: "Cypress Office 1",
-    //         orgAndOfficeName: "Web Test Automtion #3 - Cypress Office 1"
-    //     },
-    //     id: 556,
-    //     orgName: "Web Test Automation #3",
-    //     officeId: 1118,
-    //     officeName: "Cypress Office 1",
-    //     orgAndOfficeName: "Web Test Automtion #3 - Cypress Office 1"
-    // },
+    org2: {
+        office_1: {
+            id: 2218,
+            guid: 'a9e131e6-3d36-eb11-aa49-062d5b58f56e',
+            name: "Cypress Office 1",
+            orgAndOfficeName: "Web Test Automation #3 - Cypress Office 1"
+        },
+        id: 1030,
+        orgName: "Web Test Automation #3",
+        officeId: 2218,
+        officeName: "Cypress Office 1",
+        orgAndOfficeName: "Web Test Automation #3 - Cypress Office 1"
+    },
     users: {
        // systemAdminId: 40357,
         orgAdminId: 118002,

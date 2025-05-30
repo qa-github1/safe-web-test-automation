@@ -14,7 +14,7 @@ describe('Reports', function () {
 
     context('Verify generating and opening Report "Primary Label 4X3"', function () {
 
-        it.only('1. Report from Case View page - Items tab', function () {
+        it('1. Report from Case View page - Items tab', function () {
 
 
             api.auth.get_tokens(S.userAccounts.orgAdmin);

@@ -136,14 +136,18 @@ describe('Add User', function () {
             api.users.deactivate_previously_created_user();
         });
 
-        //if (S.orgNum !== 2) {
-        xit('A.U_3. Add External User', function () {
+        if (S.orgNum !== 3) {
+        it('A.U_3. Add External User', function () {
             ui.app.log_title(this);
             let org2Admin = S.getUserData(S.userAccounts.org2Admin);
             let externalOffice_id = org2Admin.officeId;
 
             // Precondition - add user account to Org2
             D.getNewUserData(externalOffice_id);
+            D.newUser.divisionId = null
+            D.newUser.unitId= null
+            D.newUser.titleRankId= null
+
             api.auth.get_tokens(org2Admin);
             api.users.add_new_user('user1');
             api.permissions.assign_Org_Admin_permissions_to_user('user1')
@@ -177,13 +181,15 @@ describe('Add User', function () {
                 .verify_text_is_present_on_main_container(C.labels.dashboard.title)
 
             //post-test cleanup
-            api.auth.get_tokens(orgAdmin, ['user1', 'user2']);
-            api.users.remove_external_users(['user1', 'user2'])
 
-            api.auth.get_tokens(org2Admin, ['user1', 'user2']);
-            api.users.deactivate_users(['user1', 'user2'])
+          //  api.auth.get_tokens(orgAdmin, ['user1']);
+          //  api.users.remove_external_users(['user1'])
+
+          //  api.auth.get_tokens(org2Admin, ['user1']);
+         //   api.users.deactivate_users(['user1'])
+
         });
-        //  }
+          }
     });
 
     context('1.2 Power User -- all permissions in Office', function () {
@@ -226,6 +232,9 @@ describe('Add User', function () {
             D.generateNewDataSet(false, false, true);
             api.org_settings.set_required_User_forms([S.selectedEnvironment.forms.userFormWithRequiredFields])
             D.newUser = Object.assign(D.newUser, D.newCustomFormData)
+            //I needed to add this because we have an issue with shared forms and we need to create a CF in every org
+            const customFormName = C.customForms[`usersFormWithRequiredFields_${S.selectedEnvironment.orgSettings.id}`];
+
 
             ui.menu.click_Settings__User_Admin()
                 .click_button(C.buttons.add)
@@ -237,7 +246,8 @@ describe('Add User', function () {
                 .click_button(C.buttons.save)
                 .verify_toast_message(C.toastMsgs.saved)
                 .search_for_user(D.newUser.email)
-                 ui.userAdmin.verify_user_data_on_grid(D.newUser, C.customForms.usersFormWithRequiredFields_2, true, 13)
+            //ui.userAdmin.verify_user_data_on_grid(D.newUser, C.customForms.usersFormWithRequiredFields_2, true, 13)
+            ui.userAdmin.verify_user_data_on_grid(D.newUser, customFormName, true, 13)
 
              ui.userAdmin.verify_email_content_(D.newUser.email, C.users.emailTemplates.welcomeToSafe, D.newUser)
              api.users.deactivate_previously_created_user();

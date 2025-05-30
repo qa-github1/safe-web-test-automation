@@ -1,6 +1,7 @@
 import authApi from "../../api-utils/endpoints/auth";
 import orgSettingsApi from "../../api-utils/endpoints/org-settings/collection";
 import '../../support/commands';
+import {selectedEnvironment} from "../../fixtures/settings";
 
 let S = require('../../fixtures/settings');
 let D = require('../../fixtures/data');
@@ -142,6 +143,7 @@ let
     locationPin = e => cy.get('.pac-matched'),
     firstCheckboxOnTableBody = e => cy.get('.bg-grid-checkbox').first(),
     checkboxOnSpecificTableRow = rowNumber => resultsTable().find('.bg-grid-checkbox', {timeout: 0}).eq(rowNumber - 1),
+    bsGridCheckboxes = rowNumber => cy.get('.bg-grid-checkbox', {timeout: 0}).eq(rowNumber - 1),
     checkboxOnTableRowOnModal = rowNumber => tableOnModal().find('.bg-grid-checkbox').eq(rowNumber - 1),
     checkboxOnTableHeader = e => resultsTableHeader().find('[type="checkbox"]'),
     caseNumberOnTypeahead = e => cy.get('[ng-repeat="match in matches track by $index"]').first(),
@@ -215,7 +217,8 @@ let
     typeaheadInputField = fieldLabel => cy.contains(fieldLabel).parent().find('input').first(),
     dropdownField = fieldLabel => cy.findByLabelText(fieldLabel).parent().find('select').eq(0),
     inputField = fieldLabel => cy.findByLabelText(fieldLabel).parent().find('input').eq(0),
-    textareaField = fieldLabel => cy.contains('span', fieldLabel).parents('labels').parent('div').find('textarea').eq(0),
+    // textareaField = fieldLabel => cy.contains('span', fieldLabel).parents('labels').parent('div').find('textarea').eq(0),
+    textareaField = fieldLabel => cy.contains('label', fieldLabel).parent().find('textarea').eq(0),
     typeaheadOption = fieldLabel => cy.contains(fieldLabel).parent().find('ul').find('li').eq(0),
     storageLocationInput = fieldLabel => cy.get('[placeholder="type ‘/‘ or start typing a location name"]').last(),
     returnedByInput = e => cy.get('[label="\'ITEMS.CHECK_IN.RETURNED_BY\'"]').find('[typeahead="l.id as l.text for l in getPerson($viewValue) | limitTo: 10"]'),
@@ -518,7 +521,7 @@ export default class BasePage {
         cy.contains('Menu Customization').click()
         optionsDropdownUnderMenuCustomization().click()
         pageSizesUnderMenuCustomization().contains(pageSize).click()
-        this.pause(1)
+        this.pause(3)
         this.wait_until_spinner_disappears()
         return this;
     }
@@ -526,6 +529,8 @@ export default class BasePage {
     click_number_on_pagination(pageNumber) {
         this.wait_until_spinner_disappears()
         cy.get('.pagination-sm').first().findByText(pageNumber).click()
+        this.pause(3)
+        this.wait_until_spinner_disappears()
         return this;
     }
 
@@ -535,8 +540,8 @@ export default class BasePage {
         this.pause(2)
         largeView().click();
         this.verify_element_has_class(largeView, 'btn-multi')
+        this.pause(2)
         this.wait_until_spinner_disappears()
-        this.pause(1)
         return this;
     }
 
@@ -553,6 +558,7 @@ export default class BasePage {
         this.pause(2)
         largeView().click();
         this.verify_element_has_class(largeView, 'btn-multi')
+        this.wait_until_spinner_disappears()
         return this;
     }
 
@@ -739,15 +745,19 @@ export default class BasePage {
     }
 
     enter_values_on_single_multi_select_typeahead_field(LabelValueArray) {
+
         if (LabelValueArray[1]) {
             // if there are multiple values in array, repeat the same action to enter all of them
             for (let i = 0; i < LabelValueArray[1].length; i++) {
+                // skip getUserinTypeahead if string is empty
+                const searchValue = LabelValueArray[1][i] == null ? '' : String(LabelValueArray[1][i]).trim();
+                if (searchValue === '') continue;
                 if (["users/groups", "usersCF"].includes(LabelValueArray[2])) {
                     this.define_API_request_to_be_awaited('GET',
-                        'api/users/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + LabelValueArray[1][i].replace(/\s+/g, '%20'),
+                        'api/users/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + searchValue.replace(/\s+/g, '%20'),
                         "getUserInTypeahead")
                     this.define_API_request_to_be_awaited('GET',
-                        '/api/userGroups/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + LabelValueArray[1][i].replace(/\s+/g, '%20'),
+                        '/api/userGroups/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + searchValue.replace(/\s+/g, '%20'),
                         "getUserGroupInTypeahead")
                 } else if (["people", "peopleCF"].includes(LabelValueArray[2])) {
                     this.define_API_request_to_be_awaited('GET',
@@ -755,6 +765,7 @@ export default class BasePage {
                         "getPeopleInTypeahead")
 
                 }
+
 
                 if (typeof LabelValueArray[0] === 'string' || LabelValueArray[0] instanceof String) {
                     // typeaheadInputField(LabelValueArray[0]).clear().invoke('val', LabelValueArray[1][i]).trigger('input')
@@ -788,6 +799,8 @@ export default class BasePage {
 
             }
         }
+
+
         return this;
     };
 
@@ -938,18 +951,31 @@ export default class BasePage {
 
     verify_multiple_text_values_in_one_container(container, arrayOfProperties) {
         container().should('exist');
+
         arrayOfProperties.forEach(function (prop) {
             if (prop !== null) {
                 if (prop === '') {
-                    container({timeout: 5000}).invoke('text').should('eq', prop);
-                }
-                {
-                    container({timeout: 5000}).should('contain.text', prop);
+                    container({ timeout: 5000 }).invoke('text').should('eq', '');
+                } else {
+                    // we have issues with trimming on DEV, so I had to add like this
+                    cy.url().then(url => {
+                        if (url.includes('dev')) {
+                            container({ timeout: 5000 }).invoke('text').then(text => {
+                                const normalizedText = text.replace(/\s+/g, ' ').trim();
+                                const normalizedProp = prop.replace(/\s+/g, ' ').trim();
+                                expect(normalizedText).to.include(normalizedProp);
+                            });
+                        } else {
+                            container({ timeout: 5000 }).should('contain.text', prop);
+                        }
+                    });
                 }
             }
         });
+
         return this;
-    };
+    }
+
 
     verify_text_on_element_found_by_label(element, expectedText, elementLabel,) {
         if (this.isObject(expectedText)) {
@@ -989,12 +1015,15 @@ export default class BasePage {
     //     }
     // }
 
-    check_text(element, text) {
+    check_text(element, text, timeoutInSeconds = 60) {
         if (text) {
             let getTextFn = () => {
                 return (element instanceof Function ? element() : element).invoke('text');
             };
-            cy.verifyTextAndRetry(getTextFn, text, {maxAttempts: 60, retryInterval: 500});
+            const retryInterval = 500
+            let timeout = timeoutInSeconds * 1000
+            let maxAttempts = timeout / retryInterval
+            cy.verifyTextAndRetry(getTextFn, text, {maxAttempts: maxAttempts, retryInterval: retryInterval});
         }
     }
 
@@ -1051,18 +1080,18 @@ export default class BasePage {
         }
     }
 
-    verify_text(element, expectedText) {
+    verify_text(element, expectedText, timeoutInSeconds) {
         let self = this
         if (this.isObject(expectedText)) {
             for (let property in expectedText) {
-                self.check_text(element, expectedText[property])
+                self.check_text(element, expectedText[property], timeoutInSeconds)
             }
         } else if (Array.isArray(expectedText)) {
             expectedText.forEach(function (value) {
-                self.check_text(element, value)
+                self.check_text(element, value, timeoutInSeconds)
             })
         } else {
-            self.check_text(element, expectedText)
+            self.check_text(element, expectedText, timeoutInSeconds)
         }
         return this;
     };
@@ -1255,6 +1284,7 @@ export default class BasePage {
     };
 
     click_Save() {
+        this.pause(2) // static wait is needed before clicking the Save button to improve test stability
         saveButton().should('be.enabled');
         saveButton().click();
         return this;
@@ -1728,10 +1758,26 @@ export default class BasePage {
         return this;
     };
 
-    press_shift_and_click_row(rowNumber) {
+    press_shift_and_click_row(rowNumber, tableIndex = 0) {
         if (rowNumber) {
             cy.get("body").type("{shift}", {release: false});
-            checkboxOnSpecificTableRow(rowNumber).click();
+
+            if (tableIndex === 0) {
+
+                cy.document().then((doc) => {
+                    const checkbox = doc.querySelector('.bg-grid-checkbox');
+                    if (checkbox) {
+                        cy.get('.bg-grid-checkbox').eq(rowNumber - 1).click({force: true});
+                    } else {
+                        throw new Error('Checkbox not found in DOM');
+                    }
+                });
+
+                //  bsGridCheckboxes(rowNumber).click();
+            } else {
+                checkboxOnSpecificTableRow(rowNumber).click();
+            }
+
             cy.get("body").type("{shift}");
         }
         return this;
@@ -1795,12 +1841,26 @@ export default class BasePage {
         return this;
     }
 
-    click_checkbox_to_select_specific_row(rowNumber) {
-        this.wait_until_spinner_disappears()
+    click_checkbox_to_select_specific_row(rowNumber, tableIndex = 0) {
         this.pause(1)
+        this.wait_until_spinner_disappears()
         firstCheckboxOnTableBody().should('be.visible')
-        checkboxOnSpecificTableRow(rowNumber).scrollIntoView()
-        checkboxOnSpecificTableRow(rowNumber).click();
+
+        if (tableIndex === 0) {
+
+            cy.document().then((doc) => {
+                const checkbox = doc.querySelector('.bg-grid-checkbox');
+                if (checkbox) {
+                    cy.get('.bg-grid-checkbox').eq(rowNumber - 1).click({force: true});
+                } else {
+                    throw new Error('Checkbox not found in DOM');
+                }
+            });
+
+            //  bsGridCheckboxes(rowNumber).click();
+        } else {
+            checkboxOnSpecificTableRow(rowNumber).click();
+        }
         return this;
     };
 
@@ -1952,10 +2012,12 @@ export default class BasePage {
         return this;
     };
 
-    verify_content_of_first_row_in_results_table(content) {
+    verify_content_of_first_row_in_results_table(content, clickReloadIconBetweenAttempts = false) {
+        this.wait_until_spinner_disappears()
         cy.verifyTextAndRetry(() =>
                 firstRowInResultsTable().invoke('text'),
-            content
+            content,
+            {clickReloadIconBetweenAttempts: true}
         );
         return this;
     }
@@ -2317,11 +2379,12 @@ export default class BasePage {
         cy.getLocalStorage("newCase").then(newCase => {
             newCase = JSON.parse(newCase);
 
-            //cy.log('Opening Case URL: ' + S.base_url + '/#/cases/' + newCase.id.toString() + '/view')
+            cy.log('Opening Case URL: ' + S.base_url + '/#/cases/' + newCase.id.toString() + '/view')
             cy.server();
             cy.intercept(S.api_url + '/api/organizations/useCaseLevelPermissions').as('getSettingsOfCLP');
 
             cy.visit(S.base_url + '/#/cases/' + newCase.id.toString() + '/view')
+            this.verify_url_contains_some_value(`/#/cases/${newCase.id.toString()}/view`)
             //   cy.wait('@getSettingsOfCLP');
         });
         return this;
@@ -2788,14 +2851,6 @@ export default class BasePage {
         });
     }
 
-    //
-    // get_text_from_grid_and_save_in_local_storage(columnTitle, object, propertyName, headerCellTag = 'th') {
-    //     resultsTableHeader().contains(headerCellTag, columnTitle).invoke('index').then((i) => {
-    //         firstRowInResultsTable().find('td').eq(i).invoke('text').then(function (text) {
-    //             return object[propertyName] = text
-    //         });
-    //     })
-    // }
 
     get_text_from_grid_and_save_in_local_storage(columnTitle, propertyName, headerCellTag = 'th') {
         resultsTableHeader().contains(headerCellTag, columnTitle).invoke('index').then((i) => {
@@ -2877,57 +2932,6 @@ export default class BasePage {
         return this
     }
 
-    // enable_columns_for_specific__Custom_Form_on_the_grid(customFormName) {
-    //     menuCustomization().click()
-    //     customFormsSectionOnMenuCustomization().click()
-    //     this.enterValue(searchCustomFormsOnMenuCustomization, customFormName)
-    //
-    //     cy.get('[ng-if="customFieldsToggle.isOpen"]')
-    //         .then(($body) => {
-    //             if ($body.find('.glyphicon-remove').length > 0) {
-    //                 disabledColumnsOsOnMenuCustomization().its('length').then(function (length) {
-    //                     for (let i = 0; i < length; i++) {
-    //                         disabledColumnsOsOnMenuCustomization().first().click()
-    //                         if (i < length - 1) {
-    //                             menuCustomization().click()
-    //                         }
-    //                     }
-    //                 })
-    //             } else {
-    //                 menuCustomization().click()
-    //             }
-    //         })
-    //     return this
-    // }
-
-    // enable_columns_for_specific__Custom_Form_on_the_grid(customFormName) {
-    //     menuCustomization().click();
-    //     customFormsSectionOnMenuCustomization().click();
-    //     this.enterValue(searchCustomFormsOnMenuCustomization, customFormName);
-    //
-    //     cy.get('[ng-if="customFieldsToggle.isOpen"]').then(($body) => {
-    //         if ($body.find('.glyphicon-remove').length > 0) {
-    //             cy.get('body').then(($page) => {
-    //                 let selectorToUse = $page.find(disabledColumnsOsOnMenuCustomization().selector).length > 0
-    //                     ? disabledColumnsOsOnMenuCustomization_PENTEST
-    //                     : disabledColumnsOsOnMenuCustomization;
-    //
-    //                 selectorToUse().its('length').then((length) => {
-    //                     for (let i = 0; i < length; i++) {
-    //                         selectorToUse().first().should('be.visible').click();
-    //                         if (i < length - 1) {
-    //                             menuCustomization().click();
-    //                         }
-    //                     }
-    //                 });
-    //             });
-    //         } else {
-    //             menuCustomization().click();
-    //         }
-    //     });
-    //     return this;
-    // }
-
     enable_columns_for_specific__Custom_Form_on_the_grid(customFormName, count) {
         menuCustomization().click();
         customFormsSectionOnMenuCustomization().click();
@@ -3001,7 +3005,7 @@ export default class BasePage {
     populate_CheckIn_form(returnedBy, usePreviousLocation, fullLocationPath, note) {
         returnedByInput().type(returnedBy.email);
         this.click_option_on_typeahead(returnedBy.fullName);
-        if (usePreviousLocation) {
+        if (usePreviousLocation === true) {
             usePreviousLocationCheckbox().click();
         } else {
             this.select_Storage_location(fullLocationPath)
@@ -3012,7 +3016,7 @@ export default class BasePage {
 
     populate_CheckOut_form(takenBy_personOrUserObject, checkoutReason, notes, expectedReturnDate) {
         checkedOutToInput().invoke('val', takenBy_personOrUserObject.email).trigger('input')
-       // checkedOutToInput().type(takenBy_personOrUserObject.email);
+        // checkedOutToInput().type(takenBy_personOrUserObject.email);
         this.pause(0.5)
         this.click_option_on_typeahead(takenBy_personOrUserObject.fullName);
 
@@ -3026,24 +3030,13 @@ export default class BasePage {
     }
 
     populate_Transfer_form(transferTo_user, transferFrom_user, notes) {
-        // this.enterValue(transferFromInput, transferFrom_user.email)
-        // this.pause(0.5)
-        // this.click_option_on_typeahead(transferFrom_user.fullName)
-
         this.select_typeahead_option(transferFromInput, transferFrom_user.email, this.typeaheadSelectorMatchInMatches)
-
-        // this.enterValue(transferToInput, transferTo_user.email)
-        // this.pause(0.5)
-        // this.click_option_on_typeahead(transferTo_user.fullName);
-
         this.select_typeahead_option(transferToInput, transferTo_user.email, this.typeaheadSelectorMatchInMatches)
         this.enter_notes_on_modal(notes);
         return this;
     }
 
     populate_Move_form(locationName, notes) {
-        // locationInputOnModal().type('/');
-        // this.click_option_on_typeahead(location.name);
         this.select_Storage_location(locationName)
         this.enter_notes_on_modal(notes);
         return this;
@@ -3051,9 +3044,6 @@ export default class BasePage {
 
     populate_disposal_form(disposalWitness_user, method, notes) {
         this.select_typeahead_option(disposalWitnessInput, disposalWitness_user.email, typeaheadSelectorMatchInMatches)
-        // this.enterValue(disposalWitnessInput, disposalWitness_user.email)
-        // this.pause(0.5)
-        // this.click_option_on_typeahead(disposalWitness_user.fullName);
         disposalMethodsDropdown().select(method)
         this.enter_notes_on_modal(notes);
         return this;
