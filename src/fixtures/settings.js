@@ -3467,19 +3467,19 @@ S.SECURE_2 = {
         name: "Cypress Office 2",
         orgAndOfficeName: "Web Test Automation #2 - Cypress Office 2"
     },
-    // org2: {
-    //     office_1: {
-    //         id: 1118,
-    //         guid: 'a9e131e6-3d36-eb11-aa49-062d5b58f56e',
-    //         name: "Cypress Office 1",
-    //         orgAndOfficeName: "Web Test Automtion #3 - Cypress Office 1"
-    //     },
-    //     id: 556,
-    //     orgName: "Web Test Automation #3",
-    //     officeId: 1118,
-    //     officeName: "Cypress Office 1",
-    //     orgAndOfficeName: "Web Test Automtion #3 - Cypress Office 1"
-    // },
+    org2: {
+        office_1: {
+            id: 2218,
+            guid: 'a9e131e6-3d36-eb11-aa49-062d5b58f56e',
+            name: "Cypress Office 1",
+            orgAndOfficeName: "Web Test Automation #3 - Cypress Office 1"
+        },
+        id: 1030,
+        orgName: "Web Test Automation #3",
+        officeId: 2218,
+        officeName: "Cypress Office 1",
+        orgAndOfficeName: "Web Test Automation #3 - Cypress Office 1"
+    },
     users: {
        // systemAdminId: 40357,
         orgAdminId: 118002,
