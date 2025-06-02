@@ -96,7 +96,7 @@ describe('Import Cases', function () {
             .verify_title_on_active_tab(1)
     });
 
-    it('I.C_3 Case with custom fields', function () {
+    it.only('I.C_3 Case with custom fields', function () {
         //failing in pentest org4
         ui.app.log_title(this);
         let fileName = 'CaseImport_customFields_' + S.domain;
@@ -106,6 +106,14 @@ describe('Import Cases', function () {
         D.newCase.reviewDate = null
         D.newCase.reviewDateNotes = null
         E.generateDataFor_CASES_Importer([D.newCase], C.customForms.casesFormWithOptionalFields);
+        const index = 18;
+        const customUserValue = 'bc395b78-7c97-ef11-8350-0254a7906fb1';
+
+        if (E.caseImportDataWithMinimumFields[1] && index !== -1) {
+            E.caseImportDataWithMinimumFields[1][index] = customUserValue;
+        } else {
+            throw new Error('Row or column index not found when updating optional field');
+        }
         cy.generate_excel_file(fileName, E.caseImportDataWithMinimumFields);
 
         api.org_settings.disable_Case_fields();

@@ -986,7 +986,7 @@ C.permissionMatrixAccessType = {
 
 C.customForms = {
     casesFormWithRequiredFields: 'Required fields - Cypress Cases Form',
-    casesFormWithOptionalFields: 'Optional fields - Cypress Cases Form',
+    casesFormWithOptionalFields: 'Optional fields - Cypress Case Form',
 
     itemsFormWithRequiredFields: 'Required fields - Cypress Items Form',
     itemsFormWithOptionalFields: 'Optional fields - Cypress Items Form',
