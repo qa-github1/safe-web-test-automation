@@ -241,6 +241,7 @@ D.getNewItemData = function (specificCaseObject, locationObject, newPerson) {
         checkedOutTo_name: '',
         checkedOutNotes: '',
         expectedReturnDate: '',
+        dispositionStatus: 'Disposed'
     });
     return D.newItem;
 };
@@ -248,6 +249,7 @@ D.getNewItemData = function (specificCaseObject, locationObject, newPerson) {
 D.getDisposedItemData = function (newOrEditedItem = 'editedItem') {
     let disposalData = {
         status: 'Disposed',
+        dispositionStatus: 'Approved for Disposal',
         location: '',
         locationGuid: '',
         actualDisposedDate: helper.setDateAndTime(C.currentDateTimeFormat, 2020, 5, 5, 17, 27),

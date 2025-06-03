@@ -4,6 +4,10 @@ const D = require('../../fixtures/data');
 const E = require('../../fixtures/files/excel-data');
 const api = require('../../api-utils/api-spec');
 const ui = require('../../pages/ui-spec');
+S.setEnvironmentProperties();
+
+
+
 
 describe('Import Notes', function () {
 
@@ -164,7 +168,9 @@ describe('Import Notes', function () {
 
         ui.menu.click_Tools__Data_Import();
         ui.importer.upload_file_and_go_to_import_preview(fileName, C.importTypes.notes)
-            .verify_importer_validation_messages(C.labels.importer.notes.validationMsgs.invalidValues)
+        let invalidDate = S.selectedEnvironment.importer.invalidDate
+        let invalidItem = S.selectedEnvironment.importer.invalidItem
+    ui.importer.verify_importer_validation_messages(C.labels.importer.notes.validationMsgs.invalidValues(invalidDate, invalidItem))
     });
 
     it('9 Validation messages for blank values', function () {

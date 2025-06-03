@@ -625,7 +625,8 @@ C = {
             'Primary Case #',
             'Additional Barcodes',
             'Item Belongs to',
-            'Tags'
+            'Tags',
+            //'Returned By'
         ]
     },
     reports: {
@@ -868,12 +869,12 @@ C.labels = {
                     'Row #2 has Error: Field CaseNumber. Case \'$\' not found.',
                     'Row #2 has Error: The note is neither Case nor Item'
                 ],
-                invalidValues: [
+                invalidValues: (invalidDate, invalidItem) =>[
                     'Row #2 has Error: Field UserGUID Email is empty.',
                     'Row #2 has Error: Field UserGUID. User not found. Value: \'\'',
                     'Row #2 has Error: Field OfficeGUID. Office not found',
-                    'Row #2 has Error: Field Date. Date \'535530de-c2e1-40bd-ad7d-4189dbbeb6af\' is not in the proper format.',
-                    'Row #2 has Error: Field ItemID. Value \'535530de-c2e1-40bd-ad7d-4189dbbeb6af\' is not in a recognizable format.',
+                    `Row #2 has Error: Field Date. Date '${invalidDate}' is not in the proper format.`,
+                    `Row #2 has Error: Field ItemID. Value '${invalidItem}' is not in a recognizable format.`,
                     'Row #2 has Error: Field CaseNumber. Case number invalid format.',
                     'Row #2 has Error: The note is neither Case nor Item'
                 ],

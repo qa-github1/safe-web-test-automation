@@ -487,25 +487,29 @@ export default class BaseViewPage extends BasePage {
         return this;
     };
 
-    verify_red_highlighted_history_records(allFieldsOnHistory, redFields) {
-        historyView_leftColumn().within(($form) => {
-            for (let field of allFieldsOnHistory) {
-                if (redFields.includes(field)) {
+     verify_red_highlighted_history_records(allFieldsOnHistory, redFields) {
+         historyView_leftColumn().within(($form) => {
+             for (let field of allFieldsOnHistory) {
+                 if (redFields.includes(field)) {
+                     cy.contains(field)
+                         .should('have.color', 'rgb(255, 0, 0)')
+                 } else {
                     cy.contains(field)
-                        .should('have.color', 'rgb(255, 0, 0)')
-                } else {
-                    cy.contains(field)
-                        // .then(($el) => {
-                        //     return window.getComputedStyle($el[0])
-                        // })
-                        // .invoke('getPropertyValue', 'color')
-                        // .should('equal', 'rgb(103, 106, 108)')
-                        .should('have.color', 'rgb(103, 106, 108)')
-                }
-            }
-        })
-        return this;
-    }
+                         // .then(($el) => {
+                         //     return window.getComputedStyle($el[0])
+                         // })
+                         // .invoke('getPropertyValue', 'color')
+                         // .should('equal', 'rgb(103, 106, 108)')
+                         .should('have.color', 'rgb(103, 106, 108)')
+                 }
+             }
+         })
+         return this;
+     }
+
+
+
+
 
     verify_required_fields(fields) {
         for (let field of fields) {

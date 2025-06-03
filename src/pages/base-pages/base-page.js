@@ -950,7 +950,7 @@ export default class BasePage {
     };
 
     verify_multiple_text_values_in_one_container(container, arrayOfProperties) {
-        container().should('exist');
+        container().should('exist').and('not.be.empty');
 
         arrayOfProperties.forEach(function (prop) {
             if (prop !== null) {

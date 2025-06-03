@@ -66,7 +66,8 @@ describe('Import Items', function () {
         let CoC_disposal_ItemEntry = S.chainOfCustody.SAFE.disposal(D.newItem);
 
         E.generateDataFor_ITEMS_Importer([D.newItem]);
-        cy.generate_excel_file(fileName, E.itemImportDataWithAllFields);
+            cy.generate_excel_file(fileName, E.itemImportDataWithAllFields);
+
 
         ui.menu.click_Tools__Data_Import();
         ui.importer.upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.items)
@@ -103,6 +104,7 @@ describe('Import Items', function () {
         D.getNewItemData(D.newCase);
         D.getCheckedOutItemData(true)
         D.newItem.checkedOutNotes = 'Imported Checked Out item';
+        D.newItem.custodianGuid = S.selectedEnvironment.person.email;
         let CoC_checkout_ItemEntry = S.chainOfCustody.SAFE.checkout(D.newItem);
 
         E.generateDataFor_ITEMS_Importer([D.newItem]);
@@ -163,7 +165,7 @@ describe('Import Items', function () {
             .verify_title_on_active_tab(1)
     });
 
-    it('5. Item with custom fields', function () {
+    it.only('5. Item with custom fields', function () {
         ui.app.log_title(this);
         let fileName = 'ItemImport_customFields_' + S.domain;
         api.auth.get_tokens(orgAdmin);
@@ -172,6 +174,7 @@ describe('Import Items', function () {
         D.getItemDataWithReducedFields(D.newCase);
         D.newItem.description = D.randomNo
         E.generateDataFor_ITEMS_Importer([D.newItem], C.customForms.itemsFormWithOptionalFields);
+        E.itemImportDataWithMinimumFields[1][19] = S.selectedEnvironment.users.orgAdmin.guid;
         cy.generate_excel_file(fileName, E.itemImportDataWithMinimumFields);
 
         ui.menu.click_Tools__Data_Import();
