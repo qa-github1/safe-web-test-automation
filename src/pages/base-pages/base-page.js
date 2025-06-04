@@ -1144,12 +1144,20 @@ export default class BasePage {
         return this;
     };
 
+    // verify_text_regardless_of_the_DOM_structure(element, fullText) {
+    //     element().invoke('text').then(function (text) {
+    //         assert.equal(text, fullText);
+    //     });
+    //     return this;
+    // };
     verify_text_regardless_of_the_DOM_structure(element, fullText) {
         element().invoke('text').then(function (text) {
-            assert.equal(text, fullText);
+            const normalizedText = text.replace(/\s+/g, ' ').trim();
+            const expectedText = fullText.replace(/\s+/g, ' ').trim();
+            assert.equal(normalizedText, expectedText);
         });
         return this;
-    };
+    }
 
     verify_element_does_NOT_contain_text(element, text) {
         element().should('not.contain', text);
@@ -2552,7 +2560,7 @@ export default class BasePage {
 
     check_asterisk_is_shown_for_specific_field_on_modal(fieldLabel, parentElementTag = 'div') {
         parentContainerFoundByInnerLabelOnModal(fieldLabel, parentElementTag)
-            .find('[ng-message="required"]').scrollIntoView().should('be.visible');
+            .find('[ng-message="required"]').should('be.visible');
         return this;
     }
 
@@ -2699,6 +2707,14 @@ export default class BasePage {
         return this
     }
 
+    turn_on_all_toggles_on_modal(labelsArray) {
+        for (let i = 0; i < labelsArray.length; i++) {
+            const label = labelsArray[i];
+            this.turnOnToggle(label);
+        }
+        return this;
+    }
+
     turn_on_and_enter_values_to_all_fields_on_modal(labelsArray, valuesArray) {
 
         for (let i = 0; i < labelsArray.length; i++) {
@@ -2771,7 +2787,12 @@ export default class BasePage {
 
             } else if (['Case Officer(s)'].some(v => label === v)) {
                 this.findElementByLabelAndSelectTypeaheadOptionsOnMultiSelectField(label, value)
-            } else {
+            } else if (label === 'Offense Location') {
+                cy.get('[name="offenseLocation"]').clear().type(value).click();
+            }
+
+
+            else {
                 this.findElementByLabelEnterValueAndPressEnter(label, value)
             }
         }
