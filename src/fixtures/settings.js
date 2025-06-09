@@ -526,7 +526,8 @@ S.DEV_2 = {
         },
         blockedUser: {
             id: 73851,
-            guid: '24abf752-0a00-f011-8356-0254a7906fb1'
+            guid: '24abf752-0a00-f011-8356-0254a7906fb1',
+            email: 'qa+org2_blockeduser@trackerproducts.com'
         },
     },
     divisions: {
@@ -683,6 +684,40 @@ S.DEV_2 = {
     },
     get recoveredById() {
         return S.DEV_2.person.id
+    },
+    caseCustomForm: {
+        name: "Optional fields - Cypress Case Form",
+        id: 22145,
+        checkboxListId: "field2946",
+        radioButtonListId: "field2948",
+        selectListId: "field2950",
+        number: "field2938",
+        password: "field2940",
+        textbox: "field2934",
+        email: "field2936",
+        textarea: "field2942",
+        checkbox: "field2944",
+        date: "Date",
+        user: "field2954",
+        person: "field2956",
+        dropdownTypeahead: "field2952"
+    },
+    itemCustomForm: {
+        name: "Optional fields - Cypress Items Form",
+        id: 22148,
+        checkboxListId: "field8019",
+        radioButtonListId: "field8021",
+        selectListId: "field8023",
+        number: "field8011",
+        password: "field8013",
+        textbox: "field8007",
+        email: "field8009",
+        textarea: "field8015",
+        checkbox: "field8017",
+        date: "Date",
+        user: "field8027",
+        person: "field8029",
+        dropdownTypeahead: "field8025"
     },
     clp_permissionGroup: {
         name: 'CLP Group',

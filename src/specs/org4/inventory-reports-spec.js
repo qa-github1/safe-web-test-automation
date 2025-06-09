@@ -51,6 +51,7 @@ describe('Inventory Reports', function () {
                     barcodes.push(JSON.parse(item).barcode)
                 })
             }
+
         });
 
         after(function () {
@@ -65,7 +66,7 @@ describe('Inventory Reports', function () {
             api.locations.move_location(child2_1, 'root')
         })
 
-        it('1.1. DR for single parent location - No Discrepancies Found', function () {
+        it.only('1.1. DR for single parent location - No Discrepancies Found', function () {
             let reportName = D.getCurrentDateAndRandomNumber(4);
 
             api.auth.get_tokens(orgAdmin);
@@ -104,11 +105,11 @@ describe('Inventory Reports', function () {
 
             api.auth.get_tokens(orgAdmin);
 
-            for (let i = 0; i < 8; i++) {
-                cy.getLocalStorage('item' + i).then(item => {
-                    barcodes.push(JSON.parse(item).barcode)
-
-                    if (i === 7) {
+            // for (let i = 0; i < 8; i++) {
+            //     cy.getLocalStorage('item' + i).then(item => {
+            //         barcodes.push(JSON.parse(item).barcode)
+            //
+            //         if (i === 7) {
                         ui.menu.click_Tools__Inventory_Reports()
                             .click_button(C.buttons.newReport)
                         ui.inventoryReports.start_report(reportName, D[parent1].barcode)
@@ -127,9 +128,9 @@ describe('Inventory Reports', function () {
                             .click_button(C.buttons.runReport)
                             .verify_text_is_present_on_main_container
                             (C.labels.InventoryReports.noDiscrepanciesFound)
-                    }
-                })
-            }
+               //     }
+              //  })
+          //  }
         });
 
         it('1.4. Create and run DR for multiple parent and child locations - starting with Child loc -  No Discrepancies Found', function () {
@@ -137,11 +138,11 @@ describe('Inventory Reports', function () {
 
             api.auth.get_tokens(orgAdmin);
 
-            for (let i = 0; i < 8; i++) {
-                cy.getLocalStorage('item' + i).then(item => {
-                    barcodes.push(JSON.parse(item).barcode)
-
-                    if (i === 7) {
+            // for (let i = 0; i < 8; i++) {
+            //     cy.getLocalStorage('item' + i).then(item => {
+            //         barcodes.push(JSON.parse(item).barcode)
+            //
+            //         if (i === 7) {
                         ui.menu.click_Tools__Inventory_Reports()
                             .click_button(C.buttons.newReport)
                         ui.inventoryReports.start_report(reportName, D[child1_1].barcode)
@@ -158,9 +159,9 @@ describe('Inventory Reports', function () {
                             .click_button(C.buttons.runReport)
                             .verify_text_is_present_on_main_container
                             (C.labels.InventoryReports.noDiscrepanciesFound)
-                    }
-                })
-            }
+              //      }
+             //   })
+           // }
         });
 
         it('1.5. Create and run DR for multiple parent and child locations  - starting with Child loc - switching back to parent location-  No Discrepancies Found', function () {

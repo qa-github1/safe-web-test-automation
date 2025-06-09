@@ -29,6 +29,12 @@ for (var i = Cypress.env('runPreconditionForSpecificEnv') ? 2 : 0; i < 3; i++) {
             "domain_": "PENTEST",
             orgNum_: 1,
         },
+        {
+            "baseUrl_": "https://dev.trackerproducts.com",
+            "apiUrl_": "https://devapi.trackerproducts.com",
+            "domain_": "DEV",
+            orgNum_: 2,
+        },
         // {
         //     "baseUrl_": "https://apac.trackerproducts.com",
         //     "apiUrl_": "https://apaclb.trackerproducts.com",
@@ -71,6 +77,15 @@ for (var i = Cypress.env('runPreconditionForSpecificEnv') ? 2 : 0; i < 3; i++) {
                 // api.auth.set_password(S.userAccounts.orgAdmin)
                 // api.auth.set_password(S.userAccounts.powerUser)
                 // api.auth.set_password(S.userAccounts.clpUser)
+                //
+                //
+                 if (S.domain === 'DEV' && S.orgNum === 2) {
+                    api.auth.set_password(S.userAccounts.systemAdmin)
+                   // api.auth.set_password(S.userAccounts.org2Admin)
+                }
+                api.auth.set_password(S.userAccounts.orgAdmin)
+                api.auth.set_password(S.userAccounts.powerUser)
+                api.auth.set_password(S.userAccounts.clpUser)
             });
         });
 }

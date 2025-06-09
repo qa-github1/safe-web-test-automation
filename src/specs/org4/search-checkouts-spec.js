@@ -31,7 +31,7 @@ describe('Search Checkouts', function () {
         api.auth.get_tokens(orgAdmin);
         D.generateNewDataSet()
         D.checkout = {
-            checkedOutTo: D.newPerson.name,
+            checkedOutTo: D.newPerson.businessName,
             checkedOutBy: orgAdmin.name,
             reason: S.selectedEnvironment.checkoutReason.name,
             //notes: D.randomNo,
