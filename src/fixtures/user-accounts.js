@@ -74,18 +74,18 @@ exports.getTestAccounts = function (environment, orgNum = 1) {
             id: environment.users.blockedUser.id,
             guid: environment.users.blockedUser.guid
         },
-        // systemAdmin: {
-        //     title: exports.userRoles.systemAdmin,
-        //     email: 'qa+systemadmin@trackerproducts.com',
-        //     password: 'Qwerty123!',
-        //     name: 'QA',
-        //     firstName: 'SystemAdmin',
-        //     lastName: 'SystemAdmin',
-        //     officeId: environment.users.systemAdmin.officeId,
-        //     organizationId: environment.users.systemAdmin.organizationId,
-        //     id: environment.users.systemAdmin.id,
-        //     guid: environment.users.systemAdmin.guid
-        // }
+        systemAdmin: {
+            title: exports.userRoles.systemAdmin,
+            email: 'qa+systemadmin@trackerproducts.com',
+            password: 'Qwerty123!',
+            name: 'QA',
+            firstName: 'SystemAdmin',
+            lastName: 'SystemAdmin',
+            officeId: environment.users.systemAdmin.officeId,
+            organizationId: environment.users.systemAdmin.organizationId,
+            id: environment.users.systemAdmin.id,
+            guid: environment.users.systemAdmin.guid
+        }
     }
     return exports.userAccounts['orgNum' + orgNum];
 };

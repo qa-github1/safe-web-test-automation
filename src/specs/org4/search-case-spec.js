@@ -5,6 +5,7 @@ const api = require('../../api-utils/api-spec');
 const ui = require('../../pages/ui-spec');
 const helper = require('../../support/e2e-helper');
 const E = require("../../fixtures/files/excel-data");
+const {log_out} = require("../../api-utils/endpoints/auth");
 
 const orgAdmin = S.getUserData(S.userAccounts.orgAdmin),
     powerUser = S.getUserData(S.userAccounts.powerUser),
@@ -75,7 +76,7 @@ describe('Cases Search', function () {
         api.org_settings.enable_all_Case_fields();
         api.auto_disposition.edit(true);
         ui.userAdmin.add_and_verify_new_user_and_get_tokens()
-        D.newCase.createdBy = D.newUser.fullName
+        D.newCase.createdBy = D.newUser.firstLastName
         api.users.update_current_user_settings('newUser')
 
         D.case0 = Object.assign({}, D.newCase)
@@ -109,8 +110,8 @@ describe('Cases Search', function () {
                 C.toastMsgs.importComplete,
                 3 + C.toastMsgs.recordsImported])
     });
-
     context('1 Org Admin', function () {
+
 
         context('1.1 Created By', function () {
 
@@ -122,6 +123,7 @@ describe('Cases Search', function () {
                     .enter_Created_By(equals, D.newUser.email)
                     .click_Search()
                     .verify_data_on_the_grid(D.case0);
+                ui.menu.click_Log_Out()
             });
 
             it('1.1.2 "Created By" equals {current user - checkbox}', function () {
@@ -132,6 +134,8 @@ describe('Cases Search', function () {
                     .select_current_user_checkbox_for_Created_By(equals)
                     .click_Search()
                     .verify_content_of_first_row_in_results_table(D.case0.caseNumber);
+                ui.menu.click_Log_Out()
+
             });
 
             it('1.1.3 "Created By" equals {email of the user (NOT current user) who created a case}', function () {
@@ -142,6 +146,8 @@ describe('Cases Search', function () {
                     .enter_Created_By(equals, D.newUser.email)
                     .click_Search()
                     .verify_content_of_first_row_in_results_table(D.case0.caseNumber);
+                ui.menu.click_Log_Out()
+
             });
 
             it('1.1.4 "Created By" not equals {email of the current user who did not create a case}', function () {
@@ -153,6 +159,8 @@ describe('Cases Search', function () {
                     .enter_Case_Number(equals, D.newCase.caseNumber)
                     .click_Search()
                     .verify_content_of_first_row_in_results_table(D.case0.caseNumber);
+                ui.menu.click_Log_Out()
+
             });
         });
 
@@ -170,6 +178,8 @@ describe('Cases Search', function () {
                     .click_Search()
                     .sort_by_descending_order('Created Date')
                     .verify_content_of_first_row_in_results_table(D.case4.caseNumber)
+                ui.menu.click_Log_Out()
+
             });
 
             it('1.2.2 after', function () {
@@ -182,6 +192,8 @@ describe('Cases Search', function () {
                     .click_Search()
                     .sort_by_descending_order('Created Date')
                     .verify_content_of_first_row_in_results_table(D.case0.caseNumber)
+                ui.menu.click_Log_Out()
+
             });
 
             it('1.2.3 between', function () {
@@ -413,6 +425,7 @@ describe('Cases Search', function () {
                         .click_Search()
                         .sort_by_descending_order('Created Date')
                         .verify_data_on_the_grid(D.newCase)
+                    ui.menu.click_Log_Out()
                 });
 
                 it('1.4.1.4 UserA saved in Case Officer(s) field ---> UserGroupA selected in Search criteria', function () {
@@ -617,7 +630,7 @@ describe('Cases Search', function () {
             })
         });
 
-        context('1.5 Offense Type', function () {
+        context.only('1.5 Offense Type', function () {
 
             it('1.5.1 equals', function () {
                 ui.app.log_title(this);

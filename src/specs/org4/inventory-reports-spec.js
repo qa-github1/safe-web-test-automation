@@ -45,12 +45,27 @@ describe('Inventory Reports', function () {
 
             api.items.add_new_item(true, child2_1, 'item6')
             api.items.add_new_item(true, child2_1, 'item7')
+             // I changed this part with wrap part because it didn't work
+            //Please review if this is fine and OK
+            // for (let i = 0; i < 8; i++) {
+            //     cy.getLocalStorage('item' + i).then(item => {
+            //         barcodes.push(JSON.parse(item).barcode)
+            //     })
+            // }
+            cy.wrap(null).then(() => {
+                let promises = [];
 
-            for (let i = 0; i < 8; i++) {
-                cy.getLocalStorage('item' + i).then(item => {
-                    barcodes.push(JSON.parse(item).barcode)
-                })
-            }
+                for (let i = 0; i < 8; i++) {
+                    promises.push(
+                        cy.getLocalStorage('item' + i).then(item => {
+                            if (!item) throw new Error(`LocalStorage item${i} is null`);
+                            barcodes.push(JSON.parse(item).barcode);
+                        })
+                    );
+                }
+
+                return Cypress.Promise.all(promises);
+            });
 
         });
 
@@ -66,7 +81,7 @@ describe('Inventory Reports', function () {
             api.locations.move_location(child2_1, 'root')
         })
 
-        it.only('1.1. DR for single parent location - No Discrepancies Found', function () {
+        it('1.1. DR for single parent location - No Discrepancies Found', function () {
             let reportName = D.getCurrentDateAndRandomNumber(4);
 
             api.auth.get_tokens(orgAdmin);
@@ -168,14 +183,21 @@ describe('Inventory Reports', function () {
             let reportName = D.getCurrentDateAndRandomNumber(4);
 
             api.auth.get_tokens(orgAdmin);
+            // I changed this part with wrap part because it didn't work
+            //Please review if this is fine and OK
+            // for (let i = 0; i < 8; i++) {
+            //     cy.getLocalStorage('item' + i).then(item => {
+            //         barcodes.push(JSON.parse(item).barcode)
+            //
+            //         if (i === 7) {
+            //             ui.menu.click_Tools__Inventory_Reports()
+            //                 .click_button(C.buttons.newReport)
 
-            for (let i = 0; i < 8; i++) {
-                cy.getLocalStorage('item' + i).then(item => {
-                    barcodes.push(JSON.parse(item).barcode)
+            cy.wrap(null).then(() => {
+                expect(barcodes).to.have.length(8);
 
-                    if (i === 7) {
-                        ui.menu.click_Tools__Inventory_Reports()
-                            .click_button(C.buttons.newReport)
+                ui.menu.click_Tools__Inventory_Reports()
+                    .click_button(C.buttons.newReport);
                         ui.inventoryReports.start_report(reportName, D[child1_1].barcode)
                             .enter_barcode(barcodes[1])
                             .enter_barcode(D[parent1].barcode, true)
@@ -193,9 +215,9 @@ describe('Inventory Reports', function () {
                             .click_button(C.buttons.runReport)
                             .verify_text_is_present_on_main_container
                             (C.labels.InventoryReports.noDiscrepanciesFound)
-                    }
+                //    }
                 })
-            }
+          //  }
         });
 
         it('1.6. Create and run DR for single parent location - multiple Discrepancies Found', function () {
@@ -343,8 +365,8 @@ describe('Inventory Reports', function () {
             ui.menu.click_Tools__Inventory_Reports()
                 .click_button(C.buttons.newReport)
             ui.inventoryReports.start_report(reportName, D[loc1].barcode)
-                .enter_barcode('test')
-                .enter_barcode('test', false, true)
+                .enter_barcode('test3232')
+                .enter_barcode('test3232', false, true)
                 .enter_barcode(barcodes[0])
                 .enter_barcode(barcodes[0], false, true)
                 .enter_barcode(barcodes[0], false, true)

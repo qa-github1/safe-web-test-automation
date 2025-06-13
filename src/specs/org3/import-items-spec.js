@@ -165,7 +165,7 @@ describe('Import Items', function () {
             .verify_title_on_active_tab(1)
     });
 
-    it.only('5. Item with custom fields', function () {
+    it('5. Item with custom fields', function () {
         ui.app.log_title(this);
         let fileName = 'ItemImport_customFields_' + S.domain;
         api.auth.get_tokens(orgAdmin);

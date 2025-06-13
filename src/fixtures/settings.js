@@ -521,8 +521,8 @@ S.DEV_2 = {
             guid: '99aa4fce-da6f-ed11-832d-021f02b7478f'
         },
         basicUser: {
-            id: 43529,
-            guid: '99aa4fce-da6f-ed11-832d-021f02b7478f'
+            id: 63347,
+            guid: 'bc395b78-7c97-ef11-8350-0254a7906fb1'
         },
         blockedUser: {
             id: 73851,
@@ -610,9 +610,9 @@ S.DEV_2 = {
     oldActiveCase: {
         id: 7663616,
         caseNumber: 'AutomatedTest-Active Case',
-        createdDate: '12/17/2022',
+        createdDate: '10/30/2024',
         offenseDate: '12/13/2022',
-        reviewDate: '12/2022/2022'
+        reviewDate: '12/12/2022'
     },
     taskTemplates: {
         dispoAuth: {
