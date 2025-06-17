@@ -606,13 +606,15 @@ S.DEV_2 = {
         offenseDate: '10/26/2022',
         reviewDate: '10/27/2022',
         closedDate: '10/27/2022',
+        closedDate2: '2022-10-27',
     },
     oldActiveCase: {
         id: 7663616,
         caseNumber: 'AutomatedTest-Active Case',
         createdDate: '10/30/2024',
         offenseDate: '12/13/2022',
-        reviewDate: '12/12/2022'
+       // reviewDate: '12/12/2022'
+        reviewDate: '11/15/2025'
     },
     taskTemplates: {
         dispoAuth: {

@@ -50,7 +50,7 @@ let
     offenseDateSearchCriteria = e => cy.contains('Offense Date').parent().find('[ng-model="field.searchCriteria"]'),
     offenseDescriptionSearchCriteria = e => cy.contains('Offense Description').parent().find('[ng-model="field.searchCriteria"]'),
     //activeSearchCriteria = e => cy.contains('Active').parent().find('[ng-model="field.searchCriteria"]'),
-    activeSearchCriteria = e => cy.contains('label', 'Active').parent().next().find('[ng-model="field.searchCriteria"]'),
+    activeSearchCriteria = e => cy.contains('label', 'Active').parent().find('[ng-model="field.searchCriteria"]'),
     tagsSearchCriteria = e => cy.contains('Tags').parent().find('[ng-model="field.searchCriteria"]'),
     savedSearchesOfItemsSearchCriteria = e => cy.contains('Saved Searches of Items').parent().find('[ng-model="field.searchCriteria"]'),
 

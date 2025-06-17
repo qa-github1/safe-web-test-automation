@@ -190,7 +190,7 @@ describe('Import Item Updates', function () {
         });
     });
 
-    xit('5. Import update for item status (Undispose transaction)', function () {
+    it.only('5. Import update for item status (Undispose transaction)', function () {
         ui.app.log_title(this);
         let fileName = 'ItemUpdatesImport_Undispose_' + S.domain;
 

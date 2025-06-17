@@ -907,6 +907,7 @@ export default class BasePage {
             } else if (stack[1]) {
                 self.verify_value(stack[0], stack[1])
             }
+
         });
         return this;
     };
@@ -926,6 +927,9 @@ export default class BasePage {
         });
         return this;
     };
+
+
+
 
     verify_multiple_input_values_in_one_container(container, arrayOfProperties) {
         let i = 0;

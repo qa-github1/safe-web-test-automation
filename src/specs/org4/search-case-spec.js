@@ -11,6 +11,7 @@ const orgAdmin = S.getUserData(S.userAccounts.orgAdmin),
     powerUser = S.getUserData(S.userAccounts.powerUser),
     regularUser = S.getUserData(S.userAccounts.basicUser),
     equals = C.searchCriteria.inputFields.equals,
+    equals_active_field = C.searchCriteria.multiSelectFields.equals,
     notEquals = C.searchCriteria.multiSelectFields.notEquals,
     equalsOr = C.searchCriteria.multiSelectFields.equalsOr,
     equalsAnd = C.searchCriteria.multiSelectFields.equalsAnd,
@@ -109,6 +110,7 @@ describe('Cases Search', function () {
             .verify_toast_message([
                 C.toastMsgs.importComplete,
                 3 + C.toastMsgs.recordsImported])
+        ui.menu.click_Log_Out()
     });
     context('1 Org Admin', function () {
 
@@ -630,7 +632,7 @@ describe('Cases Search', function () {
             })
         });
 
-        context.only('1.5 Offense Type', function () {
+        context('1.5 Offense Type', function () {
 
             it('1.5.1 equals', function () {
                 ui.app.log_title(this);
@@ -909,9 +911,9 @@ describe('Cases Search', function () {
                 ui.searchCase
                     .enter_Case_Number(equals, D.case0.caseNumber)
                     .select_option_on_Active_dropdown(notEquals, D.case0.active)
-                    .click_Search()
-                    .sort_by_descending_order('Created Date')
-                    .verify_text_is_NOT_present_on_main_container(D.case0.caseNumber);
+                     .click_Search()
+                     .sort_by_descending_order('Created Date')
+                     .verify_text_is_NOT_present_on_main_container(D.case0.caseNumber);
             });
         });
 
@@ -1108,8 +1110,10 @@ describe('Cases Search', function () {
             it('1.13.7 between X and Y', function () {
                 ui.app.log_title(this);
                 let caseNo = S.selectedEnvironment.oldClosedCase.caseNumber;
-                let date1 = helper.getCurrentDateInSpecificFormat('mm/dd/yyyy')
-                let date2 = S.selectedEnvironment.oldClosedCase.closedDate;
+               // let date1 = helper.getCurrentDateInSpecificFormat('yyyy-mm-dd')
+                let date1 = '2025-06-16';
+
+                let date2 = S.selectedEnvironment.oldClosedCase.closedDate2;
                 let numberOfDaysSinceClosedDate = helper.getNumberOfDaysBetween2Dates(date1, date2)
                 let olderThan_days = numberOfDaysSinceClosedDate - 1
                 let newerThan_days = numberOfDaysSinceClosedDate + 1

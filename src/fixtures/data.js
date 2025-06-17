@@ -321,13 +321,14 @@ D.setDateOnlyValues = function (dateOrDateTimeFormat) {
     D.newCase.offenseDateEditMode = helper.setDate(dateOrDateTimeFormat.dateOnly.editMode)
 }
 
-D.getEditedItemData = function (specificCaseObject, locationObject, newPerson) {
+D.getEditedItemData = function (specificCaseObject, locationObject, newPerson, randomNo) {
     let Person_1 = S.selectedEnvironment.person;
     let Person_2 = (newPerson && newPerson.id !== '') ? newPerson : S.selectedEnvironment.person_2;
     locationObject = locationObject || S.selectedEnvironment.locations[0];
     specificCaseObject = specificCaseObject || S.selectedEnvironment.oldClosedCase;
 
-    let randomNo = getRandomNo()
+    //let randomNo = getRandomNo()
+     randomNo = randomNo ?? getRandomNo();
         D.editedItem = Object.assign({}, D.editedCustomFormData, {
         updateMadeBy: S.userAccounts.orgAdmin.name,
         submittedById: S.userAccounts.orgAdmin.id,
