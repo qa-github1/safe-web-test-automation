@@ -237,6 +237,7 @@ describe('Import Item Updates', function () {
             .verify_edited_and_not_edited_values_on_Item_Edit_form(allEditedFields, D.editedItem, D.newItem, true, true)
             .select_tab(C.tabs.chainOfCustody)
             .verify_content_of_sequential_rows_in_results_table([
+                CoC_undispose,
                 CoC_disposal,
                 CoC_newItemEntry
             ])
