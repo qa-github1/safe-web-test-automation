@@ -243,7 +243,9 @@ D.getNewItemData = function (specificCaseObject, locationObject, newPerson) {
         expectedReturnDate: '',
         dispositionStatus: 'Disposed'
     });
+
     return D.newItem;
+
 };
 
 D.getDisposedItemData = function (newOrEditedItem = 'editedItem') {

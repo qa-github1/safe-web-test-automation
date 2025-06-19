@@ -58,7 +58,6 @@ describe('Import Item Updates', function () {
         D.generateNewDataSet();
         api.cases.add_new_case();
         api.items.add_new_item(false);
-        let originalItem = _.cloneDeep(D.newItem);
 
 
         D.editedItem.caseNumber = D.newCase.caseNumber;
@@ -77,20 +76,20 @@ describe('Import Item Updates', function () {
                 .verify_toast_message([
                     C.toastMsgs.importComplete,
                     1 + C.toastMsgs.recordsImported]);
-            let allEditedFields = C.itemFields.allEditableFieldsArray.concat(['Case', 'Status', 'Storage Location', 'Custodian'])
-            ui.itemView.open_newly_created_item_via_direct_link()
-                .verify_edited_and_not_edited_values_on_Item_View_form(allEditedFields, D.editedItem, D.newItem, true, true)
-                .click_Edit()
-                .verify_edited_and_not_edited_values_on_Item_Edit_form(allEditedFields, D.editedItem, D.newItem, true, true)
-                .select_tab(C.tabs.chainOfCustody)
-                .verify_content_of_sequential_rows_in_results_table([
-                    CoC_checkout,
-                    CoC_newItemEntry
-                ])
-                .open_last_history_record()
-                .verify_all_values_on_history(D.editedItem, originalItem)
-                .verify_red_highlighted_history_records(allEditedFields)
         });
+        let allEditedFields = C.itemFields.allEditableFieldsArray.concat(['Case', 'Status', 'Storage Location', 'Custodian'])
+        ui.itemView.open_newly_created_item_via_direct_link()
+            .verify_edited_and_not_edited_values_on_Item_View_form(allEditedFields, D.editedItem, D.newItem, true, true)
+            .click_Edit()
+            .verify_edited_and_not_edited_values_on_Item_Edit_form(allEditedFields, D.editedItem, D.newItem, true, true)
+            .select_tab(C.tabs.chainOfCustody)
+            .verify_content_of_sequential_rows_in_results_table([
+                CoC_checkout,
+                CoC_newItemEntry
+            ])
+            .open_last_history_record()
+            .verify_all_values_on_history(D.editedItem, D.newItem)
+            .verify_red_highlighted_history_records(allEditedFields)
     });
 
     it('3. Import update for item status (Move transaction)', function () {
@@ -190,54 +189,60 @@ describe('Import Item Updates', function () {
         });
     });
 
-    it.only('5. Import update for item status (Undispose transaction)', function () {
+    it('5. Import update for item status (Undispose transaction)', function () {
         ui.app.log_title(this);
         let fileName = 'ItemUpdatesImport_Undispose_' + S.domain;
 
         api.auth.get_tokens(orgAdmin);
-        api.org_settings.enable_all_Item_fields([C.itemFields.dispositionStatus]);
+        api.org_settings.enable_all_Item_fields();
         D.generateNewDataSet();
-        D.getEditedItemData(S.selectedEnvironment.oldActiveCase)
+        D.getEditedItemData(S.selectedEnvironment.oldActiveCase);
         api.cases.add_new_case();
-
-        // set 'true' as parameter in the next line when the issue in the card #15096 gets fixed
         api.items.add_new_item(false);
         api.transactions.dispose_item();
 
-        D.getDisposedItemData()
-        D.getCheckedInItemData(S.selectedEnvironment.locations[1])
+        D.getDisposedItemData();
+        D.getCheckedInItemData(S.selectedEnvironment.locations[1]);
         D.newItem.location = '';
         D.newItem.status = 'Disposed';
         D.editedItem.status = 'Checked In';
+
         let CoC_newItemEntry = S.chainOfCustody.SAFE.newItemEntry;
         let CoC_disposal = S.chainOfCustody.SAFE.disposal(D.newItem);
         let CoC_undispose = S.chainOfCustody.SAFE.checkin(D.editedItem);
 
         cy.getLocalStorage("newItem").then(newItem => {
-            D.editedItem.barcode = JSON.parse(newItem).barcode
+            D.editedItem.barcode = JSON.parse(newItem).barcode;
+
             E.generateDataFor_ITEMS_Importer([D.editedItem], null);
-            E.itemImportDataWithAllFields[1][19] = S.selectedEnvironment.person.guid;
+
+            const barcodeIndex = E.itemImportDataWithAllFields[0].indexOf('ItemBarcode');
+            const personGuidIndex = E.itemImportDataWithAllFields[0].indexOf('Returned By');
+
+            E.itemImportDataWithAllFields[1][barcodeIndex] = D.editedItem.barcode;
+            E.itemImportDataWithAllFields[1][personGuidIndex] = S.selectedEnvironment.person.guid;
+
             cy.generate_excel_file(fileName, E.itemImportDataWithAllFields);
             ui.menu.click_Tools__Data_Import();
             ui.importer.upload_then_Map_and_Submit_file_for_Item_Updates_import(fileName)
                 .verify_toast_message([
                     C.toastMsgs.importComplete,
                     1 + C.toastMsgs.recordsImported]);
-            let allEditedFields = C.itemFields.allEditableFieldsArray.concat(['Status', 'Storage Location'])
-            ui.itemView.open_newly_created_item_via_direct_link()
-                .verify_edited_and_not_edited_values_on_Item_View_form(allEditedFields, D.editedItem, D.newItem, true, true)
-                .click_Edit()
-                .verify_edited_and_not_edited_values_on_Item_Edit_form(allEditedFields, D.editedItem, D.newItem, true, true)
-                .select_tab(C.tabs.chainOfCustody)
-                .verify_content_of_sequential_rows_in_results_table([
-                    CoC_undispose,
-                    CoC_disposal,
-                    CoC_newItemEntry
-                ])
-                .open_last_history_record()
-                .verify_all_values_on_history(D.editedItem, D.newItem, false)
-                .verify_red_highlighted_history_records(allEditedFields)
         });
+        let allEditedFields = C.itemFields.allEditableFieldsArray.concat(['Status', 'Storage Location', 'Disposition Status']);
+
+        ui.itemView.open_newly_created_item_via_direct_link()
+            .verify_edited_and_not_edited_values_on_Item_View_form(allEditedFields, D.editedItem, D.newItem, true, true)
+            .click_Edit()
+            .verify_edited_and_not_edited_values_on_Item_Edit_form(allEditedFields, D.editedItem, D.newItem, true, true)
+            .select_tab(C.tabs.chainOfCustody)
+            .verify_content_of_sequential_rows_in_results_table([
+                CoC_disposal,
+                CoC_newItemEntry
+            ])
+            .open_last_history_record()
+            .verify_all_values_on_history(D.editedItem, D.newItem, false)
+            .verify_red_highlighted_history_records(allEditedFields);
     });
 
     it('6. Import update for item status (CheckIn transaction)', function () {
@@ -257,7 +262,6 @@ describe('Import Item Updates', function () {
 
         D.newItem.location = '';
         D.newItem.status = 'Checked Out';
-        // let editedItem = Object.assign({}, D.newItem)
         D.editedItem.status = 'Checked In';
         let CoC_newItemEntry = S.chainOfCustody.SAFE.newItemEntry;
         let CoC_checkin = S.chainOfCustody.SAFE.checkin(D.editedItem);
@@ -270,7 +274,8 @@ describe('Import Item Updates', function () {
             ui.importer.upload_then_Map_and_Submit_file_for_Item_Updates_import(fileName).verify_toast_message([
                 C.toastMsgs.importComplete,
                 1 + C.toastMsgs.recordsImported]);
-            let allEditedFields = C.itemFields.allEditableFieldsArray.concat(['Case', 'Status', 'Storage Location'])
+            //add 'Case' when issue from the point above is fixed
+            let allEditedFields = C.itemFields.allEditableFieldsArray.concat(['Status', 'Storage Location', 'Custodian'])
             ui.itemView.open_newly_created_item_via_direct_link()
                 .verify_edited_and_not_edited_values_on_Item_View_form(allEditedFields, D.editedItem, D.newItem, true, true)
                 .click_Edit()
@@ -286,11 +291,16 @@ describe('Import Item Updates', function () {
                     CoC_newItemEntry
                 ])
             D.getCheckedInItemData(S.selectedEnvironment.locations[0], 'newItem')
-            ui.itemView.open_last_history_record()
-                //  uncomment the lines below when bug gets fixed in card #14769 /5
-                .verify_all_values_on_history(D.editedItem, D.newItem, false)
-                .verify_red_highlighted_history_records(allEditedFields)
+
         });
+        let allEditedFields = C.itemFields.allEditableFieldsArray.concat(['Status', 'Storage Location', 'Custodian'])
+
+        ui.itemView.open_last_history_record()
+            .verify_all_values_on_history(D.editedItem, D.newItem, false)
+            .verify_red_highlighted_history_records(allEditedFields)
+
+
+
     });
 
     it('7. Item Updates Import - Precheck Only', function () {
@@ -300,12 +310,15 @@ describe('Import Item Updates', function () {
         api.auth.get_tokens(orgAdmin);
         api.org_settings.enable_all_Item_fields();
         D.generateNewDataSet();
+
         api.cases.add_new_case(D.newCase.caseNumber);
-        D.editedItem.caseNumber = D.newCase.caseNumber
+         D.editedItem.caseNumber = D.newCase.caseNumber
         api.items.add_new_item(true)
 
         cy.getLocalStorage("newItem").then(newItem => {
+
             D.editedItem.barcode = JSON.parse(newItem).barcode
+
             E.generateDataFor_ITEMS_Importer([D.editedItem], null);
             cy.generate_excel_file(fileName, E.itemImportDataWithAllFields);
             ui.menu.click_Tools__Data_Import();
@@ -313,10 +326,11 @@ describe('Import Item Updates', function () {
                 .verify_toast_message([
                     C.toastMsgs.precheckComplete,
                     1 + C.toastMsgs.recordsPrechecked]);
-            ui.app.open_newly_created_item_via_direct_link()
-                .click_button(C.buttons.edit);
-            ui.itemView.verify_values_on_Edit_form(D.newItem);
+
         });
+        ui.app.open_newly_created_item_via_direct_link()
+            .click_button(C.buttons.edit);
+        ui.itemView.verify_values_on_Edit_form(D.newItem);
     });
 
 });

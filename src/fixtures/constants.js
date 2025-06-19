@@ -81,7 +81,8 @@ C = {
             'Description',
             'Item Belongs to',
             'Tags',
-            'Released To'
+            'Released To',
+          //  'Disposition Status'
         ],
         reducedEditableFieldsArray: ['Category'],
         massUpdateModal : [
