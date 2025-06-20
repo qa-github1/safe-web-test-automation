@@ -1004,21 +1004,7 @@ export default class BasePage {
     };
 
 
-    // check_text(element, text) {
-    //
-    //     if (element instanceof Function) {
-    //         cy.verifyTextAndRetry(() =>
-    //                 element().invoke('text'),
-    //             text
-    //         );
-    //     } else {
-    //         cy.verifyTextAndRetry(() =>
-    //                 element.invoke('text'),
-    //             text
-    //         );
-    //     }
-    // }
-
+    // this was the source method that includes retry mechanism
     check_text(element, text, timeoutInSeconds = 60) {
         if (text) {
             let getTextFn = () => {
@@ -1059,22 +1045,27 @@ export default class BasePage {
     //     });
     // }
 
+
     // check_value(element, value) {
+    //     const expected = value?.toString().trim() ?? '';
+    //
     //     if (element instanceof Function) {
-    //         if (value === '') {
-    //             element().invoke('val').should('eq', value)
-    //         } else if (value) {
-    //             element().invoke('val').should('contain', value)
-    //         }
+    //         element = element();
+    //     }
+    //
+    //     if (expected === '') {
+    //         element.invoke('val').should(val => {
+    //             expect(val?.toString().trim() ?? '').to.eq('');
+    //         });
     //     } else {
-    //         if (value === '') {
-    //             element.invoke('val').should('eq', value)
-    //         } else if (value) {
-    //             element.invoke('val').should('contain', value)
-    //         }
+    //         element.invoke('val').should(val => {
+    //             expect(val?.toString().trim() ?? '').to.contain(expected);
+    //         });
     //     }
     // }
 
+
+//this was the source method that includes retry mechanism
     check_value(element, value) {
         if (value) {
             const getTextFn = () => {
@@ -1083,6 +1074,11 @@ export default class BasePage {
             cy.verifyTextAndRetry(getTextFn, value, {maxAttempts: 10, retryInterval: 500});
         }
     }
+
+
+
+
+
 
     verify_text(element, expectedText, timeoutInSeconds) {
         let self = this

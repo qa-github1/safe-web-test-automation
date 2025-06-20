@@ -627,7 +627,6 @@ C = {
             'Additional Barcodes',
             'Item Belongs to',
             'Tags',
-            //'Returned By'
         ]
     },
     reports: {

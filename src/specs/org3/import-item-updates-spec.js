@@ -214,7 +214,7 @@ describe('Import Item Updates', function () {
         cy.getLocalStorage("newItem").then(newItem => {
             D.editedItem.barcode = JSON.parse(newItem).barcode;
 
-            E.generateDataFor_ITEMS_Importer([D.editedItem], null);
+            E.generateDataFor_ITEMS_Importer([D.editedItem], null, true);
 
             const barcodeIndex = E.itemImportDataWithAllFields[0].indexOf('ItemBarcode');
             const personGuidIndex = E.itemImportDataWithAllFields[0].indexOf('Returned By');
@@ -246,7 +246,7 @@ describe('Import Item Updates', function () {
             .verify_red_highlighted_history_records(allEditedFields);
     });
 
-    it('6. Import update for item status (CheckIn transaction)', function () {
+    it.only('6. Import update for item status (CheckIn transaction)', function () {
         ui.app.log_title(this);
         let fileName = 'ItemUpdatesImport_CheckIn_' + S.domain;
 

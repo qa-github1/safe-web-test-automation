@@ -8,6 +8,7 @@ exports.userRoles = {
     basicUser: 'Basic User',
     blockedUser: 'Blocked User',
     readOnlyUser: 'Read-Only User',
+    clpUser: 'Clp User'
 };
 
 exports.getTestAccounts = function (environment, orgNum = 1) {
@@ -85,6 +86,18 @@ exports.getTestAccounts = function (environment, orgNum = 1) {
             organizationId: environment.users.systemAdmin.organizationId,
             id: environment.users.systemAdmin.id,
             guid: environment.users.systemAdmin.guid
+        },
+        clpUser: {
+            title: exports.userRoles.clpUser,
+            email: `qa+org${orgNum}_clpUser@trackerproducts.com`,
+            password: 'Qwerty123!',
+            name: 'Clp User',
+            firstName: 'Clp',
+            lastName: 'User',
+            officeId: environment.office_1.id,
+            organizationId: environment.orgSettings.id,
+            id: environment.users.clpUser.id,
+            guid: environment.users.clpUser.guid
         }
     }
     return exports.userAccounts['orgNum' + orgNum];

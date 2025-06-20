@@ -517,8 +517,8 @@ S.DEV_2 = {
             guid: '29a5a1f6-2295-ef11-8350-0254a7906fb1'
         },
         clpUser: {
-            id: 43529,
-            guid: '99aa4fce-da6f-ed11-832d-021f02b7478f'
+            id: 94519,
+            guid: 'ba885fae-d64d-f011-836d-0254a7906fb1\n'
         },
         basicUser: {
             id: 63347,
@@ -751,8 +751,8 @@ S.DEV_2 = {
     },
     blocked_permissionGroup: {
         name: 'Cypress - Blocked',
-        id: 4420,
-        startingIndexForViewPermissions: 64220,
+        id: 2166,
+        startingIndexForViewPermissions: 65425,
         get startingIndexForCreatePermissions() {
             return S.DEV_2.blocked_permissionGroup.startingIndexForViewPermissions + 22
         },
@@ -779,8 +779,8 @@ S.DEV_2 = {
     },
     readOnly_permissionGroup: {
         name: 'Cypress - ReadOnly',
-        id: 4421,
-        startingIndexForViewPermissions: 64293,
+        id: 2167,
+        startingIndexForViewPermissions: 65447,
         get startingIndexForCreatePermissions() {
             return S.DEV_2.readOnly_permissionGroup.startingIndexForViewPermissions + 22
         },

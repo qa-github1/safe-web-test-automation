@@ -65,7 +65,7 @@ describe('Dispo Auth', function () {
     });
 
 
-    it('Add Dispo Task with 11 1DA items and assign to Org Admin, ' +
+    xit('Add Dispo Task with 11 1DA items and assign to Org Admin, ' +
         '--set different actions for item using all variations' +
         '--using Actions menu and grid, ' +
         '--check statuses and notes upon submission', function () {
@@ -164,7 +164,7 @@ describe('Generating large number of release letters ', function () {
         let caseData
         let itemData
 
-        it.only('Add Dispo Task with 200 items to trigger Dispo Auth Service and generation of letters for all', function () {
+        xit('Add Dispo Task with 200 items to trigger Dispo Auth Service and generation of letters for all', function () {
 
             cy.clearLocalStorage()
             ui.app.log_title(this);

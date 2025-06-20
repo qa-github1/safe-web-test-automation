@@ -278,15 +278,16 @@ E.generateDataFor_ITEMS_Importer = function (arrayOfDataObjects, customFormName,
             E.itemImportDataWithAllFields[i + 1].push(itemObject.checkedOutNotes)
             E.itemImportDataWithMinimumFields[i + 1].push(itemObject.checkedOutNotes)
 
-
         }
 
-        if (itemObject.status === 'Checked In') {
-            allFieldHeaders.push('Returned By')
-            minimumFieldsHeaders.push('Returned By')
-            E.itemImportDataWithAllFields[i + 1].push(itemObject.returnedByGuid)
-            E.itemImportDataWithMinimumFields[i + 1].push(itemObject.returnedByGuid)
+
+        if (itemObject.status === 'Checked In' && importingItemUpdates) {
+            allFieldHeaders.push('Returned By');
+            minimumFieldsHeaders.push('Returned By');
+            E.itemImportDataWithAllFields[i + 1].push(itemObject.returnedByGuid);
+            E.itemImportDataWithMinimumFields[i + 1].push(itemObject.returnedByGuid);
         }
+
         if (itemObject.movedBy_name || itemObject.returnedByName_name) {
             allFieldHeaders.push('TransactionNotes')
             minimumFieldsHeaders.push('TransactionNotes')

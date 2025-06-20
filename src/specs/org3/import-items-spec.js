@@ -173,8 +173,9 @@ describe('Import Items', function () {
 
         D.getItemDataWithReducedFields(D.newCase);
         D.newItem.description = D.randomNo
+        D.newItem.status = C.itemStatuses.checkedIn
         E.generateDataFor_ITEMS_Importer([D.newItem], C.customForms.itemsFormWithOptionalFields);
-        E.itemImportDataWithMinimumFields[1][19] = S.selectedEnvironment.users.orgAdmin.guid;
+        E.itemImportDataWithMinimumFields[1][19] = S.selectedEnvironment.users.basicUser.guid;
         cy.generate_excel_file(fileName, E.itemImportDataWithMinimumFields);
 
         ui.menu.click_Tools__Data_Import();
