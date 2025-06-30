@@ -517,16 +517,17 @@ S.DEV_2 = {
             guid: '29a5a1f6-2295-ef11-8350-0254a7906fb1'
         },
         clpUser: {
-            id: 43529,
-            guid: '99aa4fce-da6f-ed11-832d-021f02b7478f'
+            id: 94519,
+            guid: 'ba885fae-d64d-f011-836d-0254a7906fb1\n'
         },
         basicUser: {
-            id: 43529,
-            guid: '99aa4fce-da6f-ed11-832d-021f02b7478f'
+            id: 63347,
+            guid: 'bc395b78-7c97-ef11-8350-0254a7906fb1'
         },
         blockedUser: {
             id: 73851,
-            guid: '24abf752-0a00-f011-8356-0254a7906fb1'
+            guid: '24abf752-0a00-f011-8356-0254a7906fb1',
+            email: 'qa+org2_blockeduser@trackerproducts.com'
         },
     },
     divisions: {
@@ -565,6 +566,11 @@ S.DEV_2 = {
             id: 60
         }
     },
+    importer:{
+                    invalidDate: '69b0e307-1cbc-4248-9cd9-7559c8c15084',
+                    invalidItem: '69b0e307-1cbc-4248-9cd9-7559c8c15084'
+
+    },
     forms: {
         userFormWithRequiredFields: 22208,
         userFormWithOptionalFields: 22209,
@@ -600,13 +606,15 @@ S.DEV_2 = {
         offenseDate: '10/26/2022',
         reviewDate: '10/27/2022',
         closedDate: '10/27/2022',
+        closedDate2: '2022-10-27',
     },
     oldActiveCase: {
         id: 7663616,
         caseNumber: 'AutomatedTest-Active Case',
-        createdDate: '12/17/2022',
+        createdDate: '10/30/2024',
         offenseDate: '12/13/2022',
-        reviewDate: '12/2022/2022'
+       // reviewDate: '12/12/2022'
+        reviewDate: '11/15/2025'
     },
     taskTemplates: {
         dispoAuth: {
@@ -679,6 +687,40 @@ S.DEV_2 = {
     get recoveredById() {
         return S.DEV_2.person.id
     },
+    caseCustomForm: {
+        name: "Optional fields - Cypress Case Form",
+        id: 22145,
+        checkboxListId: "field2946",
+        radioButtonListId: "field2948",
+        selectListId: "field2950",
+        number: "field2938",
+        password: "field2940",
+        textbox: "field2934",
+        email: "field2936",
+        textarea: "field2942",
+        checkbox: "field2944",
+        date: "Date",
+        user: "field2954",
+        person: "field2956",
+        dropdownTypeahead: "field2952"
+    },
+    itemCustomForm: {
+        name: "Optional fields - Cypress Items Form",
+        id: 22148,
+        checkboxListId: "field8019",
+        radioButtonListId: "field8021",
+        selectListId: "field8023",
+        number: "field8011",
+        password: "field8013",
+        textbox: "field8007",
+        email: "field8009",
+        textarea: "field8015",
+        checkbox: "field8017",
+        date: "Date",
+        user: "field8027",
+        person: "field8029",
+        dropdownTypeahead: "field8025"
+    },
     clp_permissionGroup: {
         name: 'CLP Group',
         id: 2145,
@@ -709,8 +751,8 @@ S.DEV_2 = {
     },
     blocked_permissionGroup: {
         name: 'Cypress - Blocked',
-        id: 4420,
-        startingIndexForViewPermissions: 64220,
+        id: 2166,
+        startingIndexForViewPermissions: 65425,
         get startingIndexForCreatePermissions() {
             return S.DEV_2.blocked_permissionGroup.startingIndexForViewPermissions + 22
         },
@@ -737,8 +779,8 @@ S.DEV_2 = {
     },
     readOnly_permissionGroup: {
         name: 'Cypress - ReadOnly',
-        id: 4421,
-        startingIndexForViewPermissions: 64293,
+        id: 2167,
+        startingIndexForViewPermissions: 65447,
         get startingIndexForCreatePermissions() {
             return S.DEV_2.readOnly_permissionGroup.startingIndexForViewPermissions + 22
         },
@@ -2392,8 +2434,7 @@ S.PENTEST_2 = {
         },
         div2_unit1: {
             name: 'UnitA',
-            id:
-                2369
+            id: 2369
         },
         div2_unit2: {
             name: 'UnitB',
@@ -2403,6 +2444,11 @@ S.PENTEST_2 = {
             name: 'UnitC',
             id: 92
         }
+    },
+    importer:{
+        invalidDate: '535530de-c2e1-40bd-ad7d-4189dbbeb6af',
+        invalidItem: '535530de-c2e1-40bd-ad7d-4189dbbeb6af'
+
     },
     forms: {
         userFormWithRequiredFields: 24198,
@@ -3480,19 +3526,19 @@ S.SECURE_2 = {
         name: "Cypress Office 2",
         orgAndOfficeName: "Web Test Automation #2 - Cypress Office 2"
     },
-    // org2: {
-    //     office_1: {
-    //         id: 1118,
-    //         guid: 'a9e131e6-3d36-eb11-aa49-062d5b58f56e',
-    //         name: "Cypress Office 1",
-    //         orgAndOfficeName: "Web Test Automtion #3 - Cypress Office 1"
-    //     },
-    //     id: 556,
-    //     orgName: "Web Test Automation #3",
-    //     officeId: 1118,
-    //     officeName: "Cypress Office 1",
-    //     orgAndOfficeName: "Web Test Automtion #3 - Cypress Office 1"
-    // },
+    org2: {
+        office_1: {
+            id: 2218,
+            guid: 'a9e131e6-3d36-eb11-aa49-062d5b58f56e',
+            name: "Cypress Office 1",
+            orgAndOfficeName: "Web Test Automation #3 - Cypress Office 1"
+        },
+        id: 1030,
+        orgName: "Web Test Automation #3",
+        officeId: 2218,
+        officeName: "Cypress Office 1",
+        orgAndOfficeName: "Web Test Automation #3 - Cypress Office 1"
+    },
     users: {
        // systemAdminId: 40357,
         orgAdminId: 118002,

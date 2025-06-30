@@ -135,7 +135,7 @@ export default class AddItemPage extends BaseAddPage {
     };
 
     select_Category(option) {
-        this.pause(1)
+        this.pause(3)
         category().click();
         //this.pause(3)
         cy.contains(option).click();

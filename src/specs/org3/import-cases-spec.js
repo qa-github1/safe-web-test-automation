@@ -97,7 +97,6 @@ describe('Import Cases', function () {
     });
 
     it('I.C_3 Case with custom fields', function () {
-        //failing in pentest org4
         ui.app.log_title(this);
         let fileName = 'CaseImport_customFields_' + S.domain;
         api.auth.get_tokens(user);

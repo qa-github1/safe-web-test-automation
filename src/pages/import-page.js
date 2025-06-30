@@ -237,6 +237,7 @@ export default class ImportPage extends BasePage {
     };
 
     verify_importer_validation_messages(arrayOfMessages) {
+        cy.wait(500)
         this.verify_multiple_text_values_in_one_container(importerContainer, arrayOfMessages)
         return this;
     };

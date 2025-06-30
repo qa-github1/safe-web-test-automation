@@ -15,11 +15,12 @@ let systemAdmin = S.getUserData(S.userAccounts.systemAdmin);
 let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
 let powerUser = S.getUserData(S.userAccounts.powerUser);
 let clpUser = S.getUserData(S.userAccounts.clpUser);
+let basicUser = S.getUserData(S.userAccounts.basicUser);
 
 let office_1 = S.selectedEnvironment.office_1;
 
 describe('1. Case Level Permissions', function () {
-    it('Set CLP for 5k cases', function () {
+    xit('Set CLP for 5k cases', function () {
 
             api.auth.get_tokens(orgAdmin);
             D.getNewCaseData()
@@ -32,53 +33,53 @@ describe('1. Case Level Permissions', function () {
         }
     });
 });
-//
-// describe('1. Case Level Permissions', function () {
-//
-//     before(function () {
-//         api.auth.get_tokens(orgAdmin);
-//         D.generateNewDataSet();
-//         api.locations.get_storage_locations();
-//         api.org_settings.update_org_settings(true, true)
-//             .set_Case_Level_Permissions_on_Org_Settings(true)
-//             .enable_all_Case_fields()
-//             .enable_all_Item_fields([C.itemFields.expectedReturnDate, C.itemFields.actualDisposedDate])
-//             .enable_all_Person_fields()
-//
-//         api.permissions
-//             .update_ALL_permissions_for_an_existing_Permission_group
-//             (admin_permissionGroup, true, true, true, true)
-//
-//             .update_ALL_permissions_for_an_existing_Permission_group
-//             (blocked_permissionGroup, false, false, false, false)
-//
-//             .update_ALL_permissions_for_an_existing_Permission_group
-//             (readOnly_permissionGroup, false, true, false, false)
-//     });
-//
-//     xcontext('1. System Admin', function () {
-//
-//         // before(function () {
-//         //     api.auth.get_tokens(orgAdmin);
-//         //     D.generateNewDataSet();
-//         //     api.org_settings.set_Case_Level_Permissions_on_Org_Settings(true);
-//         // });
-//
-//         beforeEach(function () {
-//             cy.restoreLocalStorage();
-//         });
-//
-//         it('TC_1.1 verify Permissions tab is available for System Admin', function () {
-//             ui.app.log_title(this);
-//             api.auth.get_tokens(systemAdmin);
-//
-//             let caseNumber = D.getRandomNo() + '_TC_1.1';
-//             api.cases.add_new_case(caseNumber);
-//
-//             ui.app.open_newly_created_case_via_direct_link();
-//             ui.caseView.select_tab(C.tabs.permissions)
-//                 .verify_text_is_present_on_main_container(C.CLP.access_allowed_based_on_office_permissions)
-//         });
+
+describe('1. Case Level Permissions', function () {
+
+    before(function () {
+        api.auth.get_tokens(orgAdmin);
+        D.generateNewDataSet();
+        api.locations.get_storage_locations();
+        api.org_settings.update_org_settings(true, true)
+            .set_Case_Level_Permissions_on_Org_Settings(true)
+            .enable_all_Case_fields()
+            .enable_all_Item_fields([C.itemFields.expectedReturnDate, C.itemFields.actualDisposedDate])
+            .enable_all_Person_fields()
+
+        // api.permissions
+        //     .update_ALL_permissions_for_an_existing_Permission_group
+        //     (admin_permissionGroup, true, true, true, true)
+        //
+        //     .update_ALL_permissions_for_an_existing_Permission_group
+        //     (blocked_permissionGroup, false, false, false, false)
+        //
+        //     .update_ALL_permissions_for_an_existing_Permission_group
+        //     (readOnly_permissionGroup, false, true, false, false)
+    });
+
+    context('1. System Admin', function () {
+
+        // before(function () {
+        //     api.auth.get_tokens(orgAdmin);
+        //     D.generateNewDataSet();
+        //     api.org_settings.set_Case_Level_Permissions_on_Org_Settings(true);
+        // });
+
+        // beforeEach(function () {
+        //     cy.restoreLocalStorage();
+        // });
+        //
+        // it('TC_1.1 verify Permissions tab is available for System Admin', function () {
+        //     ui.app.log_title(this);
+        //     api.auth.get_tokens(systemAdmin);
+        //
+        //     let caseNumber = D.getRandomNo() + '_TC_1.1';
+        //     api.cases.add_new_case(caseNumber);
+        //
+        //     ui.app.open_newly_created_case_via_direct_link();
+        //     ui.caseView.select_tab(C.tabs.permissions)
+        //         .verify_text_is_present_on_main_container(C.CLP.access_allowed_based_on_office_permissions)
+        // });
 //
 //         it('TC_1.2 verify System Admin account will automatically have access to all data - even if assigned to restricted CLP group', function () {
 //             ui.app.log_title(this);
@@ -115,35 +116,37 @@ describe('1. Case Level Permissions', function () {
 //             ui.searchCase.run_search_by_Case_Number(caseNumber)
 //                 .verify_content_of_first_row_in_results_table(C.CLP.cannot_display_case_due_to_CLP)
 //         });
-//     });
+     });
 //
-//     context('2. Org Admin', function () {
-//
-//         before(function () {
-//             api.auth.get_tokens(orgAdmin);
-//             api.permissions.assign_office_based_permissions_to_user(
-//                 clpUser.id,
-//                 office_1.id, readOnly_permissionGroup.id);
-//         });
-//
-//         beforeEach(function () {
-//             cy.restoreLocalStorage();
-//         });
-//
-//         it('TC_2.1 Permissions tab is available for Org Admin but not for Power-user', function () {
-//             ui.app.log_title(this);
-//
-//             let caseNumber = D.getRandomNo() + '_TC_1.1';
-//             api.cases.add_new_case(caseNumber);
-//
-//             ui.app.open_newly_created_case_via_direct_link();
-//             ui.caseView.select_tab(C.tabs.permissions)
-//                 .verify_text_is_present_on_main_container(C.CLP.access_allowed_based_on_office_permissions)
-//
-//             api.auth.get_tokens(powerUser);
-//             ui.app.open_newly_created_case_via_direct_link()
-//                 .verify_text_is_NOT_present_on_main_container(C.tabs.permissions)
-//         });
+    context('2. Org Admin', function () {
+
+        before(function () {
+            api.auth.get_tokens(orgAdmin);
+            api.permissions.assign_office_based_permissions_to_user(
+                clpUser.id,
+                office_1.id,
+                readOnly_permissionGroup.id
+            );
+        });
+
+        beforeEach(function () {
+            cy.restoreLocalStorage();
+        });
+
+        it('TC_2.1 Permissions tab is available for Org Admin but not for Power-user', function () {
+            ui.app.log_title(this);
+
+            let caseNumber = D.getRandomNo() + '_TC_1.1';
+            api.cases.add_new_case(caseNumber);
+
+            ui.app.open_newly_created_case_via_direct_link();
+            ui.caseView.select_tab(C.tabs.permissions)
+                .verify_text_is_present_on_main_container(C.CLP.access_allowed_based_on_office_permissions)
+
+            api.auth.get_tokens(powerUser);
+            ui.app.open_newly_created_case_via_direct_link()
+                .verify_text_is_NOT_present_on_main_container(C.tabs.permissions)
+        });
 //
 //         it('TC_2.2 Org Admin account will automatically have access to all data - even if assigned to restricted CLP group', function () {
 //             ui.app.log_title(this);
@@ -2851,5 +2854,5 @@ describe('1. Case Level Permissions', function () {
 //                 .click_option_on_expanded_menu(C.dropdowns.itemActions.manageCases)
 //
 //         });
-//     });
-// });
+     });
+ });

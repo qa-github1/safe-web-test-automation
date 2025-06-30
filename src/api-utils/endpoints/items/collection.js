@@ -78,11 +78,13 @@ exports.add_item_to_case = function (existingCaseId) {
     });
 };
 
-exports.edit_newly_added_item = function (withCustomFormData = true) {
+exports.edit_newly_added_item = function (withCustomFormData = true, randomNo) {
     cy.getLocalStorage("newCase").then(newCase => {
         cy.getLocalStorage("newItem").then(newItem => {
-            D.editedItem = D.getEditedItemData(JSON.parse(newCase))
+            D.editedItem = D.getEditedItemData(JSON.parse(newCase), null, null, randomNo)
             let itemObject = Object.assign(JSON.parse(newItem), D.editedItem);
+            //let itemObject = Object.assign({}, D.editedItem, JSON.parse(newItem));
+
             itemObject.tags = D.editedItem.tagsForApi
 
             generic_request.PUT(

@@ -3,6 +3,8 @@ const D = require('../../fixtures/data');
 const C = require('../../fixtures/constants');
 const api = require('../../api-utils/api-spec');
 const ui = require('../../pages/ui-spec');
+const {randomNo, getRandomNo} = require('/src/support/e2e-helper');
+
 
 let orgAdmin = S.userAccounts.orgAdmin
 let powerUser = S.userAccounts.powerUser
@@ -209,6 +211,9 @@ describe('Workflows', function () {
         });
 
         it('2.2 Email notification - when Item edited - matching records with "Description equals ..."', function () {
+            let randomNo = getRandomNo();
+            D.editedItem = D.getEditedItemData(D.newCase, null, null, randomNo);
+
             ui.menu.click_Settings__Workflows();
             ui.workflows.click_(C.buttons.add)
                 .set_up_workflow(
@@ -221,14 +226,14 @@ describe('Workflows', function () {
                 ui.workflows.set_matching_criteria(
                     C.itemFields.description,
                     C.workflows.operators.equals,
-                    D.editedItem.description)
+                    'desc_edited' + randomNo)
                 .click_Save();
 
-            D.editedItem = D.getEditedItemData(D.newCase);
+            //D.editedItem = D.getEditedItemData(D.newCase);
             api.org_settings.enable_all_Item_fields();
             api.cases.add_new_case()
             api.items.add_new_item()
-            api.items.edit_newly_added_item(false);
+            api.items.edit_newly_added_item(false, randomNo);
 
             ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.itemEdited, D.editedItem)
         });

@@ -22,7 +22,7 @@ describe('Login page', function () {
         ui.login.verify_Username_field_has_red_border()
 
         // wrong password - 1st attempt
-        ui.login.enter_credentials(S.userAccounts.blockedUser.email, 'wrongPass');
+        ui.login.enter_credentials(S.selectedEnvironment.users.blockedUser.email, 'wrongPass');
         ui.app.click(C.buttons.login)
             .verify_toast_title(C.validation_msgs.authenticationError);
         ui.login.verify_inline_validation_message(C.validation_msgs.wrongPassword_1st_attempt);
