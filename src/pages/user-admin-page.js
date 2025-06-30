@@ -64,7 +64,7 @@ export default class UserAdminPage extends BasePage {
         this.define_API_request_to_be_awaited('POST', '/api/users/search', 'searchUsers')
         this.enterValue(searchInput, email)
         this.wait_response_from_API_call('searchUsers')
-        this.pause(0.5)
+        this.pause(0.7)
         this.wait_until_spinner_disappears();
         return this;
     };
@@ -316,6 +316,14 @@ export default class UserAdminPage extends BasePage {
         this.wait_until_spinner_disappears();
         this.pause(1)
 
+        return this;
+    }
+
+    remove_external_user() {
+            this.select_checkbox_on_first_table_row()
+                .click_button(C.buttons.actions)
+                .click_option_on_expanded_menu(C.dropdowns.userActions.removeExternalUsers)
+                .click_button_on_sweet_alert('OK')
         return this;
     }
 
