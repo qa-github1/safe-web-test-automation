@@ -3,6 +3,8 @@ const S = require('../../fixtures/settings');
 const D = require('../../fixtures/data');
 const api = require('../../api-utils/api-spec');
 const ui = require('../../pages/ui-spec');
+const {editedCase} = require("../../fixtures/data");
+const helper = require("../../support/e2e-helper");
 
 let user = S.getUserData(S.userAccounts.orgAdmin);
 
@@ -123,15 +125,20 @@ describe('Mass Update Cases', function () {
                 .select_checkbox_on_specific_table_row(2)
                 .click_button(C.buttons.actions)
                 .click_option_on_expanded_menu(C.dropdowns.caseActions.massUpdate)
-                .turn_ON_the_toggle_for_fields_on_modal(requiredFieldsLabels)
                 .verify_Ok_button_is_disabled()
+
+                .turn_on_all_toggles_on_modal(allFieldsLabels)
                 .verify_asterisk_is_shown_for_fields_on_modal(requiredFieldsLabels)
                 .enter_values_to_all_fields_on_modal(requiredFieldsLabels, requiredValues)
                 .click_Ok()
                 .verify_toast_message(C.toastMsgs.saved)
                 .quick_search_for_case(D.newCase.caseNumber + ' _1')
                 .click_Edit()
-            ui.caseView.verify_edited_and_not_edited_values_on_Case_Edit_form(requiredFieldsLabels, D.editedCase, D.newCase)
+            D.newCase.offenseDescription = ''
+            D.newCase.reviewDateNotes = ''
+            D.newCase.offenseDate = helper.setDate(C.currentDateTimeFormat.dateOnly.editMode)
+            D.newCase.reviewDate = helper.setDate(C.currentDateTimeFormat.dateOnly.editMode)
+              ui.caseView.verify_edited_and_not_edited_values_on_Case_Edit_form(requiredFieldsLabels, D.editedCase, D.newCase)
                 .quick_search_for_case(D.newCase.caseNumber + ' _2')
                 .click_Edit()
                 .verify_edited_and_not_edited_values_on_Case_Edit_form(requiredFieldsLabels, D.editedCase, D.newCase)

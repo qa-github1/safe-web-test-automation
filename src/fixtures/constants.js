@@ -81,7 +81,8 @@ C = {
             'Description',
             'Item Belongs to',
             'Tags',
-            'Released To'
+            'Released To',
+          //  'Disposition Status'
         ],
         reducedEditableFieldsArray: ['Category'],
         massUpdateModal : [
@@ -241,16 +242,16 @@ C = {
         office: "Office",
     },
     caseCustomFields: {
-        cypressCaseForm_Textbox: "Optional fields - Cypress Cases Form > Textbox",
-        cypressCaseForm_Email: "Optional fields - Cypress Cases Form > Email",
-        cypressCaseForm_Number: "Optional fields - Cypress Cases Form > Number",
-        cypressCaseForm_Password: "Optional fields - Cypress Cases Form > Password",
-        cypressCaseForm_Textarea: "Optional fields - Cypress Cases Form > Textarea",
-        cypressCaseForm_Checkbox: "Optional fields - Cypress Cases Form > Checkbox",
-        cypressCaseForm_RadiobuttonList: "Optional fields - Cypress Cases Form > Radiobutton List",
-        cypressCaseForm_CheckboxList: "Optional fields - Cypress Cases Form > Checkbox List",
-        cypressCaseForm_SelectList: "Optional fields - Cypress Cases Form > Select List",
-        cypressCaseForm_Date: "Optional fields - Cypress Cases Form > Date",
+        cypressCaseForm_Textbox: "Optional fields - Cypress Case Form > Textbox",
+        cypressCaseForm_Email: "Optional fields - Cypress Case Form > Email",
+        cypressCaseForm_Number: "Optional fields - Cypress Case Form > Number",
+        cypressCaseForm_Password: "Optional fields - Cypress Case Form > Password",
+        cypressCaseForm_Textarea: "Optional fields - Cypress Case Form > Textarea",
+        cypressCaseForm_Checkbox: "Optional fields - Cypress Case Form > Checkbox",
+        cypressCaseForm_RadiobuttonList: "Optional fields - Cypress Case Form > Radiobutton List",
+        cypressCaseForm_CheckboxList: "Optional fields - Cypress Case Form > Checkbox List",
+        cypressCaseForm_SelectList: "Optional fields - Cypress Case Form > Select List",
+        cypressCaseForm_Date: "Optional fields - Cypress Case Form > Date",
     },
     itemCustomFields: {
         cypressItemForm_Textbox: "Optional fields - Cypress Items Form > Textbox",
@@ -625,7 +626,7 @@ C = {
             'Primary Case #',
             'Additional Barcodes',
             'Item Belongs to',
-            'Tags'
+            'Tags',
         ]
     },
     reports: {
@@ -868,12 +869,12 @@ C.labels = {
                     'Row #2 has Error: Field CaseNumber. Case \'$\' not found.',
                     'Row #2 has Error: The note is neither Case nor Item'
                 ],
-                invalidValues: [
+                invalidValues: (invalidDate, invalidItem) =>[
                     'Row #2 has Error: Field UserGUID Email is empty.',
                     'Row #2 has Error: Field UserGUID. User not found. Value: \'\'',
                     'Row #2 has Error: Field OfficeGUID. Office not found',
-                    'Row #2 has Error: Field Date. Date \'535530de-c2e1-40bd-ad7d-4189dbbeb6af\' is not in the proper format.',
-                    'Row #2 has Error: Field ItemID. Value \'535530de-c2e1-40bd-ad7d-4189dbbeb6af\' is not in a recognizable format.',
+                    `Row #2 has Error: Field Date. Date '${invalidDate}' is not in the proper format.`,
+                    `Row #2 has Error: Field ItemID. Value '${invalidItem}' is not in a recognizable format.`,
                     'Row #2 has Error: Field CaseNumber. Case number invalid format.',
                     'Row #2 has Error: The note is neither Case nor Item'
                 ],
@@ -986,7 +987,7 @@ C.permissionMatrixAccessType = {
 
 C.customForms = {
     casesFormWithRequiredFields: 'Required fields - Cypress Cases Form',
-    casesFormWithOptionalFields: 'Optional fields - Cypress Cases Form',
+    casesFormWithOptionalFields: 'Optional fields - Cypress Case Form',
 
     itemsFormWithRequiredFields: 'Required fields - Cypress Items Form',
     itemsFormWithOptionalFields: 'Optional fields - Cypress Items Form',

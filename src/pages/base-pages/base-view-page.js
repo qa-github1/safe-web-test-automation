@@ -21,12 +21,15 @@ let
     active_tab = e => cy.get('.nav-tabs').find('.active'),
     edit_form = e => cy.get('[name="frmEdit"]'),
     customFormContainerOnEdit = e => cy.get('[ng-repeat="form in formsEdit track by $index"]'),
+    customFormContainerOnEdit2 = e => cy.get('[ng-repeat="form in forms"]'),
+    customFormContainerOnHistory = e => cy.get('[fg-schema="form.form.schema"]'),
     detailsButton = e => cy.get('[translate="GENERAL.DETAILS"]'),
     historyView_leftColumn = e => cy.get('[ng-class="previousHistory ? \'col-md-6\' : \'col-md-12\'"]'),
     historyView_rightColumn = e => cy.get('[ng-if="previousHistory"]'),
     fieldFoundByLabelOnLeftHistoryColumn = fieldLabel => historyView_leftColumn().contains(fieldLabel).parents('tp-modal-field'),
     fieldFoundByLabel = fieldLabel => cy.contains(fieldLabel).parents('tp-modal-field'),
     textboxOnCustomForm = (form = customFormContainerOnEdit) => form().contains('Textbox').parent('div').find('input'),
+    textboxOnCustomForm2 = e => cy.get('input.fg-field-input[ng-model*="form.data"]'),
     emailOnCustomForm = (form = customFormContainerOnEdit) => form().contains('Email').parent('div').find('input'),
     numberOnCustomForm = (form = customFormContainerOnEdit) => form().contains('Number').parent('div').find('input'),
     passwordOnCustomForm = (form = customFormContainerOnEdit) => form().contains('Password').parent('div').find('input'),
@@ -487,25 +490,29 @@ export default class BaseViewPage extends BasePage {
         return this;
     };
 
-    verify_red_highlighted_history_records(allFieldsOnHistory, redFields) {
-        historyView_leftColumn().within(($form) => {
-            for (let field of allFieldsOnHistory) {
-                if (redFields.includes(field)) {
+     verify_red_highlighted_history_records(allFieldsOnHistory, redFields) {
+         historyView_leftColumn().within(($form) => {
+             for (let field of allFieldsOnHistory) {
+                 if (redFields.includes(field)) {
+                     cy.contains(field)
+                         .should('have.color', 'rgb(255, 0, 0)')
+                 } else {
                     cy.contains(field)
-                        .should('have.color', 'rgb(255, 0, 0)')
-                } else {
-                    cy.contains(field)
-                        // .then(($el) => {
-                        //     return window.getComputedStyle($el[0])
-                        // })
-                        // .invoke('getPropertyValue', 'color')
-                        // .should('equal', 'rgb(103, 106, 108)')
-                        .should('have.color', 'rgb(103, 106, 108)')
-                }
-            }
-        })
-        return this;
-    }
+                         // .then(($el) => {
+                         //     return window.getComputedStyle($el[0])
+                         // })
+                         // .invoke('getPropertyValue', 'color')
+                         // .should('equal', 'rgb(103, 106, 108)')
+                         .should('have.color', 'rgb(103, 106, 108)')
+                 }
+             }
+         })
+         return this;
+     }
+
+
+
+
 
     verify_required_fields(fields) {
         for (let field of fields) {

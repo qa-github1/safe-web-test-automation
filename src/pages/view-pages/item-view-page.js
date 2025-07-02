@@ -326,6 +326,7 @@ export default class ItemViewPage extends BaseViewPage {
             [['Update Made By', dataObject.updateMadeBy]],
             [['Description', dataObject.description]]
             [['Public Facing Description', dataObject.publicFacingDescription]]
+           // [['Disposition Status', dataObject.dispositionStatus]]
         )
 
         if (customFormName) {
@@ -339,7 +340,6 @@ export default class ItemViewPage extends BaseViewPage {
         super.verify_red_highlighted_history_records(fieldsToCheck, redFields)
         return this;
     }
-
 
     verify_Items_Status(status) {
         itemStatus().should('have.text', status);

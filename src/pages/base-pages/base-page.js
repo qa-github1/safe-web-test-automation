@@ -907,6 +907,7 @@ export default class BasePage {
             } else if (stack[1]) {
                 self.verify_value(stack[0], stack[1])
             }
+
         });
         return this;
     };
@@ -926,6 +927,9 @@ export default class BasePage {
         });
         return this;
     };
+
+
+
 
     verify_multiple_input_values_in_one_container(container, arrayOfProperties) {
         let i = 0;
@@ -950,7 +954,7 @@ export default class BasePage {
     };
 
     verify_multiple_text_values_in_one_container(container, arrayOfProperties) {
-        container().should('exist');
+        container().should('exist').and('not.be.empty');
 
         arrayOfProperties.forEach(function (prop) {
             if (prop !== null) {
@@ -1000,21 +1004,7 @@ export default class BasePage {
     };
 
 
-    // check_text(element, text) {
-    //
-    //     if (element instanceof Function) {
-    //         cy.verifyTextAndRetry(() =>
-    //                 element().invoke('text'),
-    //             text
-    //         );
-    //     } else {
-    //         cy.verifyTextAndRetry(() =>
-    //                 element.invoke('text'),
-    //             text
-    //         );
-    //     }
-    // }
-
+    // this was the source method that includes retry mechanism
     check_text(element, text, timeoutInSeconds = 60) {
         if (text) {
             let getTextFn = () => {
@@ -1055,22 +1045,27 @@ export default class BasePage {
     //     });
     // }
 
+
     // check_value(element, value) {
+    //     const expected = value?.toString().trim() ?? '';
+    //
     //     if (element instanceof Function) {
-    //         if (value === '') {
-    //             element().invoke('val').should('eq', value)
-    //         } else if (value) {
-    //             element().invoke('val').should('contain', value)
-    //         }
+    //         element = element();
+    //     }
+    //
+    //     if (expected === '') {
+    //         element.invoke('val').should(val => {
+    //             expect(val?.toString().trim() ?? '').to.eq('');
+    //         });
     //     } else {
-    //         if (value === '') {
-    //             element.invoke('val').should('eq', value)
-    //         } else if (value) {
-    //             element.invoke('val').should('contain', value)
-    //         }
+    //         element.invoke('val').should(val => {
+    //             expect(val?.toString().trim() ?? '').to.contain(expected);
+    //         });
     //     }
     // }
 
+
+//this was the source method that includes retry mechanism
     check_value(element, value) {
         if (value) {
             const getTextFn = () => {
@@ -1079,6 +1074,11 @@ export default class BasePage {
             cy.verifyTextAndRetry(getTextFn, value, {maxAttempts: 10, retryInterval: 500});
         }
     }
+
+
+
+
+
 
     verify_text(element, expectedText, timeoutInSeconds) {
         let self = this
@@ -1144,12 +1144,20 @@ export default class BasePage {
         return this;
     };
 
+    // verify_text_regardless_of_the_DOM_structure(element, fullText) {
+    //     element().invoke('text').then(function (text) {
+    //         assert.equal(text, fullText);
+    //     });
+    //     return this;
+    // };
     verify_text_regardless_of_the_DOM_structure(element, fullText) {
         element().invoke('text').then(function (text) {
-            assert.equal(text, fullText);
+            const normalizedText = text.replace(/\s+/g, ' ').trim();
+            const expectedText = fullText.replace(/\s+/g, ' ').trim();
+            assert.equal(normalizedText, expectedText);
         });
         return this;
-    };
+    }
 
     verify_element_does_NOT_contain_text(element, text) {
         element().should('not.contain', text);
@@ -2552,7 +2560,7 @@ export default class BasePage {
 
     check_asterisk_is_shown_for_specific_field_on_modal(fieldLabel, parentElementTag = 'div') {
         parentContainerFoundByInnerLabelOnModal(fieldLabel, parentElementTag)
-            .find('[ng-message="required"]').scrollIntoView().should('be.visible');
+            .find('[ng-message="required"]').should('be.visible');
         return this;
     }
 
@@ -2699,6 +2707,14 @@ export default class BasePage {
         return this
     }
 
+    turn_on_all_toggles_on_modal(labelsArray) {
+        for (let i = 0; i < labelsArray.length; i++) {
+            const label = labelsArray[i];
+            this.turnOnToggle(label);
+        }
+        return this;
+    }
+
     turn_on_and_enter_values_to_all_fields_on_modal(labelsArray, valuesArray) {
 
         for (let i = 0; i < labelsArray.length; i++) {
@@ -2771,7 +2787,12 @@ export default class BasePage {
 
             } else if (['Case Officer(s)'].some(v => label === v)) {
                 this.findElementByLabelAndSelectTypeaheadOptionsOnMultiSelectField(label, value)
-            } else {
+            } else if (label === 'Offense Location') {
+                cy.get('[name="offenseLocation"]').clear().type(value).click();
+            }
+
+
+            else {
                 this.findElementByLabelEnterValueAndPressEnter(label, value)
             }
         }

@@ -1,4 +1,6 @@
 const C = require('../fixtures/constants')
+const dayjs = require('dayjs');
+
 
 /*DATE FORMAT functions */
 const dateFormat = (function () {
@@ -208,7 +210,7 @@ exports.getNumberOfDaysBetween2Dates = function (date1 = "11/25/2021", date2 = "
     let date_1 = new Date(date1);
     let date_2 = new Date(date2);
     let difference = date_1.getTime() - date_2.getTime();
-    return Math.ceil(difference / (1000 * 3600 * 24));
+   return Math.ceil(difference / (1000 * 3600 * 24));
 };
 
 exports.getCurrentDateInCurrentFormat = function (formatObject) {

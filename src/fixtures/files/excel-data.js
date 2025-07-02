@@ -132,8 +132,13 @@ E.generateDataFor_CASES_Importer = function (arrayOfDataObjects, customFormName,
 
 E.generateDataFor_ITEMS_Importer = function (arrayOfDataObjects, customFormName, importingItemUpdates, numberOfRecords, specificMapping) {
     // Set headers for Excel file
-    let allFieldHeaders = specificMapping || C.importMappingsWithOutSquareBrackets.checkedInItemFields
-    let minimumFieldsHeaders = specificMapping || C.importMappingsWithOutSquareBrackets.minimumItemFields
+    //this commented part is switched with the one below because we had an issue with files
+    //import always used a file from the previous test and that was a reason for failing
+
+    // let allFieldHeaders = specificMapping || C.importMappingsWithOutSquareBrackets.checkedInItemFields
+    // let minimumFieldsHeaders = specificMapping || C.importMappingsWithOutSquareBrackets.minimumItemFields
+    let allFieldHeaders = [...(specificMapping || C.importMappingsWithOutSquareBrackets.checkedInItemFields)];
+    let minimumFieldsHeaders = [...(specificMapping || C.importMappingsWithOutSquareBrackets.minimumItemFields)];
 
     numberOfRecords = numberOfRecords || arrayOfDataObjects.length
 
@@ -187,7 +192,8 @@ E.generateDataFor_ITEMS_Importer = function (arrayOfDataObjects, customFormName,
             itemObject.caseNumber,
             additionalBarcode,
             itemObject.itemBelongsToEmail,
-            tags,
+            tags
+
         ]
 
         E.itemImportDataWithMinimumFields[i + 1] = [
@@ -198,7 +204,8 @@ E.generateDataFor_ITEMS_Importer = function (arrayOfDataObjects, customFormName,
             itemObject.status,
             itemObject.officeGuid,
             itemObject.submittedByGuid,
-            itemObject.createdDate,
+            itemObject.createdDate
+
         ]
 
         if (itemObject.barcode) {
@@ -233,6 +240,11 @@ E.generateDataFor_ITEMS_Importer = function (arrayOfDataObjects, customFormName,
             minimumFieldsHeaders.push('TransactionNotes')
             E.itemImportDataWithAllFields[i + 1].push(itemObject.disposalNotes)
             E.itemImportDataWithMinimumFields[i + 1].push(itemObject.disposalNotes)
+
+            allFieldHeaders.push('DispositionStatus')
+            minimumFieldsHeaders.push('DispositionStatus')
+            E.itemImportDataWithAllFields[i + 1].push(itemObject.dispositionStatus)
+            E.itemImportDataWithMinimumFields[i + 1].push(itemObject.dispositionStatus)
         }
 
         if (itemObject.status === 'Checked Out') {
@@ -265,6 +277,15 @@ E.generateDataFor_ITEMS_Importer = function (arrayOfDataObjects, customFormName,
             minimumFieldsHeaders.push('TransactionNotes')
             E.itemImportDataWithAllFields[i + 1].push(itemObject.checkedOutNotes)
             E.itemImportDataWithMinimumFields[i + 1].push(itemObject.checkedOutNotes)
+
+        }
+
+
+        if (itemObject.status === 'Checked In' && importingItemUpdates) {
+            allFieldHeaders.push('Returned By');
+            minimumFieldsHeaders.push('Returned By');
+            E.itemImportDataWithAllFields[i + 1].push(itemObject.returnedByGuid);
+            E.itemImportDataWithMinimumFields[i + 1].push(itemObject.returnedByGuid);
         }
 
         if (itemObject.movedBy_name || itemObject.returnedByName_name) {

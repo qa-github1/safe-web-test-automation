@@ -15,7 +15,7 @@ describe('System Services Page: verify the existing Services are in place, if a 
             "Reporter",
             "Workflow",
             "AutoDispo",
-            "ObjectToEs",
+            "Item To ES Service",
             "OrgDataDelete",
             "ScheduledJobs",
             "PersonMerge",
