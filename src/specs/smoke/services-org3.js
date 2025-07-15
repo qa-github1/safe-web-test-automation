@@ -81,7 +81,7 @@ describe('Dispo Auth', function () {
             .set_Action___Hold([7], 'Active Warrant', true)
             .set_Action___Timed_Disposal([8], '3y')
             .click_Submit_for_Disposition()
-            .verify_toast_message('Submitted for Disposition')
+            .verify_single_toast_message_if_multiple_shown('Submitted for Disposition')
             .wait_until_spinner_disappears()
             .reload_page()
             .verify_text_is_present_on_main_container('Closed')
@@ -118,9 +118,11 @@ describe('Services', function () {
             .select_checkbox_for_all_records()
             .click_element_on_active_tab(C.buttons.reports)
             .click_option_on_expanded_menu(C.reports.primaryLabel4x3)
+            .verify_report_running_toast_message()
+            .click_element_on_active_tab(C.buttons.reports)
+            .click_option_on_expanded_menu(C.reports.primaryLabel4x3)
         cy.get('@windowOpen').should('have.been.called');
-        cy.get('@windowOpen').should('have.been.calledWithMatch', /Report.*\.pdf/);
-        ui.app.verify_toast_message(C.toastMsgs.popupBlocked);
+        cy.get('@windowOpen').should('have.been.calledWithMatch', /Report.*\.pdf/)
     });
 
     it('2. Exporter', function () {
@@ -234,16 +236,17 @@ describe('Services', function () {
             .set_large_view()
             .set_Action___Approve_for_Disposal([1, 51])
             .click_Submit_for_Disposition()
-            .verify_toast_message('Processing...')
+            .verify_single_toast_message_if_multiple_shown('Processing...')
             .verify_Dispo_Auth_Job_Status('Complete')
             .reload_page()
-            //.verify_text_is_present_on_main_container('Closed')
             .select_tab('Items')
             .disable_large_view()
-            .verify_text_is_present_and_check_X_more_times_after_waiting_for_Y_seconds('Approved for Disposal', 2, 5, true, true)
+            .verify_text_is_present_on_main_container('Approved for Disposal')
         ui.taskView.set_page_size(100)
             .verify_Disposition_Statuses_on_the_grid([
                 [[...Array(50).keys()], 'Approved for Disposal']])
+            .reload_page()
+            .verify_text_is_present_on_main_container('Task was closed')
     });
 
     it('6. Auto Reports - Release Letters', function () {

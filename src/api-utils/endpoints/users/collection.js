@@ -56,6 +56,34 @@ exports.deactivate_users = function (arrayOfUsersIdsOrObjectsInStorage) {
     return this;
 };
 
+exports.set_user_supervisors = function (arrayOfUsersIdsOrObjectsInStorage, arrayOfSupervisorIds) {
+    let userIds = []
+    let supervisorsArray = []
+    arrayOfUsersIdsOrObjectsInStorage.forEach((user, index, array) => {
+        cy.getLocalStorage(user).then(user => {
+
+            if (user) {
+                userIds.push(JSON.parse(user).id)
+            } else {
+                userIds = arrayOfUsersIdsOrObjectsInStorage
+            }
+
+            arrayOfSupervisorIds.forEach((supervisorId) => {
+                supervisorsArray.push({SupervisorUserId:supervisorId})
+
+            if (index === (array.length - 1)) {
+                generic_request.POST(
+                    '/api/users/SetUserSupervisors',
+                    {"UserIds":userIds,"UserSupervisors":supervisorsArray},
+                    'Setting user supervisors via API'
+                );
+            }
+        })
+        })
+    })
+    return this;
+};
+
 exports.deactivate_previously_created_user = function () {
     cy.getLocalStorage("newUser").then(newUser => {
         newUser = JSON.parse(newUser) || S.selectedEnvironment.newUser

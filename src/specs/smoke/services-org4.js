@@ -285,10 +285,11 @@ describe('Services', function () {
                 .enter_values_on_reassign_modal([orgAdmin.fullName])
                 .click_Ok()
                 .verify_toast_message('Processing...')
+                .verify_text_is_present_on_main_container('Reassign Tasks and Cases After Deactivating the User(s)')
                 .verify_content_of_first_row_in_results_table([newUser.email, 'Complete'])
                 .open_newly_created_case_via_direct_link()
                 .click_Edit()
-            D.newCase.caseOfficers = [newUser.name, orgAdmin.name]
+            D.newCase.caseOfficers = [D.newUser.firstLastName, orgAdmin.name]
             ui.caseView.verify_values_on_Edit_form(D.newCase)
         })
     });
@@ -297,6 +298,7 @@ describe('Services', function () {
 
         api.auth.get_tokens(orgAdmin);
         D.generateNewDataSet();
+        D.randomNo = D.randomNo + i
         api.cases.add_new_case()
         const person1 = Object.assign({}, D.newPerson)
         person1.businessName = D.randomNo + '_Person1'
@@ -329,6 +331,7 @@ describe('Services', function () {
                     .verify_text_is_present_on_main_container('People Merge Jobs')
                     .sort_by_descending_order('Start Date')
                     .verify_content_of_first_row_in_results_table(['Complete', person2.firstName])
+                    .pause(1)
                     .click_link(person2.firstName)
                     .select_tab('Merge History')
                     .verify_content_of_first_row_in_results_table_on_active_tab(person1.businessName)

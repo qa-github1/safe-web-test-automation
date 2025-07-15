@@ -69,7 +69,7 @@ exports.edit_task_template = function (taskTemplate) {
     generic_request.PUT(
         '/api/taskTemplates/' + taskTemplate.templateId,
         body.generate_PUT_request_payload_for_editing_existing_task_template(taskTemplate),
-        'Creating new task template via API and saving to local storage __ ',
+        'Editing task template via API and saving to local storage __ ',
         'newTaskTemplateId',
     );
     return this;
