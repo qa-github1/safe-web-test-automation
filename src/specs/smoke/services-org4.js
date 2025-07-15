@@ -298,7 +298,6 @@ describe('Services', function () {
 
         api.auth.get_tokens(orgAdmin);
         D.generateNewDataSet();
-        D.randomNo = D.randomNo + i
         api.cases.add_new_case()
         const person1 = Object.assign({}, D.newPerson)
         person1.businessName = D.randomNo + '_Person1'
