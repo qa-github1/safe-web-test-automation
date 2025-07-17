@@ -1,3 +1,36 @@
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Choose the environment'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - pentest
+          - secure
+      api_timeout:
+        description: 'Choose the API timeout'
+        required: true
+        default: '60000'
+        type: choice
+        options:
+          - 30000
+          - 80000
+          - 90000
+      command_timeout:
+        description: 'Choose the command timeout'
+        required: true
+        default: '60000'
+        type: choice
+        options:
+          - 30000
+          - 80000
+          - 90000
+
+permissions: write-all
+
 jobs:
   cypress-tests:
     runs-on: [smj-mac, cypress]
