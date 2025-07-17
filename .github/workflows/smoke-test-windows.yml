@@ -44,7 +44,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run Cypress tests in parallel
+      - name: Run Cypress tests in parallel with manual result tracking
         shell: powershell
         run: |
           $ENVIRONMENT = "${{ github.event.inputs.environment }}"
@@ -56,27 +56,50 @@ jobs:
           Write-Host "Running Cypress tests in parallel on Windows self-hosted runner..."
 
           $specs = @(
-            @{ spec = "src/specs/org1/add-notes-spec.js"; org = 1 }
+            @{ spec = "src/specs/smoke/main-actions-org1.js"; org = 1 },
+            @{ spec = "src/specs/smoke/main-actions-org2.js"; org = 2 },
+            @{ spec = "src/specs/smoke/services-org3.js"; org = 3 },
+            @{ spec = "src/specs/smoke/services-org4.js"; org = 4 }
           )
 
           $processes = @()
 
           foreach ($s in $specs) {
-            $cmd = "npx cypress run --browser chrome --record " +
+            $logFile = "cypress-org-$($s.org).log"
+            $cmd = "npx cypress run --headless --browser chrome --record " +
                    "--key fe33f9bd-6aca-4be4-965b-9f726b827c82 " +
                    "--group `"org-$($s.org)`" " +
                    "--ci-build-id `"${{ github.run_id }}`" " +
                    "--spec `"$($s.spec)`" " +
-                   "--env `"environment=$ENVIRONMENT,orgNum=$($s.org),apiTimeout=$API_TIMEOUT,defaultCommandTimeout=$COMMAND_TIMEOUT`""
+                   "--env `"environment=$ENVIRONMENT,orgNum=$($s.org),apiTimeout=$API_TIMEOUT,defaultCommandTimeout=$COMMAND_TIMEOUT`" " +
+                   "*> `"$logFile`"; exit `$LASTEXITCODE"
 
-            Write-Host "Starting process for org $($s.org)..."
-            $p = Start-Process -FilePath "powershell" -ArgumentList "-NoProfile", "-Command", $cmd -PassThru
-            $processes += $p
+            Write-Host "Starting Cypress for org $($s.org)..."
+            $proc = Start-Process powershell -ArgumentList "-NoProfile", "-Command", $cmd -PassThru
+            $processes += [PSCustomObject]@{
+              Org = $s.org
+              Process = $proc
+              Log = $logFile
+            }
           }
 
-          # Wait for all processes to complete
+          $failed = $false
+
           foreach ($p in $processes) {
-            $p.WaitForExit()
+            $p.Process.WaitForExit()
+            Write-Host "`n===== Log for org $($p.Org) ====="
+            Get-Content $p.Log
+            if ($p.Process.ExitCode -ne 0) {
+              Write-Host "❌ Cypress failed for org $($p.Org)"
+              $failed = $true
+            } else {
+              Write-Host "✅ Cypress passed for org $($p.Org)"
+            }
+          }
+
+          if ($failed) {
+            Write-Error "One or more Cypress specs failed."
+            exit 1
           }
 
   slack-notification:
