@@ -35,7 +35,7 @@ permissions: write-all
 
 jobs:
   cypress-tests:
-    runs-on: ${{ matrix.runner_label }}
+    runs-on: [self-hosted]
     strategy:
       fail-fast: false
       matrix:
@@ -61,7 +61,7 @@ jobs:
           --ci-build-id "${{ github.run_id }}"
           --spec ${{ matrix.spec_group }}
           --env environment=${{ github.event.inputs.environment }},orgNum=${{ matrix.org_number }},apiTimeout=${{ github.event.inputs.api_timeout }},defaultCommandTimeout=${{ github.event.inputs.command_timeout }}
-        
+
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           CI: true
