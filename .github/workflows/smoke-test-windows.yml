@@ -1,3 +1,5 @@
+name: Run Cypress Tests on Self-Hosted Machines
+
 on:
   workflow_dispatch:
     inputs:
@@ -33,6 +35,7 @@ permissions: write-all
 
 jobs:
   cypress-tests:
+    runs-on: ${{ matrix.runner_label }}
     strategy:
       fail-fast: false
       matrix:
@@ -43,8 +46,6 @@ jobs:
           - runner_label: cypress
             spec_group: src/specs/smoke/main-actions-org2.js
             org_number: 2
-
-    runs-on: ${{ matrix.runner_label }}
 
     steps:
       - uses: actions/checkout@v2
@@ -87,7 +88,9 @@ jobs:
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-          SLACK_COLOR: ${{ job.status }}
-          SLACK_MESSAGE: 'Cypress Dashboard: https://cloud.cypress.io/projects/8ismn2/branches/${{ github.ref_name }}/runs\nReport URL: https://safe-qa.github.io/report_${{ env.NOW }}'
+          SLACK_COLOR: ${{ needs.cypress-tests.result }}
+          SLACK_MESSAGE: |
+            Cypress Dashboard: https://cloud.cypress.io/projects/8ismn2/branches/${{ github.ref_name }}/runs
+            Report URL: https://safe-qa.github.io/report_${{ env.NOW }}
           SLACK_TITLE: Cypress Test Results
           SLACK_USERNAME: Cypress_Tests
