@@ -101,7 +101,7 @@ jobs:
 
 
   cypress-tests-mac:
-    runs-on: [sumejja-mac]
+    runs-on: mac-smj-1
     timeout-minutes: 250
     container:
       image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
