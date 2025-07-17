@@ -33,8 +33,6 @@ permissions: write-all
 
 jobs:
   cypress-tests:
-    runs-on: [smj-mac, cypress]
-    timeout-minutes: 250
     strategy:
       fail-fast: false
       matrix:
@@ -46,7 +44,7 @@ jobs:
             spec_group: src/specs/smoke/main-actions-org2.js
             org_number: 2
 
-        runs-on: [ self-hosted, ${ { matrix.runner_label } } ]
+    runs-on: [self-hosted, ${{ matrix.runner_label }}]
 
     steps:
       - uses: actions/checkout@v2
