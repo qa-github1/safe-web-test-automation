@@ -39,10 +39,14 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - spec_group: src/specs/smoke/main-actions-org1.js
+          - runner_label: smj-mac
+            spec_group: src/specs/smoke/main-actions-org1.js
             org_number: 1
-          - spec_group: src/specs/smoke/main-actions-org2.js
+          - runner_label: cypress
+            spec_group: src/specs/smoke/main-actions-org2.js
             org_number: 2
+
+        runs-on: [ self-hosted, ${ { matrix.runner_label } } ]
 
     steps:
       - uses: actions/checkout@v2
