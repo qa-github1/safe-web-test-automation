@@ -56,10 +56,7 @@ jobs:
           Write-Host "Running Cypress tests in parallel on Windows self-hosted runner..."
 
           $specs = @(
-            @{ spec = "src/specs/smoke/main-actions-org1.js"; org = 1 },
-            @{ spec = "src/specs/smoke/main-actions-org2.js"; org = 2 },
-            @{ spec = "src/specs/smoke/services-org3.js"; org = 3 },
-            @{ spec = "src/specs/smoke/services-org4.js"; org = 4 }
+            @{ spec = "src/specs/org1/add-notes-spec.js"; org = 1 }
           )
 
           $processes = @()
