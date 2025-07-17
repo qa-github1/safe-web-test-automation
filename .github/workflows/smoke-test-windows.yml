@@ -56,7 +56,7 @@ jobs:
           Write-Host "Running Cypress tests in parallel on Windows self-hosted runner..."
 
           $specs = @(
-            @{ spec = "src/specs/org1/add-notes-spec.js"; org = 1 },
+            @{ spec = "src/specs/org1/add-notes-spec.js"; org = 1 }
           )
 
           $processes = @()
