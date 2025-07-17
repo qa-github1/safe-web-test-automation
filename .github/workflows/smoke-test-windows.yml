@@ -35,7 +35,7 @@ permissions: write-all
 
 jobs:
   cypress-tests:
-    runs-on: self-hosted
+    runs-on: cypress
     timeout-minutes: 250
 
     steps:
