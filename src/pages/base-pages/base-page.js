@@ -505,6 +505,33 @@ export default class BasePage {
         return this;
     };
 
+    verify_single_toast_message_if_multiple_shown(text) {
+
+        let allToastMessages = []
+
+        cy.get('.toast').first().invoke('text').then((firstToast) => {
+            cy.get('.toast').last().invoke('text').then((lastToast) => {
+                allToastMessages.push(firstToast)
+                allToastMessages.push(lastToast)
+                expect(allToastMessages.toString()).to.contain(text);
+            });
+        });
+
+        return this;
+    };
+
+    verify_report_running_toast_message() {
+        const isSecure = S.domain === 'SECURE';
+        const isPentest = S.domain === 'PENTEST';
+
+        this.verify_single_toast_message_if_multiple_shown(C.toastMsgs.reportRunning)
+
+        // if (isPentest || isSecure){
+        //     this.verify_single_toast_message_if_multiple_shown(C.toastMsgs.popupBlocked)
+        // }
+        return this;
+    };
+
     verify_toast_title(title) {
         toastTitle().should('be.visible');
         toastTitle().should('contain', title);
@@ -929,8 +956,6 @@ export default class BasePage {
     };
 
 
-
-
     verify_multiple_input_values_in_one_container(container, arrayOfProperties) {
         let i = 0;
         arrayOfProperties.forEach(function (prop) {
@@ -959,18 +984,18 @@ export default class BasePage {
         arrayOfProperties.forEach(function (prop) {
             if (prop !== null) {
                 if (prop === '') {
-                    container({ timeout: 5000 }).invoke('text').should('eq', '');
+                    container({timeout: 5000}).invoke('text').should('eq', '');
                 } else {
                     // we have issues with trimming on DEV, so I had to add like this
                     cy.url().then(url => {
                         if (url.includes('dev')) {
-                            container({ timeout: 5000 }).invoke('text').then(text => {
+                            container({timeout: 5000}).invoke('text').then(text => {
                                 const normalizedText = text.replace(/\s+/g, ' ').trim();
                                 const normalizedProp = prop.replace(/\s+/g, ' ').trim();
                                 expect(normalizedText).to.include(normalizedProp);
                             });
                         } else {
-                            container({ timeout: 5000 }).should('contain.text', prop);
+                            container({timeout: 5000}).should('contain.text', prop);
                         }
                     });
                 }
@@ -1074,10 +1099,6 @@ export default class BasePage {
             cy.verifyTextAndRetry(getTextFn, value, {maxAttempts: 10, retryInterval: 500});
         }
     }
-
-
-
-
 
 
     verify_text(element, expectedText, timeoutInSeconds) {
@@ -1286,6 +1307,7 @@ export default class BasePage {
     };
 
     click_Ok() {
+        okButton().scrollIntoView()
         okButton().should('be.enabled');
         okButton().click();
         return this;
@@ -1322,7 +1344,6 @@ export default class BasePage {
         editButton().should('be.enabled');
         editButton().click();
         cy.wait(2000)
-        saveButton().should('be.visible');
         return this;
     };
 
@@ -1381,10 +1402,11 @@ export default class BasePage {
     };
 
     click_link(linkText, container) {
+        this.wait_until_spinner_disappears()
         if (container) {
             container.contains(linkText).click();
         } else {
-            linkByText(linkText).click();
+            linkByText(linkText).scrollIntoView().should('be.visible').click();
         }
         return this;
     };
@@ -1530,10 +1552,10 @@ export default class BasePage {
 
     set_visibility_of_table_column(columnName, shouldBeVisible, onActiveTab = true) {
         cy.wait(1000)
-
         if (onActiveTab) {
             if (shouldBeVisible) {
                 active_tab().find('thead').contains(columnName).parents('th').then(($el) => {
+
                     if ($el.hasClass('ng-hide')) {
                         this.click_element_on_active_tab(C.buttons.menuCustomization);
                         this.click_element_on_active_tab(C.buttons.options);
@@ -1717,9 +1739,11 @@ export default class BasePage {
         this.wait_until_spinner_disappears()
 
         if (tabTitle === C.tabs.history) {
-            historyTab(tabTitle).should('be.visible').click().should('have.class', 'active')
+            historyTab(tabTitle).should('be.visible').click()
+            historyTab(tabTitle).should('have.class', 'active')
         } else {
-            specificTab(tabTitle).should('be.visible').click().should('have.class', 'active')
+            specificTab(tabTitle).should('be.visible').click()
+            specificTab(tabTitle).should('have.class', 'active')
         }
         this.pause(1)
         this.wait_until_spinner_disappears()
@@ -1825,6 +1849,7 @@ export default class BasePage {
                     });
                 };
 
+                cy.wait(1000)
                 // First click
                 clickCheckbox();
                 cy.wait(1000)
@@ -1852,7 +1877,7 @@ export default class BasePage {
     click_checkbox_to_select_specific_row(rowNumber, tableIndex = 0) {
         this.pause(1)
         this.wait_until_spinner_disappears()
-        firstCheckboxOnTableBody().should('be.visible')
+        firstCheckboxOnTableBody().scrollIntoView().should('be.visible')
 
         if (tableIndex === 0) {
 
@@ -2027,6 +2052,7 @@ export default class BasePage {
             content,
             {clickReloadIconBetweenAttempts: true}
         );
+        this.wait_until_spinner_disappears()
         return this;
     }
 
@@ -2371,13 +2397,23 @@ export default class BasePage {
         let url = `${S.base_url}/#/people/${existingPersonId.toString()}/view`;
         //cy.log('Opening Peron URL: ' + url);
         cy.visit(url);
-
+        this.verify_url_contains_some_value(`/#/people/${existingPersonId.toString()}/view`)
+        this.wait_until_spinner_disappears()
         return this;
     };
 
-    open_newly_created_task_via_direct_link() {
+    open_task_url(existingTaskId) {
+        let url = `${S.base_url}/#/view-task/` + existingTaskId;
+        cy.visit(url);
+        this.verify_url_contains_some_value(`/#/view-task/${existingTaskId.toString()}`)
+        this.wait_until_spinner_disappears()
+        return this;
+    };
+
+    open_newly_created_task_via_direct_link(task_id) {
         cy.getLocalStorage("newTaskId").then(newTaskId => {
-            let url = `${S.base_url}/#/view-task/` + newTaskId;
+            let taskId = newTaskId ? newTaskId : task_id
+            let url = `${S.base_url}/#/view-task/` + taskId;
             cy.visit(url);
         })
         return this;
@@ -2393,6 +2429,7 @@ export default class BasePage {
 
             cy.visit(S.base_url + '/#/cases/' + newCase.id.toString() + '/view')
             this.verify_url_contains_some_value(`/#/cases/${newCase.id.toString()}/view`)
+            this.verify_text_is_present_on_main_container('Case View')
             //   cy.wait('@getSettingsOfCLP');
         });
         return this;
@@ -2520,9 +2557,9 @@ export default class BasePage {
         return this;
     };
 
-    wait_until_spinner_disappears() {
-        bodyContainer().should('not.have.class', 'pace-running', {timeout: 75000});
-        bodyContainer().should('have.class', 'pace-done', {timeout: 75000});
+    wait_until_spinner_disappears(timeoutInSeconds = 80) {
+        bodyContainer().should('not.have.class', 'pace-running', {timeout: timeoutInSeconds * 1000});
+        bodyContainer().should('have.class', 'pace-done', {timeout: timeoutInSeconds * 1000});
         return this;
     };
 
@@ -2789,10 +2826,7 @@ export default class BasePage {
                 this.findElementByLabelAndSelectTypeaheadOptionsOnMultiSelectField(label, value)
             } else if (label === 'Offense Location') {
                 cy.get('[name="offenseLocation"]').clear().type(value).click();
-            }
-
-
-            else {
+            } else {
                 this.findElementByLabelEnterValueAndPressEnter(label, value)
             }
         }

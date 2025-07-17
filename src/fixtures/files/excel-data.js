@@ -193,7 +193,6 @@ E.generateDataFor_ITEMS_Importer = function (arrayOfDataObjects, customFormName,
             additionalBarcode,
             itemObject.itemBelongsToEmail,
             tags
-
         ]
 
         E.itemImportDataWithMinimumFields[i + 1] = [

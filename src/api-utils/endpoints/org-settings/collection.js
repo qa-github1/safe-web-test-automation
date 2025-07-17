@@ -16,6 +16,15 @@ exports.get_current_org_settings = function (organizationId) {
 
 };
 
+exports.update_dispo_config_for_item_catagories = function (thirdTierApproverGroup) {
+        generic_request.PUT(
+            '/api/categories/DispositionApprovalConfig',
+            body.generate_request_payload_for_setting_dispo_config_for_item_categories(thirdTierApproverGroup),
+            "Dispo Config updated via API",
+            'dispoConfig');
+    return this
+};
+
 exports.update_org_settings_by_specifying_property_and_value = function (property, value) {
     exports.get_current_org_settings();
 

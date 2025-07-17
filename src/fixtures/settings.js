@@ -251,8 +251,8 @@ S.DEV_1 = {
             guid: '7801ce14-fc36-eb11-aa49-062d5b58f56e'
         },
         basicUser: {
-            id: 43530,
-            guid: '2af70873-db6f-ed11-832d-021f02b7478f'
+            id: 74278,
+            guid: 'e1d57896-182f-f011-8369-0254a7906fb1'
         },
         blockedUser: {
             id: 54357,
@@ -445,15 +445,15 @@ S.DEV_1 = {
     },
     admin_userGroup: {
         name: 'Cypress Admin Group',
-        id: 2539
+        id: 10591
     },
     blocked_userGroup: {
         name: 'Cypress Blocked Group',
-        id: 2540
+        id: 10593
     },
     readOnly_userGroup: {
         name: 'Cypress ReadOnly Group',
-        id: 2541
+        id: 10592
     },
     orgTag1: {tagModelId: 6548, name: 'sensitive information', color: "#ad2355", tagUsedBy: 1},
     orgTag2: {tagModelId: 6714, name: 'eligible for disposal', color: "#4b9b62", tagUsedBy: 1},
@@ -2683,7 +2683,6 @@ S.PENTEST_3 = {
         officeName: "Cypress Office 1",
         orgAndOfficeName: "Web Test Automation - Cypress Office 1"
     },
-
     users: {
         systemAdminId: 40357,
         orgAdminId: 43666,
@@ -3270,35 +3269,35 @@ S.SECURE_1 = {
       //  systemAdminId: 40357,  //we don't have sys adm on Secure
         orgAdminId: 118001,
         systemAdmin: {
-            id: 40357,
-            guid: '0cfa7c01-2f2e-ea11-aa3a-062d5b58f56e'
+            id: 118001,
+            guid: '5cc413f7-6f2a-f011-ad1f-0e9868aeff83'
         },
         orgAdmin: {
             id: 118001,
             guid: '5cc413f7-6f2a-f011-ad1f-0e9868aeff83'
         },
-        // org2Admin: { //need to change password
-        //     id: 66515,
-        //     guid: 'b9bd4818-d6e3-eb11-aaaa-0686e4578f20',
-        //     organizationId: 1028,
-        //     officeId: 2216
-        // },
+        org2Admin: { //need to change password
+            id: null,
+            guid: null,
+            organizationId: null,
+            officeId: null
+        },
         powerUser: {
             id: 118005,
             guid: 'd1270088-782a-f011-ad1f-0e9868aeff83'
         },
-    //     clpUser: {
-    //         id: 40383,
-    //         guid: '7801ce14-fc36-eb11-aa49-062d5b58f56e'
-    //     },
+        clpUser: {
+            id: null,
+            guid: null
+        },
         basicUser: {
             id: 118006,
             guid: '44312f6c-7d2a-f011-ad1f-0e9868aeff83'
         },
-    //     blockedUser: {
-    //         id: 54357,
-    //         guid: 'a484b498-75c9-ed11-8334-021f02b7478f'
-    //     },
+        blockedUser: {
+            id: null,
+            guid: null
+        },
      },
     divisions: {
         div1: {
@@ -3311,17 +3310,29 @@ S.SECURE_1 = {
         }
     },
     units: {
-        unit1: {
+      div1_unit1: {
             name: 'UnitA',
-            id: 1762
+            id: null
         },
-        unit2: {
+        div1_unit2: {
             name: 'UnitB',
-            id: 1763
+            id: null
         },
-        unit3: {
+        div1_unit3: {
             name: 'UnitC',
-            id: 1764
+            id: null
+        },
+        div2_unit1: {
+            name: 'UnitA',
+            id: null
+        },
+        div2_unit2: {
+            name: 'UnitB',
+            id: null
+        },
+        div2_unit3: {
+            name: 'UnitC',
+            id: 60
         }
     },
     forms: {
@@ -3540,30 +3551,29 @@ S.SECURE_2 = {
         orgAndOfficeName: "Web Test Automation #3 - Cypress Office 1"
     },
     users: {
-       // systemAdminId: 40357,
         orgAdminId: 118002,
-        // systemAdmin: {
-        //     id: 40357,
-        //     guid: '0cfa7c01-2f2e-ea11-aa3a-062d5b58f56e'
-        // },
+        systemAdmin: {
+            id: 118002,
+            guid: '95a3522e-702a-f011-ad1f-0e9868aeff83'
+        },
         orgAdmin: {
             id: 118002,
             guid: '95a3522e-702a-f011-ad1f-0e9868aeff83'
         },
-        // org2Admin: {
-        //     id: 40727,
-        //     guid: '10589878-e7bb-eb11-aa4f-062d5b58f56e',
-        //     organizationId: 546,
-        //     officeId: 1054
-        // },
+        org2Admin: {
+            id: null,
+            guid: null,
+            organizationId: null,
+            officeId: null
+        },
         powerUser: {
             id: 118003,
             guid: '14c490f9-712a-f011-ad1f-0e9868aeff83'
         },
-        // clpUser: {
-        //     id: 40383,
-        //     guid: '7801ce14-fc36-eb11-aa49-062d5b58f56e'
-        // },
+        clpUser: {
+            id: null,
+            guid: null
+        },
         basicUser: {
             id: 118004,
             guid: 'e44a930d-742a-f011-ad1f-0e9868aeff83'
@@ -3584,17 +3594,29 @@ S.SECURE_2 = {
         }
     },
     units: {
-        unit1: {
+        div1_unit1: {
             name: 'UnitA',
-            id: 1759
+            id: null
         },
-        unit2: {
+        div1_unit2: {
             name: 'UnitB',
-            id: 1760
+            id: null
         },
-        unit3: {
+        div1_unit3: {
             name: 'UnitC',
-            id: 1761
+            id: null
+        },
+        div2_unit1: {
+            name: 'UnitA',
+            id: null
+        },
+        div2_unit2: {
+            name: 'UnitB',
+            id: null
+        },
+        div2_unit3: {
+            name: 'UnitC',
+            id: 60
         }
     },
     forms: {
@@ -3814,28 +3836,28 @@ S.SECURE_3 = {
     users: {
         //systemAdminId: 40357, //we don't have sys adm on Secure
         orgAdminId: 118065,
-        // systemAdmin: {
-        //     id: 40357,
-        //     guid: '0cfa7c01-2f2e-ea11-aa3a-062d5b58f56e'
-        // },
+        systemAdmin: {
+            id: 118065,
+            guid: '254b01fb-442b-f011-ad1f-0e9868aeff83'
+        },
         orgAdmin: {
             id: 118065,
             guid: '254b01fb-442b-f011-ad1f-0e9868aeff83'
         },
-//         // org2Admin: {
-//         //     id: 40727,
-//         //     guid: '10589878-e7bb-eb11-aa4f-062d5b58f56e',
-//         //     organizationId: 546,
-//         //     officeId: 1054
-//         // },
+        org2Admin: {
+            id: null,
+            guid: null,
+            organizationId: null,
+            officeId: null
+        },
         powerUser: {
             id: 118068,
             guid: '3af62a21-462b-f011-ad1f-0e9868aeff83'
         },
-//         // clpUser: {
-//         //     id: 43529,
-//         //     guid: '99aa4fce-da6f-ed11-832d-021f02b7478f'
-//         // },
+        clpUser: {
+            id: null,
+            guid: null
+        },
         basicUser: {
             id: 118069,
             guid: '042ac096-462b-f011-ad1f-0e9868aeff83'
@@ -3856,17 +3878,29 @@ S.SECURE_3 = {
         }
     },
     units: {
-        unit1: {
+        div1_unit1: {
             name: 'UnitA',
-            id: 1769
+            id: null
         },
-        unit2: {
+        div1_unit2: {
             name: 'UnitB',
-            id: 1770
+            id: null
         },
-        unit3: {
+        div1_unit3: {
             name: 'UnitC',
-            id: 1771
+            id: null
+        },
+        div2_unit1: {
+            name: 'UnitA',
+            id: null
+        },
+        div2_unit2: {
+            name: 'UnitB',
+            id: null
+        },
+        div2_unit3: {
+            name: 'UnitC',
+            id: 60
         }
     },
     forms: {
@@ -4102,22 +4136,21 @@ S.SECURE_4 = {
         orgAndOfficeName: "Web Test Automation #3 - Cypress Office 1"
     },
     users: {
-//         systemAdminId: 40357,
         orgAdminId: 118077,
-//         systemAdmin: {
-//             id: 40357,
-//             guid: '0cfa7c01-2f2e-ea11-aa3a-062d5b58f56e'
-//         },
+        systemAdmin: {
+            id: 118077,
+            guid: 'f5791dfd-792b-f011-ad1f-0e9868aeff83'
+        },
         orgAdmin: {
             id: 118077,
             guid: 'f5791dfd-792b-f011-ad1f-0e9868aeff83'
         },
-//         // org2Admin: {
-//         //     id: 40727,
-//         //     guid: '10589878-e7bb-eb11-aa4f-062d5b58f56e',
-//         //     organizationId: 546,
-//         //     officeId: 1054
-//         // },
+        org2Admin: {
+            id: null,
+            guid: null,
+            organizationId: null,
+            officeId: null
+        },
         powerUser: {
             id: 118078,
             guid: '167ed77c-7a2b-f011-ad1f-0e9868aeff83'
@@ -4129,6 +4162,10 @@ S.SECURE_4 = {
         blockedUser: {
             id: 118080,
             guid: 'b95a33c6-7b2b-f011-ad1f-0e9868aeff83'
+        },
+        clpUser: {
+            id: null,
+            guid: null
         },
     },
     divisions: {
@@ -4142,17 +4179,29 @@ S.SECURE_4 = {
         }
     },
     units: {
-        unit1: {
+        div1_unit1: {
             name: 'UnitA',
-            id: 1772
+            id: null
         },
-        unit2: {
+        div1_unit2: {
             name: 'UnitB',
-            id: 1773
+            id: null
         },
-        unit3: {
+        div1_unit3: {
             name: 'UnitC',
-            id: 1774
+            id: null
+        },
+        div2_unit1: {
+            name: 'UnitA',
+            id: null
+        },
+        div2_unit2: {
+            name: 'UnitB',
+            id: null
+        },
+        div2_unit3: {
+            name: 'UnitC',
+            id: 60
         }
     },
     forms: {
