@@ -55,8 +55,13 @@ jobs:
 
       - name: Run Cypress tests
         run: >
-          npx cypress run --headless --browser chrome --record --key fe33f9bd-6aca-4be4-965b-9f726b827c82 --group "org-${{ matrix.org_number }}" --ci-build-id "${{ github.run_id }}" --spec ${{ matrix.spec_group }} --env environment=${{ github.event.inputs.environment }},orgNum=${{ matrix.org_number }},apiTimeout=${{ github.event.inputs.api_timeout }},defaultCommandTimeout=${{ github.event.inputs.command_timeout }}
-
+          npx cypress run --headless --browser chrome --record
+          --key fe33f9bd-6aca-4be4-965b-9f726b827c82
+          --group "org-${{ matrix.org_number }}"
+          --ci-build-id "${{ github.run_id }}"
+          --spec ${{ matrix.spec_group }}
+          --env environment=${{ github.event.inputs.environment }},orgNum=${{ matrix.org_number }},apiTimeout=${{ github.event.inputs.api_timeout }},defaultCommandTimeout=${{ github.event.inputs.command_timeout }}
+        
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           CI: true
