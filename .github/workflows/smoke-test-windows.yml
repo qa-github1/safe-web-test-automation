@@ -33,7 +33,7 @@ permissions: write-all
 
 jobs:
   cypress-tests:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 250
     strategy:
       fail-fast: false
