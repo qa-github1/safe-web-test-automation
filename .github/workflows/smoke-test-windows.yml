@@ -1,40 +1,5 @@
-name: Run Cypress Tests on Self-Hosted Windows Machine
-
-on:
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Choose the environment'
-        required: true
-        default: 'dev'
-        type: choice
-        options:
-          - dev
-          - pentest
-          - secure
-      api_timeout:
-        description: 'Choose the API timeout'
-        required: true
-        default: '60000'
-        type: choice
-        options:
-          - 30000
-          - 80000
-          - 90000
-      command_timeout:
-        description: 'Choose the command timeout'
-        required: true
-        default: '60000'
-        type: choice
-        options:
-          - 30000
-          - 80000
-          - 90000
-
-permissions: write-all
-
 jobs:
- cypress-tests:
+  cypress-tests:
     runs-on: [smj-mac, cypress]
     timeout-minutes: 250
     strategy:
@@ -62,10 +27,9 @@ jobs:
           ENVIRONMENT="${{ github.event.inputs.environment }}"
           API_TIMEOUT="${{ github.event.inputs.api_timeout }}"
           COMMAND_TIMEOUT="${{ github.event.inputs.command_timeout }}"
-          ENVIRONMENT=${ENVIRONMENT:-dev}
 
-          echo "✅ Running tests for Environment: $ENVIRONMENT"
-          echo "✅ Running tests for Org Number: ${{ matrix.org_number }}"
+          echo "Running tests for Environment: $ENVIRONMENT"
+          echo "Running tests for Org Number: ${{ matrix.org_number }}"
 
           npx cypress run \
             --headless \
@@ -83,7 +47,7 @@ jobs:
 
   slack-notification:
     runs-on: ubuntu-latest
-    needs: [cypress-tests-win, cypress-tests-mac]
+    needs: [cypress-tests]
     if: always()
     steps:
       - name: Set date
@@ -94,6 +58,6 @@ jobs:
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_COLOR: ${{ job.status }}
-          SLACK_MESSAGE: 'Cypress Dashboard: https://cloud.cypress.io/projects/8ismn2/branches/smj-amn-branch/runs\nReport URL: https://safe-qa.github.io/report_${{ env.NOW }}'
+          SLACK_MESSAGE: 'Cypress Dashboard: https://cloud.cypress.io/projects/8ismn2/branches/${{ github.ref_name }}/runs\nReport URL: https://safe-qa.github.io/report_${{ env.NOW }}'
           SLACK_TITLE: Cypress Test Results
           SLACK_USERNAME: Cypress_Tests
