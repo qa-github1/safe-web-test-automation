@@ -107,7 +107,7 @@ describe('Services', function () {
         api.items.add_new_item()
     });
 
-    it('1. Reporter', function () {
+    it.only('1. Reporter', function () {
 
         api.auth.get_tokens(S.userAccounts.orgAdmin);
         cy.window().then((win) => {
@@ -117,7 +117,7 @@ describe('Services', function () {
             .select_tab(C.tabs.items)
             .select_checkbox_for_all_records()
             .click_element_on_active_tab(C.buttons.reports)
-            .click_option_on_expanded_menu(C.reports.primaryLabel4x3)
+            .click_option_on_expanded_menu(C.reports.primaryLabel4x3, false)
             .verify_report_running_toast_message()
             .click_element_on_active_tab(C.buttons.reports)
             .click_option_on_expanded_menu(C.reports.primaryLabel4x3)
@@ -235,6 +235,8 @@ describe('Services', function () {
             .select_tab('Items')
             .set_large_view()
             .set_Action___Approve_for_Disposal([1, 51])
+            .reload_page()
+            .select_tab('Items')
             .click_Submit_for_Disposition()
             .verify_single_toast_message_if_multiple_shown('Processing...')
             .verify_Dispo_Auth_Job_Status('Complete')
