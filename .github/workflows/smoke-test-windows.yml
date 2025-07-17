@@ -45,7 +45,7 @@ jobs:
         run: npm ci
 
       - name: Run Cypress tests in parallel
-        shell: powershell
+        shell: pwsh
         run: |
           $ENVIRONMENT = "${{ github.event.inputs.environment }}"
           if (-not $ENVIRONMENT) { $ENVIRONMENT = "dev" }
@@ -62,7 +62,7 @@ jobs:
             @{ spec = "src/specs/smoke/services-org4.js"; org = 4 }
           )
 
-          $jobs = @()
+          $processes = @()
 
           foreach ($s in $specs) {
             $cmd = "npx cypress run --headless --browser chrome --record " +
@@ -72,11 +72,15 @@ jobs:
                    "--spec `"$($s.spec)`" " +
                    "--env `"environment=$ENVIRONMENT,orgNum=$($s.org),apiTimeout=$API_TIMEOUT,defaultCommandTimeout=$COMMAND_TIMEOUT`""
 
-            Write-Host "Starting job for org $($s.org)..."
-            $jobs += Start-Job -ScriptBlock { param($c) Invoke-Expression $c } -ArgumentList $cmd
+            Write-Host "Starting process for org $($s.org)..."
+            $p = Start-Process -FilePath "powershell" -ArgumentList "-NoProfile", "-Command", $cmd -PassThru
+            $processes += $p
           }
 
-          $jobs | ForEach-Object { Receive-Job -Job $_ -Wait }
+          # Wait for all processes to complete
+          foreach ($p in $processes) {
+            $p.WaitForExit()
+          }
 
   slack-notification:
     runs-on: ubuntu-latest
