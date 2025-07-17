@@ -44,8 +44,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run Cypress tests in parallel on one machine
-        shell: powershell
+      - name: Run Cypress tests in parallel
+        shell: pwsh
         run: |
           $ENVIRONMENT = "${{ github.event.inputs.environment }}"
           if (-not $ENVIRONMENT) { $ENVIRONMENT = "dev" }
@@ -53,8 +53,7 @@ jobs:
           $API_TIMEOUT = "${{ github.event.inputs.api_timeout }}"
           $COMMAND_TIMEOUT = "${{ github.event.inputs.command_timeout }}"
 
-          Write-Host "Running Cypress tests in parallel on single Windows runner..."
-          $jobs = @()
+          Write-Host "Running Cypress tests in parallel on Windows self-hosted runner..."
 
           $specs = @(
             @{ spec = "src/specs/smoke/main-actions-org1.js"; org = 1 },
@@ -63,20 +62,20 @@ jobs:
             @{ spec = "src/specs/smoke/services-org4.js"; org = 4 }
           )
 
-          foreach ($s in $specs) {
-            $script = @"
-  npx cypress run --headless --browser chrome --record `
-  --key fe33f9bd-6aca-4be4-965b-9f726b827c82 `
-  --group "org-$($s.org)" `
-  --ci-build-id "${{ github.run_id }}" `
-  --spec "$($s.spec)" `
-  --env "environment=$ENVIRONMENT,orgNum=$($s.org),apiTimeout=$API_TIMEOUT,defaultCommandTimeout=$COMMAND_TIMEOUT"
-  "@
+          $jobs = @()
 
-            $jobs += Start-Job -ScriptBlock { param($cmd) Invoke-Expression $cmd } -ArgumentList $script
+          foreach ($s in $specs) {
+            $cmd = "npx cypress run --headless --browser chrome --record " +
+                   "--key fe33f9bd-6aca-4be4-965b-9f726b827c82 " +
+                   "--group `"org-$($s.org)`" " +
+                   "--ci-build-id `"${{ github.run_id }}`" " +
+                   "--spec `"$($s.spec)`" " +
+                   "--env `"environment=$ENVIRONMENT,orgNum=$($s.org),apiTimeout=$API_TIMEOUT,defaultCommandTimeout=$COMMAND_TIMEOUT`""
+
+            Write-Host "Starting job for org $($s.org)..."
+            $jobs += Start-Job -ScriptBlock { param($c) Invoke-Expression $c } -ArgumentList $cmd
           }
 
-          # Wait for all jobs to complete
           $jobs | ForEach-Object { Receive-Job -Job $_ -Wait }
 
   slack-notification:
@@ -87,11 +86,11 @@ jobs:
       - name: Set date
         run: echo "NOW=$(date +'%B_%d')" >> $GITHUB_ENV
 
-- name: Send Slack Notification
-  uses: rtCamp/action-slack-notify@v2
-  env:
-    SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-    SLACK_COLOR: ${{ job.status }}
-    SLACK_MESSAGE: 'Cypress Dashboard: https://cloud.cypress.io/projects/8ismn2/branches/smj-amn-branch/runs\nReport URL: https://safe-qa.github.io/report_${{ env.NOW }}'
-    SLACK_TITLE: Cypress Test Results
-    SLACK_USERNAME: Cypress_Tests
+      - name: Send Slack Notification
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_COLOR: ${{ job.status }}
+          SLACK_MESSAGE: 'Cypress Dashboard: https://cloud.cypress.io/projects/8ismn2/branches/smj-amn-branch/runs\nReport URL: https://safe-qa.github.io/report_${{ env.NOW }}'
+          SLACK_TITLE: Cypress Test Results
+          SLACK_USERNAME: Cypress_Tests
