@@ -55,28 +55,23 @@ jobs:
         run: npm ci
 
       - name: Run Cypress tests
+        shell: pwsh
         run: |
-          ENVIRONMENT="${{ github.event.inputs.environment }}"
-          API_TIMEOUT="${{ github.event.inputs.api_timeout }}"
-          COMMAND_TIMEOUT="${{ github.event.inputs.command_timeout }}"
-          ENVIRONMENT=${ENVIRONMENT:-dev}
-
-          echo "Running tests for Environment: $ENVIRONMENT"
-          echo "Running tests for Org Number: ${{ matrix.org_number }}"
-
-          npx cypress run \
-            --headless \
-            --browser chrome \
-            --record \
-            --key fe33f9bd-6aca-4be4-965b-9f726b827c82 \
-            --group "org-${{ matrix.org_number }}" \
-            --ci-build-id "${{ github.run_id }}" \
-            --spec ${{ matrix.spec_group }} \
-            --env environment=$ENVIRONMENT,orgNum=${{ matrix.org_number }},apiTimeout=$API_TIMEOUT, defaultCommandTimeout=$COMMAND_TIMEOUT
-
-        env:
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          CI: true
+          $ENVIRONMENT = "${{ github.event.inputs.environment }}"
+          if (-not $ENVIRONMENT) { $ENVIRONMENT = "dev" }
+          
+          $API_TIMEOUT = "${{ github.event.inputs.api_timeout }}"
+          $COMMAND_TIMEOUT = "${{ github.event.inputs.command_timeout }}"
+          
+          Write-Host "Running tests for Environment: $ENVIRONMENT"
+          Write-Host "Running tests for Org Number: ${{ matrix.org_number }}"
+          
+          npx cypress run --headless --browser chrome --record `
+            --key fe33f9bd-6aca-4be4-965b-9f726b827c82 `
+            --group "org-${{ matrix.org_number }}" `
+            --ci-build-id "${{ github.run_id }}" `
+            --spec "${{ matrix.spec_group }}" `
+            --env "environment=$ENVIRONMENT,orgNum=${{ matrix.org_number }},apiTimeout=$API_TIMEOUT,defaultCommandTimeout=$COMMAND_TIMEOUT"
 
   slack-notification:
     runs-on: ubuntu-latest
