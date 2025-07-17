@@ -65,13 +65,13 @@ jobs:
 
           foreach ($s in $specs) {
             $script = @"
-              npx cypress run --headless --browser chrome --record `
-                --key fe33f9bd-6aca-4be4-965b-9f726b827c82 `
-                --group "org-$($s.org)" `
-                --ci-build-id "${{ github.run_id }}" `
-                --spec "$($s.spec)" `
-                --env "environment=$ENVIRONMENT,orgNum=$($s.org),apiTimeout=$API_TIMEOUT,defaultCommandTimeout=$COMMAND_TIMEOUT"
-            "@
+  npx cypress run --headless --browser chrome --record `
+  --key fe33f9bd-6aca-4be4-965b-9f726b827c82 `
+  --group "org-$($s.org)" `
+  --ci-build-id "${{ github.run_id }}" `
+  --spec "$($s.spec)" `
+  --env "environment=$ENVIRONMENT,orgNum=$($s.org),apiTimeout=$API_TIMEOUT,defaultCommandTimeout=$COMMAND_TIMEOUT"
+  "@
 
             $jobs += Start-Job -ScriptBlock { param($cmd) Invoke-Expression $cmd } -ArgumentList $script
           }
@@ -87,11 +87,11 @@ jobs:
       - name: Set date
         run: echo "NOW=$(date +'%B_%d')" >> $GITHUB_ENV
 
-      - name: Send Slack Notification
-        uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-          SLACK_COLOR: ${{ job.status }}
-          SLACK_MESSAGE: 'Cypress Dashboard: https://cloud.cypress.io/projects/8ismn2/branches/smj-amn-branch/runs\nReport URL: https://safe-qa.github.io/report_${{ env.NOW }}'
-          SLACK_TITLE: Cypress Test Results
-          SLACK_USERNAME: Cypress_Tests
+- name: Send Slack Notification
+  uses: rtCamp/action-slack-notify@v2
+  env:
+    SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+    SLACK_COLOR: ${{ job.status }}
+    SLACK_MESSAGE: 'Cypress Dashboard: https://cloud.cypress.io/projects/8ismn2/branches/smj-amn-branch/runs\nReport URL: https://safe-qa.github.io/report_${{ env.NOW }}'
+    SLACK_TITLE: Cypress Test Results
+    SLACK_USERNAME: Cypress_Tests
