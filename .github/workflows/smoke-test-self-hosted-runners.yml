@@ -1,4 +1,4 @@
-name: Run Cypress Tests on Self-Hosted Machines
+name: Run Smoke Tests on Self-Hosted Machines
 
 on:
   workflow_dispatch:
