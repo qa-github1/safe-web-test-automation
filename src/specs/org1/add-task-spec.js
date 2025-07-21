@@ -111,7 +111,6 @@ describe('Add Task', function () {
         });
 
 
-
         it('1.1.3.' +
              'Add task - assigned to 1 User Group' +
              '-- check email notification with less Task details', function () {

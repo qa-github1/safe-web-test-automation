@@ -30,7 +30,7 @@ describe('Person', function () {
             api.org_settings.update_org_settings(false, true);
             api.org_settings.enable_all_Person_fields();
 
-            // ADD PERSON
+           // ADD PERSON
             ui.app.open_newly_created_case_via_direct_link()
                 .select_tab(C.tabs.people)
                 .click_element_on_active_tab(C.buttons.addPerson);
@@ -92,7 +92,6 @@ describe('Person', function () {
             // SEARCH FOR PERSON
             ui.searchPeople.run_search_by_Business_Name(D.editedPerson.businessName)
                 .verify_content_of_first_row_in_results_table(D.editedPerson.businessName);
-
         });
 });
 describe('User', function () {
@@ -291,16 +290,8 @@ describe('Item Transactions', function () {
             ])
 
         api.locations.get_and_save_any_location_data_to_local_storage('root')
-        api.locations.move_location('Box_2', 'root')
+        api.locations.move_location(D.box2.name, 'root')
 
     });
 });
 
-// describe('Task', function () {
-//
-//     it('Add/Edit/Search Task', function () {
-//
-//
-//     });
-//
-// });

@@ -80,7 +80,7 @@ let
     specificTab = tabTitle => navTabs().children().contains(tabTitle).parent('li'),
     historyTab = e => cy.get('[translate="GENERAL.HISTORY"]').parent('tab-heading').parent('a').parent('li'),
     expandedMenu = e => cy.get('button[aria-expanded="true"]'),
-    optionOnExpandedMenu = option => expandedMenu().next().contains(option),
+    optionOnExpandedMenu = option => expandedMenu().next().contains(option).parent('li'),
     dropdownOnModal = e => modal().children().get('select'),
     notesOnModal = e => modal().children().find('textarea'),
     noteOnModal = e => modal().children().get('[placeholder="Note"]'),
@@ -516,6 +516,8 @@ export default class BasePage {
                 expect(allToastMessages.toString()).to.contain(text);
             });
         });
+
+        toastMessage().click({multiple: true})
 
         return this;
     };
@@ -1939,12 +1941,14 @@ export default class BasePage {
         return this;
     };
 
-    click_option_on_expanded_menu(option) {
+    click_option_on_expanded_menu(option, waitUntilSpinnerDisappears = true) {
         this.pause(0.7)
         optionOnExpandedMenu(option).should('be.visible');
-        this.pause(0.3)
+        optionOnExpandedMenu(option).should('not.have.class', 'disabled')
         optionOnExpandedMenu(option).click();
-        this.wait_until_spinner_disappears();
+        if (waitUntilSpinnerDisappears){
+            this.wait_until_spinner_disappears();
+        }
         return this;
     };
 
