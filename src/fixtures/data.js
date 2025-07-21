@@ -32,7 +32,7 @@ D.getStorageLocationData = function (locationName, parentId = 0, canStore = true
 }
 
 D.getNewCaseData = function (caseNumber, autoDispoOff = false) {
-    api.cases.get_most_recent_case();
+   // api.cases.get_most_recent_case();
     caseNumber = caseNumber || this.setNewRandomNo();
 
     D.newCase = Object.assign({}, D.newCustomFormData, {
@@ -100,7 +100,7 @@ D.getNewCaseData = function (caseNumber, autoDispoOff = false) {
 };
 
 D.getEditedCaseData = function (caseNumber, autoDispoOff = false) {
-    api.cases.get_most_recent_case();
+   // api.cases.get_most_recent_case();
     caseNumber = caseNumber ? caseNumber + '_edited' : D.getRandomNo() + '_edited';
 
     D.editedCase = Object.assign({}, D.editedCustomFormData, {
@@ -982,7 +982,7 @@ D.getPersonDataWithReducedFields = function (specificCaseObject, arrayOfEnabledF
 D.generateNewDataSet = function (setNullForDisabledFields = false, autoDispoOff = false, forRequiredFieldsOnly = false) {
     D.setNewRandomNo();
     S.getCurrentDate();
-    api.cases.get_most_recent_case();
+   // api.cases.get_most_recent_case();
     api.cases.get_old_case_data(S.selectedEnvironment.oldClosedCase.id);
 
     //  D.getCustomFormData()

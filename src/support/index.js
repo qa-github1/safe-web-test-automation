@@ -6,6 +6,9 @@ const S = require('../fixtures/settings');
 const api = require('../api-utils/api-spec');
 const ui = require('../pages/ui-spec');
 
+const timeout = Cypress.env('defaultCommandTimeout') || 60000;
+Cypress.config('defaultCommandTimeout', Number(timeout));
+
 after(function() {
     cy.window().then(win => win.onbeforeunload = undefined );
 });

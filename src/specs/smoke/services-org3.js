@@ -107,7 +107,7 @@ describe('Services', function () {
         api.items.add_new_item()
     });
 
-    it.only('1. Reporter', function () {
+    it('1. Reporter', function () {
 
         api.auth.get_tokens(S.userAccounts.orgAdmin);
         cy.window().then((win) => {

@@ -14,7 +14,7 @@ function request_with_JSON_data(httpMethod, urlSuffix, requestBody, log = '', pr
             json: true,
             body: requestBody,
             headers: JSON.parse(headers),
-            timeout: 70000
+            timeout: S.api_timeout
         })
             .then(response => {
                 let propertyName;
