@@ -16,7 +16,7 @@ on:
         default: '60000'
         type: choice
         options:
-          - 30000
+          - 60000
           - 80000
           - 90000
       command_timeout:
@@ -25,7 +25,7 @@ on:
         default: '60000'
         type: choice
         options:
-          - 30000
+          - 60000
           - 80000
           - 90000
 
