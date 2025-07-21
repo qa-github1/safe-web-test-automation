@@ -1,5 +1,3 @@
-name: Run Smoke Tests on Self-Hosted Machines
-
 on:
   workflow_dispatch:
     inputs:
