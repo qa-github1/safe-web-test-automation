@@ -56,7 +56,6 @@ jobs:
       - name: Run Cypress tests
         run: >
           npx cypress run --headless --browser chrome --record
-   #       --key fe33f9bd-6aca-4be4-965b-9f726b827c82
           --key a6df584b-4d1e-485f-a673-2c371d167e62
           --group "org-${{ matrix.org_number }}"
           --ci-build-id "${{ github.run_id }}"
