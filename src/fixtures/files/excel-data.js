@@ -37,8 +37,8 @@ E.generateCustomValues = function () {
         D.newCustomFormData.custom_selectListOption,
         D.newCustomFormData.custom_date,
         D.newCustomFormData.custom_dropdownTypeaheadOption,
-        D.newCustomFormData.custom_userGuid,
-        D.newCustomFormData.custom_personGuid,
+        D.newCustomFormData.custom_user_email + ';' +  D.newCustomFormData.custom_userGroup,
+        D.newCustomFormData.custom_personEmail,
     ]
 };
 
@@ -122,6 +122,7 @@ E.generateDataFor_CASES_Importer = function (arrayOfDataObjects, customFormName,
         if (customFormName) {
             E.caseImportDataWithAllFields[i + 1] = E.caseImportDataWithAllFields[i + 1].concat(customFieldsValues);
             E.caseImportDataWithMinimumFields[i + 1] = E.caseImportDataWithMinimumFields[i + 1].concat(customFieldsValues);
+            caseObject = Object.assign({caseObject}, D.newCustomFormData);
         }
 
         if (numberOfRecords === 1 && !importingCaseUpdates) {

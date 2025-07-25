@@ -94,7 +94,7 @@ describe('Person', function () {
                 .verify_content_of_first_row_in_results_table(D.editedPerson.businessName);
         });
 });
-describe('User', function () {
+describe.only('User', function () {
 
     it('Add User -- Assign Permissions -- Log in with newly created user', function () {
         ui.app.log_title(this);

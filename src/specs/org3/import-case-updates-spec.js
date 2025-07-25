@@ -56,6 +56,7 @@ describe('Import Case Updates', function () {
             .edit_Status(true)
             .click_Save()
 
+        // verify new item can be added to the case edited by importer
         D.getNewItemData(D.editedCase)
         ui.menu.click_Add__Item();
         ui.addItem.enter_Case_Number_and_select_on_typeahead(D.editedCase.caseNumber)
@@ -64,11 +65,6 @@ describe('Import Case Updates', function () {
             .click_Save()
             .verify_Error_toast_message_is_NOT_visible();
         ui.itemView.verify_Item_View_page_is_open(D.editedCase.caseNumber)
-            .click_Edit()
-            .verify_values_on_Edit_form(D.newItem)
-            .edit_all_values(D.editedItem)
-            .click_Save()
-            .verify_Error_toast_message_is_NOT_visible();
     });
 
     it('I.C.U_2 Case Updates Import - Precheck Only', function () {

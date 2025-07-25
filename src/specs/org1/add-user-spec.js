@@ -233,7 +233,7 @@ describe('Add User', function () {
             api.org_settings.set_required_User_forms([S.selectedEnvironment.forms.userFormWithRequiredFields])
             D.newUser = Object.assign(D.newUser, D.newCustomFormData)
             //I needed to add this because we have an issue with shared forms and we need to create a CF in every org
-            const customFormName = C.customForms[`usersFormWithRequiredFields_${S.selectedEnvironment.orgSettings.id}`];
+            const customFormName = S.customForms[`userFormWithRequiredFields_${S.selectedEnvironment.orgSettings.id}`];
 
 
             ui.menu.click_Settings__User_Admin()
@@ -246,7 +246,7 @@ describe('Add User', function () {
                 .click_button(C.buttons.save)
                 .verify_toast_message(C.toastMsgs.saved)
                 .search_for_user(D.newUser.email)
-            //ui.userAdmin.verify_user_data_on_grid(D.newUser, C.customForms.usersFormWithRequiredFields_2, true, 13)
+            //ui.userAdmin.verify_user_data_on_grid(D.newUser, S.customForms.userFormWithRequiredFields_2, true, 13)
             ui.userAdmin.verify_user_data_on_grid(D.newUser, customFormName, true, 13)
 
              ui.userAdmin.verify_email_content_(D.newUser.email, C.users.emailTemplates.welcomeToSafe, D.newUser)

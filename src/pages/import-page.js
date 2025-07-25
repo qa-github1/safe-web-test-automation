@@ -10,6 +10,7 @@ const menu = new Menu();
 
 let
     playIconInTheFirstRow = e => cy.get('.fa-play').first(),
+    precheckIconInTheFirstRow = e => cy.get('.fa-check-square-o').first(),
     importNameInput = e => cy.get('[ng-model="flatImport.name"]'),
     importTypeDropdown = e => cy.get('[ng-model="flatImport.importType"]'),
     mapFieldsSection = e => cy.get('[title="Map Fields"]'),
@@ -160,6 +161,15 @@ export default class ImportPage extends BasePage {
             .save_import_type_and_name(importType)
             .click_element_if_does_NOT_have_a_class(playIconInTheFirstRow(), 'fa-gray-inactive')
             .verify_toast_message([C.toastMsgs.importComplete]);
+        return this;
+    };
+
+    precheck_import_data(fileName, importType, specificMapping, isLinkedToCase, timeoutInMinutes, validationMessagesAfterNextButton) {
+        menu.click_Tools__Data_Import();
+        this.upload_file_and_verify_toast_msg(fileName + '.xlsx', C.toastMsgs.uploadComplete, timeoutInMinutes)
+            .save_import_type_and_name(importType)
+            .click_element_if_does_NOT_have_a_class(precheckIconInTheFirstRow(), 'fa-gray-inactive')
+            .verify_toast_message([C.toastMsgs.precheckComplete]);
         return this;
     };
 

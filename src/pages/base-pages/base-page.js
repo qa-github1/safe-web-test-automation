@@ -447,10 +447,10 @@ export default class BasePage {
         if (shouldFind) {
             quickSearchCaseTypeahead_FirstOption().click();
             this.wait_until_spinner_disappears();
+            this.verify_text_is_present_on_main_container(caseNumber)
         } else {
             this.verify_element_has_class(quickSearch, 'ng-invalid-empty-data-error')
         }
-        this.verify_text_is_present_on_main_container(caseNumber)
         return this;
     };
 
@@ -870,7 +870,6 @@ export default class BasePage {
     //     return this;
     // };
 
-
     enter_values_on_Item_Belongs_To_typeahead_field(element, valuesArray) {
         if (valuesArray[0]) {
             for (let i = 0; i < valuesArray.length; i++) {
@@ -932,7 +931,7 @@ export default class BasePage {
             // 1 (stack[1]): expected value in the field
             // 2 (stack[2]): wider element container for specifying the selector more precisely
             if (stack[2]) {
-                self.verify_value(stack[0](stack[2]), stack[1])
+                self.verify_value_within_container(stack[0], stack[1], stack[2])
             } else if (stack[1]) {
                 self.verify_value(stack[0], stack[1])
             }
@@ -949,7 +948,7 @@ export default class BasePage {
             // 1 (stack[1]): expected value in the field
             // 2 (stack[2]): wider element container for specifying the selector more precisely
             if (stack[2]) {
-                self.verify_text(stack[0](stack[2]), stack[1])
+                self.verify_text_within_container(stack[0], stack[1], stack[2])
             } else if (stack[1]) {
                 self.verify_text(stack[0], stack[1])
             }
@@ -1092,16 +1091,47 @@ export default class BasePage {
     // }
 
 
-//this was the source method that includes retry mechanism
-    check_value(element, value) {
-        if (value) {
-            const getTextFn = () => {
-                return (element instanceof Function ? element() : element).invoke('val');
-            };
-            cy.verifyTextAndRetry(getTextFn, value, {maxAttempts: 10, retryInterval: 500});
-        }
+    check_value(element, value, timeoutInSeconds = 70) {
+
+            if (value) {
+                let getTextFn = () => {
+                    return (element instanceof Function ? element() : element).invoke('val');
+                };
+
+                cy.log('TEXT IS ' + getTextFn())
+                const retryInterval = 500
+                let timeout = timeoutInSeconds * 1000
+                let maxAttempts = timeout / retryInterval
+                cy.verifyTextAndRetry(getTextFn, value, {maxAttempts: maxAttempts, retryInterval: retryInterval});
+            }
     }
 
+
+    verify_value_within_container(element, value, container, timeoutInSeconds = 70) {
+
+            if (value) {
+                let getTextFn = () => {
+                    return element(container).invoke('val');
+                };
+                const retryInterval = 500
+                let timeout = timeoutInSeconds * 1000
+                let maxAttempts = timeout / retryInterval
+                cy.verifyTextAndRetry(getTextFn, value, {maxAttempts: maxAttempts, retryInterval: retryInterval});
+            }
+    }
+
+    verify_text_within_container(element, value, container, timeoutInSeconds = 70) {
+
+            if (value) {
+                let getTextFn = () => {
+                    return element(container).invoke('text');
+                };
+                const retryInterval = 500
+                let timeout = timeoutInSeconds * 1000
+                let maxAttempts = timeout / retryInterval
+                cy.verifyTextAndRetry(getTextFn, value, {maxAttempts: maxAttempts, retryInterval: retryInterval});
+            }
+    }
 
     verify_text(element, expectedText, timeoutInSeconds) {
         let self = this

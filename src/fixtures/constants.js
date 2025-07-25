@@ -985,26 +985,6 @@ C.permissionMatrixAccessType = {
     detachOrgTag: 5
 }
 
-C.customForms = {
-    casesFormWithRequiredFields: 'Required fields - Cypress Cases Form',
-    casesFormWithOptionalFields: 'Optional fields - Cypress Case Form',
-
-    itemsFormWithRequiredFields: 'Required fields - Cypress Items Form',
-    itemsFormWithOptionalFields: 'Optional fields - Cypress Items Form',
-
-    usersFormWithRequiredFields_541: 'Required fields - Cypress Users Form',
-    usersFormWithRequiredFields_555: 'Required fields - Cypress Users Form - Org #2',
-    usersFormWithRequiredFields_556: 'Required fields - Cypress Users Form - org#3',
-    usersFormWithRequiredFields_557: 'Required fields - Cypress User Form - Org#4',
-    usersFormWithOptionalFields: 'Optional fields - Cypress Users Form',
-
-    peopleFormWithRequiredFields: 'Required fields - Cypress People Form',
-    peopleFormWithOptionalFields: 'Optional fields - Cypress People Form',
-
-    // tasksFormWithRequiredFields: 'Cypress Task Form -- required fields',
-    // tasksFormWithOptionalFields: 'Cypress Task Form -- optional fields'
-}
-
 C.placeholders = {
     dashboard: {},
     addCase: {

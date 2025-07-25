@@ -17,11 +17,9 @@ S.yesterdaysDate = helper.yesterdaysDate(C.currentDateTimeFormat);
 S.isOrg1 = function () {
     return Cypress.env('orgNum') === 1
 }
-
 S.isOrg2 = function () {
     return Cypress.env('orgNum') === 2
 }
-
 S.isOrg3 = function () {
     return Cypress.env('orgNum') === 3
 }
@@ -34,7 +32,6 @@ S.getCurrentDate = function (mask) {
     S.currentDate = helper.getCurrentDateInCurrentFormat(C.currentDateFormat);
     return helper.getCurrentDateInSpecificFormat(mask)
 };
-
 S.getCurrentDate();
 S.getYesterdaysDate = function (mask) {
     return helper.getYesterdaysDateInSpecificFormat(mask)
@@ -1097,15 +1094,15 @@ S.DEV_3 = {
     // },
     admin_userGroup: {
         name: 'Cypress Admin Group',
-        id: 2903
+        id: 10603
     },
     blocked_userGroup: {
         name: 'Cypress Blocked Group',
-        id: 2904
+        id: 10604
     },
     readOnly_userGroup: {
         name: 'Cypress ReadOnly Group',
-        id: 2905
+        id: 10605
     },
     orgTag1: {tagModelId: 16827, name: 'sensitive information', color: "#ad2355", tagUsedBy: 1},
     orgTag2: {tagModelId: 16828, name: 'eligible for disposal', color: "#4b9b62", tagUsedBy: 1},
@@ -3597,10 +3594,10 @@ S.SECURE_1 = {
     },
     orgTag1: {tagModelId: 17561, name: 'sensitive information', color: "#ad2355", tagUsedBy: 1},
     orgTag2: {tagModelId: 17562, name: 'eligible for disposal', color: "#4b9b62", tagUsedBy: 1},
+    orgTag3: {tagModelId: 17566, name: 'cold_case', color: "#217ed6", tagUsedBy: 1},
     tagA: {tagModelId: 17563, name: 'Tag_A__', color: "#4b749b", tagUsedBy: 1},
     tagB: {tagModelId: 17564, name: 'Tag_B__', color: "#4b749b", tagUsedBy: 1},
     tagC: {tagModelId: 17565, name: 'Tag_C__', color: "#4b749b", tagUsedBy: 1},
-    orgTag3: {tagModelId: 17566, name: 'cold_case', color: "#217ed6", tagUsedBy: 1},
 };
 
 S.SECURE_2 = {
@@ -4587,6 +4584,19 @@ S.chainOfCustody = {
 S.newCaseId = null;
 S.oldClosedCase = S.selectedEnvironment.oldClosedCase;
 S.recentCase = S.selectedEnvironment.recentCase;
+
+S.customForms = {
+    casesFormWithRequiredFields: 'Required fields - Cypress Cases Form - Org#' + S.orgNum,
+    caseFormWithOptionalFields: 'Optional fields - Cypress Case Form - Org#' + S.orgNum,
+    itemFormWithRequiredFields: 'Required fields - Cypress Items Form - Org#' + S.orgNum,
+    itemFormWithOptionalFields: 'Optional fields - Cypress Items Form - Org#' + S.orgNum,
+    userFormWithRequiredFields: 'Required fields - Cypress Users Form - Org#' + S.orgNum,
+    userFormWithOptionalFields: 'Optional fields - Cypress Users Form - Org#' + S.orgNum,
+    peopleFormWithRequiredFields: 'Required fields - Cypress People Form - Org#' + S.orgNum,
+    peopleFormWithOptionalFields: 'Optional fields - Cypress People Form - Org#' + S.orgNum,
+    // tasksFormWithRequiredFields: 'Cypress Task Form -- required fields',
+    // tasksFormWithOptionalFields: 'Cypress Task Form -- optional fields'
+}
 
 S.colors = {
     redBorder: "rgb(231,24,45)"

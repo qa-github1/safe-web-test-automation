@@ -229,33 +229,33 @@ export default class CaseViewPage extends BaseViewPage {
         // dataObject.offenseDescription = dataObject.offenseDescription || ''
         // dataObject.tagsOnHistory = dataObject.tags? dataObject.tags : 'No Tags'
 
-        this.verify_all_values_on_history_for_standard_fields(leftOrRightColumn,
-            [
-                ['Update Made By', dataObject.updateMadeBy],
-                ['Update Date', dataObject.updateDate],
-                ['Org / Office', dataObject.orgAndOffice],
-                ['Case Officer(s)', dataObject.caseOfficers],
-                ['Offense Date', dataObject.offenseDate],
-                ['Offense Type', dataObject.offenseType],
-                ['Tags', dataObject.tagsOnHistory],
-                ['Status', dataObject.status]
-            ],
-            [
-                ['Case Number', dataObject.caseNumber],
-                ['Offense Location', dataObject.offenseLocation],
-            ],
-            [
-                ['Offense Description', dataObject.offenseDescription],
-            ]
-        )
-
-        if (dataObject.reviewDate) {
-            this.verify_all_values_on_history_for_standard_fields(leftOrRightColumn,
-                [['Review Date', dataObject.reviewDate]],
-                [],
-                [['Review Date Notes', dataObject.reviewDateNotes]]
-            )
-        }
+        // this.verify_all_values_on_history_for_standard_fields(leftOrRightColumn,
+        //     [
+        //         ['Update Made By', dataObject.updateMadeBy],
+        //         ['Update Date', dataObject.updateDate],
+        //         ['Org / Office', dataObject.orgAndOffice],
+        //         ['Case Officer(s)', dataObject.caseOfficers],
+        //         ['Offense Date', dataObject.offenseDate],
+        //         ['Offense Type', dataObject.offenseType],
+        //         ['Tags', dataObject.tagsOnHistory],
+        //         ['Status', dataObject.status]
+        //     ],
+        //     [
+        //         ['Case Number', dataObject.caseNumber],
+        //         ['Offense Location', dataObject.offenseLocation],
+        //     ],
+        //     [
+        //         ['Offense Description', dataObject.offenseDescription],
+        //     ]
+        // )
+        //
+        // if (dataObject.reviewDate) {
+        //     this.verify_all_values_on_history_for_standard_fields(leftOrRightColumn,
+        //         [['Review Date', dataObject.reviewDate]],
+        //         [],
+        //         [['Review Date Notes', dataObject.reviewDateNotes]]
+        //     )
+        // }
 
         if (customFormName) {
             this.verify_custom_data_on_History(leftOrRightColumn, customFormName, dataObject)

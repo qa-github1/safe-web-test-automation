@@ -174,7 +174,7 @@ describe('Import Items', function () {
         D.getItemDataWithReducedFields(D.newCase);
         D.newItem.description = D.randomNo
         D.newItem.status = C.itemStatuses.checkedIn
-        E.generateDataFor_ITEMS_Importer([D.newItem], C.customForms.itemsFormWithOptionalFields);
+        E.generateDataFor_ITEMS_Importer([D.newItem], S.customForms.itemFormWithOptionalFields);
         E.itemImportDataWithMinimumFields[1][19] = S.selectedEnvironment.users.basicUser.guid;
         cy.generate_excel_file(fileName, E.itemImportDataWithMinimumFields);
 
@@ -193,7 +193,7 @@ describe('Import Items', function () {
             .click_button_on_active_tab(C.buttons.edit)
             .verify_values_on_Edit_form(D.newItem)
             .open_last_history_record()
-            .verify_all_values_on_history(D.newItem, null, C.customForms.itemsFormWithOptionalFields)
+            .verify_all_values_on_history(D.newItem, null, S.customForms.itemFormWithOptionalFields)
             .click_button_on_modal(C.buttons.cancel)
             .verify_title_on_active_tab(1)
     });
