@@ -942,6 +942,9 @@ C.pages = {
     taskList: {
         numberOfStandardColumns: 16,
         numberOfStandardColumnsReduced: 14
+    },
+    import: {
+        url: 'flat-import'
     }
 }
 
