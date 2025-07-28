@@ -155,19 +155,19 @@ export default class ImportPage extends BasePage {
         return this;
     };
 
-    import_data(fileName, importType, specificMapping, isLinkedToCase, timeoutInMinutes, validationMessagesAfterNextButton) {
+    import_data(fileName, importType, isUpdate, timeoutInMinutes = 0.6) {
         menu.click_Tools__Data_Import();
         this.upload_file_and_verify_toast_msg(fileName + '.xlsx', C.toastMsgs.uploadComplete, timeoutInMinutes)
-            .save_import_type_and_name(importType)
+            .save_import_type_and_name(importType, isUpdate)
             .click_element_if_does_NOT_have_a_class(playIconInTheFirstRow(), 'fa-gray-inactive')
             .verify_toast_message([C.toastMsgs.importComplete]);
         return this;
     };
 
-    precheck_import_data(fileName, importType, specificMapping, isLinkedToCase, timeoutInMinutes, validationMessagesAfterNextButton) {
+    precheck_import_data(fileName, importType, isUpdate, timeoutInMinutes = 0.6) {
         menu.click_Tools__Data_Import();
         this.upload_file_and_verify_toast_msg(fileName + '.xlsx', C.toastMsgs.uploadComplete, timeoutInMinutes)
-            .save_import_type_and_name(importType)
+            .save_import_type_and_name(importType, isUpdate)
             .click_element_if_does_NOT_have_a_class(precheckIconInTheFirstRow(), 'fa-gray-inactive')
             .verify_toast_message([C.toastMsgs.precheckComplete]);
         return this;
