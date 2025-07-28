@@ -235,6 +235,7 @@ let
     usePreviousLocationCheckbox = e => cy.get('.icheckbox_square-blue').find('ins'),
     checkoutReason = e => cy.get('[ng-options="r.id as r.name for r in data.checkoutReasons"]'),
     typeaheadSelectorMatchInMatches = '[ng-repeat="match in matches track by $index"]',
+    typeaheadSelectorItemInGroupItems = '[ng-repeat="item in $group.items"]',
     typeaheadSelectorChoicesRow = '.ui-select-choices-row'
 
 let dashboardGetRequests = [
@@ -251,6 +252,7 @@ export default class BasePage {
     constructor() {
         this.typeaheadSelectorMatchInMatches = typeaheadSelectorMatchInMatches;
         this.typeaheadSelectorChoicesRow = typeaheadSelectorChoicesRow;
+        this.typeaheadSelectorItemInGroupItems = typeaheadSelectorItemInGroupItems;
         this.searchParametersAccordion = searchParametersAccordion;
         this.searchParametersExpandedPanel = searchParametersExpandedPanel;
         this.itemsCountOnSearchGrid = itemsCountOnSearchGrid;
@@ -513,12 +515,10 @@ export default class BasePage {
             cy.get('.toast').last().invoke('text').then((lastToast) => {
                 allToastMessages.push(firstToast)
                 allToastMessages.push(lastToast)
+                toastMessage().click({multiple: true})
                 expect(allToastMessages.toString()).to.contain(text);
             });
         });
-
-        toastMessage().click({multiple: true})
-
         return this;
     };
 
@@ -1514,6 +1514,10 @@ export default class BasePage {
             this.wait_until_spinner_disappears()
         }
         return this;
+    };
+
+    open_direct_link_for_page(page) {
+       this.open_url_and_wait_all_GET_requests_to_finish(S.base_url + '/#/' + page.url)
     };
 
     define_API_request_to_be_awaited(methodType, partOfRequestUrl, alias) {

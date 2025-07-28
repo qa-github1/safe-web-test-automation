@@ -115,8 +115,10 @@ export default class UserAdminPage extends BasePage {
 
             if (userObject.supervisors) {
                 for (let i = 0; i < userObject.supervisors.length; i++) {
-                    this.type_if_values_provided([
-                        [supervisorInput, userObject.supervisors[i], this.userAndUserGroupTypeaheadOption]])
+                    // this.type_if_values_provided([
+                    //     [supervisorInput, userObject.supervisors[i], this.userAndUserGroupTypeaheadOption]])
+
+                    this.select_typeahead_option(supervisorInput, userObject.supervisors[i], this.typeaheadSelectorItemInGroupItems)
                 }
             }
 
