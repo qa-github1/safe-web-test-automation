@@ -31,10 +31,15 @@ describe('Import Items', function () {
         api.org_settings.enable_all_Item_fields();
 
         ui.menu.click_Tools__Data_Import();
-        ui.importer.upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.items)
-            .verify_toast_message([
-                C.toastMsgs.importComplete,
-                1 + C.toastMsgs.recordsImported]);
+
+        // verify item data precheck
+        ui.importer.precheck_import_data(fileName, C.importTypes.items)
+        ui.searchItem.run_search_by_Item_Description(D.newItem.description)
+            .verify_records_count_on_grid(0)
+
+        // verify item import
+        ui.app.open_direct_link_for_page(C.pages.import)
+        ui.importer.import_data(fileName, C.importTypes.items)
 
         ui.searchItem.run_search_by_Item_Description(D.newItem.description)
             .verify_content_of_first_row_in_results_table(D.newItem.description)
@@ -66,14 +71,10 @@ describe('Import Items', function () {
         let CoC_disposal_ItemEntry = S.chainOfCustody.SAFE.disposal(D.newItem);
 
         E.generateDataFor_ITEMS_Importer([D.newItem]);
-            cy.generate_excel_file(fileName, E.itemImportDataWithAllFields);
-
+        cy.generate_excel_file(fileName, E.itemImportDataWithAllFields);
 
         ui.menu.click_Tools__Data_Import();
-        ui.importer.upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.items)
-            .verify_toast_message([
-                C.toastMsgs.importComplete,
-                1 + C.toastMsgs.recordsImported]);
+        ui.importer.import_data(fileName, C.importTypes.items)
 
         ui.searchItem.run_search_by_Item_Description(D.newItem.description)
             .verify_item_data_on_grid(D.newItem)
@@ -83,19 +84,16 @@ describe('Import Items', function () {
             .click_button_on_active_tab(C.buttons.edit)
             .verify_values_on_Edit_form(D.newItem)
             .select_tab(C.tabs.chainOfCustody)
-            .verify_content_of_sequential_rows_in_results_table([
-                CoC_disposal_ItemEntry
+            .verify_data_on_Chain_of_Custody([
+                [['Type', 'Disposals'], ['Issued From', D.newItem.disposalUser], ['Issued To', D.newItem.disposedByName], ['Notes', D.newItem.disposalNotes]],
             ])
-            // .verify_data_on_Chain_of_Custody([
-            //     [['Type', 'Disposals'], ['Issued From', D.newItem.disposedByName], ['Issued To', D.newItem.disposedByName], ['Notes', D.newItem.disposalNotes]],
-            // ])
             .open_last_history_record()
             .verify_all_values_on_history(D.newItem)
             .click_button_on_modal(C.buttons.cancel)
             .verify_title_on_active_tab(1)
     });
 
-    it('3. Item with all fields - Checked Out Status', function () {
+    it.only('3. Item with all fields - Checked Out Status', function () {
         ui.app.log_title(this);
         let fileName = 'ItemImport_allFields_CheckedOut_' + S.domain;
         api.auth.get_tokens(orgAdmin);
@@ -111,10 +109,7 @@ describe('Import Items', function () {
         cy.generate_excel_file(fileName, E.itemImportDataWithAllFields);
 
         ui.menu.click_Tools__Data_Import();
-        ui.importer.upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.items)
-            .verify_toast_message([
-                C.toastMsgs.importComplete,
-                1 + C.toastMsgs.recordsImported]);
+        ui.importer.import_data(fileName, C.importTypes.items)
 
         ui.searchItem.run_search_by_Item_Description(D.newItem.description)
             .verify_item_data_on_grid(D.newItem)
@@ -226,25 +221,4 @@ describe('Import Items', function () {
             .verify_title_on_active_tab(numberOfRecords)
     });
 
-    it('7. Item Import- Precheck Only', function () {
-        ui.app.log_title(this);
-        let fileName = 'Item_PrecheckOnly_' + S.domain;
-        api.auth.get_tokens(orgAdmin);
-
-        D.generateNewDataSet();
-        D.newItem.custodianGuid = null;
-        E.generateDataFor_ITEMS_Importer([D.newItem]);
-        cy.generate_excel_file(fileName, E.itemImportDataWithAllFields);
-
-        api.org_settings.enable_all_Item_fields();
-
-        ui.menu.click_Tools__Data_Import();
-        ui.importer.upload_then_Map_and_Submit_file_for_precheck(fileName, C.importTypes.items)
-            .verify_toast_message([
-                C.toastMsgs.precheckComplete,
-                1 + C.toastMsgs.recordsPrechecked]);
-
-        ui.searchItem.run_search_by_Item_Description(D.newItem.description)
-            .verify_records_count_on_grid(0)
-    });
 });

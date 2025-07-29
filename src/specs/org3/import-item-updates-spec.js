@@ -34,10 +34,9 @@ describe('Import Item Updates', function () {
             E.generateDataFor_ITEMS_Importer([D.editedItem], null, true);
             cy.generate_excel_file(fileName, E.itemImportDataWithAllFields);
             ui.menu.click_Tools__Data_Import();
-            ui.importer.upload_then_Map_and_Submit_file_for_Item_Updates_import(fileName)
-                .verify_toast_message([
-                    C.toastMsgs.importComplete,
-                    1 + C.toastMsgs.recordsImported]);
+
+            // verify item updates import
+            ui.importer.import_data(fileName, C.importTypes.items, true)
             let allEditedFields = C.itemFields.allEditableFieldsArray.concat(['Case'])
             ui.itemView.open_newly_created_item_via_direct_link()
                 .verify_edited_and_not_edited_values_on_Item_View_form(allEditedFields, D.editedItem, D.newItem, true, true)
@@ -46,6 +45,13 @@ describe('Import Item Updates', function () {
                 .open_last_history_record()
                 .verify_all_values_on_history(D.editedItem, D.newItem)
                 .verify_red_highlighted_history_records(allEditedFields)
+
+            // verify item data precheck
+            ui.app.open_direct_link_for_page(C.pages.import)
+            ui.importer.precheck_import_data(fileName, C.importTypes.items, true)
+            ui.app.open_newly_created_item_via_direct_link()
+            ui.itemView.select_tab(C.tabs.history)
+                .verify_title_on_active_tab(2)
         });
     });
 
@@ -246,7 +252,7 @@ describe('Import Item Updates', function () {
             .verify_red_highlighted_history_records(allEditedFields);
     });
 
-    it.only('6. Import update for item status (CheckIn transaction)', function () {
+    it('6. Import update for item status (CheckIn transaction)', function () {
         ui.app.log_title(this);
         let fileName = 'ItemUpdatesImport_CheckIn_' + S.domain;
 
@@ -299,39 +305,6 @@ describe('Import Item Updates', function () {
         ui.itemView.open_last_history_record()
             .verify_all_values_on_history(D.editedItem, D.newItem, false)
             .verify_red_highlighted_history_records(allEditedFields)
-
-
-
-    });
-
-    it('7. Item Updates Import - Precheck Only', function () {
-        ui.app.log_title(this);
-        let fileName = 'ItemUpdates_precheckOnly_' + S.domain;
-
-        api.auth.get_tokens(orgAdmin);
-        api.org_settings.enable_all_Item_fields();
-        D.generateNewDataSet();
-
-        api.cases.add_new_case(D.newCase.caseNumber);
-         D.editedItem.caseNumber = D.newCase.caseNumber
-        api.items.add_new_item(true)
-
-        cy.getLocalStorage("newItem").then(newItem => {
-
-            D.editedItem.barcode = JSON.parse(newItem).barcode
-
-            E.generateDataFor_ITEMS_Importer([D.editedItem], null);
-            cy.generate_excel_file(fileName, E.itemImportDataWithAllFields);
-            ui.menu.click_Tools__Data_Import();
-            ui.importer.upload_then_Map_and_Submit_file_for_updates_precheck(fileName, C.importTypes.items, 'ItemBarcode')
-                .verify_toast_message([
-                    C.toastMsgs.precheckComplete,
-                    1 + C.toastMsgs.recordsPrechecked]);
-
-        });
-        ui.app.open_newly_created_item_via_direct_link()
-            .click_button(C.buttons.edit);
-        ui.itemView.verify_values_on_Edit_form(D.newItem);
     });
 
 });

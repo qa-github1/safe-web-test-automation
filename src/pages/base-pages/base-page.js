@@ -97,6 +97,7 @@ let
     searchParametersExpandedPanel = e => cy.get('[class="panel-collapse collapse in"]'),
     resultsTable = (tableIndex = 0) => cy.get('.table-striped').eq(tableIndex).find('tbody'),
     tableStriped = (tableIndex = 0) => cy.get('.table-striped').eq(tableIndex),
+    cocTableStriped = (tableIndex = 0) => cy.get('.cocTable'),
     dataGrid = (tableIndex = 0) => cy.get('.table-striped[tp-fixed-table-header-scrollable="scrollable-area"]').eq(tableIndex).find('tbody'),
     resultsEntriesCount = e => cy.get('[translate="BSGRID.DISPLAY_STATS"]'),
     //menuCustomization = e => cy.contains('Menu Customization'),
@@ -124,6 +125,7 @@ let
     pageSizeAndColumnsContianer = e => cy.get('.grid-menu-header').eq(1),
     //  resultsTableHeader = (tableIndex = 0) => cy.get('.table-striped').eq(tableIndex).find('thead'),
     resultsTableHeader = (tableIndex = 0) => cy.get('thead'),
+    cocTableHeader = (tableIndex = 0) => cy.get('.cocTable').find('thead'),
     resultsTableHeaderFromRoot = (tableIndex = 0) => cy.root().parents('html').find('.table-striped').eq(tableIndex).find('thead'),
     firstRowInResultsTable = (tableIndex = 0) => resultsTable(tableIndex).children('tr').first(),
     specificRowInResultsTable = index => resultsTable().children('tr').eq(index),
@@ -917,6 +919,18 @@ export default class BasePage {
             headerValuePairs[i].forEach(function (pair) {
                 if (pair[1] !== null) {
                     self.verify_content_of_specific_table_row_by_provided_column_title_and_value(i, pair[0], pair[1], 'th', true)
+                }
+            });
+        }
+        return this;
+    };
+
+    verify_values_on_CoC(headerValuePairs) {
+        var self = this;
+        for (let i = 0; i < headerValuePairs.length; i++) {
+            headerValuePairs[i].forEach(function (pair) {
+                if (pair[1] !== null) {
+                    self.verify_content_of_CoC_table_row_by_provided_column_title_and_value(i, pair[0], pair[1], 'th')
                 }
             });
         }
@@ -2255,6 +2269,31 @@ export default class BasePage {
         return this;
     }
 
+    verify_content_of_CoC_table_row_by_provided_column_title_and_value(rowNumber, columnTitle, cellContent, headerCellTag = 'th') {
+        let self = this;
+        let currentEnvironment = Cypress.env('environment');
+
+        if (Array.isArray(cellContent)) {
+            cocTableHeader().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
+                specificRowInResultsTable(rowNumber).find('td').eq(i).invoke('text').then(function (textFound) {
+                    cellContent.forEach(function (value) {
+                        self.verify_text(specificRowInResultsTable(rowNumber).find('td').eq(i), value);
+                    });
+                });
+            });
+        } else {
+            cocTableHeader()
+                .contains(headerCellTag, columnTitle)
+                .not('ng-hide')
+                .invoke('index')
+                .then((i) => {
+                    const getCellText = () => specificRowInResultsTable(rowNumber).find('td').eq(i)
+                    self.verify_text(getCellText, cellContent);
+                });
+        }
+        return this;
+    }
+
     verify_content_of_first_table_row_by_provided_column_title_and_value(columnTitle, cellContent, headerCellTag = 'th', isCoCTable = false) {
         let self = this;
         let currentEnvironment = Cypress.env('environment');
@@ -2996,12 +3035,14 @@ export default class BasePage {
         return this;
     }
 
-    enable_all_standard_columns_on_the_grid(page) {
+    enable_all_standard_columns_on_the_grid(page, isDispoStatusEnabled) {
+        let numnerOfFieldsOnMenuCustomization = isDispoStatusEnabled? page.numberOfAllColumnsWithDispoStatusEnabled : page.numberOfStandardColumns
+
         menuCustomization().click()
         optionsOnMenuCustomization().click()
         pageSizeAndColumnsContianer().within(($list) => {
             enabledColumnsOnMenuCustomization().its('length').then(function (length) {
-                if (length < page.numberOfStandardColumns + 1) {
+                if (length < numnerOfFieldsOnMenuCustomization + 1) {
                     disabledColumnsOsOnMenuCustomization().its('length').then(function (length) {
                         // iterate through options that have 'X' icon within "Options" section the number of times that matches the number of 'disabled columns' (exclude 3 'X' icons in pageSize section)
                         let numberOfPageSizeOptionsWithXIcon = (page === C.pages.taskList) ? 1 : 3

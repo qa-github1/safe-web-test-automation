@@ -37,6 +37,7 @@ describe('Import Cases', function () {
         api.org_settings.update_org_settings(true, true);
 
         ui.menu.click_Tools__Data_Import();
+
         // verify case data precheck
         ui.importer.precheck_import_data(fileName, C.importTypes.cases)
             .quick_search_for_case(D.newCase.caseNumber, false);

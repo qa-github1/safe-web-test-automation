@@ -209,8 +209,8 @@ E.generateDataFor_ITEMS_Importer = function (arrayOfDataObjects, customFormName,
         ]
 
         if (itemObject.barcode) {
-            allFieldHeaders.push('ItemBarcode')
-            minimumFieldsHeaders.push('ItemBarcode')
+            allFieldHeaders.push('Barcode')
+            minimumFieldsHeaders.push('Barcode')
             E.itemImportDataWithAllFields[i + 1].push(itemObject.barcode)
             E.itemImportDataWithMinimumFields[i + 1].push(itemObject.barcode)
         }

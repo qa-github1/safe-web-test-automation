@@ -233,6 +233,7 @@ D.getNewItemData = function (specificCaseObject, locationObject, newPerson) {
         disposalMethod: '',
         disposedByName: '',
         disposalNotes: '',
+        disposalUser: S.userAccounts.powerUser.name,
         disposalUserId: S.userAccounts.powerUser.email,
         transactionNotes: 'Item entered into system.',
         checkoutDate: '',

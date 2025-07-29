@@ -930,6 +930,7 @@ C.pages = {
     },
     itemSearch: {
         numberOfStandardColumns: 39,
+        numberOfAllColumnsWithDispoStatusEnabled: 65,
         numberOfStandardColumnsReduced: 26,
     },
     peopleSearch: {

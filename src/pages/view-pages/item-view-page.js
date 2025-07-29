@@ -363,7 +363,7 @@ export default class ItemViewPage extends BaseViewPage {
 
 
     verify_data_on_Chain_of_Custody(columnValuePairs) {
-        this.verify_values_on_multiple_rows_on_the_grid(columnValuePairs, true)
+        this.verify_values_on_CoC(columnValuePairs, true)
         return this;
     }
 

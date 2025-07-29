@@ -43,7 +43,7 @@ describe('Import Case Updates', function () {
         ui.caseView.select_tab(C.tabs.history)
             .verify_title_on_active_tab(1)
 
-        // verify case import
+        // verify case updates import
         ui.app.open_direct_link_for_page(C.pages.import)
         ui.importer.import_data(fileName, C.importTypes.cases, true)
             .quick_search_for_case(D.newCase.caseNumber);

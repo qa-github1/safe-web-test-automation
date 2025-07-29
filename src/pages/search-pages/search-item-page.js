@@ -152,9 +152,9 @@ export default class SearchItemPage extends BaseSearchPage {
         return this;
     };
 
-    verify_item_data_on_grid(userObject, customFormName) {
+    verify_item_data_on_grid(userObject, customFormName, isDispoStatusEnabled = true) {
         if (customFormName) this.enable_columns_for_specific__Custom_Form_on_the_grid(customFormName)
-        this.enable_all_standard_columns_on_the_grid(C.pages.itemSearch)
+        this.enable_all_standard_columns_on_the_grid(C.pages.itemSearch, isDispoStatusEnabled)
 
         this.verify_values_on_the_grid([
             ['Office', userObject.officeName.substring(0, 9)],
