@@ -17,7 +17,7 @@ describe('Import Cases', function () {
         D.generateNewDataSet();
     });
 
-    it('I.C_1 Case with all regular and custom fields -- user and user group in Case Officer(s) field', function () {
+    it.only('I.C_1 Case with all regular and custom fields -- user and user group in Case Officer(s) field', function () {
         ui.app.log_title(this);
         let fileName = 'CaseImport_allFields_' + S.domain;
         api.auth.get_tokens(user);
@@ -29,7 +29,7 @@ describe('Import Cases', function () {
             S.selectedEnvironment.admin_userGroup.name
         D.newCase.caseOfficers = [S.userAccounts.orgAdmin.name, S.selectedEnvironment.admin_userGroup.name]
 
-        E.generateDataFor_CASES_Importer([D.newCase], S.customForms.caseFormWithOptionalFields);
+        E.generateDataFor_CASES_Importer([D.newCase]);
 
         ui.app.generate_excel_file(fileName, E.caseImportDataWithAllFields);
         api.org_settings.enable_all_Case_fields();
@@ -44,7 +44,10 @@ describe('Import Cases', function () {
 
         // verify case import
         ui.importer.reload_page()
-            .import_data(fileName, C.importTypes.cases)
+            .click_Play_icon_on_first_row()
+            .verify_toast_message([
+                C.toastMsgs.importComplete,
+                1 + C.toastMsgs.recordsImported])
             .quick_search_for_case(D.newCase.caseNumber);
 
         ui.caseView

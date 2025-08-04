@@ -1227,7 +1227,7 @@ export default class BasePage {
     }
 
     verify_element_does_NOT_contain_text(element, text) {
-        element().should('not.contain', text);
+        element().invoke('text').should('not.include', text)
         return this;
     };
 
@@ -1541,6 +1541,21 @@ export default class BasePage {
         cy.intercept(methodType, '**' + `${partOfRequestUrl}` + '**', (req) => {
             req.continue(); // Explicitly pass through to backend
         }).as(alias);
+        return this;
+    }
+
+    define_API_request_to_be_awaited_with_numerical_part_at_the_end_of_url(methodType, partOfRequestUrl, alias) {
+        if (!alias) {
+            alias = partOfRequestUrl;
+        }
+        const urlRegex = new RegExp(`${partOfRequestUrl}/\\d+`);
+        cy.intercept(
+            {
+                method: methodType,
+                url: urlRegex
+            }, (req) => {
+                req.continue();
+            }).as(alias);
         return this;
     }
 

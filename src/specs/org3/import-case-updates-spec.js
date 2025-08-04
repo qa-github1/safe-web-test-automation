@@ -5,6 +5,8 @@ const E = require('../../fixtures/files/excel-data');
 const api = require('../../api-utils/api-spec');
 const ui = require('../../pages/ui-spec');
 
+// Aug 1, 2025, Sumejja's Note ----> Test passed on Dev - Org#3 ---> Total time: 155 sec (cca 2.5 min)
+
 describe('Import Case Updates', function () {
 
     let user = S.userAccounts.orgAdmin;
@@ -15,7 +17,7 @@ describe('Import Case Updates', function () {
         api.auto_disposition.edit(true);
     });
 
-    it('I.C.U_1. Import Case Updates - all fields -- user and user group in Case Officer(s) field', function () {
+    it('I.C.U_1. Import Case Updates for all regular and custom fields -- user and user group in Case Officer(s) field', function () {
         ui.app.log_title(this);
         let fileName = 'CaseUpdatesImport_allFields_' + S.domain;
 
@@ -44,8 +46,11 @@ describe('Import Case Updates', function () {
             .verify_title_on_active_tab(1)
 
         // verify case updates import
-        ui.app.open_direct_link_for_page(C.pages.import)
-        ui.importer.import_data(fileName, C.importTypes.cases, true)
+        ui.importer.open_direct_link_for_page()
+            .click_Play_icon_on_first_row()
+            .verify_toast_message([
+                C.toastMsgs.importComplete,
+                1 + C.toastMsgs.recordsImported])
             .quick_search_for_case(D.newCase.caseNumber);
 
         ui.app.open_newly_created_case_via_direct_link();

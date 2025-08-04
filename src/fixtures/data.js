@@ -16,6 +16,8 @@ D.getRandomNo = function (length) {
 
 D.randomNo = D.getRandomNo();
 D.unreadEmails = []
+D.newCase = {}
+D.newItem = {}
 
 D.getCurrentDateAndRandomNumber = function (randomNumberLenght) {
     return helper.mediumDate + '_' + helper.getRandomNo(randomNumberLenght);
@@ -360,6 +362,7 @@ D.getEditedItemData = function (specificCaseObject, locationObject, newPerson, r
         officeName: S.selectedEnvironment.office_1.name,
         recoveredByGuid: Person_2.guid,
         returnedByGuid: Person_2.guid,
+        returnedByEmail: Person_2.email,
         custodianGuid: '',
         custodianEmail: '',
         formData: [],
@@ -807,9 +810,12 @@ D.editedCustomFormData = {
     custom_user_or_group_names: [S.userAccounts.powerUser.name],
     custom_userId: S.userAccounts.powerUser.id,
     custom_userGuid: S.userAccounts.powerUser.guid,
+    custom_userEmail: S.userAccounts.powerUser.email,
+    custom_userGroup: S.selectedEnvironment.readOnly_userGroup.name,
     custom_person: S.selectedEnvironment.person_2.name,
     custom_personGuid: S.selectedEnvironment.person_2.guid,
-    custom_personId: S.selectedEnvironment.person_2.id
+    custom_personId: S.selectedEnvironment.person_2.id,
+    custom_personEmail: S.selectedEnvironment.person_2.email
 }
 
 D.removeValuesForDisabledCaseFields = function (enabledFields) {

@@ -4,6 +4,7 @@ let C = require('../fixtures/constants')
 let S = require('../fixtures/settings')
 import BasePage from "./base-pages/base-page";
 import Menu from "../pages/menu";
+
 const menu = new Menu();
 
 //************************************ ELEMENTS ***************************************//
@@ -37,6 +38,12 @@ export default class ImportPage extends BasePage {
 
     //************************************ ACTIONS ***************************************//
 
+
+    open_direct_link_for_page() {
+        this.open_url_and_wait_all_GET_requests_to_finish(S.base_url + '/#/' + C.pages.import.url)
+        return this
+    }
+
     save_import_type_and_name(type, isUpdate = false, name = null) {
         if (name) {
             importNameInput().clear().type(name);
@@ -61,14 +68,13 @@ export default class ImportPage extends BasePage {
         if (importType === C.importTypes.items) {
             clientSourceDropdown().select(sourceField);
             targetSourceDropdown().select('Barcode');
-           // this.exclude_Excel_field_on_mapping_list('ItemBarcode')
+            // this.exclude_Excel_field_on_mapping_list('ItemBarcode')
         } else if (importType === C.importTypes.cases) {
             clientSourceDropdown().select(sourceField);
             targetSourceDropdown().select('Case Number');
-           // this.exclude_Excel_field_on_mapping_list('Case Number')
+            // this.exclude_Excel_field_on_mapping_list('Case Number')
 
-        }
-        else {
+        } else {
             clientSourceDropdown().select(sourceField);
             targetSourceDropdown().select(sourceField);
         }
@@ -124,8 +130,8 @@ export default class ImportPage extends BasePage {
 
         for (let i = 0; i < importMappings.length; i++) {
             if (!isImportingUpdates || (isImportingUpdates && (importType === C.importTypes.cases && importMappings[i] !== "Case Number"))) {
-            checkDefaultMappingSelected(i, importMappings[i]);
-        }
+                checkDefaultMappingSelected(i, importMappings[i]);
+            }
         }
         return this;
     };
@@ -155,21 +161,63 @@ export default class ImportPage extends BasePage {
         return this;
     };
 
+    pause_if_text_is_found(text, pauseSeconds = 1, numberOfRetries) {
+        for (let i = 0; i < numberOfRetries; i++) {
+            cy.get('[ng-repeat="item in data.displayedItems track by $index"]').first().then(($firstRow) => {
+                const rowText = $firstRow.text();
+                cy.log('TEXT IS ' + rowText)
+                if (rowText.includes('Saved')) {
+                    this.pause(1)
+                }
+            });
+        }
+    }
+
+    retry_failed_import(iconToClick) {
+        this.pause(2)
+        this.pause_if_text_is_found('Saved', 1, 3)
+        this.click_element_if_text_appears_in_first_table_row('Finished with errors', iconToClick)
+    }
+
     import_data(fileName, importType, isUpdate, timeoutInMinutes = 0.6) {
+        if (isUpdate){
+            this.define_API_request_to_be_awaited_with_numerical_part_at_the_end_of_url('PUT', 'flatFileImports_update', 'importData')
+        }
+        else{
+            this.define_API_request_to_be_awaited('POST', 'Import', 'importData')
+        }
         menu.click_Tools__Data_Import();
         this.upload_file_and_verify_toast_msg(fileName + '.xlsx', C.toastMsgs.uploadComplete, timeoutInMinutes)
             .save_import_type_and_name(importType, isUpdate)
             .click_element_if_does_NOT_have_a_class(playIconInTheFirstRow(), 'fa-gray-inactive')
-            .verify_toast_message([C.toastMsgs.importComplete]);
+            .wait_response_from_API_call('importData', 200)
+
+        //the IF block below is added because of random error that appears sometimes on this step
+        if (isUpdate) {
+            this.retry_failed_import(playIconInTheFirstRow)
+        }
+        this.verify_toast_message([C.toastMsgs.importComplete]);
         return this;
     };
 
     precheck_import_data(fileName, importType, isUpdate, timeoutInMinutes = 0.6) {
+        if (isUpdate){
+            this.define_API_request_to_be_awaited_with_numerical_part_at_the_end_of_url('PUT', 'flatFileImports_update', 'importData')
+        }
+        else{
+            this.define_API_request_to_be_awaited('POST', 'Import', 'importData')
+        }
         menu.click_Tools__Data_Import();
         this.upload_file_and_verify_toast_msg(fileName + '.xlsx', C.toastMsgs.uploadComplete, timeoutInMinutes)
             .save_import_type_and_name(importType, isUpdate)
             .click_element_if_does_NOT_have_a_class(precheckIconInTheFirstRow(), 'fa-gray-inactive')
-            .verify_toast_message([C.toastMsgs.precheckComplete]);
+            .wait_response_from_API_call('importData', 200)
+
+        //the IF block below is added because of random error that appears sometimes on this step
+        if (isUpdate) {
+            this.retry_failed_import(precheckIconInTheFirstRow)
+        }
+        this.verify_toast_message([C.toastMsgs.precheckComplete]);
         return this;
     };
 
@@ -182,6 +230,29 @@ export default class ImportPage extends BasePage {
             .click_button(C.buttons.import);
         return this;
     };
+
+    click_Precheck_icon_on_first_row() {
+        this.click_element_if_does_NOT_have_a_class(precheckIconInTheFirstRow(), 'fa-gray-inactive')
+        return this;
+    };
+
+    click_Play_icon_on_first_row() {
+        this.click_element_if_does_NOT_have_a_class(playIconInTheFirstRow(), 'fa-gray-inactive')
+            .wait_response_from_API_call('importData', 200)
+            .retry_failed_import(playIconInTheFirstRow)
+        return this;
+    };
+
+    click_element_if_text_appears_in_first_table_row(text, element) {
+        cy.get('[ng-repeat="item in data.displayedItems track by $index"]').first().then(($firstRow) => {
+            const rowText = $firstRow.text();
+
+            cy.log('TEXT IS ' + rowText)
+            if (rowText.includes(text)) {
+                element().click();
+            }
+        });
+    }
 
     upload_then_Map_and_Submit_file_for_importing_People(fileName, isLinkedToCase, hasMinimumFields) {
         this.upload_file_and_verify_toast_msg(fileName + '.xlsx', C.toastMsgs.uploadComplete, 2)

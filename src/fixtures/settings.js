@@ -9,6 +9,14 @@ S.api_url = Cypress.env('apiUrl')
 S.orgNum = Cypress.env('orgNum')
 S.api_timeout = Cypress.env('apiTimeout') || 60000
 
+// options: LightRegression, FullRegression
+S.testSuite = Cypress.env('testSuite') || 'FullRegression'
+
+
+S.isFullRegression = function () {
+    return S.testSuite === 'FullRegression'
+}
+
 S.currentDateAndTime = helper.getCurrentDateInCurrentFormat(C.currentDateTimeFormat);
 S.currentDate = helper.getCurrentDateInCurrentFormat(C.currentDateFormat);
 S.tomorrowsDate = helper.tomorrowsDate(C.currentDateTimeFormat);
