@@ -200,13 +200,13 @@ export default class ImportPage extends BasePage {
         return this;
     };
 
-    precheck_import_data(fileName, importType, isUpdate, timeoutInMinutes = 0.6) {
+    precheck_import_data(fileName, importType, isUpdate =false, timeoutInMinutes = 0.6) {
         if (isUpdate){
             this.define_API_request_to_be_awaited_with_numerical_part_at_the_end_of_url('PUT', 'flatFileImports_update', 'importData')
         }
         else{
-            this.define_API_request_to_be_awaited('POST', 'Import', 'importData')
-        }
+             this.define_API_request_to_be_awaited_with_last_part_of_url('POST', 'Import', 'importData')
+         }
         menu.click_Tools__Data_Import();
         this.upload_file_and_verify_toast_msg(fileName + '.xlsx', C.toastMsgs.uploadComplete, timeoutInMinutes)
             .save_import_type_and_name(importType, isUpdate)

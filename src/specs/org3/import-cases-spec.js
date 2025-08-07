@@ -29,7 +29,7 @@ describe('Import Cases', function () {
             S.selectedEnvironment.admin_userGroup.name
         D.newCase.caseOfficers = [S.userAccounts.orgAdmin.name, S.selectedEnvironment.admin_userGroup.name]
 
-        E.generateDataFor_CASES_Importer([D.newCase]);
+        E.generateDataFor_CASES_Importer([D.newCase], S.customForms.caseFormWithOptionalFields);
 
         ui.app.generate_excel_file(fileName, E.caseImportDataWithAllFields);
         api.org_settings.enable_all_Case_fields();
@@ -75,7 +75,7 @@ describe('Import Cases', function () {
         api.auth.get_tokens(user);
 
         D.getCaseDataWithReducedFields();
-        E.generateDataFor_CASES_Importer([D.newCase]);
+        E.generateDataFor_CASES_Importer([D.newCase],  S.customForms.caseFormWithOptionalFields);
         cy.generate_excel_file(fileName, E.caseImportDataWithMinimumFields);
 
         api.org_settings.disable_Case_fields();

@@ -1544,6 +1544,16 @@ export default class BasePage {
         return this;
     }
 
+    define_API_request_to_be_awaited_with_last_part_of_url(methodType, lastPartOfRequestUrl, alias) {
+        if (!alias) {
+            alias = partOfRequestUrl;
+        }
+        cy.intercept(methodType, '**' + `${lastPartOfRequestUrl}`, (req) => {
+            req.continue(); // Explicitly pass through to backend
+        }).as(alias);
+        return this;
+    }
+
     define_API_request_to_be_awaited_with_numerical_part_at_the_end_of_url(methodType, partOfRequestUrl, alias) {
         if (!alias) {
             alias = partOfRequestUrl;
