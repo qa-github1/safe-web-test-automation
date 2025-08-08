@@ -476,7 +476,7 @@ export default class BasePage {
 
         cy.getLocalStorage("recentCase").then(recentCase => {
             //toastMessage(timeoutInMiliseconds).should('be.visible');
-            toastMessage().should('be.visible', {timeout: timeoutInMiliseconds});
+            toastMessage(timeoutInMiliseconds).should('be.visible');
 
             toastMessage(timeoutInMiliseconds).invoke('text').then(function (toastMsg) {
                 //  toastMessage().click({multiple: true})

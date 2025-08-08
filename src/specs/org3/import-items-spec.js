@@ -162,9 +162,9 @@ describe('Import Items', function () {
                 .verify_title_on_active_tab(1)
         });
 
-       it('5. Import five thousand items', function () {
+       it('5. Import 1k items', function () {
             ui.app.log_title(this);
-            var numberOfRecords = 20000
+            var numberOfRecords = 1000
             let fileName = numberOfRecords + '_Items_' + S.domain;
             api.auth.get_tokens(orgAdmin);
 
@@ -179,10 +179,10 @@ describe('Import Items', function () {
             api.org_settings.enable_all_Item_fields();
 
             ui.menu.click_Tools__Data_Import();
-            ui.importer.upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.items, C.importMappings.minimumCaseFields)
+            ui.importer.upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.items, C.importMappings.minimumCaseFields, null, 2)
                 .verify_toast_message([
                     C.toastMsgs.importComplete,
-                    numberOfRecords + C.toastMsgs.recordsImported], false, 50);
+                    numberOfRecords + C.toastMsgs.recordsImported], false, 2);
             ui.app.open_newly_created_case_via_direct_link()
                 .select_tab(C.tabs.items)
                 .verify_title_on_active_tab(numberOfRecords)

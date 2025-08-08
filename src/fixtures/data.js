@@ -849,6 +849,7 @@ D.removeValuesForDisabledItemFields = function (enabledFields) {
     let itemFields = [
         'recoveryDate',
         'recoveryDateEditMode',
+        'recoveryDate_withoutTime',
         'recoveredBy',
         'recoveryLocation',
         'recoveredByName',

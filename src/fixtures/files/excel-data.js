@@ -77,8 +77,6 @@ E.generateDataFor_CASES_Importer = function (arrayOfDataObjects, customFormName,
     numberOfRecords = numberOfRecords || arrayOfDataObjects.length
 
     let customFieldsHeaders = E.generateCustomFormHeaders(customFormName)
-    E.customFieldsValues = E.generateCustomValues()
-    E.editedCustomFieldsValues = E.generateEditedCustomValues()
 
     if (customFormName) {
         allFieldHeaders = allFieldHeaders.concat(customFieldsHeaders);
@@ -156,6 +154,9 @@ E.generateDataFor_CASES_Importer = function (arrayOfDataObjects, customFormName,
     }
 }
 
+E.customFieldsValues = E.generateCustomValues()
+E.editedCustomFieldsValues = E.generateEditedCustomValues()
+
 E.generateDataFor_ITEMS_Importer = function (arrayOfDataObjects, customFormName, importingItemUpdates, numberOfRecords, specificMapping) {
     // Set headers for Excel file
     //this commented part is switched with the one below because we had an issue with files
@@ -167,8 +168,6 @@ E.generateDataFor_ITEMS_Importer = function (arrayOfDataObjects, customFormName,
     numberOfRecords = numberOfRecords || arrayOfDataObjects.length
 
     let customFieldsHeaders = E.generateCustomFormHeaders(customFormName)
-    E.customFieldsValues = E.generateCustomValues()
-    E.editedCustomFieldsValues = E.generateEditedCustomValues()
 
     if (customFormName) {
         allFieldHeaders = allFieldHeaders.concat(customFieldsHeaders);
@@ -313,7 +312,6 @@ E.generateDataFor_ITEMS_Importer = function (arrayOfDataObjects, customFormName,
             E.itemImportDataWithAllFields[i + 1].push(itemObject.checkedOutNotes)
             E.itemImportDataWithMinimumFields[i + 1].push(itemObject.checkedOutNotes)
         }
-
 
         if (itemObject.status === 'Checked In' && importingItemUpdates) {
             allFieldHeaders.push('Returned By');
