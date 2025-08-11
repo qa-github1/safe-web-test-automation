@@ -5,7 +5,7 @@ const E = require('../../fixtures/files/excel-data');
 const api = require('../../api-utils/api-spec');
 const ui = require('../../pages/ui-spec');
 
-// Aug 1, 2025, Sumejja's Note ----> Test passed on Dev - Org#3 ---> Total time: 155 sec (cca 2.5 min)
+// Aug 11, 2025, Sumejja's Note ----> Test passed on Dev - Org#3 ---> Total time: 185 sec (cca 3 min)
 
 describe('Import Case Updates', function () {
 
@@ -48,9 +48,8 @@ describe('Import Case Updates', function () {
         // verify case updates import
         ui.importer.open_direct_link_for_page()
             .click_Play_icon_on_first_row()
-            .verify_toast_message([
-                C.toastMsgs.importComplete,
-                1 + C.toastMsgs.recordsImported])
+            .verify_toast_message([C.toastMsgs.importComplete, 1 + C.toastMsgs.recordsImported])
+            .check_import_status_on_grid('1 records imported')
             .quick_search_for_case(D.newCase.caseNumber);
 
         ui.app.open_newly_created_case_via_direct_link();

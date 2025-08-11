@@ -23,9 +23,8 @@ describe('Import Notes', function () {
 
         ui.menu.click_Tools__Data_Import();
         ui.importer.upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.notes, true)
-            .verify_toast_message([
-                C.toastMsgs.importComplete,
-                1 + C.toastMsgs.recordsImported]);
+           // .verify_toast_message([C.toastMsgs.importComplete, 1 + C.toastMsgs.recordsImported])
+                    .check_import_status_on_grid('1 records imported')
         ui.caseView.open_newly_created_case_via_direct_link()
             .select_tab(C.tabs.notes)
             .verify_text_is_present_on_main_container(E.notesWithAllFields[1][6])

@@ -21,9 +21,8 @@ describe('Import Users', function () {
 
         ui.menu.click_Tools__Data_Import();
         ui.importer.upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.users)
-            .verify_toast_message([
-                C.toastMsgs.importComplete,
-                1 + C.toastMsgs.recordsImported]);
+        //    .verify_toast_message([C.toastMsgs.importComplete, 1 + C.toastMsgs.recordsImported])
+            .check_import_status_on_grid('1 records imported')
 
         ui.menu.click_Settings__User_Admin();
         ui.userAdmin.select_All_Users()

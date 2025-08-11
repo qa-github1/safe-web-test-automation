@@ -211,9 +211,8 @@ describe('Auto-Disposition', function () {
         // import case with Review Date in past and open tab again to fetch a new data
         ui.menu.click_Tools__Data_Import();
         ui.importer.upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.cases)
-            .verify_toast_message([
-                C.toastMsgs.importComplete,
-                1 + C.toastMsgs.recordsImported]);
+            //.verify_toast_message([C.toastMsgs.importComplete, 1 + C.toastMsgs.recordsImported])
+            .check_import_status_on_grid('1 records imported')
 
         ui.menu.click_Settings__Organization()
             ui.app.click_element_containing_link(C.labels.organization.tabs.orgSettings)

@@ -6,7 +6,7 @@ const api = require('../../api-utils/api-spec');
 const ui = require('../../pages/ui-spec');
 const _ = require('lodash');
 
-// Aug 1, 2025, Sumejja's Note ----> All tests pass on Dev - Org#3 ---> Total time: 600 sec (10 min)
+// Aug 11, 2025, Sumejja's Note ----> All tests pass on Dev - Org#3 ---> Total time: 600 sec (10 min)
 
 describe('Import Item Updates', function () {
 
@@ -50,9 +50,10 @@ describe('Import Item Updates', function () {
             // verify item updates import -- with custom form attached and initially populated by importer
             ui.importer.open_direct_link_for_page()
                 .click_Play_icon_on_first_row()
-                .verify_toast_message([
-                    C.toastMsgs.importComplete,
-                    1 + C.toastMsgs.recordsImported]);
+                // .verify_toast_message([
+                //     C.toastMsgs.importComplete,
+                //     1 + C.toastMsgs.recordsImported], null, 1);
+                .check_import_status_on_grid('1 records imported')
             let allEditedFields = C.itemFields.allEditableFieldsArray.concat(['Case'])
             ui.itemView.open_newly_created_item_via_direct_link()
                 .verify_edited_and_not_edited_values_on_Item_View_form(allEditedFields, D.editedItem, D.newItem, true, true)
@@ -97,25 +98,26 @@ describe('Import Item Updates', function () {
 
             cy.getLocalStorage("newItem").then(newItem => {
                 D.editedItem.barcode = JSON.parse(newItem).barcode
-                E.generateDataFor_ITEMS_Importer([D.editedItem], null);
+                E.generateDataFor_ITEMS_Importer([D.editedItem], null, true);
                 E.itemImportDataWithAllFields[1][9] = S.selectedEnvironment.person.guid;
                 cy.generate_excel_file(fileName, E.itemImportDataWithAllFields);
                 ui.menu.click_Tools__Data_Import();
                 ui.importer.import_data(fileName, C.importTypes.items, true)
+
+                let allEditedFields = C.itemFields.allEditableFieldsArray.concat(['Case', 'Status', 'Storage Location', 'Custodian'])
+                ui.itemView.open_newly_created_item_via_direct_link()
+                    .verify_edited_and_not_edited_values_on_Item_View_form(allEditedFields, D.editedItem, D.newItem, true, true)
+                    .click_Edit()
+                    .verify_edited_and_not_edited_values_on_Item_Edit_form(allEditedFields, D.editedItem, D.newItem, true, true)
+                    .select_tab(C.tabs.chainOfCustody)
+                    .verify_content_of_sequential_rows_in_results_table([
+                        CoC_checkout,
+                        CoC_newItemEntry
+                    ])
+                    .open_last_history_record()
+                    .verify_all_values_on_history(D.editedItem, D.newItem)
+                    .verify_red_highlighted_history_records(allEditedFields)
             });
-            let allEditedFields = C.itemFields.allEditableFieldsArray.concat(['Case', 'Status', 'Storage Location', 'Custodian'])
-            ui.itemView.open_newly_created_item_via_direct_link()
-                .verify_edited_and_not_edited_values_on_Item_View_form(allEditedFields, D.editedItem, D.newItem, true, true)
-                .click_Edit()
-                .verify_edited_and_not_edited_values_on_Item_Edit_form(allEditedFields, D.editedItem, D.newItem, true, true)
-                .select_tab(C.tabs.chainOfCustody)
-                .verify_content_of_sequential_rows_in_results_table([
-                    CoC_checkout,
-                    CoC_newItemEntry
-                ])
-                .open_last_history_record()
-                .verify_all_values_on_history(D.editedItem, D.newItem)
-                .verify_red_highlighted_history_records(allEditedFields)
         });
 
         it('3. Import update for item status (CheckIn transaction)', function () {

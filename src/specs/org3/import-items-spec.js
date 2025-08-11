@@ -7,6 +7,7 @@ const ui = require('../../pages/ui-spec');
 
 let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
 
+// Aug 11, 2025, Sumejja's Note ----> All tests pass on Dev - Org#3 ---> Total time: 420 sec (7 min)
 describe('Import Items', function () {
 
     before(function () {
@@ -40,9 +41,8 @@ describe('Import Items', function () {
         // verify item import
         ui.importer.open_direct_link_for_page()
             .click_Play_icon_on_first_row()
-            .verify_toast_message([
-                C.toastMsgs.importComplete,
-                1 + C.toastMsgs.recordsImported]);
+            //.verify_toast_message([C.toastMsgs.importComplete, 1 + C.toastMsgs.recordsImported])
+            .check_import_status_on_grid('1 records imported')
 
         ui.searchItem.run_search_by_Item_Description(D.newItem.description)
             .verify_content_of_first_row_in_results_table(D.newItem.description)
@@ -162,7 +162,7 @@ describe('Import Items', function () {
                 .verify_title_on_active_tab(1)
         });
 
-       it('5. Import 1k items', function () {
+        it('5. Import 1k items', function () {
             ui.app.log_title(this);
             var numberOfRecords = 1000
             let fileName = numberOfRecords + '_Items_' + S.domain;
