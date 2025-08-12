@@ -39,7 +39,7 @@ export default class ImportPage extends BasePage {
     //************************************ ACTIONS ***************************************//
 
 
-    open_direct_link_for_page() {
+    open_direct_url_for_page() {
         this.open_url_and_wait_all_GET_requests_to_finish(S.base_url + '/#/' + C.pages.import.url)
         return this
     }
@@ -199,7 +199,7 @@ export default class ImportPage extends BasePage {
         if (isUpdate) {
             this.retry_failed_import(playIconInTheFirstRow)
         }
-        // this.verify_toast_message([C.toastMsgs.importComplete]);
+       //  this.verify_toast_message([C.toastMsgs.importComplete]);
         this.check_import_status_on_grid('records imported')
         return this;
     };
@@ -329,8 +329,7 @@ export default class ImportPage extends BasePage {
     };
 
     verify_importer_validation_messages(arrayOfMessages) {
-        cy.wait(500)
-        this.verify_multiple_text_values_in_one_container(importerContainer, arrayOfMessages)
+        this.verify_text_is_present_on_main_container(arrayOfMessages)
         return this;
     };
 

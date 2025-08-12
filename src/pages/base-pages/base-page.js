@@ -475,11 +475,10 @@ export default class BasePage {
         let timeoutInMiliseconds = timeoutInMinutes * 60000;
 
         cy.getLocalStorage("recentCase").then(recentCase => {
-            //toastMessage(timeoutInMiliseconds).should('be.visible');
             toastMessage(timeoutInMiliseconds).should('be.visible');
 
             toastMessage(timeoutInMiliseconds).invoke('text').then(function (toastMsg) {
-                //  toastMessage().click({multiple: true})
+                 // toastMessage().click({multiple: true})
                 // firstToastMessage().click()
 
                 cy.document().then(doc => {
@@ -1530,7 +1529,7 @@ export default class BasePage {
         return this;
     };
 
-    open_direct_link_for_page(page) {
+    open_direct_url_for_page(page) {
        this.open_url_and_wait_all_GET_requests_to_finish(S.base_url + '/#/' + page.url)
     };
 

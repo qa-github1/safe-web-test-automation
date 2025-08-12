@@ -30,11 +30,14 @@ describe('Import Locations', function () {
         E.generateDataFor_LOCATIONS_Importer(3);
         ui.app.generate_excel_file(fileName, E.locationsImportAllFields);
 
-        ui.menu.click_Tools__Data_Import();
-        ui.importer.upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.locations)
-            .verify_toast_message([
-                C.toastMsgs.importComplete,
-                3 + C.toastMsgs.recordsImported])
+        ui.importer.open_direct_url_for_page()
+            .precheck_import_data(fileName, C.importTypes.locations)
+        ui.menu.click__Storage_Locations()
+            .verify_text_is_present_on_main_container(S.selectedEnvironment.locations[0].name)
+            .verify_text_is_NOT_present_on_main_container(E.parentLocation1.name)
+
+        ui.importer.open_direct_url_for_page()
+            .import_data(fileName, C.importTypes.locations)
 
         ui.menu.click__Storage_Locations()
             .verify_text_is_present_on_main_container(E.parentLocation1.name)
@@ -60,31 +63,12 @@ describe('Import Locations', function () {
 
         ui.app.generate_excel_file(fileName, E.locationsImportRequiredFields);
 
-        ui.menu.click_Tools__Data_Import();
-        ui.importer.upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.locations)
-        //    .verify_toast_message([C.toastMsgs.importComplete, 1 + C.toastMsgs.recordsImported])
-            .check_import_status_on_grid('1 records imported')
+        ui.importer.open_direct_url_for_page()
+            .import_data(fileName, C.importTypes.locations)
 
         ui.menu.click__Storage_Locations()
             .verify_text_is_present_on_main_container(E.parentLocation1.name)
         ui.storageLocations.verify_location_properties(E.parentLocation1)
     });
 
-    it('3 Import Locations - Precheck Only', function () {
-        ui.app.log_title(this);
-        let fileName = 'LocationsImport_precheckOnly_'+ S.domain;
-        let user = S.userAccounts.orgAdmin;
-        api.auth.get_tokens(user);
-        E.generateDataFor_LOCATIONS_Importer(3);
-        ui.app.generate_excel_file(fileName, E.locationsImportAllFields);
-
-        ui.menu.click_Tools__Data_Import();
-        ui.importer.upload_then_Map_and_Submit_file_for_precheck(fileName, C.importTypes.locations)
-            .verify_toast_message([
-                C.toastMsgs.precheckComplete,
-                3 + C.toastMsgs.recordsPrechecked]);
-        ui.menu.click__Storage_Locations()
-            .verify_text_is_present_on_main_container(S.selectedEnvironment.locations[0].name)
-            .verify_text_is_NOT_present_on_main_container(E.parentLocation1.name)
-    });
 });

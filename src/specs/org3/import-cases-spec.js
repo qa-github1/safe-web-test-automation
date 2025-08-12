@@ -7,7 +7,7 @@ const ui = require('../../pages/ui-spec');
 
 let user = S.getUserData(S.userAccounts.orgAdmin);
 
-// Aug 11, 2025, Sumejja's Note ----> Test passed on Dev - Org#3 ---> Total time: xxx sec (cca x min)
+// Aug 11, 2025, Sumejja's Note ----> Test passed on Dev - Org#3 ---> Total time: 460 sec (cca 8 min)
 
 describe('Import Cases', function () {
 
@@ -111,6 +111,7 @@ describe('Import Cases', function () {
 
             cy.generate_excel_file(fileName, E.caseImportDataWithAllFields);
             api.org_settings.enable_all_Case_fields();
+            api.auto_disposition.edit(true);
 
             ui.menu.click_Tools__Data_Import();
             ui.importer.upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.cases)

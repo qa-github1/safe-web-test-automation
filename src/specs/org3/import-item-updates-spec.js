@@ -48,7 +48,7 @@ describe('Import Item Updates', function () {
                 .verify_title_on_active_tab(1)
 
             // verify item updates import -- with custom form attached and initially populated by importer
-            ui.importer.open_direct_link_for_page()
+            ui.importer.open_direct_url_for_page()
                 .click_Play_icon_on_first_row()
                 // .verify_toast_message([
                 //     C.toastMsgs.importComplete,
@@ -71,7 +71,7 @@ describe('Import Item Updates', function () {
             E.generateDataFor_ITEMS_Importer([D.editedItem], S.customForms.itemFormWithOptionalFields, true);
             cy.generate_excel_file(fileName, E.itemImportDataWithAllFields);
             // verify item updates import
-            ui.importer.open_direct_link_for_page()
+            ui.importer.open_direct_url_for_page()
                 .import_data(fileName, C.importTypes.items, true)
             ui.itemView.open_newly_created_item_via_direct_link()
                 .click_Edit()
