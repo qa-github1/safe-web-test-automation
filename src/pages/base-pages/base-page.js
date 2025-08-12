@@ -471,14 +471,17 @@ export default class BasePage {
     }
 
     verify_toast_message(text, includesRecentCaseNumber = false, timeoutInMinutes = 1) {
-
-        let timeoutInMiliseconds = timeoutInMinutes * 60000;
+        if (!timeoutInMinutes || isNaN(timeoutInMinutes)) {
+            timeoutInMinutes = 1;
+        }
+        let timeoutInMiliseconds = timeoutInMinutes * 60000
+        toastMessage(timeoutInMiliseconds).should('be.visible', {timeout: timeoutInMiliseconds});
 
         cy.getLocalStorage("recentCase").then(recentCase => {
-            toastMessage(timeoutInMiliseconds).should('be.visible');
+           // toastMessage(timeoutInMiliseconds).should('be.visible');
 
             toastMessage(timeoutInMiliseconds).invoke('text').then(function (toastMsg) {
-                 // toastMessage().click({multiple: true})
+                // toastMessage().click({multiple: true})
                 // firstToastMessage().click()
 
                 cy.document().then(doc => {
@@ -1111,7 +1114,6 @@ export default class BasePage {
                     return (element instanceof Function ? element() : element).invoke('val');
                 };
 
-                cy.log('TEXT IS ' + getTextFn())
                 const retryInterval = 500
                 let timeout = timeoutInSeconds * 1000
                 let maxAttempts = timeout / retryInterval

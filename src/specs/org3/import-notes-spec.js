@@ -21,8 +21,17 @@ describe('Import Notes', function () {
         cy.generate_excel_file(fileName, E.notesWithAllFields);
         api.cases.add_new_case(D.newCase.caseNumber);
 
-        ui.menu.click_Tools__Data_Import();
-        ui.importer.upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.notes, true)
+        ui.importer.open_direct_url_for_page()
+            .impo(fileName, C.importTypes.notes, true)
+            .verify_toast_message([
+                C.toastMsgs.precheckComplete,
+                1 + C.toastMsgs.recordsPrechecked]);
+        ui.caseView.open_newly_created_case_via_direct_link()
+            .select_tab(C.tabs.notes)
+            .verify_text_is_NOT_present_on_main_container(E.notesWithAllFields[1][6])
+
+        ui.importer.open_direct_url_for_page()
+            .upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.notes, true)
            // .verify_toast_message([C.toastMsgs.importComplete, 1 + C.toastMsgs.recordsImported])
                     .check_import_status_on_grid('1 records imported')
         ui.caseView.open_newly_created_case_via_direct_link()
@@ -52,26 +61,6 @@ describe('Import Notes', function () {
                 .select_tab(C.tabs.notes)
                 .verify_text_is_present_on_main_container(E.notesWithAllFields[1][6])
         });
-    });
-
-    it('3 Import Notes for Case - Precheck Only', function () {
-        ui.app.log_title(this);
-        let fileName = 'NotesForCase_precheckOnly_'+ S.domain;
-        let user = S.userAccounts.orgAdmin;
-        api.auth.get_tokens(user);
-        D.generateNewDataSet();
-        E.generateDataFor_NOTES_Importer(D.newCase);
-        cy.generate_excel_file(fileName, E.notesWithAllFields);
-        api.cases.add_new_case(D.newCase.caseNumber);
-
-        ui.menu.click_Tools__Data_Import();
-        ui.importer.upload_then_Map_and_Submit_file_for_precheck(fileName, C.importTypes.notes, true)
-            .verify_toast_message([
-                C.toastMsgs.precheckComplete,
-                1 + C.toastMsgs.recordsPrechecked]);
-        ui.caseView.open_newly_created_case_via_direct_link()
-            .select_tab(C.tabs.notes)
-            .verify_text_is_NOT_present_on_main_container(E.notesWithAllFields[1][6])
     });
 
     //enable test running regression test suite

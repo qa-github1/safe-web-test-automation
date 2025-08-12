@@ -17,12 +17,14 @@ before(function () {
 
 describe('Auto-Disposition', function () {
 
-    it('1 Verify auto-dispo can be enabled and disabled in Org Settings', function () {
+    it('1 Verify enabling/disabling and validation for Follow Up Days', function () {
         api.auth.get_tokens(user);
         api.auto_disposition.edit(false);
 
         ui.menu.click_Settings__Organization()
             .click_element_containing_link(C.labels.organization.tabs.autoDisposition)
+
+       // Verify auto-dispo can be enabled and disabled in Org Settings
         ui.autoDispo.click_disposition_Configuration_For_Case_Offense_Types()
         ui.autoDispo.click_Edit()
             .turn_On_the_toggle()
@@ -32,12 +34,10 @@ describe('Auto-Disposition', function () {
             .turn_Off_the_toggle()
             .click_Save()
             .verify_toast_message(C.toastMsgs.saved);
-    });
 
-    it('2. Verify Save button is disabled when missing value in any "Follow Up Days" field', function () {
-        api.auth.get_tokens(user);
+
+        //Verify Save button is disabled when missing value in any "Follow Up Days" field
         api.auto_disposition.edit(true);
-
         ui.menu.click_Settings__Organization()
             .click_element_containing_link(C.labels.organization.tabs.autoDisposition);
         ui.autoDispo.click_disposition_Configuration_For_Case_Offense_Types();
@@ -46,27 +46,26 @@ describe('Auto-Disposition', function () {
             .verify_save_auto_dispo_button_is_disabled()
     });
 
-    context('3. Verify "Re-Distribute Case Review Dates" functionality', function () {
+    context('2. Verify "Re-Distribute Case Review Dates" functionality', function () {
 
-        let minDate = helper.setDate(C.currentDateTimeFormat.dateOnly.editMode, 2025, 11, 15);
-        let maxDate = helper.setDate(C.currentDateTimeFormat.dateOnly.editMode, 2025, 11, 15);
+        let minDate = helper.setDate(C.currentDateTimeFormat.dateOnly.editMode, 2027, 11, 15);
+        let maxDate = helper.setDate(C.currentDateTimeFormat.dateOnly.editMode, 2027, 11, 15);
         let redistributeNote = 'Redistributing Case Review dates from ' + minDate + ' to ' + maxDate;
 
         before(function () {
             api.auth.get_tokens(user);
             api.org_settings.enable_all_Case_fields();
-            api.auto_disposition.edit(true);
             api.users.update_current_user_settings(user.id, DF.dateTimeFormats.long)
         });
 
-        it('3.1 Verify "Re-Distribute" for "Past Due" cases', function () {
+        it.only('2.1 Verify "Re-Distribute" for "Past Due" cases', function () {
             api.auth.get_tokens(user);
-           // api.users.update_current_user_settings(user.id)
+            let daysToFollowUp = 33
+            api.org_settings.update_dispo_config_for_offense_types(true, true, daysToFollowUp)
             ui.menu.click_Settings__Organization()
                 .click_element_containing_link(C.labels.organization.tabs.autoDisposition);
             ui.autoDispo.click_disposition_Configuration_For_Case_Offense_Types();
             ui.autoDispo.verify_Redistribute_Case_Review_Date_labels(true)
-
 
             D.generateNewDataSet()
             D.getDataForMultipleCases(3)
@@ -78,7 +77,7 @@ describe('Auto-Disposition', function () {
             // import 3 cases (NO Review Date, Review Date past due and Upcoming Review Date )
             E.generateDataFor_CASES_Importer([D.case1, D.case2, D.case3]);
             ui.app.generate_excel_file(fileName, E.caseImportDataWithAllFields);
-            ui.menu.click_Tools__Data_Import();
+            ui.menu.click_Tools__Data_Import()
             ui.importer.upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.cases, null, 1, null,
                 ['Some Review Dates are blank. They will be auto-applied. Select Import to proceed.']
                 )
@@ -103,16 +102,19 @@ describe('Auto-Disposition', function () {
                 .verify_Redistribute_Case_Review_Date_labels(true, 0, 3)
             D.case2.reviewDate = helper.getSpecificDateInSpecificFormat(
                 DF.dateTimeFormats.long.mask,
-                '11/15/2025 12:00 AM'
+                '11/15/2027 12:00 AM'
             );
+
+            // verify change IS applied for Case with 'Past Due Date'
             ui.app.quick_search_for_case(D.case2.caseNumber)
                 .click_button(C.buttons.edit);
                 ui.caseView.verify_values_on_Edit_form(D.case2);
 
-            // // verify change is not applied for Case with 'No Review Date'
-            // ui.app.quick_search_for_case(D.case1.caseNumber)
-            //     .click_button(C.buttons.edit);
-            // ui.caseView.verify_values_on_Edit_form(D.case1);
+            // verify change is not applied for Case with 'No Review Date'
+            D.case1.reviewDate = helper.getDateAfterXDaysFromSpecificDate(DF.dateTimeFormats.long.mask, S.currentDate, daysToFollowUp);
+            ui.app.quick_search_for_case(D.case1.caseNumber)
+                .click_button(C.buttons.edit);
+            ui.caseView.verify_values_on_Edit_form(D.case1);
 
             // verify change is not applied for Case with 'Upcoming Review Date'
                 ui.app.quick_search_for_case(D.case3.caseNumber)
@@ -150,9 +152,8 @@ describe('Auto-Disposition', function () {
             D.newCase.offenseDate = 'April 15, 2020 02:18 PM'
             ui.caseView.verify_values_on_Edit_form(D.newCase);
         });
-    });
 
-    it('3.2 Verify "Close X Cases" functionality', function () {
+    it('2.2 Verify "Close X Cases" functionality', function () {
         api.auth.get_tokens(user);
         api.auto_disposition.edit(true);
         api.cases.add_new_case();
@@ -176,7 +177,7 @@ describe('Auto-Disposition', function () {
             .verify_text_is_present_on_main_container(S.currentDate)
     });
 
-    it('3.3 Verify "Recalculate Cases to Dispose" functionality', function () {
+    it('2.3 Verify "Recalculate Cases to Dispose" functionality', function () {
         api.auth.get_tokens(user);
         D.getNewCaseData();
         api.auto_disposition.edit(true);
@@ -191,7 +192,7 @@ describe('Auto-Disposition', function () {
             .verify_labels_for_cases_to_dispose(1)
     });
 
-    it('3.4 Verify "View X Cases" functionality', function () {
+    it('2.4 Verify "View X Cases" functionality', function () {
         api.auth.get_tokens(user);
         api.org_settings.enable_all_Case_fields();
         api.auto_disposition.edit(true);
@@ -210,8 +211,8 @@ describe('Auto-Disposition', function () {
 
         // import case with Review Date in past and open tab again to fetch a new data
         ui.menu.click_Tools__Data_Import();
-        ui.importer.upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.cases)
-            //.verify_toast_message([C.toastMsgs.importComplete, 1 + C.toastMsgs.recordsImported])
+        ui.importer.open_direct_url_for_page()
+            .import_data(fileName, C.importTypes.cases)
             .check_import_status_on_grid('1 records imported')
 
         ui.menu.click_Settings__Organization()
@@ -224,6 +225,8 @@ describe('Auto-Disposition', function () {
             .click_View_X_Cases_button()
             .verify_modal_content(C.labels.autoDisposition.viewCases)
             .verify_modal_content(D.newCase.caseNumber)
+    });
+
     });
 });
 
