@@ -202,8 +202,10 @@ export default class BaseViewPage extends BasePage {
         // });
 
         this.pause(1)
+
         this.wait_element_to_be_visible(save_button_on_active_tab)
         this.verify_Save_isPresent()
+        this.verify_text_is_present_on_main_container('Cancel')
         return this;
     }
 
@@ -224,21 +226,10 @@ export default class BaseViewPage extends BasePage {
     // }
 
     verify_edited_or_old_TEXT_if_field_was_not_edited(labelsOfEditedFields, label, fieldSelector, editedValue, initialValue) {
-        const isDev = S.selectedEnvironment.name === 'dev';
-        const isPentest = S.selectedEnvironment.name === 'pentest';
-
-        if (labelsOfEditedFields.includes(label) && editedValue !== null) {
-            if (isDev) {
-                this.verify_text_2(fieldSelector, editedValue);
-            } else if (isPentest) {
+      if (labelsOfEditedFields.includes(label) && editedValue !== null) {
                 this.verify_text(fieldSelector, editedValue);
-            }
         } else if (initialValue) {
-            if (isDev) {
-                this.verify_text_2(fieldSelector, initialValue);
-            } else if (isPentest) {
                 this.verify_text(fieldSelector, initialValue);
-            }
         }
     }
 

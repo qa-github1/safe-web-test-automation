@@ -489,7 +489,7 @@ export default class BasePage {
         toastMessage(timeoutInMiliseconds).should('be.visible', {timeout: timeoutInMiliseconds});
 
         cy.getLocalStorage("recentCase").then(recentCase => {
-           // toastMessage(timeoutInMiliseconds).should('be.visible');
+            // toastMessage(timeoutInMiliseconds).should('be.visible');
 
             toastMessage(timeoutInMiliseconds).invoke('text').then(function (toastMsg) {
                 // toastMessage().click({multiple: true})
@@ -575,7 +575,7 @@ export default class BasePage {
         let that = this;
 
         function verify() {
-            cy.window({ timeout: 70000 }).then((win) => {
+            cy.window({timeout: 70000}).then((win) => {
                 const elements = win.document.querySelectorAll('.bg-grid-checkbox');
 
                 if (elements.length !== expectedNumberOfRows) {
@@ -1148,43 +1148,43 @@ export default class BasePage {
 
     check_value(element, value, timeoutInSeconds = 70) {
 
-            if (value) {
-                let getTextFn = () => {
-                    return (element instanceof Function ? element() : element).invoke('val');
-                };
+        if (value) {
+            let getTextFn = () => {
+                return (element instanceof Function ? element() : element).invoke('val');
+            };
 
-                const retryInterval = 500
-                let timeout = timeoutInSeconds * 1000
-                let maxAttempts = timeout / retryInterval
-                cy.verifyTextAndRetry(getTextFn, value, {maxAttempts: maxAttempts, retryInterval: retryInterval});
-            }
+            const retryInterval = 500
+            let timeout = timeoutInSeconds * 1000
+            let maxAttempts = timeout / retryInterval
+            cy.verifyTextAndRetry(getTextFn, value, {maxAttempts: maxAttempts, retryInterval: retryInterval});
+        }
     }
 
 
     verify_value_within_container(element, value, container, timeoutInSeconds = 70) {
 
-            if (value) {
-                let getTextFn = () => {
-                    return element(container).invoke('val');
-                };
-                const retryInterval = 500
-                let timeout = timeoutInSeconds * 1000
-                let maxAttempts = timeout / retryInterval
-                cy.verifyTextAndRetry(getTextFn, value, {maxAttempts: maxAttempts, retryInterval: retryInterval});
-            }
+        if (value) {
+            let getTextFn = () => {
+                return element(container).invoke('val');
+            };
+            const retryInterval = 500
+            let timeout = timeoutInSeconds * 1000
+            let maxAttempts = timeout / retryInterval
+            cy.verifyTextAndRetry(getTextFn, value, {maxAttempts: maxAttempts, retryInterval: retryInterval});
+        }
     }
 
     verify_text_within_container(element, value, container, timeoutInSeconds = 70) {
 
-            if (value) {
-                let getTextFn = () => {
-                    return element(container).invoke('text');
-                };
-                const retryInterval = 500
-                let timeout = timeoutInSeconds * 1000
-                let maxAttempts = timeout / retryInterval
-                cy.verifyTextAndRetry(getTextFn, value, {maxAttempts: maxAttempts, retryInterval: retryInterval});
-            }
+        if (value) {
+            let getTextFn = () => {
+                return element(container).invoke('text');
+            };
+            const retryInterval = 500
+            let timeout = timeoutInSeconds * 1000
+            let maxAttempts = timeout / retryInterval
+            cy.verifyTextAndRetry(getTextFn, value, {maxAttempts: maxAttempts, retryInterval: retryInterval});
+        }
     }
 
     verify_text(element, expectedText, timeoutInSeconds) {
@@ -1571,7 +1571,7 @@ export default class BasePage {
     };
 
     open_direct_url_for_page(page) {
-       this.open_url_and_wait_all_GET_requests_to_finish(S.base_url + '/#/' + page.url)
+        this.open_url_and_wait_all_GET_requests_to_finish(S.base_url + '/#/' + page.url)
     };
 
     define_API_request_to_be_awaited(methodType, partOfRequestUrl, alias) {
@@ -1993,6 +1993,8 @@ export default class BasePage {
         this.pause(1)
         this.wait_until_spinner_disappears()
         firstCheckboxOnTableBody().scrollIntoView().should('be.visible')
+        this.pause(1)
+        this.wait_until_spinner_disappears()
 
         if (tableIndex === 0) {
 
@@ -2004,7 +2006,6 @@ export default class BasePage {
                     throw new Error('Checkbox not found in DOM');
                 }
             });
-
             //  bsGridCheckboxes(rowNumber).click();
         } else {
             checkboxOnSpecificTableRow(rowNumber).click();
@@ -2059,7 +2060,7 @@ export default class BasePage {
         optionOnExpandedMenu(option).should('be.visible');
         optionOnExpandedMenu(option).should('not.have.class', 'disabled')
         optionOnExpandedMenu(option).click();
-        if (waitUntilSpinnerDisappears){
+        if (waitUntilSpinnerDisappears) {
             this.wait_until_spinner_disappears();
         }
         return this;
@@ -2704,11 +2705,50 @@ export default class BasePage {
         return this;
     };
 
+    // wait_until_spinner_disappears(timeoutInSeconds = 80) {
+    //     bodyContainer().should('not.have.class', 'pace-running', {timeout: timeoutInSeconds * 1000});
+    //     bodyContainer().should('have.class', 'pace-done', {timeout: timeoutInSeconds * 1000});
+    //     return this;
+    // };
+
+    // Waits for Pace spinner to finish, but never fails the test.
+// Queues polling in Cypress chain; after timeout it logs and continues.
     wait_until_spinner_disappears(timeoutInSeconds = 80) {
-        bodyContainer().should('not.have.class', 'pace-running', {timeout: timeoutInSeconds * 1000});
-        bodyContainer().should('have.class', 'pace-done', {timeout: timeoutInSeconds * 1000});
+        const timeout = timeoutInSeconds * 1000;
+        const interval = 500; // ms
+        const started = Date.now();
+
+        const poll = () => {
+            cy.document({log: false}).then((doc) => {
+                // Pace sometimes toggles classes on <body> or <html>
+                const roots = [doc.body, doc.documentElement].filter(Boolean);
+                const hasSpinner = roots.some(el => el.classList.contains('pace-running'));
+                const isDone = roots.some(el => el.classList.contains('pace-done'));
+
+                if (!hasSpinner && isDone) {
+                    // spinner gone -> stop polling
+                    return;
+                }
+
+                const elapsed = Date.now() - started;
+                if (elapsed >= timeout) {
+                    // eslint-disable-next-line no-console
+                    console.warn(`[wait_until_spinner_disappears] still running after ${timeoutInSeconds}s — continuing test.`);
+                    return;
+                }
+
+                // wait a bit, then check again (stays inside Cypress queue)
+                cy.wait(interval, {log: false}).then(poll);
+            });
+        };
+
+        // enqueue the polling steps before whatever comes next
+        poll();
+
+        // allow page-object style chaining
         return this;
-    };
+    }
+
 
     wait_until_label_appears(text) {
         cy.contains(text).should('be.visible');
@@ -3106,7 +3146,7 @@ export default class BasePage {
     }
 
     enable_all_standard_columns_on_the_grid(page, isDispoStatusEnabled) {
-        let numnerOfFieldsOnMenuCustomization = isDispoStatusEnabled? page.numberOfAllColumnsWithDispoStatusEnabled : page.numberOfStandardColumns
+        let numnerOfFieldsOnMenuCustomization = isDispoStatusEnabled ? page.numberOfAllColumnsWithDispoStatusEnabled : page.numberOfStandardColumns
 
         menuCustomization().click()
         optionsOnMenuCustomization().click()

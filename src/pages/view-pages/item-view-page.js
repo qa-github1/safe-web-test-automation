@@ -309,7 +309,7 @@ export default class ItemViewPage extends BaseViewPage {
                 ['Case', dataObject.caseNumber],
                 ['Status', dataObject.status],
                 ['Recovered At', dataObject.recoveryLocation],
-                ['Recovery Date', dataObject.recoveryDate_withoutTime],
+                ['Recovery Date', dataObject.recoveryDateEditMode],
                 ['Recovered By', dataObject.recoveredByName],
                 ['Storage Location', dataObject.location],
                 ['Submitted By', dataObject.submittedByName],
