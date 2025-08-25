@@ -1026,9 +1026,9 @@ D.generateNewDataSet = function (setNullForDisabledFields = false, autoDispoOff 
 D.setNewRandomNo();
 D.getRandomNo();
 
-D.getDataForMultipleCases = function (numberOfCases) {
+D.getDataForMultipleCases = function (numberOfCases, startingIndex = 1) {
 
-    for (let i = 1; i < numberOfCases + 1; i++) {
+    for (let i = startingIndex; i < numberOfCases+startingIndex; i++) {
         D['case' + i] = Object.assign({}, D.getNewCaseData());
     }
 }

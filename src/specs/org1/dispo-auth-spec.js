@@ -109,6 +109,8 @@ describe('Dispo Auth', function () {
         let supervisor = S.userAccounts.powerUser
         let thirdTierApproverGroup = S.selectedEnvironment.admin_userGroup
         let thirdTierApprover = S.userAccounts.orgAdmin
+        let permissionGroup_officeAdmin = S.selectedEnvironment.admin_permissionGroup;
+        let office_1 = S.selectedEnvironment.office_1;
 
         ui.app.log_title(this);
         api.auth.get_tokens(orgAdmin);
@@ -118,6 +120,12 @@ describe('Dispo Auth', function () {
         api.org_settings.update_org_settings(false, true)
         api.users.set_user_supervisors([officer.id], [supervisor.id])
         api.permissions.assign_user_to_User_Group(thirdTierApprover, thirdTierApproverGroup)
+        api.permissions
+            .update_ALL_permissions_for_an_existing_Permission_group
+            (permissionGroup_officeAdmin, true, true, true, true)
+        api.permissions.assign_office_based_permissions_to_user(
+            officer.id,
+            office_1.id, permissionGroup_officeAdmin.id);
 
         api.auth.get_tokens(officer);
         let selectedTemplate = S.selectedEnvironment.taskTemplates.dispoAuth;
@@ -159,6 +167,7 @@ describe('Dispo Auth', function () {
                 // .open_url_and_wait_all_GET_requests_to_finish('https://dev.trackerproducts.com/#/view-task/727405')
                 .select_tab('Items')
                 .set_page_size(100)
+               // .wait_certain_number_of_rows_to_be_visible_on_grid(100)
                 .set_Action___Approve_for_Disposal([1, 52])
                 .verify_Dispo_Auth_Job_Status('Complete')
                 .reload_page()

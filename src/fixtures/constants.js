@@ -946,6 +946,9 @@ C.pages = {
     },
     import: {
         url: 'flat-import'
+    },
+    orgSettings: {
+        url: 'organizations/settings'
     }
 }
 

@@ -177,6 +177,7 @@ export default class TaskViewPage extends BaseViewPage {
     };
 
     set_Action___Approve_for_Disposal(rowNumberRange) {
+       // this.wait_response_from_API_call('getTaskItems')
         this.uncheck_all_rows()
             .click_checkbox_to_select_specific_row(rowNumberRange[0])
             .press_shift_and_click_row(rowNumberRange[1])

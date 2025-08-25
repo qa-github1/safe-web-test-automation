@@ -97,10 +97,13 @@ E.generateDataFor_CASES_Importer = function (arrayOfDataObjects, customFormName,
         let j = i + 1
 
         let caseObject = arrayOfDataObjects[i] || arrayOfDataObjects[0]
-        D['case' + j] = Object.assign({}, caseObject);
+
+      //  if (!arrayOfDataObjects[i]){
+            D['case' + j] = Object.assign({}, caseObject);
+      //  }
 
         if (!importingCaseUpdates) {
-            D['case' + j].caseNumber = 'imported_' + caseObject.caseNumber + '_' + j;
+            D['case' + j].caseNumber  = 'imported_' + caseObject.caseNumber + '_' + j;
             if (caseObject.offenseDescription) D['case' + j].offenseDescription = 'imported_' + caseObject.caseNumber
         }
         let tags = caseObject.tags ? caseObject.tags[0] : ''
@@ -150,6 +153,10 @@ E.generateDataFor_CASES_Importer = function (arrayOfDataObjects, customFormName,
 
         if (numberOfRecords === 1 && !importingCaseUpdates) {
             D.newCase = Object.assign({}, D['case' + 1]);
+        }
+
+        if (arrayOfDataObjects[1]){
+            caseObject = Object.assign({}, D['case' + j] )
         }
     }
 }

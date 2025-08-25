@@ -343,7 +343,7 @@ describe('Add Item', function () {
             });
       //  }
 
-        it.only('3.2 --- with required Custom Form but not filled out, all optional fields on Form', function () {
+        it('3.2 --- with required Custom Form but not filled out, all optional fields on Form', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
             D.getItemDataWithReducedFields(D.newCase);

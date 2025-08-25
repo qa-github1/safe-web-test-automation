@@ -1,3 +1,5 @@
+import S from "../fixtures/settings";
+
 let helper = require('../support/e2e-helper');
 let C = require('../fixtures/constants');
 import BasePage from "./base-pages/base-page";
@@ -30,6 +32,12 @@ export default class AutoDispoPage extends BasePage {
     }
 
     //************************************ ACTIONS ***************************************//
+
+
+    open_direct_url_for_page() {
+        this.open_url_and_wait_all_GET_requests_to_finish(S.base_url + '/#/' + C.pages.orgSettings.url)
+        return this
+    }
 
     click_Recalculate_Cases_to_Dispose() {
         this.define_API_request_to_be_awaited('GET', 'requestCountingCasesToClose');
@@ -76,6 +84,13 @@ export default class AutoDispoPage extends BasePage {
         return this;
     };
 
+    get_open_cases_with_NO_review_date() {
+        casesWithNoReviewDate().should('contain', "Open Cases");
+        this.get_text_after_the_character_and_save_to_local_storage(
+            casesWithNoReviewDate, ": ", "casesWithNoReviewDate");
+        return this;
+    };
+
     get_open_cases_with_review_date_past_due() {
         casesWithReviewDatePastDue().should('contain', "Open Cases");
         this.get_text_after_the_character_and_save_to_local_storage(
@@ -101,33 +116,59 @@ export default class AutoDispoPage extends BasePage {
     };
 
     get_statistics_for_Review_Dates() {
+        this.get_open_cases_with_NO_review_date();
         this.get_open_cases_with_review_date_past_due();
         this.get_open_cases_with_upcoming_review_date();
         return this;
     };
 
-    verifY_label(element, label, incrementBy) {
-        cy.getLocalStorage(label).then(labelValue => {
-
-            if (incrementBy) {
-                labelValue = parseInt(labelValue) + incrementBy;
-            }
-
-            this.verify_text(element, C.labels.autoDisposition[label](labelValue));
-        });
+    verify_label(element, label, totalCount) {
+        this.verify_text(element, C.labels.autoDisposition[label](totalCount));
     }
 
 
-    verify_Redistribute_Case_Review_Date_labels(storeNewValuesToCache, importedPastDueCases = 1, importedUpcomingCases = 2) {
-        if (storeNewValuesToCache) {
-            this.get_statistics_for_Review_Dates();
-            importedPastDueCases = 0;
-            importedUpcomingCases = 0;
-        }
+    fetch_current_counts_on_Redistribute_Case_Review_Date_section() {
+        this.get_statistics_for_Review_Dates();
+    }
 
-        //this.verifY_label(casesWithNoReviewDate, 'casesWithNoReviewDate', 0);
-        this.verifY_label(casesWithReviewDatePastDue, 'casesWithReviewDatePastDue', importedPastDueCases);
-        this.verifY_label(casesWithUpcomingReviewDate, 'casesWithUpcomingReviewDate', importedUpcomingCases);
+    verify_Redistribute_Case_Review_Date_labels(importedNoReviewDateCases = 0, importedPastDueCases = 0, importedUpcomingCases = 0) {
+
+        let totalCasesWithNoReviewDate, totalCasesWithReviewDatePastDue, totalCasesWithUpcomingReviewDate
+
+        cy.getLocalStorage('casesWithNoReviewDate').then(oldCasesWithNoReviewDate => {
+            cy.getLocalStorage('casesWithReviewDatePastDue').then(oldCasesWithReviewDatePastDue => {
+                cy.getLocalStorage('casesWithUpcomingReviewDate').then(oldCasesWithUpcomingReviewDate => {
+                    totalCasesWithNoReviewDate = parseInt(oldCasesWithNoReviewDate) + importedNoReviewDateCases
+                    totalCasesWithReviewDatePastDue = parseInt(oldCasesWithReviewDatePastDue) + importedPastDueCases
+                    totalCasesWithUpcomingReviewDate = parseInt(oldCasesWithUpcomingReviewDate) + importedUpcomingCases
+
+                    this.verify_label(casesWithNoReviewDate, 'casesWithNoReviewDate', totalCasesWithNoReviewDate);
+                    this.verify_label(casesWithReviewDatePastDue, 'casesWithReviewDatePastDue', totalCasesWithReviewDatePastDue);
+                    this.verify_label(casesWithUpcomingReviewDate, 'casesWithUpcomingReviewDate', totalCasesWithUpcomingReviewDate);
+                })
+            })
+        })
+
+        return this;
+    };
+
+    verify_counts_after_redistributing_cases_with_no_dates(importedNoReviewDateCases = 0,  importedPastDueCases = 0, importedUpcomingCases = 0) {
+
+        let totalCasesWithNoReviewDate, totalCasesWithReviewDatePastDue, totalCasesWithUpcomingReviewDate
+
+        cy.getLocalStorage('casesWithNoReviewDate').then(oldCasesWithNoReviewDate => {
+            cy.getLocalStorage('casesWithReviewDatePastDue').then(oldCasesWithReviewDatePastDue => {
+                cy.getLocalStorage('casesWithUpcomingReviewDate').then(oldCasesWithUpcomingReviewDate => {
+                    totalCasesWithNoReviewDate = parseInt(oldCasesWithNoReviewDate) + importedNoReviewDateCases
+                    totalCasesWithReviewDatePastDue = parseInt(oldCasesWithReviewDatePastDue) + importedPastDueCases
+                    totalCasesWithUpcomingReviewDate = parseInt(oldCasesWithUpcomingReviewDate)  + importedUpcomingCases
+
+                    this.verify_label(casesWithNoReviewDate, 'casesWithNoReviewDate', 0);
+                    this.verify_label(casesWithReviewDatePastDue, 'casesWithReviewDatePastDue', totalCasesWithReviewDatePastDue);
+                    this.verify_label(casesWithUpcomingReviewDate, 'casesWithUpcomingReviewDate', totalCasesWithUpcomingReviewDate + totalCasesWithNoReviewDate);
+                })
+            })
+        })
 
         return this;
     };
@@ -206,7 +247,7 @@ export default class AutoDispoPage extends BasePage {
 
         function retryFewTimesBeforeMakingAssertion(i = 0) {
             for (i; i < 5; i++) {
-               //cy.log('trying-- #' + i)
+                //cy.log('trying-- #' + i)
                 if (!isValueUpdated) {
                     self.mainContainer().invoke('text').then(function (text) {
                         if (!text.includes('Closed Date')) {

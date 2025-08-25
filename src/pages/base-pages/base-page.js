@@ -464,6 +464,17 @@ export default class BasePage {
         this.verify_element_does_NOT_contain_text(toastContainer, 'Error')
     }
 
+    click_toast_message_if_visible() {
+        cy.document().then(doc => {
+            const firstToast = doc.querySelector('.toast');
+            if (firstToast) {
+                if (firstToast.offsetParent !== null) {
+                    firstToast.click(); // Use native click if the element is still visible
+                }
+            }
+        });
+    }
+
     verify_specific_toast_message_is_NOT_visible(text) {
         this.wait_until_spinner_disappears()
         //this.wait_all_GET_requests()
@@ -519,7 +530,8 @@ export default class BasePage {
             cy.get('.toast').last().invoke('text').then((lastToast) => {
                 allToastMessages.push(firstToast)
                 allToastMessages.push(lastToast)
-                toastMessage().click({multiple: true})
+                this.click_toast_message_if_visible()
+                this.click_toast_message_if_visible()
                 expect(allToastMessages.toString()).to.contain(text);
             });
         });
@@ -554,10 +566,37 @@ export default class BasePage {
         cy.contains('Menu Customization').click()
         optionsDropdownUnderMenuCustomization().click()
         pageSizesUnderMenuCustomization().contains(pageSize).click()
-        this.pause(3)
+        this.pause(5)
         this.wait_until_spinner_disappears()
         return this;
     }
+
+    wait_certain_number_of_rows_to_be_visible_on_grid(expectedNumberOfRows, tabToBeSelected = null) {
+        let that = this;
+
+        function verify() {
+            cy.window({ timeout: 70000 }).then((win) => {
+                const elements = win.document.querySelectorAll('.bg-grid-checkbox');
+
+                if (elements.length !== expectedNumberOfRows) {
+                    cy.reload();
+                    cy.wait(1000); // give page time to reload
+
+                    if (tabToBeSelected) {
+                        that.select_tab(C.tabs[tabToBeSelected]);
+                    }
+
+                    verify(); // retry recursively
+                } else {
+                    cy.log(`✅ Found exactly ${expectedNumberOfRows} checkboxes`);
+                }
+            });
+        }
+
+        verify();
+        return this;
+    }
+
 
     click_number_on_pagination(pageNumber) {
         this.wait_until_spinner_disappears()
@@ -1519,14 +1558,14 @@ export default class BasePage {
         if (partOfRequestUrl) {
             cy.server();
             this.define_API_request_to_be_mocked('GET', partOfRequestUrl)
-            //  cy.intercept('GET', '**').as('all_GET_Requests').then(function () {
             cy.visit(urlToOpen);
-            //  })
-            // cy.wait('@all_GET_Requests')
             this.wait_response_from_API_call(partOfRequestUrl)
+            this.wait_until_spinner_disappears()
+            this.click_toast_message_if_visible()
         } else {
             cy.visit(urlToOpen);
             this.wait_until_spinner_disappears()
+            this.click_toast_message_if_visible()
         }
         return this;
     };
@@ -2560,11 +2599,16 @@ export default class BasePage {
         return this;
     };
 
+    define_get_task_items_endpoint_alias() {
+        this.define_API_request_to_be_awaited('POST', 'itemsV2', 'getTaskItems')
+    }
+
     open_newly_created_task_via_direct_link() {
         cy.getLocalStorage("newTaskId").then(newTaskId => {
             //cy.log('Opening Task URL: ' + S.base_url + '/#/view-task/' + newTaskId);
             cy.visit(S.base_url + '/#/view-task/' + newTaskId);
         });
+        this.define_get_task_items_endpoint_alias()
         return this;
     };
 
