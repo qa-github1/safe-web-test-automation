@@ -28,7 +28,8 @@ describe('Edit Case', function () {
         api.cases.add_new_case(D.newCase.caseNumber);
 
         ui.app.open_newly_created_case_via_direct_link()
-            .click_Edit();
+            .click_Edit()
+            .verify_text_is_present_on_main_container('Cancel')
         ui.caseView.remove_specific_values_on_multi_select_fields([currentCaseOfficer, currentTag])
              .edit_all_values(D.editedCase)
              .click_Save()
