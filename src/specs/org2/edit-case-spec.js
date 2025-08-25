@@ -49,6 +49,7 @@ describe('Edit Case', function () {
         D.generateNewDataSet();
 
         api.org_settings.enable_all_Case_fields();
+        api.auto_disposition.edit(false)
         api.cases.add_new_case(D.newCase.caseNumber);
 
         ui.app.open_newly_created_case_via_direct_link()
