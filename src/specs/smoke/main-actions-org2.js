@@ -8,6 +8,7 @@ const helper = require("../../support/e2e-helper");
 
 let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
 let powerUser = S.getUserData(S.userAccounts.powerUser);
+let admin_userGroup = S.selectedEnvironment.admin_userGroup;
 let approvedForReleaseItem = {}
 
 before(function () {
@@ -295,10 +296,8 @@ describe('Item Transactions', function () {
 
     });
 });
-
-describe('Person', function () {
-    it('1.1.2.' +
-        'Add task with all fields' +
+describe('Task', function () {
+    it('Add task with all fields' +
         '-- assign to 1 user' +
         '-- attach 1 case, 1 item and 1 person' +
         '-- override template content' +
@@ -306,14 +305,12 @@ describe('Person', function () {
         '--verify values on grid' +
         '-- check email notification with more Task details ', function () {
 
-        // it(
-        //     '*** Add/Edit/Search Person ' +
-        //     '*** Add/Search Person Note  ' +
-        //     '*** Add/Search Person Media', function () {
-
         ui.app.clear_gmail_inbox(S.gmailAccount);
         ui.app.log_title(this);
         api.auth.get_tokens(orgAdmin);
+
+        let powerUser2 = S.userAccounts.basicUser;
+        api.permissions.assign_multiple_users_to_User_Group([powerUser.id, powerUser2.id], admin_userGroup)
         D.generateNewDataSet()
         api.cases.add_new_case()
         api.items.add_new_item()

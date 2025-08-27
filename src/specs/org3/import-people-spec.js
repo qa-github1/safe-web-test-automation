@@ -10,7 +10,7 @@ let user = S.userAccounts.orgAdmin;
 
 describe('Import People', function () {
 
-    it('1. Import and verify People with all fields ' +
+    it('1. Precheck and Import People with all fields ' +
         '- 1 person linked to 1 case, other person linked to 2 cases', function () {
         ui.app.log_title(this);
         let fileName = 'PeopleImport_allFields_' + S.domain;
@@ -36,11 +36,15 @@ describe('Import People', function () {
         cy.generate_excel_file(fileName, E.peopleImportDataWithAllFields);
         api.org_settings.enable_all_Person_fields();
 
-        ui.menu.click_Tools__Data_Import();
-        ui.importer.upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.people)
-            .verify_toast_message([
-                C.toastMsgs.importComplete,
-                3 + C.toastMsgs.recordsImported]);
+        ui.importer.precheck_import_data(fileName, C.importTypes.people)
+
+        ui.menu.click_Search__People();
+        ui.searchPeople.enter_Business_Name(D.newPerson.businessName)
+            .click_button(C.buttons.search)
+            .wait_until_spinner_disappears()
+            .verify_records_count_on_grid(0);
+
+        ui.importer.import_data(fileName, C.importTypes.people)
 
         ui.menu.click_Search__People();
         ui.searchPeople.enter_Business_Name(person1.businessName)
@@ -87,11 +91,7 @@ describe('Import People', function () {
         cy.generate_excel_file(fileName, E.peoplemportDataWithMinimumFields);
 
         api.org_settings.disable_Person_fields();
-
-        ui.menu.click_Tools__Data_Import();
-        ui.importer.upload_then_Map_and_Submit_file_for_importing_People(fileName, true, true)
-           // .verify_toast_message([C.toastMsgs.importComplete, 1 + C.toastMsgs.recordsImported])
-            .check_import_status_on_grid('1 records imported')
+        ui.importer.import_data(fileName, C.importTypes.people)
 
         ui.menu.click_Search__People();
         ui.searchPeople.enter_First_Name(D.newPerson.firstName)
@@ -104,33 +104,6 @@ describe('Import People', function () {
             .verify_all_values_on_history(D.newPerson)
             .click_button_on_modal(C.buttons.cancel)
             .verify_title_on_active_tab(1)
-    });
-
-    it('3. Import Person with all fields - Precheck Only', function () {
-        ui.app.log_title(this);
-        let fileName = 'People_PrecheckOnly_' + S.domain;
-        let user = S.userAccounts.orgAdmin;
-        api.auth.get_tokens(user);
-
-        D.getNewCaseData();
-        D.getNewPersonData(D.newCase);
-        E.generateDataFor_PEOPLE_Importer([D.newPerson]);
-        api.cases.add_new_case(D.newCase.caseNumber);
-
-        cy.generate_excel_file(fileName, E.peopleImportDataWithAllFields);
-        api.org_settings.enable_all_Person_fields();
-
-        ui.menu.click_Tools__Data_Import();
-        ui.importer.upload_then_Map_and_Submit_file_for_precheck(fileName, C.importTypes.people)
-            .verify_toast_message([
-                C.toastMsgs.precheckComplete,
-                1 + C.toastMsgs.recordsPrechecked]);
-
-        ui.menu.click_Search__People();
-        ui.searchPeople.enter_Business_Name(D.newPerson.businessName)
-            .click_button(C.buttons.search)
-            .wait_until_spinner_disappears()
-            .verify_records_count_on_grid(0);
     });
 
 

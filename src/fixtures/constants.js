@@ -938,7 +938,8 @@ C.pages = {
         numberOfStandardColumnsReduced: 6,
     },
     userAdmin: {
-        numberOfStandardColumns: 25
+        numberOfStandardColumns: 25,
+        url: 'users'
     },
     taskList: {
         numberOfStandardColumns: 16,

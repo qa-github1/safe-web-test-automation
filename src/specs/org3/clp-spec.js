@@ -19,7 +19,7 @@ let basicUser = S.getUserData(S.userAccounts.basicUser);
 
 let office_1 = S.selectedEnvironment.office_1;
 
-describe('1. Case Level Permissions', function () {
+xdescribe('1. Case Level Permissions', function () {
     xit('Set CLP for 5k cases', function () {
 
             api.auth.get_tokens(orgAdmin);

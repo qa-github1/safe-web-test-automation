@@ -198,7 +198,7 @@ export default class ImportPage extends BasePage {
         if (isUpdate) {
             this.retry_failed_import(playIconInTheFirstRow)
         }
-       //  this.verify_toast_message([C.toastMsgs.importComplete]);
+        //  this.verify_toast_message([C.toastMsgs.importComplete]);
         this.check_import_status_on_grid('records imported')
         return this;
     };
@@ -210,7 +210,7 @@ export default class ImportPage extends BasePage {
             this.define_API_request_to_be_awaited_with_last_part_of_url('POST', 'Import', 'importData')
         }
 
-        menu.click_Tools__Data_Import();
+        this.open_direct_url_for_page()
         this.upload_file_and_verify_toast_msg(fileName + '.xlsx', C.toastMsgs.uploadComplete, timeoutInMinutes)
             .save_import_type_and_name(importType, isUpdate)
             .click_element_if_does_NOT_have_a_class(precheckIconInTheFirstRow(), 'fa-gray-inactive')
@@ -263,15 +263,20 @@ export default class ImportPage extends BasePage {
         this.toastMessage().should('not.exist');
         cy.verifyTextAndRetry(() =>
                 cy.get('[ng-repeat="item in data.displayedItems track by $index"]').first().invoke('text'),
-            text
+            text,
+            {
+                maxAttempts: 90,
+                retryInterval: 1000,
+                clickReloadIconBetweenAttempts: false,
+            }
         );
         return this;
     };
 
 
     check_import_status_on_grid(text) {
-       // this.verify_text_is_present_on_main_container(text)
-      this.verify_text_is_present_on_first_row(text)
+        // this.verify_text_is_present_on_main_container(text)
+        this.verify_text_is_present_on_first_row(text)
         return this
     }
 

@@ -7,7 +7,7 @@ const ui = require('../../pages/ui-spec');
 
 describe('Import Media', function () {
 
-    it('1 Import Media', function () {
+    it('1 Precheck and Import Media', function () {
         ui.app.log_title(this);
         let fileName = 'Media_allFields_'+ S.domain;
         let user = S.userAccounts.orgAdmin;
@@ -20,14 +20,13 @@ describe('Import Media', function () {
             E.generateDataFor_MEDIA_Importer(D.newItem, JSON.parse(newItem).barcode);
             cy.generate_excel_file(fileName, E.mediaWithAllFields);
 
-            ui.importer.open_direct_url_for_page()
-                .upload_then_Map_and_Submit_file_for_precheck(fileName, C.importTypes.media)
+            ui.importer.precheck_import_data(fileName, C.importTypes.media)
             ui.caseView.open_newly_created_item_via_direct_link()
                 .select_tab(C.tabs.media)
                 .verify_text_is_NOT_present_on_main_container(E.mediaWithAllFields[1][13])
 
-            ui.importer.open_direct_url_for_page()
-                .upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.media)
+            ui.importer.reload_page()
+                .import_data(fileName, C.importTypes.media)
             ui.caseView.open_newly_created_item_via_direct_link()
                 .select_tab(C.tabs.media)
                 .verify_text_is_present_on_main_container(E.mediaWithAllFields[1][13])

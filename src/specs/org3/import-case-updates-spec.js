@@ -37,8 +37,6 @@ describe('Import Case Updates', function () {
 
         ui.app.generate_excel_file(fileName, E.caseImportDataWithAllFields);
 
-        ui.menu.click_Tools__Data_Import();
-
         // verify case data precheck
         ui.importer.precheck_import_data(fileName, C.importTypes.cases, true)
         ui.app.open_newly_created_case_via_direct_link();

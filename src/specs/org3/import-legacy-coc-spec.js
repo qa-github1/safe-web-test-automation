@@ -25,14 +25,12 @@ describe('Import Legacy Chain of Custody', function () {
             E.generateDataFor_CoC_Importer(D.newItem, JSON.parse(newItem).barcode, 5);
             cy.generate_excel_file(fileName, E.chainOfCustodyWithAllFields);
 
-            ui.importer.open_direct_url_for_page()
-                .precheck_import_data(fileName, C.importTypes.legacyCoC)
+            ui.importer.precheck_import_data(fileName, C.importTypes.legacyCoC)
             ui.caseView.open_newly_created_item_via_direct_link()
                 .select_tab(C.tabs.chainOfCustody)
                 .verify_text_is_NOT_present_on_main_container(E.chainOfCustodyWithAllFields[1][9])
 
-            ui.importer.open_direct_url_for_page()
-                .import_data(fileName, C.importTypes.legacyCoC)
+            ui.importer.import_data(fileName, C.importTypes.legacyCoC)
             ui.caseView.open_newly_created_item_via_direct_link()
                 .select_tab(C.tabs.chainOfCustody)
                 .verify_text_is_present_on_main_container(E.chainOfCustodyWithAllFields[1][9])

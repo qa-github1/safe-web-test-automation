@@ -143,9 +143,7 @@ describe('Services', function () {
 
         D.generateNewDataSet();
         D.getNewItemData(D.newCase);
-        D.newCase.caseOfficers_importFormat =X
-            S.userAccounts.orgAdmin.email + ';' +
-            S.selectedEnvironment.admin_userGroup.name
+        D.newCase.caseOfficers_importFormat =S.userAccounts.orgAdmin.email + ';' + S.selectedEnvironment.admin_userGroup.name
         D.newCase.caseOfficers = [S.userAccounts.orgAdmin.name, S.selectedEnvironment.admin_userGroup.name]
 
         E.generateDataFor_CASES_Importer([D.newCase]);

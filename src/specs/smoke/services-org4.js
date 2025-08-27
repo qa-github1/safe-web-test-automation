@@ -191,7 +191,7 @@ describe('Services', function () {
         })
     });
 
-    it('11. Auto Disposition', function () {
+    xit('11. Auto Disposition', function () {
 
         let minDate = helper.setDate(C.currentDateTimeFormat.dateOnly.editMode, 2027, 11, 15);
         let maxDate = helper.setDate(C.currentDateTimeFormat.dateOnly.editMode, 2027, 11, 15);

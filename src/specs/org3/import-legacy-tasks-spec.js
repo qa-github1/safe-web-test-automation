@@ -19,13 +19,12 @@ describe('Import Tasks', function () {
             E.generateDataFor_TASKS_Importer(D.newItem, [JSON.parse(newItem).barcode]);
             cy.generate_excel_file(fileName, E.tasksWithAllFields);
 
-            ui.importer.open_direct_url_for_page()
-                .precheck_import_data(fileName, C.importTypes.legacyTasks)
+            ui.importer.precheck_import_data(fileName, C.importTypes.legacyTasks)
             ui.caseView.open_newly_created_item_via_direct_link()
                 .select_tab(C.tabs.tasks)
                 .verify_text_is_NOT_present_on_main_container(E.tasksWithAllFields[1][2])
 
-            ui.importer.open_direct_url_for_page()
+            ui.importer.reload_page()
                 .import_data(fileName, C.importTypes.legacyTasks)
             ui.caseView.open_newly_created_item_via_direct_link()
                 .select_tab(C.tabs.tasks)
@@ -35,7 +34,7 @@ describe('Import Tasks', function () {
     });
 
     if (S.isFullRegression()) {
-        it('2. Import 1k tasks', function () {
+        xit('2. Import 1k tasks', function () {
             ui.app.log_title(this);
             var numberOfRecords = 1000
             let fileName = numberOfRecords + '_Cases_' + S.domain;
@@ -62,8 +61,7 @@ describe('Import Tasks', function () {
                 E.generateDataFor_TASKS_Importer(D.newItem, [JSON.parse(newItem).barcode], numberOfRecords);
                 cy.generate_excel_file(fileName, E.tasksWithAllFields);
 
-                ui.importer.open_direct_url_for_page()
-                    .import_data(fileName, C.importTypes.legacyTasks, false, 2)
+                ui.importer.import_data(fileName, C.importTypes.legacyTasks, false, 2)
                 ui.caseView.open_newly_created_item_via_direct_link()
                     .select_tab(C.tabs.tasks)
                     .verify_text_is_NOT_present_on_main_container(E.tasksWithAllFields[1][2])

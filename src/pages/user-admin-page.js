@@ -300,9 +300,9 @@ export default class UserAdminPage extends BasePage {
     }
 
 
-    verify_user_is_not_shown_up_on_grid() {
-        this.verify_records_count_on_grid(0);
-        return this;
+    open_direct_url_for_page() {
+        this.open_url_and_wait_all_GET_requests_to_finish(S.base_url + '/#/' + C.pages.userAdmin.url)
+        return this
     }
 
     deactivateUser(userObject, searchForUser = true) {

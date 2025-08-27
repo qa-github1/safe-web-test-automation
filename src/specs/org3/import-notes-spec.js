@@ -6,9 +6,6 @@ const api = require('../../api-utils/api-spec');
 const ui = require('../../pages/ui-spec');
 S.setEnvironmentProperties();
 
-
-
-
 describe('Import Notes', function () {
 
     it('1 Import Notes for Case', function () {
@@ -21,19 +18,12 @@ describe('Import Notes', function () {
         cy.generate_excel_file(fileName, E.notesWithAllFields);
         api.cases.add_new_case(D.newCase.caseNumber);
 
-        ui.importer.open_direct_url_for_page()
-            .impo(fileName, C.importTypes.notes, true)
-            .verify_toast_message([
-                C.toastMsgs.precheckComplete,
-                1 + C.toastMsgs.recordsPrechecked]);
+        ui.importer.precheck_import_data(fileName, C.importTypes.notes)
         ui.caseView.open_newly_created_case_via_direct_link()
             .select_tab(C.tabs.notes)
             .verify_text_is_NOT_present_on_main_container(E.notesWithAllFields[1][6])
 
-        ui.importer.open_direct_url_for_page()
-            .upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.notes, true)
-           // .verify_toast_message([C.toastMsgs.importComplete, 1 + C.toastMsgs.recordsImported])
-                    .check_import_status_on_grid('1 records imported')
+        ui.importer.import_data(fileName, C.importTypes.notes)
         ui.caseView.open_newly_created_case_via_direct_link()
             .select_tab(C.tabs.notes)
             .verify_text_is_present_on_main_container(E.notesWithAllFields[1][6])
@@ -52,11 +42,8 @@ describe('Import Notes', function () {
             E.generateDataFor_NOTES_Importer(D.newCase, JSON.parse(newItem).barcode);
             cy.generate_excel_file(fileName, E.notesWithAllFields);
 
-            ui.menu.click_Tools__Data_Import();
-            ui.importer.upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.notes, false)
-                .verify_toast_message([
-                    C.toastMsgs.importComplete,
-                    1 + C.toastMsgs.recordsImported], false, 1200000);
+            ui.importer.precheck_import_data(fileName, C.importTypes.notes)
+
             ui.itemView.open_newly_created_item_via_direct_link()
                 .select_tab(C.tabs.notes)
                 .verify_text_is_present_on_main_container(E.notesWithAllFields[1][6])

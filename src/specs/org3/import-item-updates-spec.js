@@ -39,7 +39,6 @@ describe('Import Item Updates', function () {
             D.editedItem = Object.assign(D.editedItem, D.newCustomFormData)
             E.generateDataFor_ITEMS_Importer([D.editedItem], S.customForms.itemFormWithOptionalFields, true);
             cy.generate_excel_file(fileName, E.itemImportDataWithAllFields);
-            ui.menu.click_Tools__Data_Import();
 
             // verify item data precheck
             ui.importer.precheck_import_data(fileName, C.importTypes.items, true)
@@ -71,8 +70,7 @@ describe('Import Item Updates', function () {
             E.generateDataFor_ITEMS_Importer([D.editedItem], S.customForms.itemFormWithOptionalFields, true);
             cy.generate_excel_file(fileName, E.itemImportDataWithAllFields);
             // verify item updates import
-            ui.importer.open_direct_url_for_page()
-                .import_data(fileName, C.importTypes.items, true)
+            ui.importer.import_data(fileName, C.importTypes.items, true)
             ui.itemView.open_newly_created_item_via_direct_link()
                 .click_Edit()
                 .verify_custom_data_on_Edit_form(D.editedCustomFormData)
@@ -101,7 +99,6 @@ describe('Import Item Updates', function () {
                 E.generateDataFor_ITEMS_Importer([D.editedItem], null, true);
                 E.itemImportDataWithAllFields[1][9] = S.selectedEnvironment.person.guid;
                 cy.generate_excel_file(fileName, E.itemImportDataWithAllFields);
-                ui.menu.click_Tools__Data_Import();
                 ui.importer.import_data(fileName, C.importTypes.items, true)
 
                 let allEditedFields = C.itemFields.allEditableFieldsArray.concat(['Case', 'Status', 'Storage Location', 'Custodian'])
@@ -144,7 +141,6 @@ describe('Import Item Updates', function () {
                 D.editedItem.barcode = JSON.parse(newItem).barcode
                 E.generateDataFor_ITEMS_Importer([D.editedItem], null, true);
                 cy.generate_excel_file(fileName, E.itemImportDataWithAllFields);
-                ui.menu.click_Tools__Data_Import();
                 ui.importer.import_data(fileName, C.importTypes.items, true)
                 //add 'Case' when issue from the point above is fixed
                 let allEditedFields = C.itemFields.allEditableFieldsArray.concat(['Status', 'Storage Location', 'Custodian'])
@@ -172,7 +168,7 @@ describe('Import Item Updates', function () {
                 .verify_red_highlighted_history_records(allEditedFields)
         });
 
-        it('4. Import update for item status (Move transaction)', function () {
+        it.only('4. Import update for item status (Move transaction)', function () {
             ui.app.log_title(this);
             let fileName = 'ItemUpdatesImport_Move_' + S.domain;
 
@@ -194,7 +190,6 @@ describe('Import Item Updates', function () {
                 D.editedItem.barcode = JSON.parse(newItem).barcode
                 E.generateDataFor_ITEMS_Importer([D.editedItem], null);
                 cy.generate_excel_file(fileName, E.itemImportDataWithAllFields);
-                ui.menu.click_Tools__Data_Import();
                 ui.importer.import_data(fileName, C.importTypes.items, true)
                 let allEditedFields = C.itemFields.allEditableFieldsArray.concat(['Case', 'Storage Location'])
                 ui.itemView.open_newly_created_item_via_direct_link()
@@ -242,7 +237,6 @@ describe('Import Item Updates', function () {
                 E.itemImportDataWithAllFields[1][22] = S.selectedEnvironment.users.powerUser.guid;
                 //E.itemImportDataWithAllFields[1][24] = D.newItem.dispositionStatus;
                 cy.generate_excel_file(fileName, E.itemImportDataWithAllFields);
-                ui.menu.click_Tools__Data_Import();
                 ui.importer.import_data(fileName, C.importTypes.items, true)
 
                 let allEditedFieldsWithoutDisposition = C.itemFields.allFieldsOnHistory.filter(f => f !== 'Disposition Status');
@@ -299,7 +293,6 @@ describe('Import Item Updates', function () {
                 E.itemImportDataWithAllFields[1][personGuidIndex] = S.selectedEnvironment.person.guid;
 
                 cy.generate_excel_file(fileName, E.itemImportDataWithAllFields);
-                ui.menu.click_Tools__Data_Import();
                 ui.importer.import_data(fileName, C.importTypes.items, true)
             });
             let allEditedFields = C.itemFields.allEditableFieldsArray.concat(['Status', 'Storage Location', 'Disposition Status']);

@@ -31,8 +31,6 @@ describe('Import Items', function () {
 
         api.org_settings.enable_all_Item_fields();
 
-        ui.menu.click_Tools__Data_Import();
-
         // verify item data precheck
         ui.importer.precheck_import_data(fileName, C.importTypes.items)
         ui.searchItem.run_search_by_Item_Description(D.newItem.description)
@@ -113,7 +111,6 @@ describe('Import Items', function () {
             E.generateDataFor_ITEMS_Importer([D.newItem]);
             cy.generate_excel_file(fileName, E.itemImportDataWithAllFields);
 
-            ui.menu.click_Tools__Data_Import();
             ui.importer.import_data(fileName, C.importTypes.items)
 
             ui.searchItem.run_search_by_Item_Description(D.newItem.description)
@@ -144,7 +141,6 @@ describe('Import Items', function () {
 
             api.org_settings.disable_Item_fields([C.itemFields.description]);
 
-            ui.menu.click_Tools__Data_Import();
             ui.importer.import_data(fileName, C.importTypes.items)
 
             ui.menu.click_Search__Item();
