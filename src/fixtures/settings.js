@@ -2251,17 +2251,29 @@ S.PENTEST_1 = {
         }
     },
     units: {
-        unit1: {
+        div1_unit1: {
             name: 'UnitA',
-            id: 63
+            id: null
         },
-        unit2: {
+        div1_unit2: {
             name: 'UnitB',
-            id: 64
+            id: null
         },
-        unit3: {
+        div1_unit3: {
             name: 'UnitC',
-            id: 85
+            id: null
+        },
+        div2_unit1: {
+            name: 'UnitA',
+            id: null
+        },
+        div2_unit2: {
+            name: 'UnitB',
+            id: null
+        },
+        div2_unit3: {
+            name: 'UnitC',
+            id: null
         }
     },
     forms: {

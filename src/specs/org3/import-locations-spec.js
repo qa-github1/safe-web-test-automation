@@ -31,7 +31,7 @@ describe('Import Locations', function () {
         ui.app.generate_excel_file(fileName, E.locationsImportAllFields);
 
         ui.importer.precheck_import_data(fileName, C.importTypes.locations)
-        ui.menu.click__Storage_Locations()
+        ui.menu.click_Tools__Storage_Locations()
             .verify_text_is_present_on_main_container(S.selectedEnvironment.locations[0].name)
             .verify_text_is_NOT_present_on_main_container(E.parentLocation1.name)
 
@@ -63,7 +63,7 @@ describe('Import Locations', function () {
 
         ui.importer.import_data(fileName, C.importTypes.locations)
 
-        ui.menu.click__Storage_Locations()
+        ui.menu.click_Tools__Storage_Locations()
             .verify_text_is_present_on_main_container(E.parentLocation1.name)
         ui.storageLocations.verify_location_properties(E.parentLocation1)
     });

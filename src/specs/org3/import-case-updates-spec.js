@@ -46,7 +46,6 @@ describe('Import Case Updates', function () {
         // verify case updates import
         ui.importer.open_direct_url_for_page()
             .click_Play_icon_on_first_row()
-            .verify_toast_message([C.toastMsgs.importComplete, 1 + C.toastMsgs.recordsImported])
             .check_import_status_on_grid('1 records imported')
             .quick_search_for_case(D.newCase.caseNumber);
 

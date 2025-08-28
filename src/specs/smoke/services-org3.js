@@ -150,7 +150,7 @@ describe('Services', function () {
 
         ui.app.generate_excel_file(fileName, E.caseImportDataWithAllFields);
         api.org_settings.enable_all_Case_fields();
-        api.org_settings.enable_all_Item_fields();
+        api.org_settings.enable_all_Item_fields([C.itemFields.itemBelongsTo]);
         api.org_settings.update_org_settings(true, true);
         api.auto_disposition.edit(true);
 
@@ -171,7 +171,7 @@ describe('Services', function () {
         D.newItem.caseNumber = D.newCase.caseNumber
         ui.menu.click_Add__Item();
         ui.addItem.enter_Case_Number_and_select_on_typeahead(D.newCase.caseNumber)
-            .populate_all_fields_on_both_forms(D.newItem, false, false)
+            .populate_all_fields_on_both_forms(D.newItem, false, true)
             .select_post_save_action(C.postSaveActions.viewAddedItem)
             .click_Save(D.newItem)
             .verify_Error_toast_message_is_NOT_visible();

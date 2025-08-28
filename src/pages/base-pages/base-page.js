@@ -720,38 +720,37 @@ export default class BasePage {
     enter_value_and_retype_last_character_if_typeahead_did_not_appear(element, value, typeaheadSelector) {
         const lastChar = value.slice(-1);
 
-        element()
-            .clear()
-            .invoke('val', value)
-            .trigger('input')
-            .then($el => {
-                cy.wait(500).then(() => {
-                    cy.document().then(doc => {
-                        let typeaheadExists = !!doc.querySelector(typeaheadSelector);
+        function attempt($el, attemptNum = 1) {
+            if (attemptNum === 1) {
+                // First attempt: enter full value
+                cy.log(`Typeahead attempt ${attemptNum}: entering full value`);
+                cy.wrap($el)
+                    .clear()
+                    .invoke('val', value)
+                    .trigger('input');
+            } else {
+                // Subsequent attempts: backspace + retype last char
+                cy.log(`Typeahead attempt ${attemptNum}: retyping last character`);
+                cy.wrap($el)
+                    .type('{backspace}')
+                    .type(lastChar)
+                    .trigger('input');
+            }
 
-                        if (!typeaheadExists) {
-                            cy.wrap($el)
-                                .type('{backspace}')
-                                .type(lastChar)
-                                .trigger('input'); // ensure input event is triggered again
+            cy.wait(500).then(() => {
+                cy.document().then(doc => {
+                    const typeaheadExists = !!doc.querySelector(typeaheadSelector);
 
-                            cy.wait(500).then(() => {
-                                cy.document().then(doc2 => {
-                                    let retryTypeaheadExists = !!doc2.querySelector(typeaheadSelector);
-                                    if (!retryTypeaheadExists) {
-                                        //third attempt to find typeahead
-                                        cy.wrap($el)
-                                            .type('{backspace}')
-                                            .type(lastChar)
-                                            .trigger('input');
-                                        cy.wait(500);
-                                    }
-                                });
-                            });
-                        }
-                    });
+                    if (!typeaheadExists && attemptNum < 5) {
+                        attempt($el, attemptNum + 1);
+                    }
                 });
             });
+        }
+
+        element().then($el => {
+            attempt($el, 1);
+        });
     }
 
 
@@ -2370,7 +2369,10 @@ export default class BasePage {
         }
 
         if (Array.isArray(cellContent)) {
-            resultsTableHeader().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
+            resultsTableHeader()
+                .find(headerCellTag)
+                .filter((i, el) => Cypress.$(el).text().trim() === columnTitle)
+                .not('.ng-hide').invoke('index').then((i) => {
                 tableStriped().find('td').eq(i).invoke('text').then(function (textFound) {
                     cellContent.forEach(function (value) {
                         if (value === '') {
@@ -2388,8 +2390,10 @@ export default class BasePage {
             //     });
             // });
             resultsTableHeader()
-                .contains(headerCellTag, columnTitle)
-                .not('ng-hide')
+                .find(headerCellTag)
+                .filter((i, el) => Cypress.$(el).text().trim() === columnTitle)
+                //.contains(headerCellTag, columnTitle)
+                .not('.ng-hide')
                 .invoke('index')
                 .then((i) => {
                     const getCellText = () => tableStriped().find('td').eq(i)

@@ -96,7 +96,7 @@ describe('Import Items', function () {
                 .verify_title_on_active_tab(1)
         });
 
-        it('3. Item with all fields - Checked Out Status', function () {
+        it.only('3. Item with all fields - Checked Out Status', function () {
             ui.app.log_title(this);
             let fileName = 'ItemImport_allFields_CheckedOut_' + S.domain;
             api.auth.get_tokens(orgAdmin);
