@@ -2458,7 +2458,7 @@ S.PENTEST_2 = {
     office_2: {
         id: 1123,
         name: "Cypress Office 2",
-        orgAndOfficeName: "Web Test Autotion #2 - Cypress Office 2"
+        orgAndOfficeName: "Web Test Automtion #2 - Cypress Office 2"
     },
     org2: {
         office_1: {

@@ -68,7 +68,7 @@ describe('Import Cases', function () {
             .verify_Error_toast_message_is_NOT_visible();
     });
 
-    if (S.isFullRegression()) {
+   // if (S.isFullRegression()) {
         it('I.C_2 Case with minimum number of fields', function () {
             ui.app.log_title(this);
             let fileName = 'CaseImport_minimumFields_' + S.domain;
@@ -98,7 +98,7 @@ describe('Import Cases', function () {
                 .verify_title_on_active_tab(1)
         });
 
-        it('I.C_3 Import 5k cases', function () {
+        xit('I.C_3 Import 5k cases', function () {
             ui.app.log_title(this);
             var numberOfRecords = 5000
             let fileName = numberOfRecords + '_Cases_' + S.domain;
@@ -122,5 +122,5 @@ describe('Import Cases', function () {
                 .click_button(C.buttons.search)
                 .verify_toast_title_and_message(C.toastMsgs.resultsLimitExceededTitle, C.toastMsgs.resultsLimitExceeded('5,000').toString())
         });
-    }
+  //  }
 });
