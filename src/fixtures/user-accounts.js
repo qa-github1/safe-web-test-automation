@@ -29,15 +29,15 @@ exports.getTestAccounts = function (environment, orgNum = 1) {
             id: environment.users.orgAdmin.id,
             guid: environment.users.orgAdmin.guid
         },
-         org2Admin: {
-             title: exports.userRoles.orgAdmin,
-             email: `qa+org3admin@trackerproducts.com`,
-             password: 'Qwerty123!',
-             officeId: environment.users.org2Admin.officeId,
-             organizationId: environment.users.org2Admin.organizationId,
-             id: environment.users.org2Admin.id,
-            guid: environment.users.org2Admin.guid
-         },
+         // org2Admin: {
+         //     title: exports.userRoles.orgAdmin,
+         //     email: `qa+org3admin@trackerproducts.com`,
+         //     password: 'Qwerty123!',
+         //     officeId: environment.users.org2Admin.officeId,
+         //     organizationId: environment.users.org2Admin.organizationId,
+         //     id: environment.users.org2Admin.id,
+         //    guid: environment.users.org2Admin.guid
+         // },
         powerUser: {
             title: exports.userRoles.powerUser,
             email: `qa+org${orgNum}_poweruser@trackerproducts.com`,
@@ -82,10 +82,10 @@ exports.getTestAccounts = function (environment, orgNum = 1) {
             name: 'QA',
             firstName: 'SystemAdmin',
             lastName: 'SystemAdmin',
-            officeId: environment.users.systemAdmin.officeId,
-            organizationId: environment.users.systemAdmin.organizationId,
-            id: environment.users.systemAdmin.id,
-            guid: environment.users.systemAdmin.guid
+           officeId: environment.users.systemAdmin.officeId,
+           organizationId: environment.users.systemAdmin.organizationId,
+           id: environment.users.systemAdmin.id,
+           guid: environment.users.systemAdmin.guid
         },
         clpUser: {
             title: exports.userRoles.clpUser,

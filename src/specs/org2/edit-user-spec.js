@@ -30,7 +30,7 @@ describe('Edit User', function () {
                 .verify_user_data_on_grid(D.editedUser, false, false)
                 .select_Active_Users()
                 .search_for_user(D.editedUser.email)
-                .verify_user_is_not_shown_up_on_grid()
+                .verify_records_count_on_grid(0)
                 .select_Inactive_Users()
                 .verify_content_of_first_row_in_results_table(D.editedUser.email)
         });

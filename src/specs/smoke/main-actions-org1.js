@@ -32,7 +32,6 @@ describe('Case', function () {
             api.auto_disposition.edit(true);
             api.org_settings.set_Org_Level_Case_Number_formatting(false, false, false)
 
-
             //ADD Case
             ui.menu.click_Add__Case();
             ui.addCase.verify_Add_Case_page_is_open()
@@ -126,7 +125,6 @@ describe('Case', function () {
                 .click_Edit()
                 .verify_edited_and_not_edited_values_on_Case_Edit_form(C.caseFields.massUpdateModal, D.editedCase, D.newCase)
         });
-
 });
 
 describe('Item', function () {

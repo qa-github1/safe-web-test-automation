@@ -28,8 +28,9 @@ describe('Edit Case', function () {
         api.cases.add_new_case(D.newCase.caseNumber);
 
         ui.app.open_newly_created_case_via_direct_link()
-            .click_Edit();
-        ui.caseView.remove_specific_values_on_multi_select_fields([currentCaseOfficer, currentTag])
+        ui.caseView.click_Edit()
+            //.verify_text_is_present_on_main_container('Cancel')
+            .remove_specific_values_on_multi_select_fields([currentCaseOfficer, currentTag])
              .edit_all_values(D.editedCase)
              .click_Save()
              .verify_toast_message(C.toastMsgs.saved)
@@ -51,8 +52,8 @@ describe('Edit Case', function () {
         api.cases.add_new_case(D.newCase.caseNumber);
 
         ui.app.open_newly_created_case_via_direct_link()
-            .click_Edit();
-        ui.caseView.edit_all_values(D.editedCase)
+        ui.caseView.click_Edit()
+            .edit_all_values(D.editedCase)
             .click_Save()
             .verify_toast_message(C.toastMsgs.saved)
             .reload_page()
@@ -79,8 +80,8 @@ describe('Edit Case', function () {
         let editedCase = Object.assign({}, D.editedCase);
 
         ui.app.open_newly_created_case_via_direct_link()
-            .click_Edit();
-        ui.caseView.remove_specific_values_on_multi_select_fields([currentCaseOfficer])
+        ui.caseView.click_Edit()
+            .remove_specific_values_on_multi_select_fields([currentCaseOfficer])
             .edit_all_values(D.editedCase)
             .click_Save()
             .verify_toast_message(C.toastMsgs.saved)
@@ -112,9 +113,9 @@ describe('Edit Case', function () {
         api.cases.add_new_case(D.newCase.caseNumber);
 
         ui.app.open_newly_created_case_via_direct_link()
-            .click_Edit()
         D.editedCase.caseNumber = null
-        ui.caseView.remove_specific_values_on_multi_select_fields(D.newCase.caseOfficers)
+        ui.caseView.click_Edit()
+            .remove_specific_values_on_multi_select_fields(D.newCase.caseOfficers)
             .edit_all_values(D.editedCase)
             .click_Save()
             .verify_toast_message(C.toastMsgs.saved)
@@ -146,9 +147,9 @@ describe('Edit Case', function () {
         api.cases.add_new_case(D.newCase.caseNumber);
 
         ui.app.open_newly_created_case_via_direct_link()
-            .click_Edit()
         D.editedCase.caseNumber = null
-        ui.caseView.edit_all_values(D.editedCase)
+        ui.caseView.click_Edit()
+            .edit_all_values(D.editedCase)
             .click_Save()
             .verify_toast_message(C.toastMsgs.saved)
             .reload_page()
@@ -177,8 +178,8 @@ describe('Edit Case', function () {
         api.cases.add_new_case(D.newCase.caseNumber);
 
         ui.app.open_newly_created_case_via_direct_link()
-            .click_Edit()
-        ui.caseView.edit_all_values(D.editedCase)
+        ui.caseView.click_Edit()
+            .edit_all_values(D.editedCase)
             .click_Save()
             .verify_toast_message(C.toastMsgs.saved)
             .reload_page()
@@ -205,8 +206,8 @@ describe('Edit Case', function () {
 
         api.cases.add_new_case();
         ui.app.open_newly_created_case_via_direct_link()
-            .click_Edit();
-        ui.caseView.verify_values_on_Edit_form(D.newCase, false)
+        ui.caseView.click_Edit()
+            .verify_values_on_Edit_form(D.newCase, false)
             .remove_all_optional_values(editedCase, false)
             .click_Save()
             .verify_toast_message(C.toastMsgs.saved)

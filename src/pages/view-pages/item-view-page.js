@@ -293,13 +293,13 @@ export default class ItemViewPage extends BaseViewPage {
         return this;
     }
 
-    verify_all_values_on_history(newItemObject, oldItemObject, customFormName = null) {
+    verify_all_values_on_history(newItemObject, oldItemObject, customFormName = null, isNewlyAttachedForm = false) {
         this.verify_all_values_on_history_in_specific_column(newItemObject, 'left', customFormName)
-        if (oldItemObject) this.verify_all_values_on_history_in_specific_column(oldItemObject, 'right', customFormName)
+        if (oldItemObject) this.verify_all_values_on_history_in_specific_column(oldItemObject, 'right', customFormName, isNewlyAttachedForm)
         return this;
     };
 
-    verify_all_values_on_history_in_specific_column(dataObject, leftOrRightColumn, customFormName) {
+    verify_all_values_on_history_in_specific_column(dataObject, leftOrRightColumn, customFormName, isNewlyAttachedForm) {
 
         this.verify_all_values_on_history_for_standard_fields(leftOrRightColumn,
             [
@@ -309,7 +309,7 @@ export default class ItemViewPage extends BaseViewPage {
                 ['Case', dataObject.caseNumber],
                 ['Status', dataObject.status],
                 ['Recovered At', dataObject.recoveryLocation],
-                ['Recovery Date', dataObject.recoveryDate],
+                ['Recovery Date', dataObject.recoveryDateEditMode],
                 ['Recovered By', dataObject.recoveredByName],
                 ['Storage Location', dataObject.location],
                 ['Submitted By', dataObject.submittedByName],
@@ -330,7 +330,13 @@ export default class ItemViewPage extends BaseViewPage {
         )
 
         if (customFormName) {
-            this.verify_custom_data_on_History(leftOrRightColumn, customFormName, dataObject)
+
+            if (isNewlyAttachedForm && leftOrRightColumn === 'right'){
+             this.verify_custom_data_is_not_present_on_history(leftOrRightColumn, customFormName)
+            }
+            else{
+                this.verify_custom_data_on_History(leftOrRightColumn, customFormName, dataObject)
+            }
         }
         return this;
     };
@@ -363,7 +369,7 @@ export default class ItemViewPage extends BaseViewPage {
 
 
     verify_data_on_Chain_of_Custody(columnValuePairs) {
-        this.verify_values_on_multiple_rows_on_the_grid(columnValuePairs, true)
+        this.verify_values_on_CoC(columnValuePairs, true)
         return this;
     }
 

@@ -27,8 +27,11 @@ let
     okButtonOnModal = e => cy.get('[translate="GENERAL.BUTTON_OK"]'),
     dispoAuthJobStatus = e => cy.get('[ng-if="job.status !== jobStatusEnum.error"]'),
     claimantInputFieldOnApproveForReleaseModal = e => cy.get('input[placeholder="Select person linked to the case or search for any other person"]'),
-    specificClaimantOnTypeahead = personName => cy.get('[ng-repeat="person in $select.items"]').contains(personName),
+    specificClaimantOnTypeahead = personName => cy.get('[ng-repeat="person in $select.items"]').children().contains(personName).first(),
     resultsTable = (tableIndex = 0) => cy.get('.table-striped').eq(tableIndex).find('tbody'),
+    approveButtonInSpecificRow = (rowNumber) => cy.get('tbody').find('tr').eq(rowNumber - 1).find('[translate="DISPO.AUTH_ACTION_APPROVE"]'),
+    rejectButtonInSpecificRow = (rowNumber) => cy.get('tbody').find('tr').eq(rowNumber - 1).find('[translate="DISPO.AUTH_ACTION_REJECT"]'),
+    rejectionNote = e => cy.get('[placeholder="Add notes for case officer"]'),
     checkboxOnFirstTableRow = e => resultsTable().find('.bg-grid-checkbox').first()
 
 export default class TaskViewPage extends BaseViewPage {
@@ -80,7 +83,18 @@ export default class TaskViewPage extends BaseViewPage {
         }
         holdReasonDropdown().select(holdReason)
         this.click_button_on_modal('Ok')
-            .verify_toast_message('Saved')
+
+        const numberOfItemsProcessed = rowNumberRange[1] - rowNumberRange[0] + 1
+        const expectedMessage = numberOfItemsProcessed > 50
+            ? 'Processing...'
+            : 'Saved';
+
+        this.verify_single_toast_message_if_multiple_shown(expectedMessage)
+        if (numberOfItemsProcessed > 50) {
+            this.verify_text(dispoAuthJobStatus, 'Complete', 120)
+        }
+        this.wait_until_spinner_disappears(80)
+
         return this;
     };
 
@@ -92,7 +106,79 @@ export default class TaskViewPage extends BaseViewPage {
         return this;
     };
 
+    click__Approve__from_grid_for_specific_item(rowNumber) {
+        this.pause(2)
+        this.wait_until_spinner_disappears()
+
+        approveButtonInSpecificRow(rowNumber).click()
+        return this;
+    };
+
+    click__Reject__from_grid_for_specific_item(rowNumber, note = 'Rejection Note') {
+        this.pause(2)
+        this.wait_until_spinner_disappears()
+        rejectButtonInSpecificRow(rowNumber).click()
+        this.add_Rejection_note(note)
+            .click_Ok()
+        return this;
+    };
+
+    add_Rejection_note(text) {
+        this.enterValue(rejectionNote, text)
+        return this;
+    };
+
+    set___Approve__from_Actions_menu(rowNumberRange) {
+        let numberOfItemsProcessed =  (rowNumberRange[1])? (rowNumberRange[1] - rowNumberRange[0] + 1) : 1
+        const alertMessage = 'You are going to approve Disposition Action for ' + numberOfItemsProcessed + ' items'
+        const toastMessage = numberOfItemsProcessed > 50
+            ? 'Processing...'
+            : 'Saved';
+
+        this.uncheck_all_rows()
+            .click_checkbox_to_select_specific_row(rowNumberRange[0])
+            .press_shift_and_click_row(rowNumberRange[1])
+            .pause(0.5)
+            .click_Actions()
+            .click_option_on_expanded_menu('Mass Approve Disposition Action')
+            .verify_messages_on_sweet_alert([alertMessage])
+            .click_button_on_sweet_alert('Yes')
+            .verify_toast_message(toastMessage)
+
+        if (numberOfItemsProcessed > 50) {
+            this.verify_text(dispoAuthJobStatus, 'Complete')
+        }
+        this.wait_until_spinner_disappears(80)
+        return this;
+    };
+
+    set___Reject__from_Actions_menu(rowNumberRange, note) {
+        const numberOfItemsProcessed = rowNumberRange[1] - rowNumberRange[0] + 1
+        const itemOrItems = (numberOfItemsProcessed === 1) ? ' item' : ' items'
+        const alertMessage = 'Rejecting ' + numberOfItemsProcessed + itemOrItems
+        const toastMessage = numberOfItemsProcessed > 50
+            ? 'Processing...'
+            : 'Saved';
+
+        this.uncheck_all_rows()
+            .click_checkbox_to_select_specific_row(rowNumberRange[0])
+            .press_shift_and_click_row(rowNumberRange[1])
+            .click_Actions()
+            .click_option_on_expanded_menu('Mass Reject Disposition Action')
+            .add_Rejection_note(note)
+            .verify_modal_content(alertMessage)
+            .click_Ok()
+            .verify_toast_message(toastMessage)
+
+        if (numberOfItemsProcessed > 50) {
+            this.verify_text(dispoAuthJobStatus, 'Complete')
+        }
+        this.wait_until_spinner_disappears(80)
+        return this;
+    };
+
     set_Action___Approve_for_Disposal(rowNumberRange) {
+       // this.wait_response_from_API_call('getTaskItems')
         this.uncheck_all_rows()
             .click_checkbox_to_select_specific_row(rowNumberRange[0])
             .press_shift_and_click_row(rowNumberRange[1])
@@ -106,10 +192,10 @@ export default class TaskViewPage extends BaseViewPage {
             ? 'Processing...'
             : 'Saved';
 
-        this.verify_toast_message(expectedMessage)
+        this.verify_single_toast_message_if_multiple_shown(expectedMessage)
         if (numberOfItemsProcessed > 50) {
             this.verify_text(dispoAuthJobStatus, 'Complete')
-        }
+        } this.wait_until_spinner_disappears(80)
         return this;
     };
 
@@ -128,10 +214,12 @@ export default class TaskViewPage extends BaseViewPage {
             ? 'Processing...'
             : 'Saved';
 
-        this.verify_toast_message(expectedMessage)
+        this.verify_single_toast_message_if_multiple_shown(expectedMessage)
         if (numberOfItemsProcessed > 50) {
-            this.verify_text(dispoAuthJobStatus, 'Complete')
+            this.verify_text(dispoAuthJobStatus, 'Complete', 120)
         }
+        this.wait_until_spinner_disappears(80)
+
         return this;
     };
 
@@ -151,16 +239,18 @@ export default class TaskViewPage extends BaseViewPage {
         }
 
         if (isExistingPerson) {
-            this.pause(1)
+            this.pause(1.5)
             claimantFieldOnApproveForReleaseModal().click()
-            this.pause(0.5)
+            this.pause(0.7)
 
             if (isPersonLinkedToCase) {
                 specificClaimantOnTypeahead(personName).click()
             } else {
                 claimantInputFieldOnApproveForReleaseModal().clear()
                 claimantInputFieldOnApproveForReleaseModal().type(personName)
+                this.pause(0.7)
                 claimantInputFieldOnApproveForReleaseModal().should('have.class', 'ng-not-empty')
+                this.wait_until_spinner_disappears()
                 cy.contains(personName).click()
                 personTypeOnModal().select(personObject.personType)
             }
@@ -199,10 +289,12 @@ export default class TaskViewPage extends BaseViewPage {
                 ? 'Processing...'
                 : 'Saved';
 
-        this.verify_toast_message(expectedMessage)
+        this.verify_single_toast_message_if_multiple_shown(expectedMessage)
+        //  this.verify_toast_message(expectedMessage)
         if (numberOfItemsProcessed > 50) {
             this.verify_text(dispoAuthJobStatus, 'Complete', 120)
         }
+        this.wait_until_spinner_disappears(80)
 
         return this;
     };
@@ -213,8 +305,8 @@ export default class TaskViewPage extends BaseViewPage {
     };
 
     verify_Disposition_Statuses_on_the_grid(arrayOfArrays_rowNumberAndStatusInEach) {
+        this.wait_until_spinner_disappears()
         arrayOfArrays_rowNumberAndStatusInEach.forEach(array => {
-
             // array[0] --> as first element in each array represents the ROW NUMBER which can be single number or again array of row numbers
             if (Array.isArray(array[0])) {
                 array[0].forEach(row => {

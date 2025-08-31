@@ -73,7 +73,7 @@ exports.generate_request_payload_for_disabling_Case_fields = function (fieldsToE
                 "name": "GENERAL.LINKED_CASES",
                 "recordType": 1
             },
-            )
+        )
     }
 
     return body;
@@ -392,7 +392,6 @@ exports.generate_request_payload_for_setting_visible_and_required_Item_fields = 
     }
 
 
-
     return body;
 };
 
@@ -566,7 +565,7 @@ exports.generate_request_payload_for_disabling_Item_fields = function (fieldsToE
             "name": "DISPO_AUTH_STATUS",
             "recordType": 1
         })
-     }
+    }
 
     return body;
 };
@@ -704,7 +703,7 @@ exports.generate_request_payload_for_editing_Org = function (
     body.signatureConfiguration.defaultSignatureDevice = defaultSignatureDevice;
     body.signatureConfiguration.noSignatureDeviceSelected = noSignature;
     body.signatureConfiguration.topazSignatureDeviceSelected = false;
-    body.signatureConfiguration.touchScreenSignatureDeviceSelected = touchScreenSignature? touchScreenSignature : false;
+    body.signatureConfiguration.touchScreenSignatureDeviceSelected = touchScreenSignature ? touchScreenSignature : false;
     body.personViewConfiguration.formattingString = personFormattingString;
 
     return body
@@ -759,6 +758,230 @@ exports.generate_request_payload_for_disabling_Case_Number_Formatting_for_Office
     let body = Object.assign({}, orgSettings)
 
     body.caseNumberOfficeConfigurations = undefined;
+
+    return body
+};
+
+exports.generate_request_payload_for_setting_dispo_config_for_item_categories = function (thirdTierApproverGroup) {
+    let groupId = thirdTierApproverGroup.id
+
+    let body = [
+        {
+            "categoryName": "Alcohol",
+            "approvalUsers": [],
+            "approvalUserGroups": [],
+            "overrideDispositionAuthorizationUsers": [],
+            "overrideDispositionAuthorizationUserGroups": [],
+            "maxHoldDays": 11,
+            "maxIndefiniteRetentionDays": 1111,
+            "categoryId": 31,
+            "isSecondaryApprovalRequired": false,
+            "isTertiaryApprovalRequired": false,
+            "isAutoHold": false,
+            "isApprovalforItemReleaseBlocked": false,
+            "overrideDispositionAuthorization": false,
+            "maxHoldDaysApplytoAll": false,
+            "maxIndefiniteRetentionDaysApplyToAll": false,
+            "usersAndGroups": {"items": []},
+            "overrideDispositionUsersAndGroups": {"items": []}
+        },
+        {
+            "categoryName": "Cellular Phone",
+            "approvalUsers": [],
+            "approvalUserGroups": [],
+            "overrideDispositionAuthorizationUsers": [],
+            "overrideDispositionAuthorizationUserGroups": [],
+            "maxHoldDays": 365,
+            "maxIndefiniteRetentionDays": 365,
+            "categoryId": 28,
+            "isSecondaryApprovalRequired": true,
+            "isTertiaryApprovalRequired": false,
+            "isAutoHold": false,
+            "isApprovalforItemReleaseBlocked": false,
+            "overrideDispositionAuthorization": false,
+            "maxHoldDaysApplytoAll": false,
+            "maxIndefiniteRetentionDaysApplyToAll": false,
+            "usersAndGroups": {"items": []},
+            "overrideDispositionUsersAndGroups": {"items": []}
+        },
+        {
+            "categoryName": "Currency",
+            "approvalUsers": [],
+            "approvalUserGroups": [{"id": groupId}],
+            "overrideDispositionAuthorizationUsers": [],
+            "overrideDispositionAuthorizationUserGroups": [],
+            "maxHoldDays": 365,
+            "maxIndefiniteRetentionDays": 100,
+            "categoryId": 7,
+            "isSecondaryApprovalRequired": true,
+            "isTertiaryApprovalRequired": true,
+            "isAutoHold": false,
+            "isApprovalforItemReleaseBlocked": false,
+            "overrideDispositionAuthorization": false,
+            "maxHoldDaysApplytoAll": false,
+            "maxIndefiniteRetentionDaysApplyToAll": false,
+            "usersAndGroups": {
+                "items": [{
+                    "id": groupId,
+                    "text": "Cypress Admin Group",
+                    "type": "group",
+                    "typeName": "User Groups",
+                    "icon": "fa fa-users"
+                }]
+            },
+            "overrideDispositionUsersAndGroups": {"items": []},
+            "areThirdTierUsersEditing": true
+        },
+        {
+            "categoryName": "Drugs",
+            "approvalUsers": [],
+            "approvalUserGroups": [{"id": groupId}],
+            "overrideDispositionAuthorizationUsers": [],
+            "overrideDispositionAuthorizationUserGroups": [],
+            "maxHoldDays": 366,
+            "maxIndefiniteRetentionDays": 100,
+            "categoryId": 9,
+            "isSecondaryApprovalRequired": true,
+            "isTertiaryApprovalRequired": true,
+            "isAutoHold": false,
+            "isApprovalforItemReleaseBlocked": false,
+            "overrideDispositionAuthorization": false,
+            "maxHoldDaysApplytoAll": false,
+            "maxIndefiniteRetentionDaysApplyToAll": false,
+            "usersAndGroups": {
+                "items": [{
+                    "id": groupId,
+                    "text": "Cypress Admin Group",
+                    "type": "group",
+                    "typeName": "User Groups",
+                    "icon": "fa fa-users"
+                }]
+            },
+            "overrideDispositionUsersAndGroups": {"items": []},
+            "areThirdTierUsersEditing": true
+        },
+        {
+            "categoryName": "Forensic",
+            "approvalUsers": [],
+            "approvalUserGroups": [{"id": groupId}],
+            "overrideDispositionAuthorizationUsers": [],
+            "overrideDispositionAuthorizationUserGroups": [],
+            "maxHoldDays": 365,
+            "maxIndefiniteRetentionDays": 365,
+            "categoryId": 258,
+            "isSecondaryApprovalRequired": true,
+            "isTertiaryApprovalRequired": true,
+            "isAutoHold": false,
+            "isApprovalforItemReleaseBlocked": false,
+            "overrideDispositionAuthorization": false,
+            "maxHoldDaysApplytoAll": false,
+            "maxIndefiniteRetentionDaysApplyToAll": false,
+            "usersAndGroups": {
+                "items": [{
+                    "id": groupId,
+                    "text": "Cypress Admin Group",
+                    "type": "group",
+                    "typeName": "User Groups",
+                    "icon": "fa fa-users"
+                }]
+            },
+            "overrideDispositionUsersAndGroups": {"items": []},
+            "areThirdTierUsersEditing": true
+        }]
+
+    return body
+};
+
+exports.generate_request_payload_for_setting_dispo_config_for_offense_types = function (isAutoDispositionOn = true, skipFutureCaseReviewUpdates = true, daysToFollowUp = 100) {
+   // let body = {
+   //      "isAutoDispositionOn": isAutoDispositionOn,
+   //      "skipFutureCaseReviewUpdates": skipFutureCaseReviewUpdates,
+   //      "officeAutoDispositionReviewers": [{
+   //          "officeId": S.selectedEnvironment.office_1.id,
+   //          "officeName": "Cypress Office 1",
+   //          "generalTaskFromUserId": 63324,
+   //          "generalTaskFromUserGroupId": null,
+   //          "isDefault": true,
+   //          "isGeneralTaskFromUser": true
+   //      }, {
+   //          "officeId": S.selectedEnvironment.office_2.id,
+   //          "officeName": "Cypress Office 2",
+   //          "generalTaskFromUserId": null,
+   //          "generalTaskFromUserGroupId": null,
+   //          "isDefault": false,
+   //          "isGeneralTaskFromUser": false
+   //      }],
+   //      "generalTaskFromUserGroupId": null,
+   //      "offenseTypes": [{
+   //          "offenseTypeId": 2,
+   //          "offenseTypeName": "Arson",
+   //          "daysToFollowUp": 100,
+   //          "daysToFollowUpApplytoAll": false,
+   //          "route": "offenseTypes",
+   //          "reqParams": null,
+   //          "restangularized": true,
+   //          "fromServer": true,
+   //          "parentResource": {"route": "autoDisposition", "parentResource": null},
+   //          "restangularCollection": false
+   //      }, {
+   //          "offenseTypeId": 3,
+   //          "offenseTypeName": "Assault",
+   //          "daysToFollowUp": daysToFollowUp,
+   //          "daysToFollowUpApplytoAll": true,
+   //          "route": "offenseTypes",
+   //          "reqParams": null,
+   //          "restangularized": true,
+   //          "fromServer": true,
+   //          "parentResource": {"route": "autoDisposition", "parentResource": null},
+   //          "restangularCollection": false
+   //      }, {
+   //          "offenseTypeId": 4,
+   //          "offenseTypeName": "Burglary",
+   //          "daysToFollowUp": daysToFollowUp,
+   //          "daysToFollowUpApplytoAll": true,
+   //          "route": "offenseTypes",
+   //          "reqParams": null,
+   //          "restangularized": true,
+   //          "fromServer": true,
+   //          "parentResource": {"route": "autoDisposition", "parentResource": null},
+   //          "restangularCollection": false
+   //      }, {
+   //          "offenseTypeId": 11,
+   //          "offenseTypeName": "Drug Offense",
+   //          "daysToFollowUp": 100,
+   //          "daysToFollowUpApplytoAll": false,
+   //          "route": "offenseTypes",
+   //          "reqParams": null,
+   //          "restangularized": true,
+   //          "fromServer": true,
+   //          "parentResource": {"route": "autoDisposition", "parentResource": null},
+   //          "restangularCollection": false
+   //      }, {
+   //          "offenseTypeId": 28,
+   //          "offenseTypeName": "Vandalism",
+   //          "daysToFollowUp": 100,
+   //          "daysToFollowUpApplytoAll": false,
+   //          "route": "offenseTypes",
+   //          "reqParams": null,
+   //          "restangularized": true,
+   //          "fromServer": true,
+   //          "parentResource": {"route": "autoDisposition", "parentResource": null},
+   //          "restangularCollection": false
+   //      },  {
+   //          "offenseTypeId": 158,
+   //          "offenseTypeName": "Accident",
+   //          "daysToFollowUp": 100,
+   //          "daysToFollowUpApplytoAll": false,
+   //          "route": "offenseTypes",
+   //          "reqParams": null,
+   //          "restangularized": true,
+   //          "fromServer": true,
+   //          "parentResource": {"route": "autoDisposition", "parentResource": null},
+   //          "restangularCollection": false
+   //      }]
+   //  }
+
+    let body = {"isAutoDispositionOn":isAutoDispositionOn,"skipFutureCaseReviewUpdates":true,"officeAutoDispositionReviewers":[{"officeId":11082,"officeName":"Cypress Office 1","generalTaskFromUserId":63328,"generalTaskFromUserGroupId":null,"isDefault":true,"isGeneralTaskFromUser":true},{"officeId":11091,"officeName":"Cypress Office 2","generalTaskFromUserId":63328,"generalTaskFromUserGroupId":null,"isDefault":false,"isGeneralTaskFromUser":true},{"officeId":11100,"officeName":"Office 3","generalTaskFromUserId":null,"generalTaskFromUserGroupId":null,"isDefault":false,"isGeneralTaskFromUser":false}],"generalTaskFromUserGroupId":null,"offenseTypes":[{"offenseTypeId":2,"offenseTypeName":"Arson","daysToFollowUp":100,"daysToFollowUpApplytoAll":false,"route":"offenseTypes","reqParams":null,"restangularized":true,"fromServer":true,"parentResource":{"route":"autoDisposition","parentResource":null},"restangularCollection":false},{"offenseTypeId":4,"offenseTypeName":"Burglary","daysToFollowUp":33,"daysToFollowUpApplytoAll":false,"route":"offenseTypes","reqParams":null,"restangularized":true,"fromServer":true,"parentResource":{"route":"autoDisposition","parentResource":null},"restangularCollection":false},{"offenseTypeId":28,"offenseTypeName":"Vandalism","daysToFollowUp":100,"daysToFollowUpApplytoAll":false,"route":"offenseTypes","reqParams":null,"restangularized":true,"fromServer":true,"parentResource":{"route":"autoDisposition","parentResource":null},"restangularCollection":false},{"offenseTypeId":158,"offenseTypeName":"Accident","daysToFollowUp":100,"daysToFollowUpApplytoAll":false,"route":"offenseTypes","reqParams":null,"restangularized":true,"fromServer":true,"parentResource":{"route":"autoDisposition","parentResource":null},"restangularCollection":false}]}
 
     return body
 };

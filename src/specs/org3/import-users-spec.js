@@ -7,7 +7,7 @@ const ui = require('../../pages/ui-spec');
 
 describe('Import Users', function () {
 
-    it('I.U_1 Import and verify User with all fields', function () {
+    it('1. Precheck and Import User with all fields', function () {
         ui.app.log_title(this);
         let fileName = 'UserImport_allFields_' + S.domain;
         let user = S.userAccounts.orgAdmin;
@@ -19,32 +19,18 @@ describe('Import Users', function () {
         E.generateDataFor_USERS_Importer([D.newUser]);
         cy.generate_excel_file(fileName, E.userImportDataWithAllFields);
 
-        ui.menu.click_Tools__Data_Import();
-        ui.importer.upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.users)
-            .verify_toast_message([
-                C.toastMsgs.importComplete,
-                1 + C.toastMsgs.recordsImported]);
-
+        ui.importer.precheck_import_data(fileName, C.importTypes.users)
         ui.menu.click_Settings__User_Admin();
         ui.userAdmin.select_All_Users()
+            .search_for_user(D.newUser.email)
+            .verify_records_count_on_grid(0)
+
+        ui.importer.import_data(fileName, C.importTypes.users)
+        ui.userAdmin.open_direct_url_for_page()
+            .select_All_Users()
             .search_for_user(D.newUser.email)
             .verify_user_data_on_grid(D.newUser)
     });
 
-    it('I.U_1 Import User with all fields - Precheck Only', function () {
-        ui.app.log_title(this);
-        let fileName = 'User_PrecheckOnly_' + S.domain;
-        let user = S.userAccounts.orgAdmin;
-        api.auth.get_tokens(user);
-
-        E.generateDataFor_USERS_Importer([D.newUser]);
-        cy.generate_excel_file(fileName, E.userImportDataWithAllFields);
-
-        ui.menu.click_Tools__Data_Import();
-        ui.importer.upload_then_Map_and_Submit_file_for_precheck(fileName, C.importTypes.users)
-            .verify_toast_message([
-                C.toastMsgs.precheckComplete,
-                1 + C.toastMsgs.recordsPrechecked]);
-    });
 
 });

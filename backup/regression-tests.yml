@@ -45,19 +45,16 @@ jobs:
         run: npm ci
 
       - name: Run Cypress tests
-        run: |
-          ENVIRONMENT="${{ github.event.inputs.environment || 'dev' }}"
-
-          if [[ "${{ github.event_name }}" == "schedule" ]]; then
-            echo "Running with Cypress Dashboard recording..."
-            npx cypress run --headless --browser chrome --record -- --spec ${{ matrix.spec_group }} --env environment=${ENVIRONMENT},orgNum=${{ matrix.org_number }}
-          else
-            echo "Running WITHOUT Cypress Dashboard recording..."
-            npx cypress run --headless --browser chrome --spec ${{ matrix.spec_group }} --env environment=${ENVIRONMENT},orgNum=${{ matrix.org_number }}
-          fi
         env:
+          EVENT_NAME: ${{ github.event_name }}
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           CI: true
+        run: |
+          ENVIRONMENT="${{ github.event.inputs.environment }}"
+          if [ -z "$ENVIRONMENT" ]; then
+            ENVIRONMENT="dev"
+          fi
+          npx cypress run --headless --browser chrome --record --spec ${{ matrix.spec_group }} --env environment=$ENVIRONMENT,orgNum=${{ matrix.org_number }}
 
       - name: Push report folder to external report-${{ matrix.org_number }} branch
         if: always()
