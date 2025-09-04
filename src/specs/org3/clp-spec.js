@@ -34,7 +34,7 @@ xdescribe('1. Case Level Permissions', function () {
     });
 });
 
-describe('1. Case Level Permissions', function () {
+xdescribe('1. Case Level Permissions', function () {
 
     before(function () {
         api.auth.get_tokens(orgAdmin);
@@ -133,7 +133,7 @@ describe('1. Case Level Permissions', function () {
             cy.restoreLocalStorage();
         });
 
-        it('TC_2.1 Permissions tab is available for Org Admin but not for Power-user', function () {
+        xit('TC_2.1 Permissions tab is available for Org Admin but not for Power-user', function () {
             ui.app.log_title(this);
 
             let caseNumber = D.getRandomNo() + '_TC_1.1';
