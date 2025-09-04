@@ -933,20 +933,10 @@ export default class BasePage {
         return this;
     };
 
-    // verify_values_on_the_grid(headerValuePairs) {
-    //     var self = this;
-    //     headerValuePairs.forEach(function (pair) {
-    //         if (pair[1] !== null) {
-    //             self.verify_content_of_specified_cell_in_first_table_row(pair[0], pair[1])
-    //         }
-    //     });
-    //     return this;
-    // };
-
     verify_values_on_the_grid(headerValuePairs) {
         var self = this;
         headerValuePairs.forEach(function (pair) {
-            if (pair[1] !== null) {
+            if (pair[1] !== null && pair[1] !== '') {
                 self.verify_content_of_first_table_row_by_provided_column_title_and_value(pair[0], pair[1], 'th')
             }
         });
@@ -2384,11 +2374,6 @@ export default class BasePage {
                 });
             });
         } else {
-            // resultsTableHeader().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
-            //     tableStriped().find('td').eq(i).invoke('text').then(function (textFound) {
-            //                 self.verify_text(tableStriped().find('td').eq(i), cellContent);
-            //     });
-            // });
             resultsTableHeader()
                 .find(headerCellTag)
                 .filter((i, el) => Cypress.$(el).text().trim() === columnTitle)
@@ -2936,6 +2921,7 @@ export default class BasePage {
     }
 
     turn_on_all_toggles_on_modal(labelsArray) {
+        this.pause(1)
         for (let i = 0; i < labelsArray.length; i++) {
             const label = labelsArray[i];
             this.turnOnToggle(label);
