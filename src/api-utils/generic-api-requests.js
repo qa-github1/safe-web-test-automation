@@ -13,7 +13,8 @@ function request_with_JSON_data(httpMethod, urlSuffix, requestBody, log = '', pr
             method: httpMethod,
             json: true,
             body: requestBody,
-            headers: JSON.parse(headers)
+            headers: JSON.parse(headers),
+            timeout: S.api_timeout
         })
             .then(response => {
                 let propertyName;

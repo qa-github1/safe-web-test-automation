@@ -15,7 +15,7 @@ let
     itemTypeaheadDivField = e => cy.get('[aria-label="Select box activate"]').last(),
     itemObjectTypeahead = e => cy.get('[repeat="task in availableItems"]'),
     personInputField = e => cy.get('[ng-model="person.text"]').last(),
-    usersAndGroupsInput = e => cy.contains('Users and groups').parent('div').find('input'),
+    assignedToInput = e => cy.contains('Assigned to').parent('div').find('input'),
     saveButton = e => cy.findAllByText('Save').last()
 
 export default class AddTaskPage extends BasePage {
@@ -24,18 +24,17 @@ export default class AddTaskPage extends BasePage {
     }
 
 //************************************ ACTIONS ***************************************//
-    enter_value_to_Users_and_Groups_field(arrayOfValues) {
-        this.enter_values_on_single_multi_select_typeahead_field(['Users and groups', arrayOfValues, "users/groups"])
+    select_assignees(arrayOfValues) {
+        this.enter_values_on_single_multi_select_typeahead_field(['Assigned to', arrayOfValues, "users/groups"])
         return this;
     }
 
-    enter_user_group(groupName) {
-        //  this.enter_and_select_value_in_typeahead_field('Users and groups', groupName)
-        this.type_if_value_provided(usersAndGroupsInput, groupName)
-        this.pause(1)
-        this.click_highlighted_option_on_typeahead(groupName);
-        return this;
-    }
+    // select_assignees(groupName) {
+    //     this.type_if_value_provided(assignedToInput, groupName)
+    //     this.pause(1)
+    //     this.click_highlighted_option_on_typeahead(groupName);
+    //     return this;
+    // }
 
     populate_all_fields(taskObject, keepDefaultDueDate = true, keepTemplateValues = true, templateObject) {
 
@@ -58,7 +57,7 @@ export default class AddTaskPage extends BasePage {
             });
         }
 
-       this.enter_value_to_Users_and_Groups_field([taskObject.assignees])
+       this.select_assignees([taskObject.assignees])
 
         if (taskObject.linkedObjects) {
             const linkedObjects = Array.isArray(taskObject.linkedObjects)
@@ -76,6 +75,7 @@ export default class AddTaskPage extends BasePage {
                     attachmentTypeDropdown().select('Item')
                     this.findElementByLabelEnterValueAndPressEnter('Case', object.caseNumber)
                     this.caseNumberOnTypeahead().click()
+                    this.pause(1)
                     itemTypeaheadInputField().click()
                     itemObjectTypeahead().should('be.visible')
                     itemTypeaheadInputField().type('{enter}')
@@ -99,7 +99,7 @@ export default class AddTaskPage extends BasePage {
     populate_and_submit_form(title, message, user) {
         titleInput().type(title);
         messageInput().type(message);
-        usersAndGroupsInput.type(user.email);
+        assignedToInput.type(user.email);
         this.click_highlighted_option_on_typeahead(user.email);
         this.click_Save();
         return this;

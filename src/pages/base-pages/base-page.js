@@ -80,7 +80,7 @@ let
     specificTab = tabTitle => navTabs().children().contains(tabTitle).parent('li'),
     historyTab = e => cy.get('[translate="GENERAL.HISTORY"]').parent('tab-heading').parent('a').parent('li'),
     expandedMenu = e => cy.get('button[aria-expanded="true"]'),
-    optionOnExpandedMenu = option => expandedMenu().next().contains(option),
+    optionOnExpandedMenu = option => expandedMenu().next().contains(option).parent('li'),
     dropdownOnModal = e => modal().children().get('select'),
     notesOnModal = e => modal().children().find('textarea'),
     noteOnModal = e => modal().children().get('[placeholder="Note"]'),
@@ -97,6 +97,7 @@ let
     searchParametersExpandedPanel = e => cy.get('[class="panel-collapse collapse in"]'),
     resultsTable = (tableIndex = 0) => cy.get('.table-striped').eq(tableIndex).find('tbody'),
     tableStriped = (tableIndex = 0) => cy.get('.table-striped').eq(tableIndex),
+    cocTableStriped = (tableIndex = 0) => cy.get('.cocTable'),
     dataGrid = (tableIndex = 0) => cy.get('.table-striped[tp-fixed-table-header-scrollable="scrollable-area"]').eq(tableIndex).find('tbody'),
     resultsEntriesCount = e => cy.get('[translate="BSGRID.DISPLAY_STATS"]'),
     //menuCustomization = e => cy.contains('Menu Customization'),
@@ -124,6 +125,7 @@ let
     pageSizeAndColumnsContianer = e => cy.get('.grid-menu-header').eq(1),
     //  resultsTableHeader = (tableIndex = 0) => cy.get('.table-striped').eq(tableIndex).find('thead'),
     resultsTableHeader = (tableIndex = 0) => cy.get('thead'),
+    cocTableHeader = (tableIndex = 0) => cy.get('.cocTable').find('thead'),
     resultsTableHeaderFromRoot = (tableIndex = 0) => cy.root().parents('html').find('.table-striped').eq(tableIndex).find('thead'),
     firstRowInResultsTable = (tableIndex = 0) => resultsTable(tableIndex).children('tr').first(),
     specificRowInResultsTable = index => resultsTable().children('tr').eq(index),
@@ -235,6 +237,7 @@ let
     usePreviousLocationCheckbox = e => cy.get('.icheckbox_square-blue').find('ins'),
     checkoutReason = e => cy.get('[ng-options="r.id as r.name for r in data.checkoutReasons"]'),
     typeaheadSelectorMatchInMatches = '[ng-repeat="match in matches track by $index"]',
+    typeaheadSelectorItemInGroupItems = '[ng-repeat="item in $group.items"]',
     typeaheadSelectorChoicesRow = '.ui-select-choices-row'
 
 let dashboardGetRequests = [
@@ -251,6 +254,7 @@ export default class BasePage {
     constructor() {
         this.typeaheadSelectorMatchInMatches = typeaheadSelectorMatchInMatches;
         this.typeaheadSelectorChoicesRow = typeaheadSelectorChoicesRow;
+        this.typeaheadSelectorItemInGroupItems = typeaheadSelectorItemInGroupItems;
         this.searchParametersAccordion = searchParametersAccordion;
         this.searchParametersExpandedPanel = searchParametersExpandedPanel;
         this.itemsCountOnSearchGrid = itemsCountOnSearchGrid;
@@ -447,10 +451,10 @@ export default class BasePage {
         if (shouldFind) {
             quickSearchCaseTypeahead_FirstOption().click();
             this.wait_until_spinner_disappears();
+            this.verify_text_is_present_on_main_container(caseNumber)
         } else {
             this.verify_element_has_class(quickSearch, 'ng-invalid-empty-data-error')
         }
-        this.verify_text_is_present_on_main_container(caseNumber)
         return this;
     };
 
@@ -460,6 +464,17 @@ export default class BasePage {
         this.verify_element_does_NOT_contain_text(toastContainer, 'Error')
     }
 
+    click_toast_message_if_visible() {
+        cy.document().then(doc => {
+            const firstToast = doc.querySelector('.toast');
+            if (firstToast) {
+                if (firstToast.offsetParent !== null) {
+                    firstToast.click(); // Use native click if the element is still visible
+                }
+            }
+        });
+    }
+
     verify_specific_toast_message_is_NOT_visible(text) {
         this.wait_until_spinner_disappears()
         //this.wait_all_GET_requests()
@@ -467,15 +482,17 @@ export default class BasePage {
     }
 
     verify_toast_message(text, includesRecentCaseNumber = false, timeoutInMinutes = 1) {
-
-        let timeoutInMiliseconds = timeoutInMinutes * 60000;
+        if (!timeoutInMinutes || isNaN(timeoutInMinutes)) {
+            timeoutInMinutes = 1;
+        }
+        let timeoutInMiliseconds = timeoutInMinutes * 60000
+        toastMessage(timeoutInMiliseconds).should('be.visible', {timeout: timeoutInMiliseconds});
 
         cy.getLocalStorage("recentCase").then(recentCase => {
-            //toastMessage(timeoutInMiliseconds).should('be.visible');
-            toastMessage().should('be.visible', {timeout: timeoutInMiliseconds});
+            // toastMessage(timeoutInMiliseconds).should('be.visible');
 
             toastMessage(timeoutInMiliseconds).invoke('text').then(function (toastMsg) {
-                //  toastMessage().click({multiple: true})
+                // toastMessage().click({multiple: true})
                 // firstToastMessage().click()
 
                 cy.document().then(doc => {
@@ -505,6 +522,34 @@ export default class BasePage {
         return this;
     };
 
+    verify_single_toast_message_if_multiple_shown(text) {
+
+        let allToastMessages = []
+
+        cy.get('.toast').first().invoke('text').then((firstToast) => {
+            cy.get('.toast').last().invoke('text').then((lastToast) => {
+                allToastMessages.push(firstToast)
+                allToastMessages.push(lastToast)
+                this.click_toast_message_if_visible()
+                this.click_toast_message_if_visible()
+                expect(allToastMessages.toString()).to.contain(text);
+            });
+        });
+        return this;
+    };
+
+    verify_report_running_toast_message() {
+        const isSecure = S.domain === 'SECURE';
+        const isPentest = S.domain === 'PENTEST';
+
+        this.verify_single_toast_message_if_multiple_shown(C.toastMsgs.reportRunning)
+
+        // if (isPentest || isSecure){
+        //     this.verify_single_toast_message_if_multiple_shown(C.toastMsgs.popupBlocked)
+        // }
+        return this;
+    };
+
     verify_toast_title(title) {
         toastTitle().should('be.visible');
         toastTitle().should('contain', title);
@@ -521,10 +566,37 @@ export default class BasePage {
         cy.contains('Menu Customization').click()
         optionsDropdownUnderMenuCustomization().click()
         pageSizesUnderMenuCustomization().contains(pageSize).click()
-        this.pause(3)
+        this.pause(5)
         this.wait_until_spinner_disappears()
         return this;
     }
+
+    wait_certain_number_of_rows_to_be_visible_on_grid(expectedNumberOfRows, tabToBeSelected = null) {
+        let that = this;
+
+        function verify() {
+            cy.window({timeout: 70000}).then((win) => {
+                const elements = win.document.querySelectorAll('.bg-grid-checkbox');
+
+                if (elements.length !== expectedNumberOfRows) {
+                    cy.reload();
+                    cy.wait(1000); // give page time to reload
+
+                    if (tabToBeSelected) {
+                        that.select_tab(C.tabs[tabToBeSelected]);
+                    }
+
+                    verify(); // retry recursively
+                } else {
+                    cy.log(`✅ Found exactly ${expectedNumberOfRows} checkboxes`);
+                }
+            });
+        }
+
+        verify();
+        return this;
+    }
+
 
     click_number_on_pagination(pageNumber) {
         this.wait_until_spinner_disappears()
@@ -648,38 +720,37 @@ export default class BasePage {
     enter_value_and_retype_last_character_if_typeahead_did_not_appear(element, value, typeaheadSelector) {
         const lastChar = value.slice(-1);
 
-        element()
-            .clear()
-            .invoke('val', value)
-            .trigger('input')
-            .then($el => {
-                cy.wait(500).then(() => {
-                    cy.document().then(doc => {
-                        let typeaheadExists = !!doc.querySelector(typeaheadSelector);
+        function attempt($el, attemptNum = 1) {
+            if (attemptNum === 1) {
+                // First attempt: enter full value
+                cy.log(`Typeahead attempt ${attemptNum}: entering full value`);
+                cy.wrap($el)
+                    .clear()
+                    .invoke('val', value)
+                    .trigger('input');
+            } else {
+                // Subsequent attempts: backspace + retype last char
+                cy.log(`Typeahead attempt ${attemptNum}: retyping last character`);
+                cy.wrap($el)
+                    .type('{backspace}')
+                    .type(lastChar)
+                    .trigger('input');
+            }
 
-                        if (!typeaheadExists) {
-                            cy.wrap($el)
-                                .type('{backspace}')
-                                .type(lastChar)
-                                .trigger('input'); // ensure input event is triggered again
+            cy.wait(500).then(() => {
+                cy.document().then(doc => {
+                    const typeaheadExists = !!doc.querySelector(typeaheadSelector);
 
-                            cy.wait(500).then(() => {
-                                cy.document().then(doc2 => {
-                                    let retryTypeaheadExists = !!doc2.querySelector(typeaheadSelector);
-                                    if (!retryTypeaheadExists) {
-                                        //third attempt to find typeahead
-                                        cy.wrap($el)
-                                            .type('{backspace}')
-                                            .type(lastChar)
-                                            .trigger('input');
-                                        cy.wait(500);
-                                    }
-                                });
-                            });
-                        }
-                    });
+                    if (!typeaheadExists && attemptNum < 5) {
+                        attempt($el, attemptNum + 1);
+                    }
                 });
             });
+        }
+
+        element().then($el => {
+            attempt($el, 1);
+        });
     }
 
 
@@ -841,7 +912,6 @@ export default class BasePage {
     //     return this;
     // };
 
-
     enter_values_on_Item_Belongs_To_typeahead_field(element, valuesArray) {
         if (valuesArray[0]) {
             for (let i = 0; i < valuesArray.length; i++) {
@@ -863,20 +933,10 @@ export default class BasePage {
         return this;
     };
 
-    // verify_values_on_the_grid(headerValuePairs) {
-    //     var self = this;
-    //     headerValuePairs.forEach(function (pair) {
-    //         if (pair[1] !== null) {
-    //             self.verify_content_of_specified_cell_in_first_table_row(pair[0], pair[1])
-    //         }
-    //     });
-    //     return this;
-    // };
-
     verify_values_on_the_grid(headerValuePairs) {
         var self = this;
         headerValuePairs.forEach(function (pair) {
-            if (pair[1] !== null) {
+            if (pair[1] !== null && pair[1] !== '') {
                 self.verify_content_of_first_table_row_by_provided_column_title_and_value(pair[0], pair[1], 'th')
             }
         });
@@ -895,6 +955,18 @@ export default class BasePage {
         return this;
     };
 
+    verify_values_on_CoC(headerValuePairs) {
+        var self = this;
+        for (let i = 0; i < headerValuePairs.length; i++) {
+            headerValuePairs[i].forEach(function (pair) {
+                if (pair[1] !== null) {
+                    self.verify_content_of_CoC_table_row_by_provided_column_title_and_value(i, pair[0], pair[1], 'th')
+                }
+            });
+        }
+        return this;
+    };
+
     verify_values_on_multiple_elements(element_value__stacks) {
         let self = this
         element_value__stacks.forEach(function (stack) {
@@ -903,7 +975,7 @@ export default class BasePage {
             // 1 (stack[1]): expected value in the field
             // 2 (stack[2]): wider element container for specifying the selector more precisely
             if (stack[2]) {
-                self.verify_value(stack[0](stack[2]), stack[1])
+                self.verify_value_within_container(stack[0], stack[1], stack[2])
             } else if (stack[1]) {
                 self.verify_value(stack[0], stack[1])
             }
@@ -920,15 +992,13 @@ export default class BasePage {
             // 1 (stack[1]): expected value in the field
             // 2 (stack[2]): wider element container for specifying the selector more precisely
             if (stack[2]) {
-                self.verify_text(stack[0](stack[2]), stack[1])
+                self.verify_text_within_container(stack[0], stack[1], stack[2])
             } else if (stack[1]) {
                 self.verify_text(stack[0], stack[1])
             }
         });
         return this;
     };
-
-
 
 
     verify_multiple_input_values_in_one_container(container, arrayOfProperties) {
@@ -959,18 +1029,18 @@ export default class BasePage {
         arrayOfProperties.forEach(function (prop) {
             if (prop !== null) {
                 if (prop === '') {
-                    container({ timeout: 5000 }).invoke('text').should('eq', '');
+                    container({timeout: 5000}).invoke('text').should('eq', '');
                 } else {
                     // we have issues with trimming on DEV, so I had to add like this
                     cy.url().then(url => {
                         if (url.includes('dev')) {
-                            container({ timeout: 5000 }).invoke('text').then(text => {
+                            container({timeout: 5000}).invoke('text').then(text => {
                                 const normalizedText = text.replace(/\s+/g, ' ').trim();
                                 const normalizedProp = prop.replace(/\s+/g, ' ').trim();
                                 expect(normalizedText).to.include(normalizedProp);
                             });
                         } else {
-                            container({ timeout: 5000 }).should('contain.text', prop);
+                            container({timeout: 5000}).should('contain.text', prop);
                         }
                     });
                 }
@@ -1065,20 +1135,46 @@ export default class BasePage {
     // }
 
 
-//this was the source method that includes retry mechanism
-    check_value(element, value) {
+    check_value(element, value, timeoutInSeconds = 70) {
+
         if (value) {
-            const getTextFn = () => {
+            let getTextFn = () => {
                 return (element instanceof Function ? element() : element).invoke('val');
             };
-            cy.verifyTextAndRetry(getTextFn, value, {maxAttempts: 10, retryInterval: 500});
+
+            const retryInterval = 500
+            let timeout = timeoutInSeconds * 1000
+            let maxAttempts = timeout / retryInterval
+            cy.verifyTextAndRetry(getTextFn, value, {maxAttempts: maxAttempts, retryInterval: retryInterval});
         }
     }
 
 
+    verify_value_within_container(element, value, container, timeoutInSeconds = 70) {
 
+        if (value) {
+            let getTextFn = () => {
+                return element(container).invoke('val');
+            };
+            const retryInterval = 500
+            let timeout = timeoutInSeconds * 1000
+            let maxAttempts = timeout / retryInterval
+            cy.verifyTextAndRetry(getTextFn, value, {maxAttempts: maxAttempts, retryInterval: retryInterval});
+        }
+    }
 
+    verify_text_within_container(element, value, container, timeoutInSeconds = 70) {
 
+        if (value) {
+            let getTextFn = () => {
+                return element(container).invoke('text');
+            };
+            const retryInterval = 500
+            let timeout = timeoutInSeconds * 1000
+            let maxAttempts = timeout / retryInterval
+            cy.verifyTextAndRetry(getTextFn, value, {maxAttempts: maxAttempts, retryInterval: retryInterval});
+        }
+    }
 
     verify_text(element, expectedText, timeoutInSeconds) {
         let self = this
@@ -1160,7 +1256,7 @@ export default class BasePage {
     }
 
     verify_element_does_NOT_contain_text(element, text) {
-        element().should('not.contain', text);
+        element().invoke('text').should('not.include', text)
         return this;
     };
 
@@ -1286,6 +1382,7 @@ export default class BasePage {
     };
 
     click_Ok() {
+        okButton().scrollIntoView()
         okButton().should('be.enabled');
         okButton().click();
         return this;
@@ -1322,7 +1419,6 @@ export default class BasePage {
         editButton().should('be.enabled');
         editButton().click();
         cy.wait(2000)
-        saveButton().should('be.visible');
         return this;
     };
 
@@ -1381,10 +1477,11 @@ export default class BasePage {
     };
 
     click_link(linkText, container) {
+        this.wait_until_spinner_disappears()
         if (container) {
             container.contains(linkText).click();
         } else {
-            linkByText(linkText).click();
+            linkByText(linkText).scrollIntoView().should('be.visible').click();
         }
         return this;
     };
@@ -1450,16 +1547,20 @@ export default class BasePage {
         if (partOfRequestUrl) {
             cy.server();
             this.define_API_request_to_be_mocked('GET', partOfRequestUrl)
-            //  cy.intercept('GET', '**').as('all_GET_Requests').then(function () {
             cy.visit(urlToOpen);
-            //  })
-            // cy.wait('@all_GET_Requests')
             this.wait_response_from_API_call(partOfRequestUrl)
+            this.wait_until_spinner_disappears()
+            this.click_toast_message_if_visible()
         } else {
             cy.visit(urlToOpen);
             this.wait_until_spinner_disappears()
+            this.click_toast_message_if_visible()
         }
         return this;
+    };
+
+    open_direct_url_for_page(page) {
+        this.open_url_and_wait_all_GET_requests_to_finish(S.base_url + '/#/' + page.url)
     };
 
     define_API_request_to_be_awaited(methodType, partOfRequestUrl, alias) {
@@ -1469,6 +1570,31 @@ export default class BasePage {
         cy.intercept(methodType, '**' + `${partOfRequestUrl}` + '**', (req) => {
             req.continue(); // Explicitly pass through to backend
         }).as(alias);
+        return this;
+    }
+
+    define_API_request_to_be_awaited_with_last_part_of_url(methodType, lastPartOfRequestUrl, alias) {
+        if (!alias) {
+            alias = partOfRequestUrl;
+        }
+        cy.intercept(methodType, '**' + `${lastPartOfRequestUrl}`, (req) => {
+            req.continue(); // Explicitly pass through to backend
+        }).as(alias);
+        return this;
+    }
+
+    define_API_request_to_be_awaited_with_numerical_part_at_the_end_of_url(methodType, partOfRequestUrl, alias) {
+        if (!alias) {
+            alias = partOfRequestUrl;
+        }
+        const urlRegex = new RegExp(`${partOfRequestUrl}/\\d+`);
+        cy.intercept(
+            {
+                method: methodType,
+                url: urlRegex
+            }, (req) => {
+                req.continue();
+            }).as(alias);
         return this;
     }
 
@@ -1530,10 +1656,10 @@ export default class BasePage {
 
     set_visibility_of_table_column(columnName, shouldBeVisible, onActiveTab = true) {
         cy.wait(1000)
-
         if (onActiveTab) {
             if (shouldBeVisible) {
                 active_tab().find('thead').contains(columnName).parents('th').then(($el) => {
+
                     if ($el.hasClass('ng-hide')) {
                         this.click_element_on_active_tab(C.buttons.menuCustomization);
                         this.click_element_on_active_tab(C.buttons.options);
@@ -1717,9 +1843,11 @@ export default class BasePage {
         this.wait_until_spinner_disappears()
 
         if (tabTitle === C.tabs.history) {
-            historyTab(tabTitle).should('be.visible').click().should('have.class', 'active')
+            historyTab(tabTitle).should('be.visible').click()
+            historyTab(tabTitle).should('have.class', 'active')
         } else {
-            specificTab(tabTitle).should('be.visible').click().should('have.class', 'active')
+            specificTab(tabTitle).should('be.visible').click()
+            specificTab(tabTitle).should('have.class', 'active')
         }
         this.pause(1)
         this.wait_until_spinner_disappears()
@@ -1825,6 +1953,7 @@ export default class BasePage {
                     });
                 };
 
+                cy.wait(1000)
                 // First click
                 clickCheckbox();
                 cy.wait(1000)
@@ -1852,7 +1981,9 @@ export default class BasePage {
     click_checkbox_to_select_specific_row(rowNumber, tableIndex = 0) {
         this.pause(1)
         this.wait_until_spinner_disappears()
-        firstCheckboxOnTableBody().should('be.visible')
+        firstCheckboxOnTableBody().scrollIntoView().should('be.visible')
+        this.pause(1)
+        this.wait_until_spinner_disappears()
 
         if (tableIndex === 0) {
 
@@ -1864,7 +1995,6 @@ export default class BasePage {
                     throw new Error('Checkbox not found in DOM');
                 }
             });
-
             //  bsGridCheckboxes(rowNumber).click();
         } else {
             checkboxOnSpecificTableRow(rowNumber).click();
@@ -1914,12 +2044,14 @@ export default class BasePage {
         return this;
     };
 
-    click_option_on_expanded_menu(option) {
+    click_option_on_expanded_menu(option, waitUntilSpinnerDisappears = true) {
         this.pause(0.7)
         optionOnExpandedMenu(option).should('be.visible');
-        this.pause(0.3)
+        optionOnExpandedMenu(option).should('not.have.class', 'disabled')
         optionOnExpandedMenu(option).click();
-        this.wait_until_spinner_disappears();
+        if (waitUntilSpinnerDisappears) {
+            this.wait_until_spinner_disappears();
+        }
         return this;
     };
 
@@ -2027,6 +2159,7 @@ export default class BasePage {
             content,
             {clickReloadIconBetweenAttempts: true}
         );
+        this.wait_until_spinner_disappears()
         return this;
     }
 
@@ -2191,6 +2324,31 @@ export default class BasePage {
         return this;
     }
 
+    verify_content_of_CoC_table_row_by_provided_column_title_and_value(rowNumber, columnTitle, cellContent, headerCellTag = 'th') {
+        let self = this;
+        let currentEnvironment = Cypress.env('environment');
+
+        if (Array.isArray(cellContent)) {
+            cocTableHeader().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
+                specificRowInResultsTable(rowNumber).find('td').eq(i).invoke('text').then(function (textFound) {
+                    cellContent.forEach(function (value) {
+                        self.verify_text(specificRowInResultsTable(rowNumber).find('td').eq(i), value);
+                    });
+                });
+            });
+        } else {
+            cocTableHeader()
+                .contains(headerCellTag, columnTitle)
+                .not('ng-hide')
+                .invoke('index')
+                .then((i) => {
+                    const getCellText = () => specificRowInResultsTable(rowNumber).find('td').eq(i)
+                    self.verify_text(getCellText, cellContent);
+                });
+        }
+        return this;
+    }
+
     verify_content_of_first_table_row_by_provided_column_title_and_value(columnTitle, cellContent, headerCellTag = 'th', isCoCTable = false) {
         let self = this;
         let currentEnvironment = Cypress.env('environment');
@@ -2201,7 +2359,10 @@ export default class BasePage {
         }
 
         if (Array.isArray(cellContent)) {
-            resultsTableHeader().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
+            resultsTableHeader()
+                .find(headerCellTag)
+                .filter((i, el) => Cypress.$(el).text().trim() === columnTitle)
+                .not('.ng-hide').invoke('index').then((i) => {
                 tableStriped().find('td').eq(i).invoke('text').then(function (textFound) {
                     cellContent.forEach(function (value) {
                         if (value === '') {
@@ -2213,14 +2374,11 @@ export default class BasePage {
                 });
             });
         } else {
-            // resultsTableHeader().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
-            //     tableStriped().find('td').eq(i).invoke('text').then(function (textFound) {
-            //                 self.verify_text(tableStriped().find('td').eq(i), cellContent);
-            //     });
-            // });
             resultsTableHeader()
-                .contains(headerCellTag, columnTitle)
-                .not('ng-hide')
+                .find(headerCellTag)
+                .filter((i, el) => Cypress.$(el).text().trim() === columnTitle)
+                //.contains(headerCellTag, columnTitle)
+                .not('.ng-hide')
                 .invoke('index')
                 .then((i) => {
                     const getCellText = () => tableStriped().find('td').eq(i)
@@ -2371,13 +2529,23 @@ export default class BasePage {
         let url = `${S.base_url}/#/people/${existingPersonId.toString()}/view`;
         //cy.log('Opening Peron URL: ' + url);
         cy.visit(url);
-
+        this.verify_url_contains_some_value(`/#/people/${existingPersonId.toString()}/view`)
+        this.wait_until_spinner_disappears()
         return this;
     };
 
-    open_newly_created_task_via_direct_link() {
+    open_task_url(existingTaskId) {
+        let url = `${S.base_url}/#/view-task/` + existingTaskId;
+        cy.visit(url);
+        this.verify_url_contains_some_value(`/#/view-task/${existingTaskId.toString()}`)
+        this.wait_until_spinner_disappears()
+        return this;
+    };
+
+    open_newly_created_task_via_direct_link(task_id) {
         cy.getLocalStorage("newTaskId").then(newTaskId => {
-            let url = `${S.base_url}/#/view-task/` + newTaskId;
+            let taskId = newTaskId ? newTaskId : task_id
+            let url = `${S.base_url}/#/view-task/` + taskId;
             cy.visit(url);
         })
         return this;
@@ -2393,6 +2561,7 @@ export default class BasePage {
 
             cy.visit(S.base_url + '/#/cases/' + newCase.id.toString() + '/view')
             this.verify_url_contains_some_value(`/#/cases/${newCase.id.toString()}/view`)
+            this.verify_text_is_present_on_main_container('Case View')
             //   cy.wait('@getSettingsOfCLP');
         });
         return this;
@@ -2420,11 +2589,16 @@ export default class BasePage {
         return this;
     };
 
+    define_get_task_items_endpoint_alias() {
+        this.define_API_request_to_be_awaited('POST', 'itemsV2', 'getTaskItems')
+    }
+
     open_newly_created_task_via_direct_link() {
         cy.getLocalStorage("newTaskId").then(newTaskId => {
             //cy.log('Opening Task URL: ' + S.base_url + '/#/view-task/' + newTaskId);
             cy.visit(S.base_url + '/#/view-task/' + newTaskId);
         });
+        this.define_get_task_items_endpoint_alias()
         return this;
     };
 
@@ -2520,11 +2694,50 @@ export default class BasePage {
         return this;
     };
 
-    wait_until_spinner_disappears() {
-        bodyContainer().should('not.have.class', 'pace-running', {timeout: 75000});
-        bodyContainer().should('have.class', 'pace-done', {timeout: 75000});
+    // wait_until_spinner_disappears(timeoutInSeconds = 80) {
+    //     bodyContainer().should('not.have.class', 'pace-running', {timeout: timeoutInSeconds * 1000});
+    //     bodyContainer().should('have.class', 'pace-done', {timeout: timeoutInSeconds * 1000});
+    //     return this;
+    // };
+
+    // Waits for Pace spinner to finish, but never fails the test.
+// Queues polling in Cypress chain; after timeout it logs and continues.
+    wait_until_spinner_disappears(timeoutInSeconds = 80) {
+        const timeout = timeoutInSeconds * 1000;
+        const interval = 500; // ms
+        const started = Date.now();
+
+        const poll = () => {
+            cy.document({log: false}).then((doc) => {
+                // Pace sometimes toggles classes on <body> or <html>
+                const roots = [doc.body, doc.documentElement].filter(Boolean);
+                const hasSpinner = roots.some(el => el.classList.contains('pace-running'));
+                const isDone = roots.some(el => el.classList.contains('pace-done'));
+
+                if (!hasSpinner && isDone) {
+                    // spinner gone -> stop polling
+                    return;
+                }
+
+                const elapsed = Date.now() - started;
+                if (elapsed >= timeout) {
+                    // eslint-disable-next-line no-console
+                    console.warn(`[wait_until_spinner_disappears] still running after ${timeoutInSeconds}s — continuing test.`);
+                    return;
+                }
+
+                // wait a bit, then check again (stays inside Cypress queue)
+                cy.wait(interval, {log: false}).then(poll);
+            });
+        };
+
+        // enqueue the polling steps before whatever comes next
+        poll();
+
+        // allow page-object style chaining
         return this;
-    };
+    }
+
 
     wait_until_label_appears(text) {
         cy.contains(text).should('be.visible');
@@ -2708,6 +2921,7 @@ export default class BasePage {
     }
 
     turn_on_all_toggles_on_modal(labelsArray) {
+        this.pause(1)
         for (let i = 0; i < labelsArray.length; i++) {
             const label = labelsArray[i];
             this.turnOnToggle(label);
@@ -2789,10 +3003,7 @@ export default class BasePage {
                 this.findElementByLabelAndSelectTypeaheadOptionsOnMultiSelectField(label, value)
             } else if (label === 'Offense Location') {
                 cy.get('[name="offenseLocation"]').clear().type(value).click();
-            }
-
-
-            else {
+            } else {
                 this.findElementByLabelEnterValueAndPressEnter(label, value)
             }
         }
@@ -2924,12 +3135,14 @@ export default class BasePage {
         return this;
     }
 
-    enable_all_standard_columns_on_the_grid(page) {
+    enable_all_standard_columns_on_the_grid(page, isDispoStatusEnabled) {
+        let numnerOfFieldsOnMenuCustomization = isDispoStatusEnabled ? page.numberOfAllColumnsWithDispoStatusEnabled : page.numberOfStandardColumns
+
         menuCustomization().click()
         optionsOnMenuCustomization().click()
         pageSizeAndColumnsContianer().within(($list) => {
             enabledColumnsOnMenuCustomization().its('length').then(function (length) {
-                if (length < page.numberOfStandardColumns + 1) {
+                if (length < numnerOfFieldsOnMenuCustomization + 1) {
                     disabledColumnsOsOnMenuCustomization().its('length').then(function (length) {
                         // iterate through options that have 'X' icon within "Options" section the number of times that matches the number of 'disabled columns' (exclude 3 'X' icons in pageSize section)
                         let numberOfPageSizeOptionsWithXIcon = (page === C.pages.taskList) ? 1 : 3

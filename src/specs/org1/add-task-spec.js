@@ -53,10 +53,9 @@ describe('Add Task', function () {
                      .verify_task_data_on_grid(D.newTask, orgAdmin)
         });
 
-        // candidate fot smoke test
         it('1.1.2.' +
             'Add task with all fields' +
-            '-- assign to 1 user' +
+            '-- assign to 1 user and 1 user group' +
             '-- attach 1 case, 1 item and 1 person' +
             '-- override template content' +
             '-- search for task on the grid by Assignee name' +
@@ -96,7 +95,7 @@ describe('Add Task', function () {
                 ui.menu.click_Tasks();
                 ui.addTask.click_button(C.buttons.addTask)
                     .populate_all_fields(D.newTask, false, false, selectedTemplate)
-                    .enter_user_group(D.newTask.userGroupName)
+                    .select_assignees([D.newTask.userGroupName])
                     .click_Save_()
                     .verify_toast_message(C.toastMsgs.saved)
                 ui.taskList.search_for_the_task(powerUser.firstName)
@@ -109,7 +108,6 @@ describe('Add Task', function () {
             })
 
         });
-
 
 
         it('1.1.3.' +

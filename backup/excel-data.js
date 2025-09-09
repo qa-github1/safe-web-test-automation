@@ -61,9 +61,11 @@ E.generateEditedCustomValues = function () {
     ]
 };
 
+
 E.generateDataFor_CASES_Importer = function (arrayOfDataObjects, customFormName, importingCaseUpdates, numberOfRecords, specificMapping) {
     // Set headers for Excel file
     let allFieldHeaders = specificMapping || C.importMappingsWithOutSquareBrackets.allCaseFields
+
     let minimumFieldsHeaders = [
         "Active",
         "Case Number",
@@ -77,6 +79,10 @@ E.generateDataFor_CASES_Importer = function (arrayOfDataObjects, customFormName,
     numberOfRecords = numberOfRecords || arrayOfDataObjects.length
 
     let customFieldsHeaders = E.generateCustomFormHeaders(customFormName)
+    let customFieldsValues = E.generateCustomValues()
+
+    E.customFieldsValues = E.generateCustomValues()
+    E.editedCustomFieldsValues = E.generateEditedCustomValues()
 
     if (customFormName) {
         allFieldHeaders = allFieldHeaders.concat(customFieldsHeaders);
@@ -97,13 +103,10 @@ E.generateDataFor_CASES_Importer = function (arrayOfDataObjects, customFormName,
         let j = i + 1
 
         let caseObject = arrayOfDataObjects[i] || arrayOfDataObjects[0]
-
-      //  if (!arrayOfDataObjects[i]){
-            D['case' + j] = Object.assign({}, caseObject);
-      //  }
+        D['case' + j] = Object.assign({}, caseObject);
 
         if (!importingCaseUpdates) {
-            D['case' + j].caseNumber  = 'imported_' + caseObject.caseNumber + '_' + j;
+            D['case' + j].caseNumber = 'imported_' + caseObject.caseNumber + '_' + j;
             if (caseObject.offenseDescription) D['case' + j].offenseDescription = 'imported_' + caseObject.caseNumber
         }
         let tags = caseObject.tags ? caseObject.tags[0] : ''
@@ -138,37 +141,25 @@ E.generateDataFor_CASES_Importer = function (arrayOfDataObjects, customFormName,
             caseObject.createdDate
         ]
 
-
         if (customFormName) {
-            if (importingCaseUpdates) {
-                E.caseImportDataWithAllFields[i + 1] = E.caseImportDataWithAllFields[i + 1].concat(E.editedCustomFieldsValues);
-                E.caseImportDataWithMinimumFields[i + 1] = E.caseImportDataWithMinimumFields[i + 1].concat(E.editedCustomFieldsValues);
-                caseObject = Object.assign({caseObject}, D.newCustomFormData);
-            }
-            else{
-                E.caseImportDataWithAllFields[i + 1] = E.caseImportDataWithAllFields[i + 1].concat(E.customFieldsValues);
-                E.caseImportDataWithMinimumFields[i + 1] = E.caseImportDataWithMinimumFields[i + 1].concat(E.customFieldsValues);
-            }
+            E.caseImportDataWithAllFields[i + 1] = E.caseImportDataWithAllFields[i + 1].concat(customFieldsValues);
+            E.caseImportDataWithMinimumFields[i + 1] = E.caseImportDataWithMinimumFields[i + 1].concat(customFieldsValues);
+            caseObject = Object.assign({caseObject}, D.newCustomFormData);
         }
 
         if (numberOfRecords === 1 && !importingCaseUpdates) {
             D.newCase = Object.assign({}, D['case' + 1]);
         }
-
-        if (arrayOfDataObjects[1]){
-            caseObject = Object.assign({}, D['case' + j] )
-        }
     }
 }
-
-E.customFieldsValues = E.generateCustomValues()
-E.editedCustomFieldsValues = E.generateEditedCustomValues()
 
 E.generateDataFor_ITEMS_Importer = function (arrayOfDataObjects, customFormName, importingItemUpdates, numberOfRecords, specificMapping) {
     // Set headers for Excel file
     //this commented part is switched with the one below because we had an issue with files
     //import always used a file from the previous test and that was a reason for failing
 
+    // let allFieldHeaders = specificMapping || C.importMappingsWithOutSquareBrackets.checkedInItemFields
+    // let minimumFieldsHeaders = specificMapping || C.importMappingsWithOutSquareBrackets.minimumItemFields
     let allFieldHeaders = [...(specificMapping || C.importMappingsWithOutSquareBrackets.checkedInItemFields)];
     let minimumFieldsHeaders = [...(specificMapping || C.importMappingsWithOutSquareBrackets.minimumItemFields)];
 
@@ -319,6 +310,7 @@ E.generateDataFor_ITEMS_Importer = function (arrayOfDataObjects, customFormName,
             E.itemImportDataWithAllFields[i + 1].push(itemObject.checkedOutNotes)
             E.itemImportDataWithMinimumFields[i + 1].push(itemObject.checkedOutNotes)
         }
+
 
         if (itemObject.status === 'Checked In' && importingItemUpdates) {
             allFieldHeaders.push('Returned By');
@@ -560,7 +552,6 @@ E.generateDataFor_LOCATIONS_Importer = function (numberOfLocations = 3) {
 
     E.setLocationImportStructure(numberOfLocations);
 };
-
 E.notesFieldsHeaders = [
     "UserGuid",
     "ItemId",

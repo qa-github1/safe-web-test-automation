@@ -63,42 +63,43 @@ exports.getTestAccounts = function (environment, orgNum = 1) {
             id: environment.users.basicUser.id,
             guid: environment.users.basicUser.guid
         },
-        // blockedUser: {
-        //     title: exports.userRoles.blockedUser,
-        //     email: `qa+org${orgNum}_blockedUser@trackerproducts.com`,
-        //     name: 'Blocked CypressUser',
-        //     firstName: 'Blocked',
-        //     lastName: 'CypressUser',
-        //     password: 'Qwerty123!',
-        //     officeId: environment.office_1.id,
-        //     organizationId: environment.orgSettings.id,
-        //     id: environment.users.blockedUser.id,
-        //     guid: environment.users.blockedUser.guid
-        // },
-        // systemAdmin: {
-        //     title: exports.userRoles.systemAdmin,
-        //     email: 'qa+systemadmin@trackerproducts.com',
-        //     password: 'Qwerty123!',
-        //     name: 'QA',
-        //     firstName: 'SystemAdmin',
-        //     lastName: 'SystemAdmin',
-        //     officeId: environment.users.systemAdmin.officeId,
-        //     organizationId: environment.users.systemAdmin.organizationId,
-        //     id: environment.users.systemAdmin.id,
-        //     guid: environment.users.systemAdmin.guid
-        // },
-        // clpUser: {
-        //     title: exports.userRoles.clpUser,
-        //     email: `qa+org${orgNum}_clpUser@trackerproducts.com`,
-        //     password: 'Qwerty123!',
-        //     name: 'Clp User',
-        //     firstName: 'Clp',
-        //     lastName: 'User',
-        //     officeId: environment.office_1.id,
-        //     organizationId: environment.orgSettings.id,
-        //     id: environment.users.clpUser.id,
-        //     guid: environment.users.clpUser.guid
-        // }
+        blockedUser: {
+            title: exports.userRoles.blockedUser,
+            email: `qa+org${orgNum}_blockedUser@trackerproducts.com`,
+            name: 'Blocked CypressUser',
+            firstName: 'Blocked',
+            lastName: 'CypressUser',
+            password: 'Qwerty123!',
+            officeId: environment.office_1.id,
+            organizationId: environment.orgSettings.id,
+            id: environment.users.blockedUser.id,
+            guid: environment.users.blockedUser.guid
+        },
+        systemAdmin: {
+            title: exports.userRoles.systemAdmin,
+            email: 'qa+systemadmin@trackerproducts.com',
+            password: 'Qwerty123!',
+            name: 'QA',
+            firstName: 'SystemAdmin',
+            lastName: 'SystemAdmin',
+           officeId: environment.users.systemAdmin.officeId,
+           organizationId: environment.users.systemAdmin.organizationId,
+           id: environment.users.systemAdmin.id,
+           guid: environment.users.systemAdmin.guid
+        },
+        clpUser: {
+            title: exports.userRoles.clpUser,
+            email: `qa+org${orgNum}_clpUser@trackerproducts.com`,
+            password: 'Qwerty123!',
+            name: 'Clp User',
+            firstName: 'Clp',
+            lastName: 'User',
+            officeId: environment.office_1.id,
+            organizationId: environment.orgSettings.id,
+            id: environment.users.clpUser.id,
+            guid: environment.users.clpUser.guid
+        }
+
     }
     return exports.userAccounts['orgNum' + orgNum];
 };

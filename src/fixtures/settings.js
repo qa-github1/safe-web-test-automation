@@ -7,6 +7,15 @@ S.domain = Cypress.env('domain')
 S.base_url = Cypress.env('baseUrl')
 S.api_url = Cypress.env('apiUrl')
 S.orgNum = Cypress.env('orgNum')
+S.api_timeout = Cypress.env('apiTimeout') || 60000
+
+// options: LightRegression, FullRegression
+S.testSuite = Cypress.env('testSuite') || 'FullRegression'
+
+
+S.isFullRegression = function () {
+    return S.testSuite === 'FullRegression'
+}
 
 S.currentDateAndTime = helper.getCurrentDateInCurrentFormat(C.currentDateTimeFormat);
 S.currentDate = helper.getCurrentDateInCurrentFormat(C.currentDateFormat);
@@ -16,11 +25,9 @@ S.yesterdaysDate = helper.yesterdaysDate(C.currentDateTimeFormat);
 S.isOrg1 = function () {
     return Cypress.env('orgNum') === 1
 }
-
 S.isOrg2 = function () {
     return Cypress.env('orgNum') === 2
 }
-
 S.isOrg3 = function () {
     return Cypress.env('orgNum') === 3
 }
@@ -33,7 +40,6 @@ S.getCurrentDate = function (mask) {
     S.currentDate = helper.getCurrentDateInCurrentFormat(C.currentDateFormat);
     return helper.getCurrentDateInSpecificFormat(mask)
 };
-
 S.getCurrentDate();
 S.getYesterdaysDate = function (mask) {
     return helper.getYesterdaysDateInSpecificFormat(mask)
@@ -251,8 +257,8 @@ S.DEV_1 = {
             guid: '7801ce14-fc36-eb11-aa49-062d5b58f56e'
         },
         basicUser: {
-            id: 43530,
-            guid: '2af70873-db6f-ed11-832d-021f02b7478f'
+            id: 74278,
+            guid: 'e1d57896-182f-f011-8369-0254a7906fb1'
         },
         blockedUser: {
             id: 54357,
@@ -270,17 +276,29 @@ S.DEV_1 = {
         }
     },
     units: {
-        unit1: {
+        div1_unit1: {
             name: 'UnitA',
-            id: 54
+            id: null
         },
-        unit2: {
+        div1_unit2: {
             name: 'UnitB',
-            id: 56
+            id: null
         },
-        unit3: {
+        div1_unit3: {
             name: 'UnitC',
-            id: 57
+            id: null
+        },
+        div2_unit1: {
+            name: 'UnitA',
+            id: null
+        },
+        div2_unit2: {
+            name: 'UnitB',
+            id: null
+        },
+        div2_unit3: {
+            name: 'UnitC',
+            id: null
         }
     },
     forms: {
@@ -445,15 +463,15 @@ S.DEV_1 = {
     },
     admin_userGroup: {
         name: 'Cypress Admin Group',
-        id: 2539
+        id: 10591
     },
     blocked_userGroup: {
         name: 'Cypress Blocked Group',
-        id: 2540
+        id: 10593
     },
     readOnly_userGroup: {
         name: 'Cypress ReadOnly Group',
-        id: 2541
+        id: 10592
     },
     orgTag1: {tagModelId: 6548, name: 'sensitive information', color: "#ad2355", tagUsedBy: 1},
     orgTag2: {tagModelId: 6714, name: 'eligible for disposal', color: "#4b9b62", tagUsedBy: 1},
@@ -538,7 +556,7 @@ S.DEV_2 = {
         div2: {
             name: 'Investigations',
             id: 55
-        }
+        },
     },
     units: {
         div1_unit1: {
@@ -566,9 +584,9 @@ S.DEV_2 = {
             id: 60
         }
     },
-    importer:{
-                    invalidDate: '69b0e307-1cbc-4248-9cd9-7559c8c15084',
-                    invalidItem: '69b0e307-1cbc-4248-9cd9-7559c8c15084'
+    importer: {
+        invalidDate: '69b0e307-1cbc-4248-9cd9-7559c8c15084',
+        invalidItem: '69b0e307-1cbc-4248-9cd9-7559c8c15084'
 
     },
     forms: {
@@ -613,7 +631,7 @@ S.DEV_2 = {
         caseNumber: 'AutomatedTest-Active Case',
         createdDate: '10/30/2024',
         offenseDate: '12/13/2022',
-       // reviewDate: '12/12/2022'
+        // reviewDate: '12/12/2022'
         reviewDate: '11/15/2025'
     },
     taskTemplates: {
@@ -825,20 +843,20 @@ S.DEV_2 = {
 S.DEV_3 = {
     newUser: {},
     orgSettings: {
-        id: 556,
-        name: 'Web Test Automtion #3',
-        license: 'CH9byWyGCZWALMV9S5V4BYE9T5DsquRUSa7zh+wF+zc=',
-        guid: '51554d99-4630-ed11-832b-021f02b7478f',
+        id: 559,
+        name: 'Web Test Automation #3',
+        license: 'XKvU4HQo2Nupg5mO6mqE3D4Oqayey1ksgpRCFHjPp4k=',
+        guid: '63b30ce5-a18b-ef11-834d-0254a7906fb1',
         cals: 10
     },
     office_1: {
-        id: 1118,
-        guid: '52554d99-4630-ed11-832b-021f02b7478f',
+        id: 11083,
+        guid: '64b30ce5-a18b-ef11-834d-0254a7906fb1',
         name: "Cypress Office 1",
         orgAndOfficeName: "Web Test Automtion #3 - Cypress Office 1"
     },
     office_2: {
-        id: 1130,
+        id: 11107,
         name: "Web Test Automtion #3 - Cypress Office 2"
     },
     org2: {
@@ -865,20 +883,20 @@ S.DEV_3 = {
             id: 74201,
             guid: '127ca944-0821-f011-8367-0254a7906fb1'
         },
-        // org2Admin: {
-        //     id: 40727,
-        //     guid: '10589878-e7bb-eb11-aa4f-062d5b58f56e',
-        //     organizationId: 546,
-        //     officeId: 1054
-        // },
+        org2Admin: {
+            id: null,
+            guid: null,
+            organizationId: null,
+            officeId: null
+        },
         powerUser: {
             id: 74212,
             guid: '22205855-d021-f011-8367-0254a7906fb1'
         },
-        // clpUser: {
-        //     id: 43529,
-        //     guid: '99aa4fce-da6f-ed11-832d-021f02b7478f'
-        // },
+        clpUser: {
+            id: null,
+            guid: null
+        },
         basicUser: {
             id: 43684,
             guid: '6729d18f-8e86-ed11-832d-021f02b7478f'
@@ -899,17 +917,29 @@ S.DEV_3 = {
         }
     },
     units: {
-        unit1: {
+        div1_unit1: {
             name: 'UnitA',
-            id: 88
+            id: null
         },
-        unit2: {
+        div1_unit2: {
             name: 'UnitB',
-            id: 83
+            id: null
         },
-        unit3: {
+        div1_unit3: {
             name: 'UnitC',
-            id: 89
+            id: null
+        },
+        div2_unit1: {
+            name: 'UnitA',
+            id: null
+        },
+        div2_unit2: {
+            name: 'UnitB',
+            id: null
+        },
+        div2_unit3: {
+            name: 'UnitC',
+            id: null
         }
     },
     // forms: {
@@ -920,8 +950,8 @@ S.DEV_3 = {
     // },
     locations: [
         {
-            id: 487927,
-            guid: '2047e0e8-e536-4b4b-acbd-03300c734617',
+            id: 577154,
+            guid: 'e9a9513e-9230-4ebe-9e59-dbad823e9e6c',
             name: "CypressLocation1"
         },
         {
@@ -941,15 +971,15 @@ S.DEV_3 = {
     //     id: 105156,
     // },
     oldClosedCase: {
-        id: 7743098,
+        id: 9009858,
         caseNumber: 'TestCase1',
-        createdDate: '12/28/2022',
-        offenseDate: '12/21/2022',
-        reviewDate: '12/30/2022',
-        closedDate: '12/29/2022',
+        createdDate: '07/16/2025',
+        offenseDate: '07/22/2025',
+        reviewDate: '07/26/2025',
+        closedDate: '07/17/2025',
     },
     oldActiveCase: {
-        id: 7743099,
+        id: 9010613,
         caseNumber: 'AutomatedTest-Active Case',
         createdDate: '12/28/2022',
         offenseDate: '12/20/2022',
@@ -988,12 +1018,12 @@ S.DEV_3 = {
     person: {
         name: 'Person_1',
         fullName: 'Cypress Person_1',
-        id: 6608222,
+        id: 5078972,
         get organizationId() {
             return S.DEV_3.orgSettings.id
         },
         userId: null,
-        guid: '5c11a259-d0fc-43c9-a42f-28b500ae5e6b',
+        guid: '5fe6b54a-e35a-4f99-913b-0bd0ccf51df0',
         email: 'qa+person_1@trackerproducts.com'
     },
     person_2: {
@@ -1072,15 +1102,15 @@ S.DEV_3 = {
     // },
     admin_userGroup: {
         name: 'Cypress Admin Group',
-        id: 2903
+        id: 10603
     },
     blocked_userGroup: {
         name: 'Cypress Blocked Group',
-        id: 2904
+        id: 10604
     },
     readOnly_userGroup: {
         name: 'Cypress ReadOnly Group',
-        id: 2905
+        id: 10605
     },
     orgTag1: {tagModelId: 16827, name: 'sensitive information', color: "#ad2355", tagUsedBy: 1},
     orgTag2: {tagModelId: 16828, name: 'eligible for disposal', color: "#4b9b62", tagUsedBy: 1},
@@ -1092,20 +1122,20 @@ S.DEV_3 = {
 S.DEV_4 = {
     newUser: {},
     orgSettings: {
-        id: 557,
-        name: 'Web Test Automtion #4',
-        license: 'CH9byWyGCZWALMV9S5V4BVXKXGS/G6hqnPaCKAnFGeE=',
-        guid: 'f26bc8a3-4630-ed11-832b-021f02b7478f',
+        id: 560,
+        name: 'Web Test Automation #4',
+        license: 'XKvU4HQo2Nupg5mO6mqE3CVGfabqhgxs0rKUdeWci0U=',
+        guid: '11e20bf4-a18b-ef11-834d-0254a7906fb1',
         cals: 10
     },
     office_1: {
-        id: 1119,
-        guid: 'f36bc8a3-4630-ed11-832b-021f02b7478f',
+        id: 11084,
+        guid: '12e20bf4-a18b-ef11-834d-0254a7906fb1',
         name: "Cypress Office 1",
-        orgAndOfficeName: "Web Test Automtion #4 - Cypress Office 1"
+        orgAndOfficeName: "Web Test Automation #4 - Cypress Office 1"
     },
     office_2: {
-        id: 1138,
+        id: 11109,
         name: "Web Test Automtion #4 - Cypress Office 2"
     },
     org2: {
@@ -1123,14 +1153,14 @@ S.DEV_4 = {
     },
     users: {
         systemAdminId: 40357,
-        orgAdminId: 43720,
+        orgAdminId: 63400,
         systemAdmin: {
             id: 40357,
             guid: '0cfa7c01-2f2e-ea11-aa3a-062d5b58f56e'
         },
         orgAdmin: {
-            id: 43720,
-            guid: '00e8a5a3-d98c-ed11-832e-021f02b7478f'
+            id: 63400,
+            guid: '9ef382df-e4a8-ef11-8351-0254a7906fb1'
         },
         // org2Admin: {
         //     id: 40727,
@@ -1146,6 +1176,14 @@ S.DEV_4 = {
             id: 43722,
             guid: '9fbf2a88-de8c-ed11-832e-021f02b7478f'
         },
+        blockedUser: {
+            id: null,
+            guid: null
+        },
+        clpUser: {
+            id: null,
+            guid: null
+        },
     },
     divisions: {
         div1: {
@@ -1158,17 +1196,29 @@ S.DEV_4 = {
         }
     },
     units: {
-        unit1: {
+        div1_unit1: {
             name: 'UnitA',
-            id: 90
+            id: null
         },
-        unit2: {
+        div1_unit2: {
             name: 'UnitB',
-            id: 84
+            id: null
         },
-        unit3: {
+        div1_unit3: {
             name: 'UnitC',
-            id: 91
+            id: null
+        },
+        div2_unit1: {
+            name: 'UnitA',
+            id: null
+        },
+        div2_unit2: {
+            name: 'UnitB',
+            id: null
+        },
+        div2_unit3: {
+            name: 'UnitC',
+            id: null
         }
     },
     // // forms: {
@@ -1179,8 +1229,8 @@ S.DEV_4 = {
     // // },
     locations: [
         {
-            id: 487942,
-            guid: '92473db1-d9ce-4d43-8962-25b2d484a681',
+            id: 577156,
+            guid: 'b3bb56db-15a9-4abc-b5ce-5d6a69b7a9fc',
             name: "CypressLocation1"
         },
         {
@@ -1200,7 +1250,7 @@ S.DEV_4 = {
     // //     id: 105156,
     // // },
     oldClosedCase: {
-        id: 7744300,
+        id: 9009891,
         caseNumber: 'AutomatedTest-Closed Case',
         createdDate: '01/05/2023',
         offenseDate: '12/21/2022',
@@ -1208,11 +1258,52 @@ S.DEV_4 = {
         closedDate: '05/02/2023',
     },
     oldActiveCase: {
-        id: 7744372,
+        id: 9009893,
         caseNumber: 'AutomatedTest-Active Case',
         createdDate: '01/05/2023',
         offenseDate: '12/20/2022',
         reviewDate: '11/15/2025'
+    },
+    taskTemplates: {
+        dispoAuth: {
+            templateId: null,
+            type: 'Disposition Authorization',
+            subtype: '',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 5,
+            useDispositionAuthorizationActions: true,
+            title: 'Disposition Authorization',
+        },
+        other: {
+            templateId: null,
+            type: 'Other',
+            subtype: '',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 10,
+            useDispositionAuthorizationActions: true,
+            title: 'Title--forAutomatedTests',
+            message: 'Message-forAutomatedTests'
+        },
+        errorCorrection: {
+            templateId: null,
+            typeId: 3388,
+            type: 'Error Correction',
+            subtypeId: 2808,
+            subtype: 'Packaging and Labeling',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 5,
+            useDispositionAuthorizationActions: false,
+            title: 'Title--forAutomatedTests',
+            message: 'Message-forAutomatedTests',
+            taskAction: 'Must be Rendered Safe',
+            taskActionId: 1688,
+        },
     },
     // recentCase: {
     //     id: 7744372,
@@ -1222,7 +1313,7 @@ S.DEV_4 = {
     person: {
         name: 'Person_1',
         fullName: 'Cypress Person_1',
-        id: 6608222,
+        id: 5078979,
         get organizationId() {
             return S.DEV_3.orgSettings.id
         },
@@ -2160,17 +2251,29 @@ S.PENTEST_1 = {
         }
     },
     units: {
-        unit1: {
+        div1_unit1: {
             name: 'UnitA',
-            id: 63
+            id: null
         },
-        unit2: {
+        div1_unit2: {
             name: 'UnitB',
-            id: 64
+            id: null
         },
-        unit3: {
+        div1_unit3: {
             name: 'UnitC',
-            id: 85
+            id: null
+        },
+        div2_unit1: {
+            name: 'UnitA',
+            id: null
+        },
+        div2_unit2: {
+            name: 'UnitB',
+            id: null
+        },
+        div2_unit3: {
+            name: 'UnitC',
+            id: null
         }
     },
     forms: {
@@ -2355,7 +2458,7 @@ S.PENTEST_2 = {
     office_2: {
         id: 1123,
         name: "Cypress Office 2",
-        orgAndOfficeName: "Web Test Autotion #2 - Cypress Office 2"
+        orgAndOfficeName: "Web Test Automtion #2 - Cypress Office 2"
     },
     org2: {
         office_1: {
@@ -2445,7 +2548,7 @@ S.PENTEST_2 = {
             id: 92
         }
     },
-    importer:{
+    importer: {
         invalidDate: '535530de-c2e1-40bd-ad7d-4189dbbeb6af',
         invalidItem: '535530de-c2e1-40bd-ad7d-4189dbbeb6af'
 
@@ -2639,7 +2742,7 @@ S.PENTEST_2 = {
             taskAction: 'Must be Rendered Safe',
             taskActionId: '547',
         },
-        },
+    },
 
     orgTag1: {tagModelId: 6751, name: 'sensitive information', color: "#ad2355", tagUsedBy: 1},
     orgTag2: {tagModelId: 6752, name: 'eligible for disposal', color: "#4b9b62", tagUsedBy: 1},
@@ -2683,7 +2786,6 @@ S.PENTEST_3 = {
         officeName: "Cypress Office 1",
         orgAndOfficeName: "Web Test Automation - Cypress Office 1"
     },
-
     users: {
         systemAdminId: 40357,
         orgAdminId: 43666,
@@ -2938,7 +3040,7 @@ S.PENTEST_3 = {
             taskActionId: 548,
         },
     },
-},
+};
 
 S.PENTEST_4 = {
     newUser: {},
@@ -3003,6 +3105,10 @@ S.PENTEST_4 = {
             id: 97339,
             guid: 'db569414-481c-f011-8371-021f02b7478f'
         },
+        clpUser: {
+            id: null,
+            guid: null
+        },
     },
     divisions: {
         div1: {
@@ -3015,17 +3121,29 @@ S.PENTEST_4 = {
         }
     },
     units: {
-        unit1: {
+        div1_unit1: {
             name: 'UnitA',
-            id: 90
+            id: null
         },
-        unit2: {
+        div1_unit2: {
             name: 'UnitB',
-            id: 84
+            id: null
         },
-        unit3: {
+        div1_unit3: {
             name: 'UnitC',
-            id: 91
+            id: null
+        },
+        div2_unit1: {
+            name: 'UnitA',
+            id: null
+        },
+        div2_unit2: {
+            name: 'UnitB',
+            id: null
+        },
+        div2_unit3: {
+            name: 'UnitC',
+            id: null
         }
     },
     forms: {
@@ -3267,39 +3385,39 @@ S.SECURE_1 = {
         orgAndOfficeName: "Web Test Automation #2 - Default Office"
     },
     users: {
-      //  systemAdminId: 40357,  //we don't have sys adm on Secure
+        //  systemAdminId: 40357,  //we don't have sys adm on Secure
         orgAdminId: 118001,
         systemAdmin: {
-            id: 40357,
-            guid: '0cfa7c01-2f2e-ea11-aa3a-062d5b58f56e'
+            id: 118001,
+            guid: '5cc413f7-6f2a-f011-ad1f-0e9868aeff83'
         },
         orgAdmin: {
             id: 118001,
             guid: '5cc413f7-6f2a-f011-ad1f-0e9868aeff83'
         },
-        // org2Admin: { //need to change password
-        //     id: 66515,
-        //     guid: 'b9bd4818-d6e3-eb11-aaaa-0686e4578f20',
-        //     organizationId: 1028,
-        //     officeId: 2216
-        // },
+        org2Admin: { //need to change password
+            id: null,
+            guid: null,
+            organizationId: null,
+            officeId: null
+        },
         powerUser: {
             id: 118005,
             guid: 'd1270088-782a-f011-ad1f-0e9868aeff83'
         },
-    //     clpUser: {
-    //         id: 40383,
-    //         guid: '7801ce14-fc36-eb11-aa49-062d5b58f56e'
-    //     },
+        clpUser: {
+            id: null,
+            guid: null
+        },
         basicUser: {
             id: 118006,
             guid: '44312f6c-7d2a-f011-ad1f-0e9868aeff83'
         },
-    //     blockedUser: {
-    //         id: 54357,
-    //         guid: 'a484b498-75c9-ed11-8334-021f02b7478f'
-    //     },
-     },
+        blockedUser: {
+            id: null,
+            guid: null
+        },
+    },
     divisions: {
         div1: {
             name: 'Patrol',
@@ -3311,17 +3429,29 @@ S.SECURE_1 = {
         }
     },
     units: {
-        unit1: {
+        div1_unit1: {
             name: 'UnitA',
-            id: 1762
+            id: null
         },
-        unit2: {
+        div1_unit2: {
             name: 'UnitB',
-            id: 1763
+            id: null
         },
-        unit3: {
+        div1_unit3: {
             name: 'UnitC',
-            id: 1764
+            id: null
+        },
+        div2_unit1: {
+            name: 'UnitA',
+            id: null
+        },
+        div2_unit2: {
+            name: 'UnitB',
+            id: null
+        },
+        div2_unit3: {
+            name: 'UnitC',
+            id: 60
         }
     },
     forms: {
@@ -3500,10 +3630,10 @@ S.SECURE_1 = {
     },
     orgTag1: {tagModelId: 17561, name: 'sensitive information', color: "#ad2355", tagUsedBy: 1},
     orgTag2: {tagModelId: 17562, name: 'eligible for disposal', color: "#4b9b62", tagUsedBy: 1},
+    orgTag3: {tagModelId: 17566, name: 'cold_case', color: "#217ed6", tagUsedBy: 1},
     tagA: {tagModelId: 17563, name: 'Tag_A__', color: "#4b749b", tagUsedBy: 1},
     tagB: {tagModelId: 17564, name: 'Tag_B__', color: "#4b749b", tagUsedBy: 1},
     tagC: {tagModelId: 17565, name: 'Tag_C__', color: "#4b749b", tagUsedBy: 1},
-    orgTag3: {tagModelId: 17566, name: 'cold_case', color: "#217ed6", tagUsedBy: 1},
 };
 
 S.SECURE_2 = {
@@ -3540,30 +3670,29 @@ S.SECURE_2 = {
         orgAndOfficeName: "Web Test Automation #3 - Cypress Office 1"
     },
     users: {
-       // systemAdminId: 40357,
         orgAdminId: 118002,
-        // systemAdmin: {
-        //     id: 40357,
-        //     guid: '0cfa7c01-2f2e-ea11-aa3a-062d5b58f56e'
-        // },
+        systemAdmin: {
+            id: 118002,
+            guid: '95a3522e-702a-f011-ad1f-0e9868aeff83'
+        },
         orgAdmin: {
             id: 118002,
             guid: '95a3522e-702a-f011-ad1f-0e9868aeff83'
         },
-        // org2Admin: {
-        //     id: 40727,
-        //     guid: '10589878-e7bb-eb11-aa4f-062d5b58f56e',
-        //     organizationId: 546,
-        //     officeId: 1054
-        // },
+        org2Admin: {
+            id: null,
+            guid: null,
+            organizationId: null,
+            officeId: null
+        },
         powerUser: {
             id: 118003,
             guid: '14c490f9-712a-f011-ad1f-0e9868aeff83'
         },
-        // clpUser: {
-        //     id: 40383,
-        //     guid: '7801ce14-fc36-eb11-aa49-062d5b58f56e'
-        // },
+        clpUser: {
+            id: null,
+            guid: null
+        },
         basicUser: {
             id: 118004,
             guid: 'e44a930d-742a-f011-ad1f-0e9868aeff83'
@@ -3584,17 +3713,29 @@ S.SECURE_2 = {
         }
     },
     units: {
-        unit1: {
+        div1_unit1: {
             name: 'UnitA',
-            id: 1759
+            id: null
         },
-        unit2: {
+        div1_unit2: {
             name: 'UnitB',
-            id: 1760
+            id: null
         },
-        unit3: {
+        div1_unit3: {
             name: 'UnitC',
-            id: 1761
+            id: null
+        },
+        div2_unit1: {
+            name: 'UnitA',
+            id: null
+        },
+        div2_unit2: {
+            name: 'UnitB',
+            id: null
+        },
+        div2_unit3: {
+            name: 'UnitC',
+            id: 60
         }
     },
     forms: {
@@ -3814,28 +3955,28 @@ S.SECURE_3 = {
     users: {
         //systemAdminId: 40357, //we don't have sys adm on Secure
         orgAdminId: 118065,
-        // systemAdmin: {
-        //     id: 40357,
-        //     guid: '0cfa7c01-2f2e-ea11-aa3a-062d5b58f56e'
-        // },
+        systemAdmin: {
+            id: 118065,
+            guid: '254b01fb-442b-f011-ad1f-0e9868aeff83'
+        },
         orgAdmin: {
             id: 118065,
             guid: '254b01fb-442b-f011-ad1f-0e9868aeff83'
         },
-//         // org2Admin: {
-//         //     id: 40727,
-//         //     guid: '10589878-e7bb-eb11-aa4f-062d5b58f56e',
-//         //     organizationId: 546,
-//         //     officeId: 1054
-//         // },
+        org2Admin: {
+            id: null,
+            guid: null,
+            organizationId: null,
+            officeId: null
+        },
         powerUser: {
             id: 118068,
             guid: '3af62a21-462b-f011-ad1f-0e9868aeff83'
         },
-//         // clpUser: {
-//         //     id: 43529,
-//         //     guid: '99aa4fce-da6f-ed11-832d-021f02b7478f'
-//         // },
+        clpUser: {
+            id: null,
+            guid: null
+        },
         basicUser: {
             id: 118069,
             guid: '042ac096-462b-f011-ad1f-0e9868aeff83'
@@ -3856,17 +3997,29 @@ S.SECURE_3 = {
         }
     },
     units: {
-        unit1: {
+        div1_unit1: {
             name: 'UnitA',
-            id: 1769
+            id: null
         },
-        unit2: {
+        div1_unit2: {
             name: 'UnitB',
-            id: 1770
+            id: null
         },
-        unit3: {
+        div1_unit3: {
             name: 'UnitC',
-            id: 1771
+            id: null
+        },
+        div2_unit1: {
+            name: 'UnitA',
+            id: null
+        },
+        div2_unit2: {
+            name: 'UnitB',
+            id: null
+        },
+        div2_unit3: {
+            name: 'UnitC',
+            id: 60
         }
     },
     forms: {
@@ -4102,22 +4255,21 @@ S.SECURE_4 = {
         orgAndOfficeName: "Web Test Automation #3 - Cypress Office 1"
     },
     users: {
-//         systemAdminId: 40357,
         orgAdminId: 118077,
-//         systemAdmin: {
-//             id: 40357,
-//             guid: '0cfa7c01-2f2e-ea11-aa3a-062d5b58f56e'
-//         },
+        systemAdmin: {
+            id: 118077,
+            guid: 'f5791dfd-792b-f011-ad1f-0e9868aeff83'
+        },
         orgAdmin: {
             id: 118077,
             guid: 'f5791dfd-792b-f011-ad1f-0e9868aeff83'
         },
-//         // org2Admin: {
-//         //     id: 40727,
-//         //     guid: '10589878-e7bb-eb11-aa4f-062d5b58f56e',
-//         //     organizationId: 546,
-//         //     officeId: 1054
-//         // },
+        org2Admin: {
+            id: null,
+            guid: null,
+            organizationId: null,
+            officeId: null
+        },
         powerUser: {
             id: 118078,
             guid: '167ed77c-7a2b-f011-ad1f-0e9868aeff83'
@@ -4129,6 +4281,10 @@ S.SECURE_4 = {
         blockedUser: {
             id: 118080,
             guid: 'b95a33c6-7b2b-f011-ad1f-0e9868aeff83'
+        },
+        clpUser: {
+            id: null,
+            guid: null
         },
     },
     divisions: {
@@ -4142,17 +4298,29 @@ S.SECURE_4 = {
         }
     },
     units: {
-        unit1: {
+        div1_unit1: {
             name: 'UnitA',
-            id: 1772
+            id: null
         },
-        unit2: {
+        div1_unit2: {
             name: 'UnitB',
-            id: 1773
+            id: null
         },
-        unit3: {
+        div1_unit3: {
             name: 'UnitC',
-            id: 1774
+            id: null
+        },
+        div2_unit1: {
+            name: 'UnitA',
+            id: null
+        },
+        div2_unit2: {
+            name: 'UnitB',
+            id: null
+        },
+        div2_unit3: {
+            name: 'UnitC',
+            id: 60
         }
     },
     forms: {
@@ -4453,6 +4621,19 @@ S.newCaseId = null;
 S.oldClosedCase = S.selectedEnvironment.oldClosedCase;
 S.recentCase = S.selectedEnvironment.recentCase;
 
+S.customForms = {
+    casesFormWithRequiredFields: 'Required fields - Cypress Cases Form - Org#' + S.orgNum,
+    caseFormWithOptionalFields: 'Optional fields - Cypress Case Form - Org#' + S.orgNum,
+    itemFormWithRequiredFields: 'Required fields - Cypress Items Form - Org#' + S.orgNum,
+    itemFormWithOptionalFields: 'Optional fields - Cypress Items Form - Org#' + S.orgNum,
+    userFormWithRequiredFields: 'Required fields - Cypress Users Form - Org#' + S.orgNum,
+    userFormWithOptionalFields: 'Optional fields - Cypress Users Form - Org#' + S.orgNum,
+    peopleFormWithRequiredFields: 'Required fields - Cypress People Form - Org#' + S.orgNum,
+    peopleFormWithOptionalFields: 'Optional fields - Cypress People Form - Org#' + S.orgNum,
+    // tasksFormWithRequiredFields: 'Cypress Task Form -- required fields',
+    // tasksFormWithOptionalFields: 'Cypress Task Form -- optional fields'
+}
+
 S.colors = {
     redBorder: "rgb(231,24,45)"
 };
@@ -4474,7 +4655,7 @@ S.getCurrentUrl = function () {
     return S.currentUrl;
 };
 
-S.isDispoStatusEnabled  = function () {
+S.isDispoStatusEnabled = function () {
     return S.selectedEnvironment.dispoStatusEnabled
 }
 

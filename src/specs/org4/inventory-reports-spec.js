@@ -45,27 +45,12 @@ describe('Inventory Reports', function () {
 
             api.items.add_new_item(true, child2_1, 'item6')
             api.items.add_new_item(true, child2_1, 'item7')
-             // I changed this part with wrap part because it didn't work
-            //Please review if this is fine and OK
-            // for (let i = 0; i < 8; i++) {
-            //     cy.getLocalStorage('item' + i).then(item => {
-            //         barcodes.push(JSON.parse(item).barcode)
-            //     })
-            // }
-            cy.wrap(null).then(() => {
-                let promises = [];
 
-                for (let i = 0; i < 8; i++) {
-                    promises.push(
-                        cy.getLocalStorage('item' + i).then(item => {
-                            if (!item) throw new Error(`LocalStorage item${i} is null`);
-                            barcodes.push(JSON.parse(item).barcode);
-                        })
-                    );
-                }
-
-                return Cypress.Promise.all(promises);
-            });
+            for (let i = 0; i < 8; i++) {
+                cy.getLocalStorage('item' + i).then(item => {
+                    barcodes.push(JSON.parse(item).barcode)
+                })
+            }
 
         });
 
@@ -120,11 +105,6 @@ describe('Inventory Reports', function () {
 
             api.auth.get_tokens(orgAdmin);
 
-            // for (let i = 0; i < 8; i++) {
-            //     cy.getLocalStorage('item' + i).then(item => {
-            //         barcodes.push(JSON.parse(item).barcode)
-            //
-            //         if (i === 7) {
                         ui.menu.click_Tools__Inventory_Reports()
                             .click_button(C.buttons.newReport)
                         ui.inventoryReports.start_report(reportName, D[parent1].barcode)
@@ -143,21 +123,12 @@ describe('Inventory Reports', function () {
                             .click_button(C.buttons.runReport)
                             .verify_text_is_present_on_main_container
                             (C.labels.InventoryReports.noDiscrepanciesFound)
-               //     }
-              //  })
-          //  }
         });
 
         it('1.4. Create and run DR for multiple parent and child locations - starting with Child loc -  No Discrepancies Found', function () {
             let reportName = D.getCurrentDateAndRandomNumber(4);
 
             api.auth.get_tokens(orgAdmin);
-
-            // for (let i = 0; i < 8; i++) {
-            //     cy.getLocalStorage('item' + i).then(item => {
-            //         barcodes.push(JSON.parse(item).barcode)
-            //
-            //         if (i === 7) {
                         ui.menu.click_Tools__Inventory_Reports()
                             .click_button(C.buttons.newReport)
                         ui.inventoryReports.start_report(reportName, D[child1_1].barcode)
@@ -174,24 +145,12 @@ describe('Inventory Reports', function () {
                             .click_button(C.buttons.runReport)
                             .verify_text_is_present_on_main_container
                             (C.labels.InventoryReports.noDiscrepanciesFound)
-              //      }
-             //   })
-           // }
         });
 
         it('1.5. Create and run DR for multiple parent and child locations  - starting with Child loc - switching back to parent location-  No Discrepancies Found', function () {
             let reportName = D.getCurrentDateAndRandomNumber(4);
 
             api.auth.get_tokens(orgAdmin);
-            // I changed this part with wrap part because it didn't work
-            //Please review if this is fine and OK
-            // for (let i = 0; i < 8; i++) {
-            //     cy.getLocalStorage('item' + i).then(item => {
-            //         barcodes.push(JSON.parse(item).barcode)
-            //
-            //         if (i === 7) {
-            //             ui.menu.click_Tools__Inventory_Reports()
-            //                 .click_button(C.buttons.newReport)
 
             cy.wrap(null).then(() => {
                 expect(barcodes).to.have.length(8);
@@ -215,9 +174,7 @@ describe('Inventory Reports', function () {
                             .click_button(C.buttons.runReport)
                             .verify_text_is_present_on_main_container
                             (C.labels.InventoryReports.noDiscrepanciesFound)
-                //    }
                 })
-          //  }
         });
 
         it('1.6. Create and run DR for single parent location - multiple Discrepancies Found', function () {

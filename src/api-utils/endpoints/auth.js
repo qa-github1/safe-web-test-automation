@@ -44,6 +44,9 @@ exports.get_tokens = function (selectedUser, arrayOfPropertiesToRetain) {
     //              _________________________________________________________________________
     //              ` );
 
+    console.log ('TIME: ' + S.currentDateAndTime)
+    cy.log ('TIME: ' + S.currentDateAndTime)
+
     token_request(selectedUser)
         .then(response => {
 

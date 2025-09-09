@@ -9,154 +9,6 @@ const DF = require("../../support/date-time-formatting");
 
 let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
 let powerUser = S.getUserData(S.userAccounts.powerUser);
-let approvedForReleaseItem = {}
-
-
-// this test is temporarily moved here to achieve even distribution of tests for smoke-test suite
-// describe('Item', function () {
-//
-//     it(
-//         '*** Add/Edit/Search/MassUpdate Item ' +
-//         '*** Add/Search Item Note  ' +
-//         '*** Add/Search Item Media', function () {
-//             api.auth.get_tokens(orgAdmin);
-//             D.generateNewDataSet();
-//             const itemBelongsToCurrently = D.newItem.itemBelongsTo[0]
-//             const currentTag = D.newItem.tags[0]
-//             D.editedItem.caseNumber = D.newItem.caseNumber = D.newCase.caseNumber
-//             api.cases.add_new_case(D.newCase.caseNumber);
-//             api.org_settings.update_org_settings(false, true);
-//             api.org_settings.enable_all_Item_fields();
-//
-//             // ADD ITEM
-//             ui.app.open_newly_created_case_via_direct_link()
-//             ui.menu.click_Add__Item()
-//             ui.addItem.verify_Case_Number_is_populated_on_enabled_input_field(D.newItem.caseNumber)
-//                 .populate_all_fields_on_both_forms(D.newItem, false, false)
-//                 .select_post_save_action(C.postSaveActions.viewAddedItem)
-//                 .click_Save(D.newItem)
-//                 .verify_toast_message_(D.newCase);
-//             ui.itemView.verify_Item_View_page_is_open(D.newItem.caseNumber)
-//                 .click_Edit()
-//                 .verify_values_on_Edit_form(D.newItem)
-//
-//             // EDIT ITEM
-//             ui.itemView.remove_specific_values_on_multi_select_fields([itemBelongsToCurrently, currentTag])
-//                 .edit_all_values(D.editedItem)
-//                 .click_Save()
-//                 .verify_toast_message(C.toastMsgs.saved)
-//                 .open_last_history_record(0)
-//                 .verify_all_values_on_history(D.editedItem, D.newItem)
-//                 .verify_red_highlighted_history_records(C.itemFields.allEditableFieldsArray)
-//                 .click_button('Cancel')
-//
-//             //ADD NOTE
-//             let note = D.getRandomNo() + '_note';
-//             ui.itemView.select_tab(C.tabs.notes)
-//                 .enter_note_and_category(note, C.noteCategories.sensitive)
-//                 .verify_toast_message(C.toastMsgs.saved)
-//
-//             //ADD MEDIA
-//             ui.itemView.select_tab(C.tabs.media)
-//                 .click_button(C.buttons.add)
-//                 .verify_element_is_visible('Drag And Drop your files here')
-//                 .upload_file_and_verify_toast_msg('image.png')
-//                 .edit_Description_on_first_row_on_grid(note)
-//
-//             //Check values after reloading
-//             ui.itemView.reload_page()
-//                 .verify_edited_and_not_edited_values_on_Item_View_form(C.itemFields.allEditableFieldsArray, D.editedItem, D.newItem, true)
-//                 .select_tab(C.tabs.notes)
-//                 .verify_content_of_results_table(note)
-//                 .select_tab(C.tabs.media)
-//                 .verify_content_of_results_table('image.png')
-//
-//             // SEARCH FOR NOTE
-//             ui.searchNotes.run_search_by_Text(note)
-//                 .verify_records_count_on_grid(1)
-//
-//             //SEARCH FOR MEDIA
-//             ui.searchMedia.run_search_by_Description(note)
-//                 .verify_records_count_on_grid(1)
-//
-//             // SEARCH FOR ITEM
-//             ui.searchItem.run_search_by_Item_Description(D.editedItem.description)
-//                 .verify_content_of_first_row_in_results_table(D.editedItem.description);
-//
-//             //MASS UPDATE ITEMS
-//             D.getNewItemData(D.newCase)
-//             D.getEditedItemData(D.newCase)
-//
-//             let allValues = [
-//                 D.editedItem.description,
-//                 D.editedItem.recoveryLocation,
-//                 D.editedItem.recoveredByName,
-//                 D.editedItem.submittedBy,
-//                 D.editedItem.category,
-//                 D.editedItem.custodyReason,
-//                 D.editedItem.recoveryDate,
-//                 D.editedItem.make,
-//                 D.editedItem.model,
-//                 D.editedItem.itemBelongsTo[0],
-//                 D.editedItem.tags[0]
-//             ]
-//
-//             let allUpdatedFieldsOnHistory = [
-//                 'Description',
-//                 'Recovered At',
-//                 'Recovered By',
-//                 'Category',
-//                 'Custody Reason',
-//                 'Recovery Date',
-//                 'Make',
-//                 'Model',
-//                 'Item Belongs to',
-//                 'Tags',
-//             ]
-//             D.editedItem.serialNumber = D.newItem.serialNumber
-//             D.newItem1 = Object.assign({}, D.newItem)
-//             D.newItem1.description = '1__ ' + D.newItem.description
-//             D.newItem2 = Object.assign({}, D.newItem)
-//             D.newItem2.description = '2__ ' + D.newItem.description
-//             D.editedItem.additionalBarcodes = []
-//
-//             api.items.add_new_item(true, null, 'item_1', D.newItem1)
-//             api.items.add_new_item(true, null, 'item_2', D.newItem2)
-//
-//             ui.searchItem
-//                 .expand_search_criteria()
-//                 .enter_Description(C.searchCriteria.inputFields.textSearch, D.newItem.description)
-//                 .click_Search()
-//                 .verify_records_count_on_grid(2)
-//                 .select_checkbox_on_specific_table_row(1)
-//                 .select_checkbox_on_specific_table_row(2)
-//                 .click_Actions()
-//                 .click_option_on_expanded_menu(C.dropdowns.caseActions.massUpdate)
-//                 .turn_on_and_enter_values_to_all_fields_on_modal(C.itemFields.massUpdateModal, allValues)
-//                 // .verify_text_above_modal_footer('\n        Mass updating\n         2 \n        \n        cases\n    ')
-//                 .click_Ok()
-//                 .verify_toast_message(C.toastMsgs.saved)
-//
-//             cy.getLocalStorage('item_1').then(item => {
-//                 ui.app.open_item_url(JSON.parse(item).id)
-//                 ui.itemView.click_Edit()
-//                     .verify_edited_and_not_edited_values_on_Item_Edit_form(C.itemFields.allEditableFieldsArray, D.editedItem, D.newItem1, true)
-//                     .open_last_history_record(0)
-//                     .verify_all_values_on_history(D.editedItem, D.newItem1)
-//                     .verify_red_highlighted_history_records(allUpdatedFieldsOnHistory)
-//             })
-//
-//             cy.getLocalStorage('item_2').then(item => {
-//                 ui.app.open_item_url(JSON.parse(item).id)
-//                 ui.itemView.click_Edit()
-//                     .verify_edited_and_not_edited_values_on_Item_Edit_form(C.itemFields.allEditableFieldsArray, D.editedItem, D.newItem2, true)
-//                     .open_last_history_record(0)
-//                     .verify_all_values_on_history(D.editedItem, D.newItem2)
-//                     .verify_red_highlighted_history_records(allUpdatedFieldsOnHistory)
-//             })
-//         });
-// });
-
 describe('Services', function () {
 
     before(function () {
@@ -167,6 +19,7 @@ describe('Services', function () {
         api.org_settings.enable_all_Case_fields();
         api.org_settings.enable_all_Item_fields();
         api.org_settings.enable_all_Person_fields();
+        api.users.update_current_user_settings(orgAdmin.id, DF.dateTimeFormats.long)
         api.org_settings.update_org_settings(false, true);
         api.org_settings.update_org_settings_by_specifying_property_and_value('containerAutoDeactivate', true)
         api.users.update_current_user_settings(orgAdmin.id, C.currentDateTimeFormat, C.currentDateFormat)
@@ -285,10 +138,11 @@ describe('Services', function () {
                 .enter_values_on_reassign_modal([orgAdmin.fullName])
                 .click_Ok()
                 .verify_toast_message('Processing...')
+                .verify_text_is_present_on_main_container('Reassign Tasks and Cases After Deactivating the User(s)')
                 .verify_content_of_first_row_in_results_table([newUser.email, 'Complete'])
                 .open_newly_created_case_via_direct_link()
                 .click_Edit()
-            D.newCase.caseOfficers = [newUser.name, orgAdmin.name]
+            D.newCase.caseOfficers = [D.newUser.firstLastName, orgAdmin.name]
             ui.caseView.verify_values_on_Edit_form(D.newCase)
         })
     });
@@ -329,6 +183,7 @@ describe('Services', function () {
                     .verify_text_is_present_on_main_container('People Merge Jobs')
                     .sort_by_descending_order('Start Date')
                     .verify_content_of_first_row_in_results_table(['Complete', person2.firstName])
+                    .pause(1)
                     .click_link(person2.firstName)
                     .select_tab('Merge History')
                     .verify_content_of_first_row_in_results_table_on_active_tab(person1.businessName)
@@ -338,26 +193,33 @@ describe('Services', function () {
 
     xit('11. Auto Disposition', function () {
 
-        api.auth.get_tokens(user);
+        let minDate = helper.setDate(C.currentDateTimeFormat.dateOnly.editMode, 2027, 11, 15);
+        let maxDate = helper.setDate(C.currentDateTimeFormat.dateOnly.editMode, 2027, 11, 15);
+        let redistributeNote = 'Redistributing Case Review dates from ' + minDate + ' to ' + maxDate;
+        let daysToFollowUp = 33
+
+        api.auth.get_tokens(orgAdmin);
+        api.org_settings.enable_all_Case_fields();
+        api.org_settings.update_dispo_config_for_offense_types(true, true, daysToFollowUp)
         ui.menu.click_Settings__Organization()
             .click_element_containing_link(C.labels.organization.tabs.autoDisposition);
         ui.autoDispo.click_disposition_Configuration_For_Case_Offense_Types();
         ui.autoDispo.verify_Redistribute_Case_Review_Date_labels(true)
 
-
-        D.generateNewDataSet()
-        D.getDataForMultipleCases(3)
-        let fileName = 'Case_pastDueReview';
+         D.generateNewDataSet()
+         D.getDataForMultipleCases(3)
+         let fileName = 'Case_pastDueReview';
         D.case1.reviewDate = '';
         D.case2.reviewDate = helper.getSpecificDateInSpecificFormat(DF.dateTimeFormats.long.mask, '01/08/2019');
-        D.case3.reviewDate = helper.getSpecificDateInSpecificFormat(DF.dateTimeFormats.short.mask, '01/08/2030');
+        D.case3.reviewDate = helper.getSpecificDateInSpecificFormat(DF.dateTimeFormats.long.mask, '01/08/2030');
 
         // import 3 cases (NO Review Date, Review Date past due and Upcoming Review Date )
         E.generateDataFor_CASES_Importer([D.case1, D.case2, D.case3]);
         ui.app.generate_excel_file(fileName, E.caseImportDataWithAllFields);
-        ui.menu.click_Tools__Data_Import();
-        ui.importer.upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.cases, null, 1, null,
-            ['Some Review Dates are blank. They will be auto-applied. Select Import to proceed.'])
+        ui.menu.click_Tools__Data_Import()
+        ui.importer.upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.cases, null, 1, 1,
+            ['Some Review Dates are blank. They will be auto-applied. Select Import to proceed.']
+        )
             .verify_toast_message([
                 C.toastMsgs.importComplete,
                 3 + C.toastMsgs.recordsImported])
@@ -369,7 +231,7 @@ describe('Services', function () {
         ui.menu.click_Settings__Organization()
             .click_element_containing_link(C.labels.organization.tabs.autoDisposition);
         ui.autoDispo.click_disposition_Configuration_For_Case_Offense_Types();
-        //   ui.autoDispo.verify_Redistribute_Case_Review_Date_labels(false, 1, 2)
+        ui.autoDispo.verify_Redistribute_Case_Review_Date_labels(false, 1, 2)
         ui.autoDispo.click_button(C.buttons.redestributeCaseReviewDates)
             .verify_modal_content(C.labels.autoDisposition.updateCases)
             .click_button(C.tabs.pastDue)
@@ -377,14 +239,21 @@ describe('Services', function () {
             .click_button(C.buttons.updateCases)
             .verify_toast_message(C.toastMsgs.saved)
             .verify_Redistribute_Case_Review_Date_labels(true, 0, 3)
-            .quick_search_for_case(D.case2.caseNumber)
+        D.case2.reviewDate = helper.getSpecificDateInSpecificFormat(
+            DF.dateTimeFormats.long.mask,
+            '11/15/2027 12:00 AM'
+        );
+
+        // verify change IS applied for Case with 'Past Due Date'
+        ui.app.quick_search_for_case(D.case2.caseNumber)
             .click_button(C.buttons.edit);
         ui.caseView.verify_values_on_Edit_form(D.case2);
 
-        // // verify change is not applied for Case with 'No Review Date'
-        // ui.app.quick_search_for_case(D.case1.caseNumber)
-        //     .click_button(C.buttons.edit);
-        // ui.caseView.verify_values_on_Edit_form(D.case1);
+        // verify change is not applied for Case with 'No Review Date'
+        D.case1.reviewDate = helper.getDateAfterXDaysFromSpecificDate(DF.dateTimeFormats.long.mask, S.currentDate, daysToFollowUp);
+        ui.app.quick_search_for_case(D.case1.caseNumber)
+            .click_button(C.buttons.edit);
+        ui.caseView.verify_values_on_Edit_form(D.case1);
 
         // verify change is not applied for Case with 'Upcoming Review Date'
         ui.app.quick_search_for_case(D.case3.caseNumber)
