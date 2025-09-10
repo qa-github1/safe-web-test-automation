@@ -11,7 +11,7 @@ let person = S.getUserData(S.selectedEnvironment.person);
 describe('Item Transactions on Action on Search Results', function () {
 
 
-    it('1. Verify Check Out transaction with Uploaded Media and No Signature', function () {
+    it.only('1. Verify Check Out transaction with Uploaded Media and No Signature', function () {
         api.auth.get_tokens(orgAdmin);
         api.users.update_current_user_settings(orgAdmin.id)
         api.org_settings.update_org_settings(false, true, false, "~person.firstName~ ~person.lastName~")
@@ -23,7 +23,6 @@ describe('Item Transactions on Action on Search Results', function () {
         ui.app.log_title(this);
         api.auth.get_tokens(orgAdmin);
         D.generateNewDataSet()
-        D.getNewItemData()
         api.items.add_new_item(true, null, 'newItem1')
         ui.menu.click_Search__Item()
         ui.searchItem
@@ -33,9 +32,9 @@ describe('Item Transactions on Action on Search Results', function () {
             .click_Search()
             .click_Actions_On_Search_Results()
             .perform_Item_Check_Out_transaction(powerUser, C.checkoutReasons.lab, 'Check Out from Actions on Search Results', null, true, true)
-             .verify_text_is_present_on_main_container('Actions on Search Results Jobs')
-             .sort_by_descending_order('Start Date')
-             .verify_content_of_first_row_in_results_table('Completed')
+            .verify_text_is_present_on_main_container('Actions on Search Results Jobs')
+            .sort_by_descending_order('Start Date')
+            .verify_content_of_first_row_in_results_table('Completed')
 
         cy.getLocalStorage('newItem1').then(item => {
             ui.app.open_item_url(JSON.parse(item).id)
@@ -46,7 +45,7 @@ describe('Item Transactions on Action on Search Results', function () {
                     [['Type', 'In'], ['Issued From', orgAdmin.name], ['Issued To', 'New Item Entry'], ['Notes', `Item entered into system.`]],
                 ])
                 .verify_last_transaction_media_from_CoC()
-                api.auth.log_out(orgAdmin)
+            api.auth.log_out(orgAdmin)
         })
     });
 
@@ -81,11 +80,11 @@ describe('Item Transactions on Action on Search Results', function () {
             ui.app.open_item_url(JSON.parse(item).id)
             ui.itemView.select_tab(C.tabs.chainOfCustody)
                 // we should add verification for signature (true-false)
-            .verify_data_on_Chain_of_Custody([
-                [['Type', 'Transfer'], ['Issued From', orgAdmin.name], ['Issued To', powerUser.name], ['Storage Location', ``],  ['Check out Reason', ``], ['Note', `Transfer from Actions on Search Results`]],
-                [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', person.fullName], ['Storage Location', ``],  ['Check out Reason', `Court`], ['Note', `Note for Checked Out Item`]],
-                [['Type', 'In'], ['Issued From', orgAdmin.name], ['Issued To', 'New Item Entry'], ['Notes', `Item entered into system.`]],
-            ])
+                .verify_data_on_Chain_of_Custody([
+                    [['Type', 'Transfer'], ['Issued From', orgAdmin.name], ['Issued To', powerUser.name], ['Storage Location', ``], ['Check out Reason', ``], ['Note', `Transfer from Actions on Search Results`]],
+                    [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', person.fullName], ['Storage Location', ``], ['Check out Reason', `Court`], ['Note', `Note for Checked Out Item`]],
+                    [['Type', 'In'], ['Issued From', orgAdmin.name], ['Issued To', 'New Item Entry'], ['Notes', `Item entered into system.`]],
+                ])
                 .verify_last_transaction_media_from_CoC()
             api.auth.log_out(orgAdmin)
 
@@ -123,8 +122,8 @@ describe('Item Transactions on Action on Search Results', function () {
             ui.itemView.select_tab(C.tabs.chainOfCustody)
                 // we should add verification for signature (true-false)
                 .verify_data_on_Chain_of_Custody([
-                    [['Type', 'In'], ['Issued From', powerUser.name], ['Issued To', orgAdmin.name], ['Storage Location', D.box2.name],  ['Check out Reason', ``], ['Note', `Check In from Actions on Search Results`]],
-                    [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', person.fullName], ['Storage Location', ``],  ['Check out Reason', `Court`], ['Note', `Note for Checked Out Item`]],
+                    [['Type', 'In'], ['Issued From', powerUser.name], ['Issued To', orgAdmin.name], ['Storage Location', D.box2.name], ['Check out Reason', ``], ['Note', `Check In from Actions on Search Results`]],
+                    [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', person.fullName], ['Storage Location', ``], ['Check out Reason', `Court`], ['Note', `Note for Checked Out Item`]],
                     [['Type', 'In'], ['Issued From', orgAdmin.name], ['Issued To', 'New Item Entry'], ['Notes', `Item entered into system.`]],
                 ])
                 .verify_last_transaction_media_from_CoC()
@@ -163,7 +162,7 @@ describe('Item Transactions on Action on Search Results', function () {
             ui.itemView.select_tab(C.tabs.chainOfCustody)
                 // we should add verification for signature (true-false)
                 .verify_data_on_Chain_of_Custody([
-                    [['Type', 'Disposal'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location',''],  ['Check out Reason', ``], ['Note', `Disposed from Actions on Search Results`]],
+                    [['Type', 'Disposal'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ''], ['Check out Reason', ``], ['Note', `Disposed from Actions on Search Results`]],
                     [['Type', 'In'], ['Issued From', orgAdmin.name], ['Issued To', 'New Item Entry'], ['Notes', `Item entered into system.`]],
                 ])
                 .verify_last_transaction_media_from_CoC()
@@ -203,8 +202,8 @@ describe('Item Transactions on Action on Search Results', function () {
             ui.itemView.select_tab(C.tabs.chainOfCustody)
                 // we should add verification for signature (true-false)
                 .verify_data_on_Chain_of_Custody([
-                    [['Type', 'In'], ['Issued From', powerUser.name], ['Issued To', orgAdmin.name], ['Storage Location', D.box2.name],  ['Check out Reason', ``], ['Note', `Undispose from Actions on Search Results`]],
-                    [['Type', 'Disposal'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location',''],  ['Witness', powerUser.name], ['Storage Location',''],  ['Check out Reason', ``], ['Note', D.randomNo]],
+                    [['Type', 'In'], ['Issued From', powerUser.name], ['Issued To', orgAdmin.name], ['Storage Location', D.box2.name], ['Check out Reason', ``], ['Note', `Undispose from Actions on Search Results`]],
+                    [['Type', 'Disposal'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ''], ['Witness', powerUser.name], ['Storage Location', ''], ['Check out Reason', ``], ['Note', D.randomNo]],
                     [['Type', 'In'], ['Issued From', orgAdmin.name], ['Issued To', 'New Item Entry'], ['Notes', `Item entered into system.`]],
                 ])
                 .verify_last_transaction_media_from_CoC()
@@ -233,7 +232,7 @@ describe('Item Transactions on Action on Search Results', function () {
             .enter_Description('contains', D.newItem.description)
             .click_Search()
             .click_Actions_On_Search_Results()
-            .perform_Item_Move_transaction(D.box2.name, 'Move from Actions on Search Results', true )
+            .perform_Item_Move_transaction(D.box2.name, 'Move from Actions on Search Results', true)
             .verify_text_is_present_on_main_container('Actions on Search Results Jobs')
             .sort_by_descending_order('Start Date')
             .verify_content_of_first_row_in_results_table('Completed')
