@@ -221,44 +221,49 @@ export default class CaseViewPage extends BaseViewPage {
         return this;
     };
 
-    verify_all_values_on_history_in_specific_column(dataObject_, leftOrRightColumn, customFormName) {
+    verify_all_values_on_history_in_specific_column(dataObject_, leftOrRightColumn, customFormName, isNewlyAttachedForm) {
 
         let dataObject = Object.assign({}, dataObject_)
-        // dataObject.offenseDate = dataObject.offenseDate || ''
-        // dataObject.offenseLocation = dataObject.offenseLocation || ''
-        // dataObject.offenseDescription = dataObject.offenseDescription || ''
-        // dataObject.tagsOnHistory = dataObject.tags? dataObject.tags : 'No Tags'
+        dataObject.offenseDate = dataObject.offenseDate || ''
+        dataObject.offenseLocation = dataObject.offenseLocation || ''
+        dataObject.offenseDescription = dataObject.offenseDescription || ''
+        dataObject.tagsOnHistory = dataObject.tags? dataObject.tags : 'No Tags'
 
-        // this.verify_all_values_on_history_for_standard_fields(leftOrRightColumn,
-        //     [
-        //         ['Update Made By', dataObject.updateMadeBy],
-        //         ['Update Date', dataObject.updateDate],
-        //         ['Org / Office', dataObject.orgAndOffice],
-        //         ['Case Officer(s)', dataObject.caseOfficers],
-        //         ['Offense Date', dataObject.offenseDate],
-        //         ['Offense Type', dataObject.offenseType],
-        //         ['Tags', dataObject.tagsOnHistory],
-        //         ['Status', dataObject.status]
-        //     ],
-        //     [
-        //         ['Case Number', dataObject.caseNumber],
-        //         ['Offense Location', dataObject.offenseLocation],
-        //     ],
-        //     [
-        //         ['Offense Description', dataObject.offenseDescription],
-        //     ]
-        // )
-        //
-        // if (dataObject.reviewDate) {
-        //     this.verify_all_values_on_history_for_standard_fields(leftOrRightColumn,
-        //         [['Review Date', dataObject.reviewDate]],
-        //         [],
-        //         [['Review Date Notes', dataObject.reviewDateNotes]]
-        //     )
-        // }
+        this.verify_all_values_on_history_for_standard_fields(leftOrRightColumn,
+            [
+                ['Update Made By', dataObject.updateMadeBy],
+                ['Update Date', dataObject.updateDate],
+                ['Org / Office', dataObject.orgAndOffice],
+                ['Case Officer(s)', dataObject.caseOfficers],
+                ['Offense Date', dataObject.offenseDate],
+                ['Offense Type', dataObject.offenseType],
+                ['Tags', dataObject.tagsOnHistory],
+                ['Status', dataObject.status]
+            ],
+            [
+                ['Case Number', dataObject.caseNumber],
+                ['Offense Location', dataObject.offenseLocation],
+            ],
+            [
+                ['Offense Description', dataObject.offenseDescription],
+            ]
+        )
 
-        if (customFormName) {
-            this.verify_custom_data_on_History(leftOrRightColumn, customFormName, dataObject)
+        if (dataObject.reviewDate) {
+            this.verify_all_values_on_history_for_standard_fields(leftOrRightColumn,
+                [['Review Date', dataObject.reviewDate]],
+                [],
+                [['Review Date Notes', dataObject.reviewDateNotes]]
+            )
+        }
+
+        if (customFormName){
+            if (isNewlyAttachedForm && leftOrRightColumn === 'right'){
+                this.verify_custom_data_is_not_present_on_history(leftOrRightColumn, customFormName)
+            }
+            else{
+                this.verify_custom_data_on_History(leftOrRightColumn, customFormName, dataObject)
+            }
         }
         return this;
     };
@@ -311,9 +316,9 @@ export default class CaseViewPage extends BaseViewPage {
         return this;
     }
 
-    verify_all_values_on_history(newCaseObject, oldCaseObject, customFormName = null) {
+    verify_all_values_on_history(newCaseObject, oldCaseObject, customFormName = null , isNewlyAttachedForm = false) {
         this.verify_all_values_on_history_in_specific_column(newCaseObject, 'left', customFormName)
-        if (oldCaseObject) this.verify_all_values_on_history_in_specific_column(oldCaseObject, 'right', customFormName)
+        if (oldCaseObject) this.verify_all_values_on_history_in_specific_column(oldCaseObject, 'right', customFormName, isNewlyAttachedForm )
         return this;
     };
 

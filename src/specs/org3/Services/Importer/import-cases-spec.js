@@ -19,7 +19,7 @@ describe('Import Cases', function () {
         D.generateNewDataSet();
     });
 
-    it('I.C_1 Case with all regular and custom fields -- user and user group in Case Officer(s) field', function () {
+    it.only('I.C_1 Case with all regular and custom fields -- user and user group in Case Officer(s) field', function () {
         ui.app.log_title(this);
         let fileName = 'CaseImport_allFields_' + S.domain;
         api.auth.get_tokens(user);
@@ -59,16 +59,19 @@ describe('Import Cases', function () {
             .verify_title_on_active_tab(1)
 
         // verify new item can be added to the imported case
+        D.getItemDataWithReducedFields(D.editedCase)
         D.newItem.caseNumber = D.newCase.caseNumber
+        api.org_settings.disable_Item_fields()
         ui.menu.click_Add__Item();
-        ui.addItem.enter_Case_Number_and_select_on_typeahead(D.newCase.caseNumber)
+        ui.addItem.enter_Case_Number_and_select_on_typeahead(D.editedCase.caseNumber)
             .populate_all_fields_on_both_forms(D.newItem, false, false)
             .select_post_save_action(C.postSaveActions.viewAddedItem)
-            .click_Save(D.newItem)
+            .click_Save()
             .verify_Error_toast_message_is_NOT_visible();
+        ui.itemView.verify_Item_View_page_is_open(D.editedCase.caseNumber)
     });
 
-   // if (S.isFullRegression()) {
+    if (S.isFullRegression()) {
         it('I.C_2 Case with minimum number of fields', function () {
             ui.app.log_title(this);
             let fileName = 'CaseImport_minimumFields_' + S.domain;
@@ -122,5 +125,5 @@ describe('Import Cases', function () {
                 .click_button(C.buttons.search)
                 .verify_toast_title_and_message(C.toastMsgs.resultsLimitExceededTitle, C.toastMsgs.resultsLimitExceeded('5,000').toString())
         });
-  //  }
+   }
 });

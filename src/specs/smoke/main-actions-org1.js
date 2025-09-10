@@ -270,12 +270,3 @@ describe('Item', function () {
             })
         });
 });
-
-// describe('Task', function () {
-//
-//     it('Add/Edit/Search Task', function () {
-//
-//
-//     });
-//
-// });

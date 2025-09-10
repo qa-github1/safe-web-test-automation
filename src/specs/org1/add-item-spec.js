@@ -19,7 +19,6 @@ before(function () {
     D.generateNewDataSet();
     api.cases.add_new_case(D.newCase.caseNumber);
     api.org_settings.enable_all_Person_fields();
-    api.org_settings.per
     api.users.update_current_user_settings(orgAdmin.id, C.currentDateTimeFormat)
     api.auth.get_tokens(powerUser);
     api.users.update_current_user_settings(powerUser.id, C.currentDateTimeFormat)

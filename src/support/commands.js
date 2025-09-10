@@ -58,7 +58,7 @@ Cypress.Commands.add('verifyTextAndRetry', (
                 name: 'verifyTextAndRetry',
                 message: passed
                     ? `[✅ Attempt ${attempt}] Found all expected values: [${expectedArray.join(', ')}]`
-                    : `[❌ Attempt ${attempt}] Missing: [${failedMatches.join(', ')}]`,
+                    : `[❌ Attempt ${attempt}] Missing: [${failedMatches.join(', ')}], TEXT FOUND: ${normalizedActual} `,
                 consoleProps: () => ({
                     attempt,
                     expected: expectedArray,

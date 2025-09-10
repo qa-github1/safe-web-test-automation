@@ -311,10 +311,10 @@ export default class TaskViewPage extends BaseViewPage {
             if (Array.isArray(array[0])) {
                 array[0].forEach(row => {
                     // array[1] --> as second element in each array represents THE VALUE that we expect for 'Disposition Status' column in that row number
-                    this.verify_content_of_specified_cell_in_specified_table_row(row, 'Disposition Status', array[1])
+                    this.verify_content_of_specific_table_row_by_provided_column_title_and_value(row - 1, 'Disposition Status', array[1])
                 })
             } else {
-                this.verify_content_of_specified_cell_in_specified_table_row(array[0], 'Disposition Status', array[1])
+                this.verify_content_of_specific_table_row_by_provided_column_title_and_value(array[0] - 1, 'Disposition Status', array[1])
             }
         })
         return this;
