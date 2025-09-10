@@ -4,7 +4,7 @@ const api = require('../../api-utils/api-spec');
 const generic_request = require("../../api-utils/generic-api-requests");
 let requestPayloads = require('./request-payloads');
 let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
-let numberOfRequests = 1
+let numberOfRequests = 100
 
 describe('Services', function () {
 
@@ -19,7 +19,7 @@ describe('Services', function () {
     it.only('REPORT Service', function () {
         api.auth.get_tokens(orgAdmin);
 
-        function checkStatusOfJobs(nameOfReportsInCache, secondsToWait = 30) {
+        function checkStatusOfJobs(nameOfReportsInCache, secondsToWait = 5) {
             cy.wait(secondsToWait * 1000)
             nameOfReportsInCache.forEach(reportName => {
                 cy.getLocalStorage(reportName).then(reportId => {
@@ -42,7 +42,7 @@ describe('Services', function () {
             });
         }
 
-        //start report for case with cca 1k items
+       // start report for case with cca 1k items
             generic_request.POST(
                 '/api/reports/buildreport',
                 requestPayloads.reporterPayloadFromCaseView([S.selectedEnvironment.oldActiveCase.id]),
@@ -51,14 +51,14 @@ describe('Services', function () {
             )
 
         //start report for newly created case with 1 item only
-        cy.getLocalStorage('newCase').then(newCase => {
-            generic_request.POST(
-                '/api/reports/buildreport',
-                requestPayloads.reporterPayloadFromCaseView([JSON.parse(newCase).id]),
-                "REPORT Service",
-                'Small_Case_Report'
-            )
-        });
+        // cy.getLocalStorage('newCase').then(newCase => {
+        //     generic_request.POST(
+        //         '/api/reports/buildreport',
+        //         requestPayloads.reporterPayloadFromCaseView([JSON.parse(newCase).id]),
+        //         "REPORT Service",
+        //         'Small_Case_Report'
+        //     )
+        // });
 
         //start X reports for 1 item only
         for (let i = 0; i < numberOfRequests; i++) {
@@ -67,11 +67,11 @@ describe('Services', function () {
                     '/api/reports/buildreport',
                     requestPayloads.reporterPayloadFromItemList(null, [JSON.parse(newItem).id]),
                     "REPORT Service",
-                    'Item_Report' + 0
+                    'Item_Report' + i
                 )
             });
         }
-        checkStatusOfJobs(['Big_Case_Report', 'Small_Case_Report', 'Item_Report0']);
+        checkStatusOfJobs(['Big_Case_Report', 'Small_Case_Report', 'Item_Report0', 'Item_Report99']);
 
 
     });
