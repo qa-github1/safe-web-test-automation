@@ -83,8 +83,7 @@ let
     expandedMenu = e => cy.get('button[aria-expanded="true"]'),
     optionOnExpandedMenu = option => expandedMenu().next().contains(option).parent('li'),
     dropdownOnModal = e => modal().children().get('select'),
-    notesOnModal = e => modal().children().find('textarea'),
-    noteOnModal = e => modal().children().get('[placeholder="Note"]'),
+    notesOnModal = e => modal().children().contains('Notes').parents('tp-modal-field').find('ng-transclude').find('.form-control'),
     tableOnModal = e => modal().find('tbody'),
     asterisks = e => cy.get('[ng-if="form.state[field.name].$error.required"]'),
     optionOnTypeahead = option => cy.get('.dropdown-menu[aria-hidden="false"]').contains(option),
@@ -2084,11 +2083,6 @@ export default class BasePage {
         return this;
     };
 
-    enter_note_on_modal(note) {
-        noteOnModal().type(note);
-        return this;
-    };
-
     verify_number_of_required_fields_marked_with_asterisk(count) {
         asterisks().should('have.length', count)
         return this;
@@ -3300,7 +3294,7 @@ export default class BasePage {
         } else {
             this.select_Storage_location(fullLocationPath)
         }
-        this.enter_note_on_modal(note);
+        this.enter_notes_on_modal(note);
         return this;
     }
 

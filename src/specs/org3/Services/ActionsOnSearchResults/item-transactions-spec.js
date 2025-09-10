@@ -10,17 +10,20 @@ let person = S.getUserData(S.selectedEnvironment.person);
 
 describe('Item Transactions on Action on Search Results', function () {
 
-
-    it.only('1. Verify Check Out transaction with Uploaded Media and No Signature', function () {
+    before(function () {
         api.auth.get_tokens(orgAdmin);
         api.users.update_current_user_settings(orgAdmin.id)
-        api.org_settings.update_org_settings(false, true, false, "~person.firstName~ ~person.lastName~")
         api.org_settings.enable_all_Item_fields(C.itemFields.dispositionStatus);
         api.org_settings.enable_all_Person_fields()
         D.box2 = D.getStorageLocationData('BOX_2')
         api.locations.add_storage_location(D.box2)
+    });
+
+    it('1. Verify Check Out transaction with Uploaded Media and No Signature', function () {
 
         ui.app.log_title(this);
+        api.auth.get_tokens(orgAdmin);
+        api.org_settings.update_org_settings(false, true, false, "~person.firstName~ ~person.lastName~")
         api.auth.get_tokens(orgAdmin);
         D.generateNewDataSet()
         api.items.add_new_item(true, null, 'newItem1')
@@ -51,18 +54,12 @@ describe('Item Transactions on Action on Search Results', function () {
 
     it('2. Verify Transfer transaction with Uploaded Media and Signature Optional', function () {
 
-        api.auth.get_tokens(orgAdmin);
-        api.users.update_current_user_settings(orgAdmin.id)
-        api.org_settings.update_org_settings(false, true, 'both', "~person.firstName~ ~person.lastName~")
-        api.org_settings.enable_all_Item_fields(C.itemFields.dispositionStatus);
-        api.org_settings.enable_all_Person_fields()
-        D.box2 = D.getStorageLocationData('BOX_2')
-        api.locations.add_storage_location(D.box2)
-
         ui.app.log_title(this);
         api.auth.get_tokens(orgAdmin);
+        api.org_settings.update_org_settings(false, true, 'both', "~person.firstName~ ~person.lastName~")
+        api.auth.get_tokens(orgAdmin);
         D.generateNewDataSet()
-        api.items.add_new_item(true, null, 'newItem')
+        api.items.add_new_item()
         api.transactions.check_out_item()
         ui.menu.click_Search__Item()
         ui.searchItem
@@ -92,18 +89,13 @@ describe('Item Transactions on Action on Search Results', function () {
     });
 
     it('3. Verify Check In transaction with Uploaded Media and Signature Required', function () {
-        api.auth.get_tokens(orgAdmin);
-        api.users.update_current_user_settings(orgAdmin.id)
-        api.org_settings.update_org_settings(false, true, true, "~person.firstName~ ~person.lastName~")
-        api.org_settings.enable_all_Item_fields(C.itemFields.dispositionStatus);
-        api.org_settings.enable_all_Person_fields()
-        D.box2 = D.getStorageLocationData('BOX_2')
-        api.locations.add_storage_location(D.box2)
 
         ui.app.log_title(this);
         api.auth.get_tokens(orgAdmin);
+        api.org_settings.update_org_settings(false, true, true, "~person.firstName~ ~person.lastName~")
+        api.auth.get_tokens(orgAdmin);
         D.generateNewDataSet()
-        api.items.add_new_item(true, null, 'newItem')
+        api.items.add_new_item()
         api.transactions.check_out_item()
         ui.menu.click_Search__Item()
         ui.searchItem
@@ -133,18 +125,12 @@ describe('Item Transactions on Action on Search Results', function () {
     });
 
     it('4. Verify Dispose transaction with Uploaded Media and No Signature', function () {
-        api.auth.get_tokens(orgAdmin);
-        api.users.update_current_user_settings(orgAdmin.id)
-        api.org_settings.update_org_settings(false, true, false, "~person.firstName~ ~person.lastName~")
-        api.org_settings.enable_all_Item_fields(C.itemFields.dispositionStatus);
-        api.org_settings.enable_all_Person_fields()
-        D.box2 = D.getStorageLocationData('BOX_2')
-        api.locations.add_storage_location(D.box2)
-
         ui.app.log_title(this);
         api.auth.get_tokens(orgAdmin);
+        api.org_settings.update_org_settings(false, true, false, "~person.firstName~ ~person.lastName~")
+        api.auth.get_tokens(orgAdmin);
         D.generateNewDataSet()
-        api.items.add_new_item(true, null, 'newItem')
+        api.items.add_new_item()
         ui.menu.click_Search__Item()
         ui.searchItem
             .select_Status('Checked In')
@@ -172,18 +158,12 @@ describe('Item Transactions on Action on Search Results', function () {
     });
 
     it('5. Verify Undispose transaction with Uploaded Media and No Signature', function () {
-        api.auth.get_tokens(orgAdmin);
-        api.users.update_current_user_settings(orgAdmin.id)
-        api.org_settings.update_org_settings(false, true, false, "~person.firstName~ ~person.lastName~")
-        api.org_settings.enable_all_Item_fields(C.itemFields.dispositionStatus);
-        api.org_settings.enable_all_Person_fields()
-        D.box2 = D.getStorageLocationData('BOX_2')
-        api.locations.add_storage_location(D.box2)
-
         ui.app.log_title(this);
         api.auth.get_tokens(orgAdmin);
+        api.org_settings.update_org_settings(false, true, false, "~person.firstName~ ~person.lastName~")
+        api.auth.get_tokens(orgAdmin);
         D.generateNewDataSet()
-        api.items.add_new_item(true, null, 'newItem')
+        api.items.add_new_item()
         api.transactions.dispose_item()
         ui.menu.click_Search__Item()
         ui.searchItem
@@ -213,18 +193,13 @@ describe('Item Transactions on Action on Search Results', function () {
     });
 
     it('6. Verify Move transaction with Uploaded Media and No Signature', function () {
-        api.auth.get_tokens(orgAdmin);
-        api.users.update_current_user_settings(orgAdmin.id)
-        api.org_settings.update_org_settings(false, true, false, "~person.firstName~ ~person.lastName~")
-        api.org_settings.enable_all_Item_fields(C.itemFields.dispositionStatus);
-        api.org_settings.enable_all_Person_fields()
-        D.box2 = D.getStorageLocationData('BOX_2')
-        api.locations.add_storage_location(D.box2)
 
         ui.app.log_title(this);
         api.auth.get_tokens(orgAdmin);
+        api.org_settings.update_org_settings(false, true, false, "~person.firstName~ ~person.lastName~")
+        api.auth.get_tokens(orgAdmin);
         D.generateNewDataSet()
-        api.items.add_new_item(true, null, 'newItem')
+        api.items.add_new_item()
         ui.menu.click_Search__Item()
         ui.searchItem
             .select_Status('Checked In')
