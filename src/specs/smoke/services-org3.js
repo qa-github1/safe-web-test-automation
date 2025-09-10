@@ -256,7 +256,7 @@ describe('Services', function () {
         ui.menu.click_Tools__Auto_Reports()
         ui.app.set_visibility_of_table_column('Public Facing Description', true)
             .sort_by_descending_order('Delivery Time')
-            .verify_text_is_present_and_check_X_more_times_after_waiting_for_Y_seconds(approvedForReleaseItem.description, 10)
+            .verify_text_is_present_and_check_X_more_times_after_waiting_for_Y_seconds(approvedForReleaseItem.description, 10, 30, true)
     });
 
 })

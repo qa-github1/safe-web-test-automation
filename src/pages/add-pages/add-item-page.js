@@ -181,7 +181,7 @@ export default class AddItemPage extends BaseAddPage {
             this.select_typeahead_option(storageLocationInput, itemObject.location, this.typeaheadSelectorMatchInMatches)
         }
 
-        if (!skipItemBelongsTo) {
+        if (!skipItemBelongsTo && itemBelongsTo) {
             this.enter_values_on_Item_Belongs_To_typeahead_field(itemBelongsTo, itemObject.itemBelongsToFirstLastName);
         }
 

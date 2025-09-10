@@ -35,7 +35,7 @@
     "smoke-test-secure-org3": "cypress run --headless --browser chrome --spec 'src/specs/smoke/services-org3.js' --env environment=secure,orgNum=3",
     "smoke-test-secure-org4": "cypress run --headless --browser chrome --spec 'src/specs/smoke/services-org4.js' --env environment=secure,orgNum=4",
     "all-smoke-test-secure-org_x": "cypress run --headless --browser chrome --spec 'src/specs/smoke/*.js' --env environment=secure,orgNum=4",
-    "all-smoke-test-pentest-org_x": "cypress run --headless --browser chrome --spec 'src/specs/org3/*.js' --env environment=pentest,orgNum=2",
+    "all-smoke-test-pentest-org_x": "cypress run --headless --browser chrome --spec 'src/specs/org3/*.js' --env environment=pentest,orgNum=3",
     "headedTests": "npm run precondition && cypress run --browser chrome --spec 'src/specs/org2/verify-reports.js'",
     "clearReport": "del-cli --force ./report/allure-results && del-cli --force ./report/allure-report"
   },

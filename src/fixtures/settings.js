@@ -2807,10 +2807,10 @@ S.PENTEST_3 = {
             id: 43683,
             guid: '19330c4f-8c86-ed11-832d-021f02b7478f'
         },
-        // clpUser: {
-        //     id: 43529,
-        //     guid: '99aa4fce-da6f-ed11-832d-021f02b7478f'
-        // },
+        clpUser: {
+            id: null,
+            guid: null
+        },
         basicUser: {
             id: 43684,
             guid: '6729d18f-8e86-ed11-832d-021f02b7478f'
@@ -2831,17 +2831,29 @@ S.PENTEST_3 = {
         }
     },
     units: {
-        unit1: {
+        div1_unit1: {
             name: 'UnitA',
-            id: 88
+            id: null
         },
-        unit2: {
+        div1_unit2: {
             name: 'UnitB',
-            id: 83
+            id: null
         },
-        unit3: {
+        div1_unit3: {
             name: 'UnitC',
-            id: 89
+            id: null
+        },
+        div2_unit1: {
+            name: 'UnitA',
+            id: null
+        },
+        div2_unit2: {
+            name: 'UnitB',
+            id: null
+        },
+        div2_unit3: {
+            name: 'UnitC',
+            id: null
         }
     },
     forms: {
@@ -2873,15 +2885,15 @@ S.PENTEST_3 = {
     //     id: 105156,
     // },
     oldClosedCase: {
-        id: 7743123,
-        caseNumber: 'Closed Case-AutomatedTest',
+        id: 7743205,
+        caseNumber: 'AutomatedTest-Closed Case',
         createdDate: '12/28/2022',
-        offenseDate: '12/21/2022',
+        offenseDate: '12/20/2022',
         reviewDate: '12/30/2022',
-        closedDate: '12/28/2022',
+        closedDate: '09/10/2025',
     },
     oldActiveCase: {
-        id: 7743205,
+        id: 7743098,
         caseNumber: 'AutomatedTest-Active Case',
         createdDate: '12/28/2022',
         offenseDate: '12/20/2022',
