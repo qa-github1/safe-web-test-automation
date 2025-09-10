@@ -1,4 +1,4 @@
-import authApi from "../../api-utils/endpoints/auth";
+import authApi, {log_out} from "../../api-utils/endpoints/auth";
 import orgSettingsApi from "../../api-utils/endpoints/org-settings/collection";
 import '../../support/commands';
 import {selectedEnvironment} from "../../fixtures/settings";
@@ -47,6 +47,7 @@ let
     modalBodySectionAboveFooter = e => cy.get('.modal-body').children('div').last(),
     itemCategoryOnMassUpdate = e => cy.get('[ng-model="item.categoryId"]'),
     sweetAlert = e => cy.get('[data-animation="pop"]'),
+    lastCoCMediaButton = e => cy.get('[class="btn btn-default btn-xs btn-block ng-binding"]').eq(1),
     typeaheadList = e => cy.get('.ui-select-choices'),
     firstTypeaheadOption = e => cy.get('.ui-select-choices-row').first(),
     //highlightedOptionOnTypeahead = e => cy.get('.ui-select-choices-row-inner').last(),
@@ -964,6 +965,12 @@ export default class BasePage {
                 }
             });
         }
+        return this;
+    };
+
+    verify_last_transaction_media_from_CoC(){
+        lastCoCMediaButton().click();
+        this.verify_content_of_results_table('image.png')
         return this;
     };
 
@@ -2327,7 +2334,6 @@ export default class BasePage {
     verify_content_of_CoC_table_row_by_provided_column_title_and_value(rowNumber, columnTitle, cellContent, headerCellTag = 'th') {
         let self = this;
         let currentEnvironment = Cypress.env('environment');
-
         if (Array.isArray(cellContent)) {
             cocTableHeader().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
                 specificRowInResultsTable(rowNumber).find('td').eq(i).invoke('text').then(function (textFound) {
@@ -2647,7 +2653,9 @@ export default class BasePage {
                 const input = $input[0];
                 input.files = dataTransfer.files;
                 input.dispatchEvent(new Event('change'));
-                this.verify_toast_message(successMessage, false, timeoutInMinutes);
+                if (successMessage !== false) {
+                    this.verify_toast_message(successMessage, false, timeoutInMinutes);
+                }
             });
         });
         return this;
@@ -3270,8 +3278,8 @@ export default class BasePage {
         return this;
     }
 
-    populate_Move_form(locationName, notes) {
-        this.select_Storage_location(locationName)
+    populate_Move_form(fullLocationPath, notes) {
+        this.select_Storage_location(fullLocationPath)
         this.enter_notes_on_modal(notes);
         return this;
     }
@@ -3284,15 +3292,27 @@ export default class BasePage {
     }
 
     perform_Item_CheckIn_transaction(returnedBy_userObject, usePreviousLocation, fullLocationPath, note, isActionOnSearchResults, multipleItems) {
-        const label = multipleItems ? C.dropdowns.itemActions.checkItemsIn : C.dropdowns.itemActions.checkItemIn
+        //const label = multipleItems ? C.dropdowns.itemActions.checkItemsIn : C.dropdowns.itemActions.checkItemIn
+        let label;
+
+        if (isActionOnSearchResults) {
+            label = multipleItems
+                ? C.dropdowns.itemActionsOnSearchResults.checkItemsIn
+                : C.dropdowns.itemActionsOnSearchResults.checkItemIn;
+        } else {
+            label = multipleItems
+                ? C.dropdowns.itemActions.checkItemsIn
+                : C.dropdowns.itemActions.checkItemIn;
+        }
         this.click_option_on_expanded_menu(label)
             .populate_CheckIn_form(returnedBy_userObject, usePreviousLocation, fullLocationPath, note)
 
         if (isActionOnSearchResults) {
-            this.verify_modal_content(' Warning! This action will check out all items found by the current search\n' +
-                'Items shared among Organizations are not included in the transaction')
+            this.verify_modal_content(' Warning! This action will check in all items found by the current search')
+            this.verify_modal_content('Items shared among Organizations are not included in the transaction')
+            cy.signOnCanvas()
         }
-
+        this.upload_file_and_verify_toast_msg('image.png', isActionOnSearchResults ? false : 'Saved')
         this.click_button_on_modal(C.buttons.ok)
             .verify_toast_message('Saved')
             .wait_until_spinner_disappears()
@@ -3307,10 +3327,10 @@ export default class BasePage {
             .populate_CheckIn_form(returnedBy_userObject, usePreviousLocation, fullLocationPath, note)
 
         if (isActionOnSearchResults) {
-            this.verify_modal_content(' Warning! This action will check out all items found by the current search\n' +
-                'Items shared among Organizations are not included in the transaction')
+            this.verify_modal_content(' Warning! This action will check in all items found by the current search')
+            this.verify_modal_content('Items shared among Organizations are not included in the transaction')
         }
-
+        this.upload_file_and_verify_toast_msg('image.png', isActionOnSearchResults ? false : 'Saved')
         this.click_button_on_modal(C.buttons.ok)
             .verify_toast_message('Saved')
             .wait_until_spinner_disappears()
@@ -3328,6 +3348,7 @@ export default class BasePage {
             this.verify_modal_content(' Warning! This action will check out all items found by the current search')
             this.verify_modal_content('Items shared among Organizations are not included in the transaction')
         }
+        this.upload_file_and_verify_toast_msg('image.png', isActionOnSearchResults ? false : 'Saved')
 
         this.click_button_on_modal(C.buttons.ok)
             .verify_toast_message('Saved')
@@ -3346,12 +3367,13 @@ export default class BasePage {
             .populate_Transfer_form(transferTo_userObject, transferFrom_userObject, notes)
 
         if (isActionOnSearchResults) {
-            this.verify_modal_content(' Warning! This action will check out all items found by the current search\n' +
-                'Items shared among Organizations are not included in the transaction')
+            this.verify_modal_content(' Warning! This action will transfer all items found by the current search')
+            this.verify_modal_content('Items shared among Organizations are not included in the transaction')
+            cy.signOnCanvas()
         }
-
+        this.upload_file_and_verify_toast_msg('image.png', isActionOnSearchResults ? false : 'Saved')
         this.click_button_on_modal(C.buttons.ok)
-            .wait_response_from_API_call('api/transfers/V2')
+            //.wait_response_from_API_call('api/transfers/V2')
             .verify_toast_message('Saved')
             .wait_until_spinner_disappears()
         D.editedItem.status = 'Checked Out'
@@ -3363,13 +3385,14 @@ export default class BasePage {
     perform_Item_Move_transaction(fullLocationPath, notes, isActionOnSearchResults, multipleItems) {
         const label = multipleItems ? C.dropdowns.itemActions.moveItems : C.dropdowns.itemActions.moveItem
         this.click_option_on_expanded_menu(label)
-            .populate_Move_form(fullLocationPath, notes)
+        cy.wait(1000)
+        this.populate_Move_form(fullLocationPath, notes)
 
         if (isActionOnSearchResults) {
-            this.verify_modal_content(' Warning! This action will check out all items found by the current search\n' +
-                'Items shared among Organizations are not included in the transaction')
+            this.verify_modal_content(' Warning! This action will move all items found by the current search')
+            this.verify_modal_content('Items shared among Organizations are not included in the transaction')
         }
-
+        this.upload_file_and_verify_toast_msg('image.png', isActionOnSearchResults ? false : 'Saved')
         this.click_button_on_modal(C.buttons.ok)
             .verify_toast_message('Saved')
             .wait_until_spinner_disappears()
@@ -3389,10 +3412,10 @@ export default class BasePage {
         this.populate_disposal_form(witness_userObject, method, notes, isItemInContainer)
 
         if (isActionOnSearchResults) {
-            this.verify_modal_content(' Warning! This action will check out all items found by the current search\n' +
-                'Items shared among Organizations are not included in the transaction')
+            this.verify_modal_content(' Warning! This action will dispose all items found by the current search')
+            this.verify_modal_content('Items shared among Organizations are not included in the transaction')
         }
-
+        this.upload_file_and_verify_toast_msg('image.png', isActionOnSearchResults ? false : 'Saved')
         this.click_button_on_modal(C.buttons.ok)
             .verify_toast_message('Saved')
             .wait_until_spinner_disappears()
@@ -3400,5 +3423,6 @@ export default class BasePage {
         D.editedItem.location = ''
         return this;
     }
+
 
 }

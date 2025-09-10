@@ -1,9 +1,9 @@
-const C = require('../../fixtures/constants');
-const S = require('../../fixtures/settings');
-const D = require('../../fixtures/data');
-const E = require('../../fixtures/files/excel-data');
-const api = require('../../api-utils/api-spec');
-const ui = require('../../pages/ui-spec');
+const C = require('../../../../fixtures/constants');
+const S = require('../../../../fixtures/settings');
+const D = require('../../../../fixtures/data');
+const E = require('../../../../fixtures/files/excel-data');
+const api = require('../../../../api-utils/api-spec');
+const ui = require('../../../../pages/ui-spec');
 const _ = require('lodash');
 
 // Aug 11, 2025, Sumejja's Note ----> All tests pass on Dev - Org#3 ---> Total time: 600 sec (10 min)

@@ -292,6 +292,9 @@ C = {
             changePrimaryCase: "Change Primary Case",
             manageCases: "Manage Cases",
         },
+        itemActionsOnSearchResults: {
+            checkItemIn:"Check Items In"
+        },
         caseActions: {
             massUpdate: "Mass Update"
         },

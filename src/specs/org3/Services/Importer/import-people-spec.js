@@ -1,10 +1,10 @@
-const C = require('../../fixtures/constants');
-const S = require('../../fixtures/settings');
-const D = require('../../fixtures/data');
-const E = require('../../fixtures/files/excel-data');
-const api = require('../../api-utils/api-spec');
-const helper = require('../../support/e2e-helper');
-const ui = require('../../pages/ui-spec');
+const C = require('../../../../fixtures/constants');
+const S = require('../../../../fixtures/settings');
+const D = require('../../../../fixtures/data');
+const E = require('../../../../fixtures/files/excel-data');
+const api = require('../../../../api-utils/api-spec');
+const helper = require('../../../../support/e2e-helper');
+const ui = require('../../../../pages/ui-spec');
 
 let user = S.userAccounts.orgAdmin;
 
