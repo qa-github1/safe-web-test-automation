@@ -16,11 +16,10 @@ describe('Services', function () {
 
     });
 
-
     it.only('REPORT Service', function () {
         api.auth.get_tokens(orgAdmin);
 
-        function checkStatusOfJobs(nameOfReportsInCache, secondsToWait = 5) {
+        function checkStatusOfJobs(nameOfReportsInCache, secondsToWait = 30) {
             cy.wait(secondsToWait * 1000)
             nameOfReportsInCache.forEach(reportName => {
                 cy.getLocalStorage(reportName).then(reportId => {
