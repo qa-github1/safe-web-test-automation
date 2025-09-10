@@ -89,6 +89,8 @@ let
     asterisks = e => cy.get('[ng-if="form.state[field.name].$error.required"]'),
     optionOnTypeahead = option => cy.get('.dropdown-menu[aria-hidden="false"]').contains(option),
     mainContainer = e => cy.get('.ui-view-main'),
+    recoveryDate = e => cy.get('[ng-model="item.recoveryDate"]').last(),
+    itemBelongsTo = e => cy.get('[placeholder="Persons for search"]').last(),
     textOnMainContainer = text => cy.get('.ui-view-main').contains(text),
     toastMessage = (timeout = 50000) => cy.get('.toast', {timeout: timeout}),
     firstToastMessage = (timeout = 50000) => cy.get('.toast', {timeout: timeout}).first(),
@@ -968,7 +970,7 @@ export default class BasePage {
         return this;
     };
 
-    verify_last_transaction_media_from_CoC(){
+    verify_last_transaction_media_from_CoC() {
         lastCoCMediaButton().click();
         this.verify_content_of_results_table('image.png')
         return this;
@@ -2933,7 +2935,12 @@ export default class BasePage {
         for (let i = 0; i < labelsArray.length; i++) {
             const label = labelsArray[i];
             this.turnOnToggle(label);
+
+            if (label === 'Category' && S.isDispoStatusEnabled()) {
+                this.click('Confirm');
+            }
         }
+
         return this;
     }
 
@@ -2983,7 +2990,7 @@ export default class BasePage {
                 this.turnOnToggleAndEnterValueToInputField(label, value)
                 firstPersonOnItemBelongsToTypeahead().click()
 
-            } else {
+            }   else {
                 this.turnOnToggleEnterValueAndPressEnter(label, value)
             }
         }
@@ -2997,7 +3004,7 @@ export default class BasePage {
             let label = labelsArray[i]
             let value = valuesArray[i]
 
-            if (['Offense Type', ''].some(v => label === v)) {
+            if (['Offense Type', 'Custody Reason'].some(v => label === v)) {
                 this.findElementByLabelAndSelectDropdownOption(label, value)
 
             } else if (['Status'].some(v => label === v)) {
@@ -3011,7 +3018,18 @@ export default class BasePage {
                 this.findElementByLabelAndSelectTypeaheadOptionsOnMultiSelectField(label, value)
             } else if (label === 'Offense Location') {
                 cy.get('[name="offenseLocation"]').clear().type(value).click();
-            } else {
+            } else if (label === 'Recovered At') {
+                cy.get('[name="recoveryLocation"]').clear().type(value).click();
+            } else if (label === 'Recovery Date') {
+                this.enterValue(recoveryDate, value)
+            } else if (label === 'Item Belongs to') {
+                this.enterValue(itemBelongsTo, value)
+                firstPersonOnItemBelongsToTypeahead().click()
+            } else if (['Category'].some(v => label === v)) {
+                cy.get('[category-name="item.categoryName"]').click()
+                cy.get('[repeat="category in data.categories | filter: { name: $select.search }"]').contains(value).click();
+            }
+            else {
                 this.findElementByLabelEnterValueAndPressEnter(label, value)
             }
         }

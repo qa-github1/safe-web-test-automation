@@ -9,7 +9,7 @@ describe('Add Notes', function () {
     let user = S.getUserData(S.userAccounts.orgAdmin);
     let note = D.getRandomNo() + '_note';
 
-    it.only('A.N_1. Add Note to Case', function () {
+    it('A.N_1. Add Note to Case', function () {
         ui.app.log_title(this);
 
         api.auth.get_tokens(user);
