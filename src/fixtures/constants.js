@@ -293,7 +293,8 @@ C = {
             manageCases: "Manage Cases",
         },
         itemActionsOnSearchResults: {
-            checkItemIn:"Check Items In"
+            checkItemIn:"Check Items In",
+            massUpdate: "Mass Update"
         },
         caseActions: {
             massUpdate: "Mass Update"
