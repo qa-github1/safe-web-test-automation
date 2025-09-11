@@ -933,6 +933,7 @@ C.pages = {
         numberOfStandardColumnsReduced: 10,
     },
     itemSearch: {
+        url: 'items/search/',
         numberOfStandardColumns: 39,
         numberOfAllColumnsWithDispoStatusEnabled: 65,
         numberOfStandardColumnsReduced: 26,

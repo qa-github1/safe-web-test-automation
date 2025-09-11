@@ -19,7 +19,8 @@ let searchCriteriaBasedOnFieldLabel = fieldLabel => cy.contains(fieldLabel).pare
     inputField = fieldLabel => cy.contains(fieldLabel).parent('div').find('input').eq(0),
     textareaField = fieldLabel => cy.contains(fieldLabel).parent('div').find('textarea').eq(0),
     typeaheadOption = fieldLabel => cy.contains(fieldLabel).parent('div').find('ul').find('li').eq(0),
-    resultsItemsCount = e => cy.get('[translate="BSGRID.DISPLAY_STATS_ROWS"]')
+    resultsItemsCount = e => cy.get('[translate="BSGRID.DISPLAY_STATS_ROWS"]'),
+    clearButton= e => cy.get('[translate="GENERAL.BUTTON_CLEAR"]')
 
 export default class BaseSearchPage extends BasePage {
 
@@ -123,10 +124,14 @@ export default class BaseSearchPage extends BasePage {
         return this;
     };
 
-
     expand_search_criteria() {
         this.searchParametersAccordion().scrollIntoView()
         this.searchParametersAccordion().click()
+        return this;
+    };
+
+    click_Clear_button() {
+        clearButton().click()
         return this;
     };
 

@@ -1,7 +1,7 @@
-import BasePage from "../base-pages/base-page";
 import Menu from "../menu";
 import BaseSearchPage from "../base-pages/base-search-page";
-
+import S from "../../fixtures/settings";
+import authApi from "../../api-utils/endpoints/auth";
 const C = require('../../fixtures/constants');
 const menu = new Menu();
 
@@ -9,7 +9,7 @@ const menu = new Menu();
 let
     createdBySearchCriteria = e => cy.get('[translate="ITEM_CREATED_BY"]').parent().find('[ng-model="field.searchCriteria"]'),
     createdByInput = e => cy.get('[translate="ITEM_CREATED_BY"]').parent().find('[ng-model="user.text"]'),
-    createdDateSearchCriteria  = e => cy.get('[translate="ITEM_DATE_CREATED"]').parent().find('[ng-model="field.searchCriteria"]'),
+    createdDateSearchCriteria = e => cy.get('[translate="ITEM_DATE_CREATED"]').parent().find('[ng-model="field.searchCriteria"]'),
     createdDateInput = e => cy.get('[translate="ITEM_DATE_CREATED"]').parent().find('[ng-model="ngModel"]'),
     descriptionSearchCriteria = e => cy.get('[translate="ITEM_DESCRIPTION"]').parent().find('[ng-model="field.searchCriteria"]'),
     descriptionInput = e => cy.get('[translate="ITEM_DESCRIPTION"]').parent().find('[ng-model="field.model"]'),
@@ -20,7 +20,8 @@ let
     makeInput = e => cy.get('[translate="ITEM_MAKE"]').parent().find('[ng-model="field.model"]'),
     modelInput = e => cy.get('[translate="ITEM_MODEL"]').parent().find('[ng-model="field.model"]'),
     serialNoInput = e => cy.get('[translate="ITEM_SERIAL_NUMBER"]').parent().find('[ng-model="field.model"]'),
-    orgItemNoInput = e => cy.get('[translate="ITEM_SEQUENTIAL_ORG_ID"]').parent().find('[ng-model="field.model"]'),custodyReasonDropdown = e => cy.get('[translate="ITEM_CUSTODY_REASON"]').parent().find('select').eq(1),
+    orgItemNoInput = e => cy.get('[translate="ITEM_SEQUENTIAL_ORG_ID"]').parent().find('[ng-model="field.model"]'),
+    custodyReasonDropdown = e => cy.get('[translate="ITEM_CUSTODY_REASON"]').parent().find('select').eq(1),
     statusDropdown = e => cy.get('[translate="ITEM_STATUS"]').parent().find('select').eq(1),
     actionsOnSearchResultsButton = e => cy.get('[ng-disabled="!isAdmin || !canUpdateByQuery"]'),
     categoryDropdown = e => cy.get('[class="btn btn-default form-control ui-select-toggle"]').eq(1),
@@ -39,6 +40,11 @@ export default class SearchItemPage extends BaseSearchPage {
 
 //************************************ ACTIONS ***************************************//
 
+    open_direct_url_for_page() {
+        this.open_url_and_wait_all_GET_requests_to_finish(S.base_url + '/#/' + C.pages.itemSearch.url)
+        return this
+    }
+
     enter_Description(searchCriteria, itemDescription) {
         this.searchParametersExpandedPanel().should('be.visible');
         descriptionSearchCriteria().select(searchCriteria);
@@ -54,7 +60,7 @@ export default class SearchItemPage extends BaseSearchPage {
     };
 
     enter_Created_Date(date, searchCriteria = C.searchCriteria.dates.before) {
-        if (searchCriteria !== C.searchCriteria.dates.before){
+        if (searchCriteria !== C.searchCriteria.dates.before) {
             createdDateSearchCriteria().select(searchCriteria);
         }
         createdDateInput().type(date);
@@ -127,6 +133,53 @@ export default class SearchItemPage extends BaseSearchPage {
         return this;
     };
 
+    search_with_minimum_required_fields_and_click_Actions_on_Search_Results(status, office, description) {
+        this.select_Status(status)
+            .select_Office(office)
+            .enter_Description('contains', description)
+            .click_Search()
+
+        let that = this
+        function checkIfButtonIsVisibleAndRetry(retries) {
+            if (retries <= 0) {
+                throw new Error('Max retries reached');
+            }
+
+            cy.get('.grid-buttons').find('button').first().then(($gridButtons) => {
+                const rowText = $gridButtons.text();
+
+                if (rowText.includes('Actions on Search Results')) {
+                    cy.log('✅ SUCCESS: ' + rowText);
+                    // 👉 click the button here
+                    cy.wrap($gridButtons).click();
+                } else {
+                    cy.log(`🚫 TEXT NOT FOUND, found only "${rowText}". We will retry ${retries - 1} more times.`);
+
+                    // re-auth and refresh search
+                    cy.clearLocalStorage()
+                    authApi.get_tokens(S.userAccounts.orgAdmin);
+                    that.verify_text_is_present_on_main_container('Welcome')
+                        .open_direct_url_for_page();
+                    that.wait_search_criteria_to_be_visible()
+                        .select_Status(status)
+                        .select_Office(office)
+                        .enter_Description('contains', description)
+                        .click_Search();
+
+                    // wrap recursion in Cypress queue
+                    cy.wait(1000).then(() => {
+                        checkIfButtonIsVisibleAndRetry(retries - 1);
+                    });
+                }
+            });
+        }
+
+        checkIfButtonIsVisibleAndRetry(3);
+      //  that.click_Actions_On_Search_Results()
+
+        return this;
+    };
+
     select_option_on_Actions_On_Search_Results(option) {
         actionsOnSearchResultsButton().click()
         this.click_option_on_expanded_menu(option)
@@ -140,15 +193,15 @@ export default class SearchItemPage extends BaseSearchPage {
         return this;
     };
 
-    run_search_by_Item_Description(itemDescription, searchOperator= C.searchCriteria.inputFields.textSearch) {
-       // this.define_API_request_to_be_awaited('POST', 'items/search')
+    run_search_by_Item_Description(itemDescription, searchOperator = C.searchCriteria.inputFields.textSearch) {
+        // this.define_API_request_to_be_awaited('POST', 'items/search')
         cy.getLocalStorage("newCaseId").then(caseId => {
             menu.click_Search__Item();
             this.enter_Description(searchOperator, itemDescription || caseId);
             super.click_Search();
         });
         this.wait_until_spinner_disappears();
-     //   this.wait_response_from_API_call('items/search', 200)
+        //   this.wait_response_from_API_call('items/search', 200)
         return this;
     };
 
@@ -160,8 +213,8 @@ export default class SearchItemPage extends BaseSearchPage {
             ['Office', dataObject.officeName.substring(0, 9)],
             ['Primary Case #', dataObject.caseNumber],
             ['Case Officer(s)', dataObject.caseOfficers],
-         //   ['Org#', dataObject.],
-          //  ['Item#', dataObject.],
+            //   ['Org#', dataObject.],
+            //  ['Item#', dataObject.],
             ['Category', dataObject.category],
             ['Description', dataObject.description],
             ['Recovery Date', dataObject.recoveryDate],
