@@ -3135,27 +3135,27 @@ S.PENTEST_4 = {
     units: {
         div1_unit1: {
             name: 'UnitA',
-            id: null
+            id: 90
         },
         div1_unit2: {
             name: 'UnitB',
-            id: null
+            id: 84
         },
         div1_unit3: {
             name: 'UnitC',
-            id: null
+            id: 91
         },
         div2_unit1: {
             name: 'UnitA',
-            id: null
+            id: 2366
         },
         div2_unit2: {
             name: 'UnitB',
-            id: null
+            id: 2367
         },
         div2_unit3: {
             name: 'UnitC',
-            id: null
+            id: 2365
         }
     },
     forms: {
