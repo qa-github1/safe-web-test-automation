@@ -41,6 +41,15 @@ S.getCurrentDate = function (mask) {
     return helper.getCurrentDateInSpecificFormat(mask)
 };
 S.getCurrentDate();
+S.checkTestDuration = function (startTime, endTime) {
+    const totalSeconds = (endTime - startTime) / 1000;
+    if (totalSeconds >= 60) {
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = (totalSeconds % 60).toFixed(2);
+        return `${minutes}m ${seconds}s`;
+    }
+    return `${totalSeconds.toFixed(2)}s`;
+}
 S.getYesterdaysDate = function (mask) {
     return helper.getYesterdaysDateInSpecificFormat(mask)
 };

@@ -98,6 +98,7 @@ describe('Dispo Auth', function () {
 
     });
 });
+
 describe('Services', function () {
 
     before(function () {
@@ -203,7 +204,7 @@ describe('Services', function () {
         ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.caseCreated, D.newCase, null, 1, false)
     })
 
-    it('5. Dispo Auth Service', function () {
+    it.only('5. Dispo Auth Service', function () {
 
         ui.app.log_title(this);
         api.auth.get_tokens(orgAdmin);

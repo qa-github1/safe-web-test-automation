@@ -5,13 +5,24 @@ const api = require('../../api-utils/api-spec');
 const ui = require('../../pages/ui-spec');
 const E = require("../../fixtures/files/excel-data");
 const taskView = require("../../pages/ui-spec");
+const {checkTestDuration} = require("../../fixtures/settings");
+let startTime
 
 let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
 let approvedForReleaseItem3 = {}
 let approvedForReleaseItem4 = {}
 describe('Dispo Auth', function () {
 
-    it.only('Add Dispo Task with 11 1DA items and assign to Org Admin, ' +
+    before(function () {
+        startTime = Date.now();
+    });
+
+    after(() => {
+        const endTime = Date.now();
+        cy.log(`⏱ Total time for suite: ${checkTestDuration(startTime, endTime)}`);
+    });
+
+    it('Add Dispo Task with 11 1DA items and assign to Org Admin, ' +
         '--set different actions for item using all variations' +
         '--using Actions menu and grid, ' +
         '--check statuses and notes upon submission', function () {
@@ -110,7 +121,7 @@ describe('Dispo Auth', function () {
             .verify_text_is_present_on_main_container('Closed')
     });
 
-    it('Add Dispo Task with 100 items and assign to Power User, ' +
+    it.only('Add Dispo Task with 100 items and assign to Power User, ' +
         '--initiate and complete 2nd and 3rd tier approval' +
         '--use Approve and Reject buttons from grid and Actions menu' +
         '--with and without Dispo Auth Service' +
@@ -175,10 +186,9 @@ describe('Dispo Auth', function () {
 
             ui.taskView
                 .open_newly_created_task_via_direct_link()
-                // .open_url_and_wait_all_GET_requests_to_finish('https://dev.trackerproducts.com/#/view-task/727405')
                 .select_tab('Items')
                 .set_page_size(100)
-               // .wait_certain_number_of_rows_to_be_visible_on_grid(100)
+                .wait_certain_number_of_rows_to_be_visible_on_grid(100)
                 .set_Action___Approve_for_Disposal([1, 52])
                 .verify_Dispo_Auth_Job_Status('Complete')
                 .reload_page()
@@ -278,8 +288,6 @@ describe('Dispo Auth', function () {
             .verify_text_is_present_and_check_X_more_times_after_waiting_for_Y_seconds(approvedForReleaseItem3.description, 10, 30, true)
     });
 });
-
-
 
 
 
