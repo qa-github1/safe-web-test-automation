@@ -103,7 +103,7 @@ describe('Mass Update Cases', function () {
                 .verify_edited_and_not_edited_values_on_Case_Edit_form(multiSelectFieldsLabels, D.editedCase, D.newCase, true)
         });
 
-        it.only('1.3 all fields turned on but value is edited on required fields only', function () {
+        it('1.3 all fields turned on but value is edited on required fields only', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(user);
             D.generateNewDataSet();

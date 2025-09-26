@@ -73,10 +73,10 @@ describe('Mass Update Items through Actions on Search Results', function () {
                 ui.app.open_item_url(JSON.parse(item).id)
                 ui.itemView.select_tab(C.tabs.basicInfo)
             })
-            ui.itemView.verify_edited_and_not_edited_values_on_Item_View_form(allFieldsLabels, D.editedItem, D.newItem)
+            ui.itemView.verify_edited_and_not_edited_values_on_Item_View_form(C.itemFields.allFieldsOnItemView, D.newItem)
                 .click_Edit()
-                .verify_edited_and_not_edited_values_on_Item_Edit_form(allFieldsLabels, D.editedItem, D.newItem)
-            //these three last steps related to History is failing, so if we want to
+                .verify_edited_and_not_edited_values_on_Item_Edit_form(C.itemFields.allEditableFieldsArray, D.editedItem)
+            //TODO:these three last steps related to History is failing, so if we want to
             //include this in test, we should fix method first
             //.open_last_history_record(0)
             // .verify_all_values_on_history(D.editedItem, D.newItem)

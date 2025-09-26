@@ -244,6 +244,7 @@ D.getNewItemData = function (specificCaseObject, locationObject, newPerson) {
         checkedOutTo_name: '',
         checkedOutNotes: '',
         expectedReturnDate: '',
+        customDataType: 'Optional fields - Cypress Item Form - Org #2',
         dispositionStatus: 'Disposed'
     });
 
@@ -737,7 +738,7 @@ D.getCustomFormData = function () {
         custom_number: "10",
         custom_password: "Test123",
         custom_textarea: "custom Textarea",
-        custom_checkbox: true,
+        custom_checkbox: false,
         custom_checkboxListOption: 'Option 1',
         custom_checkboxListOption_apiFormat: {"1": true},
         custom_radiobuttonListOption: 'Option 2',
@@ -793,7 +794,7 @@ D.editedCustomFormData = {
     custom_number: "333",
     custom_password: "Test12345",
     custom_textarea: "edited custom Textarea",
-    custom_checkbox: false,
+    custom_checkbox: true,
     custom_checkboxListOption: 'Option 2',
     custom_checkboxListOption_apiFormat: {"2": true},
     custom_radiobuttonListOption: 'Option 3',
@@ -808,6 +809,7 @@ D.editedCustomFormData = {
     custom_date_withoutTime: helper.setDateAndTime(C.currentDateTimeFormat.dateOnly, 2028, 6, 3, 15, 25),
     custom_user_email: S.userAccounts.powerUser.email,
     custom_user_or_group_names: [S.userAccounts.powerUser.name],
+    custom_user_or_group_email: [S.userAccounts.powerUser.email],
     custom_userId: S.userAccounts.powerUser.id,
     custom_userGuid: S.userAccounts.powerUser.guid,
     custom_userEmail: S.userAccounts.powerUser.email,

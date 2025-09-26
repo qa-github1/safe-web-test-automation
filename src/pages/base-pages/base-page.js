@@ -31,6 +31,7 @@ let
     addItem = e => cy.get('[translate="CASES.LIST.BUTTON_ADD_ITEM"]'),
     active_tab = e => cy.get('[class="tab-pane ng-scope active"]'),
     quickSearch = e => cy.get('[name="navbarSearchField"]'),
+    customDataType = e => cy.get('ng-transclude > .form-control'),
     tableColumn_header = columnTitle => cy.get('thead').contains(columnTitle),
     tableColumn_header_arrowUp = columnTitle => cy.get('thead').contains(columnTitle).parent().find('.order'),
     tableColumn_header_sortingArrow = columnTitle => cy.get('thead').contains(columnTitle).parent().find('.order'),
@@ -56,6 +57,7 @@ let
     specificPersonOnItemBelongsToTypeahead = person => cy.get('[ng-repeat="person in $select.items"]').contains(person),
     firstMatchOnTypeahead = e => cy.get('[ng-repeat="match in matches track by $index"]').first(),
     caseOfficersOverwrite = e => cy.get('[ng-model="toggle.caseOfficersOverwrite"]'),
+    overwriteForm = e => cy.get('[ng-model="massUpdateOptions.overwrite"]'),
     replaceTagsRadioButton = e => cy.get('[translate="MASS.UPDATE.OVERWRITE_EXISTING_TAGS"]'),
     tagsTypeaheadList = e => cy.get('[repeat="tagModel in allTagModels | filter: $select.search"]'),
     orgTagIconOnTagsTypeaheadList = e => tagsTypeaheadList().find('[ng-if="model.tagUsedBy==1"]'),
@@ -251,7 +253,7 @@ let dashboardGetRequests = [
     '/api/access/offices'
 ]
 
-export default class BasePage {
+let basePage = class BasePage {
 
     constructor() {
         this.typeaheadSelectorMatchInMatches = typeaheadSelectorMatchInMatches;
@@ -1434,6 +1436,8 @@ export default class BasePage {
         deleteButton().click();
         return this;
     };
+
+
 
     click_Actions(useButtonOnActiveTab) {
         this.pause(1)
@@ -2847,8 +2851,41 @@ export default class BasePage {
             .parents('.form-group').first()
     }
 
+    turnOnToggleAndReturnParentElementOnCustomForm(label) {
+        return cy.get('.modal-content')
+            .contains('.fg-field-inner label, .fg-field-inner .control-label', new RegExp(`^\\s*${label}\\s*$`))
+            .closest('.fg-field-inner')
+            .as('field')
+            .within(() => {
+                cy.get('[ng-click="onSwitch($event)"]').click({force: true});
+            })
+            .then(() => cy.get('@field'));
+
+    }
+
+    turnOnToggleEnterValueAndPressEnterOnCustomForm(label, value) {
+        this.turnOnToggleAndReturnParentElementOnCustomForm(label)
+            .find('input:visible, textarea:visible')
+            .first()
+            .as('cfInput');
+        cy.get('@cfInput')
+            .should('be.enabled')
+            .clear({force: true})
+            .type(String(value), {force: true})
+        cy.wait(2000)
+        cy.get('@cfInput').type('{enter}');
+    }
+
+
     turnOnToggleAndSelectDropdownOption(label, value) {
         this.turnOnToggleAndReturnParentElement(label)
+            .find('select').first()
+            .select(value)
+        this.pause(0.3)
+    }
+
+    turnOnToggleAndSelectDropdownOptionOnCustomForm(label, value) {
+        this.turnOnToggleAndReturnParentElementOnCustomForm(label)
             .find('select').first()
             .select(value)
         this.pause(0.3)
@@ -2877,6 +2914,12 @@ export default class BasePage {
             .type(value)
     }
 
+    turnOnToggleAndEnterValueInTextareaOnCustomForm(label, value) {
+        this.turnOnToggleAndReturnParentElementOnCustomForm(label)
+            .find('textarea').first()
+            .type(value)
+    }
+
     turnOnToggleEnterValueAndPressEnter(label, value) {
         this.turnOnToggleAndReturnParentElement(label)
             .find('input').first()
@@ -2890,6 +2933,15 @@ export default class BasePage {
     turnOnToggleEnterValueAndWaitApiRequestToFinish(label, value, partOfApiRequest) {
         this.define_API_request_to_be_awaited('GET', partOfApiRequest)
         this.turnOnToggleAndReturnParentElement(label)
+            .find('input').first()
+            .clear()
+            .invoke('val', value).trigger('input')
+        this.wait_response_from_API_call(partOfApiRequest)
+    }
+
+    turnOnToggleEnterValueAndWaitApiRequestToFinishOnCustomForm(label, value, partOfApiRequest) {
+        this.define_API_request_to_be_awaited('GET', partOfApiRequest)
+        this.turnOnToggleAndReturnParentElementOnCustomForm(label)
             .find('input').first()
             .clear()
             .invoke('val', value).trigger('input')
@@ -2967,6 +3019,11 @@ export default class BasePage {
         return this
     }
 
+    enable_overwrite_existing_form_data() {
+        overwriteForm().click()
+        return this
+    }
+
     click_on_replace_tags() {
         replaceTagsRadioButton().click()
         return this
@@ -3032,13 +3089,114 @@ export default class BasePage {
                 this.turnOnToggleAndEnterValueToInputField(label, value)
                 firstPersonOnItemBelongsToTypeahead().click()
 
-            }   else {
+            } else {
                 this.turnOnToggleEnterValueAndPressEnter(label, value)
             }
         }
         return this
     }
 
+
+    turn_on_and_enter_values_to_all_fields_on_custom_form_modal(labelsArray, valuesArray) {
+
+        for (let i = 0; i < labelsArray.length; i++) {
+            const label = labelsArray[i];
+            const value = valuesArray[i];
+
+            if (['Textbox', 'Email', 'Number', 'Password', 'Person', 'Dropdown Typeahead'].some(v => label === v)) {
+                this.turnOnToggleEnterValueAndPressEnterOnCustomForm(label, value);
+
+            } else if (label === 'Textarea') {
+                this.turnOnToggleAndEnterValueInTextareaOnCustomForm(label, value);
+
+            } else if (label === 'Checkbox') {
+                this.turnOnToggleAndReturnParentElementOnCustomForm(label)
+                    .find('input[type="checkbox"]:visible')
+                    .first()
+                    .then($cb => {
+                        if (value) cy.wrap($cb).check({force: true});
+                        else cy.wrap($cb).uncheck({force: true});
+                    });
+
+            } else if (label === 'Checkbox List') {
+                const values = Array.isArray(value) ? value : [value];
+                this.turnOnToggleAndReturnParentElementOnCustomForm(label).then(($root) => {
+                    values.forEach(v => {
+                        cy.wrap($root)
+                            .contains('.checkbox, .checkbox-inline, label', new RegExp(`^\\s*${v}\\s*$`))
+                            .find('input[type="checkbox"]')
+                            .check({force: true});
+                    });
+                });
+
+            } else if (label === 'Radiobutton List') {
+                this.turnOnToggleAndReturnParentElementOnCustomForm(label)
+                    .contains('.radio, .radio-inline, label', new RegExp(`^\\s*${value}\\s*$`))
+                    .find('input[type="radio"]')
+                    .check({force: true});
+
+            } else if (label === 'Select List') {
+                this.turnOnToggleAndSelectDropdownOptionOnCustomForm(label, value);
+
+            } else if (label === 'User/User Group' ) {
+                const values = Array.isArray(value) ? value : [value];
+                this.turnOnToggleAndReturnParentElementOnCustomForm(label)
+                    .find('.ui-select-container')
+                    .first()
+                    .as('userSelect');
+
+                values.forEach(v => {
+                    cy.get('@userSelect').click().find('input.ui-select-search').type(v);
+                    cy.wait(2000);
+                    cy.get('.ui-select-choices-row').contains(v).click();
+                });
+
+            }
+
+                //  } else if (label === 'Person') {
+                //      this.turnOnToggleEnterValueAndPressEnterOnCustomForm(label, value);
+
+                // this.turnOnToggleAndReturnParentElementOnCustomForm(label)
+                //     .find('input[ng-model="person.text"]')
+                //     .should('be.enabled')
+                //     .clear({ force: true })
+                //     .type(value, { force: true });
+                // cy.wait(3000)
+                // cy.get('.typeahead .ng-scope, .uib-typeahead-match, .dropdown-menu .ng-scope')
+                //     .first()
+                //     .click({ force: true });
+
+
+            // }
+            else if (label === 'Date') {
+                this.turnOnToggleAndReturnParentElementOnCustomForm(label)
+                    .within(() => {
+                        cy.get('input[tp-datepicker-popup][ng-model="ngModel"]')
+                            .filter(':visible')
+                            .first()
+                            .scrollIntoView()
+                            .click({force: true})
+                            .clear({force: true})
+                            .type(String(value), {force: true})
+                            .type('{enter}')
+                            .blur();
+                    });
+
+
+            } else {
+
+                this.turnOnToggleEnterValueAndPressEnterOnCustomForm(label, value);
+            }
+        }
+
+        return this;
+    }
+
+    choose_custom_form_from_mass_update_cf_modal(itemObject) {
+        customDataType().select(`number:${itemObject.id}`, { force: true }).trigger('change');
+
+        return this;
+    }
 
     enter_values_to_all_fields_on_modal(labelsArray, valuesArray) {
 
@@ -3070,8 +3228,7 @@ export default class BasePage {
             } else if (['Category'].some(v => label === v)) {
                 cy.get('[category-name="item.categoryName"]').click()
                 cy.get('[repeat="category in data.categories | filter: { name: $select.search }"]').contains(value).click();
-            }
-            else {
+            } else {
                 this.findElementByLabelEnterValueAndPressEnter(label, value)
             }
         }
@@ -3485,4 +3642,5 @@ export default class BasePage {
     }
 
 
-}
+};
+export default basePage

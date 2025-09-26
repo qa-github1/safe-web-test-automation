@@ -69,6 +69,31 @@ C = {
             'Public Facing Description',
             'Disposition Status',
             'Tags'],
+        allFieldsOnItemView: [
+            'Org #',
+            'Item #',
+            'Case',
+            'Status',
+            'Recovered At',
+            'Recovery Date',
+            'Recovered By',
+            'Storage Location',
+            'Submitted By',
+            'Category',
+            'Custody Reason',
+            'Serial Number',
+            'Model',
+            'Barcode',
+            'Additional Barcodes',
+            'Make',
+            'Description',
+            'Item Belongs to',
+            'Custodian',
+            'Public Facing Description',
+            'Disposition Status',
+            'Tags',
+        'Disposition Status',
+        'Latest Transaction Notes'],
         allEditableFieldsArray: [
             'Recovered At',
             'Recovery Date',
@@ -97,6 +122,21 @@ C = {
             'Model',
             'Item Belongs to',
             'Tags',
+        ],
+        massUpdateCFModal : [
+            'Textbox',
+            'Email',
+            'Number',
+            'Password',
+            'Textarea',
+            'Checkbox',
+            'Checkbox List',
+            'Radiobutton List',
+            'Select List',
+            'Dropdown Typeahead',
+            'User/User Group',
+            'Person',
+            'Date'
         ],
         orgNo: 'Org #',
         active: 'Active',
@@ -254,7 +294,7 @@ C = {
         cypressCaseForm_Date: "Optional fields - Cypress Case Form > Date",
     },
     itemCustomFields: {
-        cypressItemForm_Textbox: "Optional fields - Cypress Items Form > Textbox",
+        cypressItemForm_Textbox: "Optional fields - Cypress Items Form - Org#2 > Textbox",
         cypressItemForm_Email: "Cypress Item Form > Email",
         cypressItemForm_Number: "Cypress Item Form > Number",
         cypressItemForm_Password: "Cypress Item Form > Password",
@@ -294,7 +334,8 @@ C = {
         },
         itemActionsOnSearchResults: {
             checkItemIn:"Check Items In",
-            massUpdate: "Mass Update"
+            massUpdate: "Mass Update",
+            massUpdateCF: "Mass Update Custom Data"
         },
         caseActions: {
             massUpdate: "Mass Update"

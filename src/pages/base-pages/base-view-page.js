@@ -55,7 +55,9 @@ let
     xButton_onselectedTagOrUser_ByText = text => selectedTagOrUser_ByText(text).find('.ui-select-match-close'),
     xButtons_onTagOrUserBoxes_byFieldLabel = label => active_form().contains(label).parent().find('[ng-click="$selectMultiple.removeChoice($index)"]'),
     xButtons_onTagOrUserBoxes = text => active_form().find('[ng-click="$selectMultiple.removeChoice($index)"]'),
-    requiredElement = e => cy.get(`label[for="${e}"]`).siblings().find('[ng-message="required"]')
+    requiredElement = e => cy.get(`label[for="${e}"]`).siblings().find('[ng-message="required"]'),
+    deleteFormButton = e => cy.get(`[title="Delete Form"]`).first(),
+    confirmDeleteFormButton = e => cy.get(`[class="confirm"]`).first()
 
 export default class BaseViewPage extends BasePage {
     constructor() {
@@ -508,6 +510,11 @@ export default class BaseViewPage extends BasePage {
         return this;
     }
 
+    delete_custom_form_on_edit_page() {
+        deleteFormButton().click();
+        confirmDeleteFormButton().click();
+        return this;
+    }
 
     verify_required_fields(fields) {
         for (let field of fields) {
