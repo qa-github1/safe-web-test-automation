@@ -68,6 +68,7 @@ C = {
             'Custodian',
             'Public Facing Description',
             'Disposition Status',
+            'Letter Sent to Owner/ Claimant',
             'Tags'],
         allFieldsOnItemView: [
             'Org #',
@@ -92,8 +93,8 @@ C = {
             'Public Facing Description',
             'Disposition Status',
             'Tags',
-        'Disposition Status',
-        'Latest Transaction Notes'],
+            'Disposition Status',
+            'Latest Transaction Notes'],
         allEditableFieldsArray: [
             'Recovered At',
             'Recovery Date',
@@ -107,7 +108,6 @@ C = {
             'Item Belongs to',
             'Tags',
             'Released To',
-          //  'Disposition Status'
         ],
         reducedEditableFieldsArray: ['Category'],
         massUpdateModal : [
@@ -122,6 +122,18 @@ C = {
             'Model',
             'Item Belongs to',
             'Tags',
+        ],
+        massUpdateModalWhenAllTogglesAreOn : [
+            'Recovered At',
+            'Description',
+            'Recovery Date',
+            'Item Belongs to',
+            'Recovered By',
+            'Submitted By',
+            'Category',
+            'Custody Reason',
+            'Model',
+            'Make'
         ],
         massUpdateCFModal : [
             'Textbox',

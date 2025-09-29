@@ -69,7 +69,7 @@ exports.add_custom_form_data_to_existing_item = function (itemObject) {
 exports.add_custom_form_data_to_existing_item_2 = function (itemObject) {
     cy.getLocalStorage("newItem").then(newItem => {
         let itemData = Object.assign(JSON.parse(newItem), itemObject);
-        // I know that this is the same method as the one above, but
+        // TODO:I know that this is the same method as the one above, but
         // I was not able to figure it out why method above passes for workflow
         // and failed if I comment itemData.tags row
         // I will leave like this until Sumejja's review

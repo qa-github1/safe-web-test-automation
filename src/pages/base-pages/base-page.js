@@ -2872,7 +2872,8 @@ let basePage = class BasePage {
             .should('be.enabled')
             .clear({force: true})
             .type(String(value), {force: true})
-        cy.wait(2000)
+        this.pause(2)
+       // cy.wait(1000)
         cy.get('@cfInput').type('{enter}');
     }
 
@@ -3043,6 +3044,20 @@ let basePage = class BasePage {
         return this;
     }
 
+    turn_off_all_toggles_on_modal(labelsArray) {
+        this.pause(1)
+        for (let i = 0; i < labelsArray.length; i++) {
+            const label = labelsArray[i];
+            this.turnOnToggle(label);
+
+            if (label === 'Category' && S.isDispoStatusEnabled()) {
+                this.click('Confirm');
+            }
+        }
+
+        return this;
+    }
+
     turn_on_and_enter_values_to_all_fields_on_modal(labelsArray, valuesArray) {
 
         for (let i = 0; i < labelsArray.length; i++) {
@@ -3147,7 +3162,8 @@ let basePage = class BasePage {
 
                 values.forEach(v => {
                     cy.get('@userSelect').click().find('input.ui-select-search').type(v);
-                    cy.wait(2000);
+                    //cy.wait(2000);
+                    this.pause(1)
                     cy.get('.ui-select-choices-row').contains(v).click();
                 });
 
@@ -3206,6 +3222,17 @@ let basePage = class BasePage {
 
             if (['Offense Type', 'Custody Reason'].some(v => label === v)) {
                 this.findElementByLabelAndSelectDropdownOption(label, value)
+            }
+            else if (label === 'Recovered By') {
+                cy.get('[name="recoveredBy"]').clear().type(value)
+                    cy.wait(2000)
+                cy.get('[name="recoveredBy"]').type('{enter}');
+
+            }
+            else if (label === 'Submitted By') {
+                cy.get('[name="submittedBy"]').clear().type(value)
+                    cy.wait(2000)
+                cy.get('[name="submittedBy"]').type('{enter}');
 
             } else if (['Status'].some(v => label === v)) {
                 if (value === 'Closed') {
@@ -3220,8 +3247,14 @@ let basePage = class BasePage {
                 cy.get('[name="offenseLocation"]').clear().type(value).click();
             } else if (label === 'Recovered At') {
                 cy.get('[name="recoveryLocation"]').clear().type(value).click();
-            } else if (label === 'Recovery Date') {
-                this.enterValue(recoveryDate, value)
+            }
+            else if (label === 'Recovery Date') {
+                //this.enterValue(recoveryDate, value)
+             //   this.findElementByLabelEnterValueAndPressEnter(label, value)
+                cy.get('.col-md-8 > .test > .input-group').clear().type(value)
+                cy.wait(1000)
+                cy.get('.col-md-8 > .test > .input-group').type('{enter}')
+
             } else if (label === 'Item Belongs to') {
                 this.enterValue(itemBelongsTo, value)
                 firstPersonOnItemBelongsToTypeahead().click()

@@ -7,12 +7,23 @@ const {editedCase} = require("../../../../fixtures/data");
 const helper = require("../../../../support/e2e-helper");
 
 let user = S.getUserData(S.userAccounts.orgAdmin);
+let startTime;
 
+
+for (let i = 0; i < 10; i++) {
 describe('Mass Update Items through Actions on Search Results', function () {
 
     before(function () {
         api.auth.get_tokens(user);
         api.auto_disposition.edit(true);
+        startTime = Date.now();
+
+    });
+
+    after(() => {
+        const endTime = Date.now();
+        const totalSeconds = ((endTime - startTime) / 1000).toFixed(2);
+        cy.log(`⏱ Total time for suite: ${totalSeconds} seconds`);
     });
 
     let allFieldsLabels = C.itemFields.massUpdateModal
@@ -28,9 +39,10 @@ describe('Mass Update Items through Actions on Search Results', function () {
         'Custody Reason'
     ]
 
-    let multiSelectFieldsLabels = [
+    let optionalFieldsLabels = [
         'Tags',
     ]
+
 
     context('1. All fields enabled in Org Settings', function () {
         it('1.1 All fields turned on and edited', function () {
@@ -42,7 +54,7 @@ describe('Mass Update Items through Actions on Search Results', function () {
                 D.editedItem.description,
                 D.editedItem.recoveryLocation,
                 D.editedItem.recoveredBy,
-                D.editedItem.submittedBy,
+                D.editedItem.submittedBy = 'Power User',
                 D.editedItem.category,
                 D.editedItem.custodyReason,
                 D.editedItem.recoveryDate,
@@ -73,17 +85,21 @@ describe('Mass Update Items through Actions on Search Results', function () {
                 ui.app.open_item_url(JSON.parse(item).id)
                 ui.itemView.select_tab(C.tabs.basicInfo)
             })
-            ui.itemView.verify_edited_and_not_edited_values_on_Item_View_form(C.itemFields.allFieldsOnItemView, D.newItem)
+            D.editedItem.submittedBy = 'Power User'
+                // TODO: Please review if this is enough to verify only fields that are modified
+            ui.itemView.verify_edited_and_not_edited_values_on_Item_View_form(C.itemFields.massUpdateModal, D.editedItem)
                 .click_Edit()
-                .verify_edited_and_not_edited_values_on_Item_Edit_form(C.itemFields.allEditableFieldsArray, D.editedItem)
-            //TODO:these three last steps related to History is failing, so if we want to
-            //include this in test, we should fix method first
-            //.open_last_history_record(0)
+                .verify_edited_and_not_edited_values_on_Item_Edit_form(C.itemFields.massUpdateModal, D.editedItem)
+            .open_last_history_record(0)
+            .verify_red_highlighted_history_records(C.itemFields.massUpdateModal)
+            //TODO: Please review this method below if we want to  include an extra verification
             // .verify_all_values_on_history(D.editedItem, D.newItem)
-            //.verify_red_highlighted_history_records(C.itemFields.allEditableFieldsArray)
+
+            api.auth.log_out(user)
 
         });
-        it.only('1.2 All fields turned on but value is edited on required fields only', function () {
+
+        it('1.2 All fields turned on but value is edited on required fields only', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(user);
             D.generateNewDataSet();
@@ -94,9 +110,9 @@ describe('Mass Update Items through Actions on Search Results', function () {
                 D.editedItem.recoveryDate,
                 D.editedItem.itemBelongsTo,
                 D.editedItem.recoveredBy,
-                D.editedItem.submittedBy,
+                D.editedItem.submittedBy = 'Power User',
                 D.editedItem.category,
-                D.editedItem.custodyReason
+                D.editedItem.custodyReason,
             ]
 
             api.org_settings.enable_all_Item_fields()
@@ -112,25 +128,31 @@ describe('Mass Update Items through Actions on Search Results', function () {
                 .verify_Ok_button_is_disabled()
                 .turn_on_all_toggles_on_modal(allFieldsLabels)
                 .verify_asterisk_is_shown_for_fields_on_modal(requiredFieldsLabels)
+                .turn_off_all_toggles_on_modal(optionalFieldsLabels) // #19466 ⁃ Items - Uncategorized Issues (issue #4)
                 .enter_values_to_all_fields_on_modal(requiredFieldsLabels, requiredValues)
-            //     .verify_text_above_modal_footer('Warning! This action will mass update all items found by the current search, except items shared among Organizations')
-            //     .click_Ok()
-            //     .verify_text_is_present_on_main_container('Actions on Search Results Jobs')
-            //     .sort_by_descending_order('Start Date')
-            //     .verify_content_of_first_row_in_results_table('Completed')
-            //
-            // cy.getLocalStorage('newItem1').then(item => {
-            //     ui.app.open_item_url(JSON.parse(item).id)
-            //     ui.itemView.select_tab(C.tabs.basicInfo)
-            // })
-            // ui.itemView.verify_edited_and_not_edited_values_on_Item_View_form(allFieldsLabels, D.editedItem, D.newItem)
-            //     .click_Edit()
-            //     .verify_edited_and_not_edited_values_on_Item_Edit_form(allFieldsLabels, D.editedItem, D.newItem)
-            // //these three last steps related to History is failing, so if we want to
-            // //include this in test, we should fix method first
-            // .open_last_history_record(0)
-            //  .verify_all_values_on_history(D.editedItem, D.newItem)
-            // .verify_red_highlighted_history_records(C.itemFields.allEditableFieldsArray)
+                 .verify_text_above_modal_footer('Warning! This action will mass update all items found by the current search, except items shared among Organizations')
+                 .click_Ok()
+                 .verify_text_is_present_on_main_container('Actions on Search Results Jobs')
+                 .sort_by_descending_order('Start Date')
+                 .verify_content_of_first_row_in_results_table('Completed')
+
+            cy.getLocalStorage('newItem1').then(item => {
+                ui.app.open_item_url(JSON.parse(item).id)
+                ui.itemView.select_tab(C.tabs.basicInfo)
+            })
+            D.editedItem.make = ''
+            D.editedItem.model = ''
+            D.editedItem.submittedBy = 'Power User'
+            // TODO: Please review this part below - I verified only values that are changed through the mass update modal
+             ui.itemView.verify_edited_and_not_edited_values_on_Item_View_form(C.itemFields.massUpdateModalWhenAllTogglesAreOn, D.editedItem)
+                 ui.itemView.click_Edit()
+            ui.itemView.verify_edited_and_not_edited_values_on_Item_Edit_form(C.itemFields.massUpdateModalWhenAllTogglesAreOn, D.editedItem)
+             .open_last_history_record(0)
+             .verify_red_highlighted_history_records(C.itemFields.massUpdateModalWhenAllTogglesAreOn)
+                //TODO: failing od this method below - we need to see what is the problem if we want to include this method also
+               // .verify_all_values_on_history(D.editedItem, D.newItem)
+
         });
     });
 });
+}
