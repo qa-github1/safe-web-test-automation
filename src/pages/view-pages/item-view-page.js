@@ -47,6 +47,8 @@ let
     tagsField = e => active_form().find('[tagging="addNew"]'),
     tagsInput = e => active_form().contains('Tags').parent('div').find('input'),
     itemStatus = e => cy.get('[ng-model="item.statusId"]'),
+    newPrimaryCaseField = e => cy.get('[name="primaryCaseId"]'),
+    removeOldPrimaryCaseFromItemsCheckbox = e => cy.get('.deepGutter > .icheckbox_square-blue > .iCheck-helper'),
     xButtons_onAdditionalBarcodes = text => active_form().find('[ng-click="removeBarcode($index)"]')
 
 export default class ItemViewPage extends BaseViewPage {
@@ -370,6 +372,18 @@ export default class ItemViewPage extends BaseViewPage {
 
     verify_data_on_Chain_of_Custody(columnValuePairs) {
         this.verify_values_on_CoC(columnValuePairs, true)
+        return this;
+    }
+
+    change_primary_case(data, removeOldPrimaryCase = true) {
+        newPrimaryCaseField().type(data.caseNumber)
+            cy.wait(1000)
+                newPrimaryCaseField().type('{enter}');
+        return this;
+    }
+
+    click_remove_old_primary_case_checkbox(){
+        removeOldPrimaryCaseFromItemsCheckbox().click();
         return this;
     }
 

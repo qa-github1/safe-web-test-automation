@@ -182,6 +182,8 @@ C = {
         submittedBy: 'Submitted By',
         expectedReturnDate: 'Expected Return Date',
         actualDisposedDate: 'Actual Disposed Date',
+        case: 'Case',
+        caseNumber: 'Case Number'
     },
     personFields: {
         allEditableFieldsArray: [
