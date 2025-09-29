@@ -14,8 +14,7 @@ describe('Mass Update Custom Data through Actions on Search Results', function (
 
     before(function () {
         startTime = Date.now();
-       // api.auth.get_tokens(user);
-    //    api.auto_disposition.edit(true);
+
     });
 
     after(() => {

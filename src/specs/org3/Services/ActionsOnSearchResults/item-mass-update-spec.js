@@ -14,8 +14,6 @@ for (let i = 0; i < 10; i++) {
 describe('Mass Update Items through Actions on Search Results', function () {
 
     before(function () {
-        api.auth.get_tokens(user);
-        api.auto_disposition.edit(true);
         startTime = Date.now();
 
     });
