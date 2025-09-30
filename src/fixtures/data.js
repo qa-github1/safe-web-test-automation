@@ -245,7 +245,10 @@ D.getNewItemData = function (specificCaseObject, locationObject, newPerson) {
         checkedOutNotes: '',
         expectedReturnDate: '',
         customDataType: 'Optional fields - Cypress Item Form - Org #2',
-        dispositionStatus: 'Disposed'
+        dispositionStatus: 'Disposed',
+        subsetTypePercentage: 'Percentage',
+        subsetTypeNumber: 'Number',
+        percentageOrNumberOfItems: '1'
     });
 
     return D.newItem;

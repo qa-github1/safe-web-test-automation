@@ -30,7 +30,9 @@ let
     typeaheadOption = e => cy.get('[ng-repeat="match in matches track by $index"]'),
     tableColumn_header = columnTitle => cy.get('thead').contains(columnTitle),
     tableColumn_header_arrowUp = columnTitle => cy.get('thead').contains(columnTitle).parent().find('.order'),
-    splitButton = e => cy.get('[translate="ITEMS.LIST.BUTTON_SPLIT"]').parent()
+    splitButton = e => cy.get('[translate="ITEMS.LIST.BUTTON_SPLIT"]').parent(),
+    subsetType = e => cy.get('[ng-model="userSubsetSelection.subsetTypeSelection"]'),
+    percentageOrNumberOfItems = e => cy.get('[name="numberFrom"]')
 
 export default class SearchItemPage extends BaseSearchPage {
 
@@ -284,4 +286,15 @@ export default class SearchItemPage extends BaseSearchPage {
         }
         return this;
     }
+
+    choose_subset_type(data){
+        subsetType().select(data);
+        return this;
+    }
+
+    type_percentage_or_number_of_items_on_item_subset_modal(data){
+        percentageOrNumberOfItems().type(data.percentageOrNumberOfItems);
+        return this;
+    }
+
 }

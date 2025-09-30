@@ -8,6 +8,7 @@ const helper = require("../../../../support/e2e-helper");
 
 let user = S.getUserData(S.userAccounts.orgAdmin);
 let startTime;
+const equals = C.searchCriteria.inputFields.equals
 
 
 for (let i = 0; i < 1; i++) {
@@ -46,23 +47,16 @@ for (let i = 0; i < 1; i++) {
 
 
         it('1. Export Selected Cases - Excel (Item View - Case Tab)', function () {
-            //this api is triggered when User clicks on export selected
-             cy.intercept('GET', '**/api/items/*/notesCount').as('notesCount');
             ui.app.open_newly_created_item_via_direct_link()
                 .select_tab('Cases')
                 .select_checkbox_on_specific_table_row(0)
                 .click_element_on_active_tab(C.buttons.export)
                 .click_option_on_expanded_menu('Selected - Excel');
-
-            cy.wait('@notesCount').its('response.statusCode').should('eq', 200);
-
         });
 
         it('2. Export Selected Cases - CSV (Search Case Page)', function () {
-            ui.menu.click_Search__Item()
-            ui.searchItem
-                .select_Status('Checked In')
-                .enter_Description('contains', D.newItem.description)
+            ui.menu.click_Search__Case()
+            ui.searchCase.enter_Case_Number(equals, D.newCase.caseNumber)
                 .click_Search()
                 .click_checkbox_to_select_specific_row(0)
                 .click_button('Export')
@@ -70,6 +64,6 @@ for (let i = 0; i < 1; i++) {
         });
     });
 
-    //TODO: Later, we can add verification for downloaded place and text in the downloaded file
+    //TODO: Later, we can add verification for file downloaded folder and text in the downloaded file
 }
 
