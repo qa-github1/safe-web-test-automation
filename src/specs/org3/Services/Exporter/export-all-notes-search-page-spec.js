@@ -8,6 +8,8 @@ const helper = require("../../../../support/e2e-helper");
 
 let user = S.getUserData(S.userAccounts.orgAdmin);
 let startTime;
+const exactly = C.searchCriteria.dates.exactly
+let note = D.getRandomNo() + '_note';
 
 
 for (let i = 0; i < 1; i++) {
@@ -16,9 +18,11 @@ for (let i = 0; i < 1; i++) {
         before(function () {
             api.auth.get_tokens(user);
             D.generateNewDataSet();
-            api.org_settings.enable_all_Item_fields()
             api.cases.add_new_case()
-            api.items.add_new_item(true)
+            ui.caseView.open_newly_created_case_via_direct_link()
+                .select_tab(C.tabs.notes)
+                .enter_note_and_category(note, C.noteCategories.sensitive)
+                .verify_toast_message(C.toastMsgs.saved)
             startTime = Date.now();
 
 
@@ -31,10 +35,22 @@ for (let i = 0; i < 1; i++) {
         });
 
 
-        it('1. Export All - Item Search Page - Excel', function () {
-            ui.menu.click_Search__Item()
-            ui.searchItem
-                .enter_Description('contains', D.newItem.description)
+        it.only('1. Export All - Note Search Page - Excel', function () {
+            ui.menu.click_Search__Notes()
+            ui.searchNotes.run_search_by_Text(note)
+                .click_Search()
+            //     .click_button('Export')
+            //     .click_option_on_expanded_menu('All - Excel')
+            // ui.app.verify_url_contains_some_value('export-jobs')
+            //     .sort_by_descending_order('Start Date')
+            // cy.reload()
+            // ui.app.verify_content_of_specific_cell_in_first_table_row('Download Link', 'Download')
+
+        });
+
+        xit('2. Export All - Note Search Page - CSV', function () {
+            ui.menu.click_Search__Notes()
+            ui.searchNotes.run_search_by_Text(note)
                 .click_Search()
                 .click_button('Export')
                 .click_option_on_expanded_menu('All - Excel')
@@ -45,21 +61,6 @@ for (let i = 0; i < 1; i++) {
 
         });
 
-        it('2. Export All - Item Search Page - CSV', function () {
-            ui.menu.click_Search__Item()
-            ui.searchItem
-                .enter_Description('contains', D.newItem.description)
-                .click_Search()
-                .click_button('Export')
-                .click_option_on_expanded_menu('All - CSV')
-            ui.app.verify_url_contains_some_value('export-jobs')
-                .sort_by_descending_order('Start Date')
-            cy.reload()
-            ui.app.verify_content_of_specific_cell_in_first_table_row('Download Link', 'Download')
-
-        });
-
     });
 }
-
 

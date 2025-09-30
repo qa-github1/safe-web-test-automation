@@ -134,7 +134,9 @@ describe('Services', function () {
             .click_element_on_active_tab(C.buttons.export)
             .click_option_on_expanded_menu('All - Excel')
         ui.app.verify_url_contains_some_value('export-jobs')
-            .verify_content_of_first_row_in_results_table('Download')
+           // .verify_content_of_first_row_in_results_table('Download')
+        ui.app.verify_content_of_specific_cell_in_first_table_row('Download Link', 'Download')
+
     });
 
     it('3. Importer', function () {
