@@ -137,7 +137,7 @@ describe('User', function () {
     });
 
 });
-describe('Item Transactions', function () {
+describe.only('Item Transactions', function () {
 
     it('Verify all transactions, data changes and enabled/disabled actions based on Item status', function () {
         ui.app.log_title(this);

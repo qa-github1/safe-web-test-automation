@@ -1841,6 +1841,7 @@ export default class BasePage {
 
         this.pause(1)
         this.wait_until_spinner_disappears()
+        this.wait_all_GET_requests()
 
         if (tabTitle === C.tabs.history) {
             historyTab(tabTitle).should('be.visible').click()
@@ -2535,7 +2536,7 @@ export default class BasePage {
     };
 
     wait_all_GET_requests() {
-        //  cy.wait('@all_GET_Requests')
+          cy.wait('@all_GET_Requests')
         return this;
     };
 
