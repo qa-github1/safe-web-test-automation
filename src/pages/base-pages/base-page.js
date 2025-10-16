@@ -2706,7 +2706,7 @@ let basePage = class BasePage {
                 const input = $input[0];
                 input.files = dataTransfer.files;
                 input.dispatchEvent(new Event('change'));
-                if (successMessage !== false) {
+                if (successMessage) {
                     this.verify_toast_message(successMessage, false, timeoutInMinutes);
                 }
             });
@@ -3567,7 +3567,7 @@ let basePage = class BasePage {
             this.verify_modal_content('Items shared among Organizations are not included in the transaction')
             cy.signOnCanvas()
         }
-        this.upload_file_and_verify_toast_msg('image.png', isActionOnSearchResults ? false : 'Saved')
+        this.upload_file_and_verify_toast_msg('image.png', null)
         this.click_button_on_modal(C.buttons.ok)
             .verify_toast_message('Saved')
             .wait_until_spinner_disappears()
@@ -3585,7 +3585,7 @@ let basePage = class BasePage {
             this.verify_modal_content(' Warning! This action will check in all items found by the current search')
             this.verify_modal_content('Items shared among Organizations are not included in the transaction')
         }
-        this.upload_file_and_verify_toast_msg('image.png', isActionOnSearchResults ? false : 'Saved')
+        this.upload_file_and_verify_toast_msg('image.png', null)
         this.click_button_on_modal(C.buttons.ok)
             .verify_toast_message('Saved')
             .wait_until_spinner_disappears()
@@ -3603,7 +3603,7 @@ let basePage = class BasePage {
             this.verify_modal_content(' Warning! This action will check out all items found by the current search')
             this.verify_modal_content('Items shared among Organizations are not included in the transaction')
         }
-        this.upload_file_and_verify_toast_msg('image.png', isActionOnSearchResults ? false : 'Saved')
+        this.upload_file_and_verify_toast_msg('image.png', null)
 
         this.click_button_on_modal(C.buttons.ok)
             .verify_toast_message('Saved')
@@ -3626,7 +3626,7 @@ let basePage = class BasePage {
             this.verify_modal_content('Items shared among Organizations are not included in the transaction')
             cy.signOnCanvas()
         }
-        this.upload_file_and_verify_toast_msg('image.png', isActionOnSearchResults ? false : 'Saved')
+        this.upload_file_and_verify_toast_msg('image.png', null)
         this.click_button_on_modal(C.buttons.ok)
             //.wait_response_from_API_call('api/transfers/V2')
             .verify_toast_message('Saved')
@@ -3647,7 +3647,7 @@ let basePage = class BasePage {
             this.verify_modal_content(' Warning! This action will move all items found by the current search')
             this.verify_modal_content('Items shared among Organizations are not included in the transaction')
         }
-        this.upload_file_and_verify_toast_msg('image.png', isActionOnSearchResults ? false : 'Saved')
+        this.upload_file_and_verify_toast_msg('image.png', null)
         this.click_button_on_modal(C.buttons.ok)
             .verify_toast_message('Saved')
             .wait_until_spinner_disappears()
@@ -3670,7 +3670,7 @@ let basePage = class BasePage {
             this.verify_modal_content(' Warning! This action will dispose all items found by the current search')
             this.verify_modal_content('Items shared among Organizations are not included in the transaction')
         }
-        this.upload_file_and_verify_toast_msg('image.png', isActionOnSearchResults ? false : 'Saved')
+        this.upload_file_and_verify_toast_msg('image.png', null)
         this.click_button_on_modal(C.buttons.ok)
             .verify_toast_message('Saved')
             .wait_until_spinner_disappears()

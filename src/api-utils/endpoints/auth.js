@@ -35,7 +35,7 @@ function get_token_status(selectedUser) {
     })
 }
 
-exports.get_tokens = function (selectedUser, arrayOfPropertiesToRetain) {
+exports.get_tokens = function (selectedUser, arrayOfPropertiesToRetain, specificOffice) {
 
   //  ui.app.define_API_request_to_be_awaited('POST', '', 'all_POST_Requests')
     //ui.app.define_all_dashboard_GET_requests();
@@ -69,13 +69,17 @@ exports.get_tokens = function (selectedUser, arrayOfPropertiesToRetain) {
                 cy.getLocalStorage("token").should("not.equal", null).then(() => {
                     cy.saveLocalStorage().then(() => {
 
-                        if (selectedUser.title === S.userRoles.systemAdmin) {
-                            ui.menu.select_office(S.selectedEnvironment.office_1.name)
+                        if (selectedUser.title === S.userRoles.systemAdmin || specificOffice) {
+                            let office = specificOffice || S.selectedEnvironment.office_1
+
+                            if (selectedUser.title === S.userRoles.systemAdmin){
+                                ui.menu.select_office(office.orgAndOfficeName)
+                            }
 
                             cy.getLocalStorage("headers").then(headers => {
                                 let updatedHeaders = JSON.parse(headers);
                                 updatedHeaders.organizationid = S.selectedEnvironment.orgSettings.id;
-                                updatedHeaders.officeid = S.selectedEnvironment.office_1.id;
+                                updatedHeaders.officeid = office.id
 
                                 cy.clearLocalStorage("headers");
                                 cy.setLocalStorage("headers", JSON.stringify(updatedHeaders));

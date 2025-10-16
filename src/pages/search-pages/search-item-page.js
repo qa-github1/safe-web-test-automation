@@ -161,24 +161,20 @@ export default class SearchItemPage extends BaseSearchPage {
                     cy.clearLocalStorage()
                     authApi.get_tokens(S.userAccounts.orgAdmin);
                     that.verify_text_is_present_on_main_container('Welcome')
-                        .open_direct_url_for_page();
+                    menu.click_Search__Item()
                     that.wait_search_criteria_to_be_visible()
                         .select_Status(status)
                         .select_Office(office)
                         .enter_Description('contains', description)
                         .click_Search();
 
-                    // wrap recursion in Cypress queue
                     cy.wait(1000).then(() => {
                         checkIfButtonIsVisibleAndRetry(retries - 1);
                     });
                 }
             });
         }
-
         checkIfButtonIsVisibleAndRetry(3);
-      //  that.click_Actions_On_Search_Results()
-
         return this;
     };
 

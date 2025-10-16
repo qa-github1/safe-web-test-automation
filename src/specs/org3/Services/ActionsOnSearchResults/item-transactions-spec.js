@@ -39,7 +39,7 @@ for (let i = 0; i < 10; i++) {
             api.items.add_new_item(true, null, 'newItem1')
             ui.menu.click_Search__Item()
             ui.searchItem.search_with_minimum_required_fields_and_click_Actions_on_Search_Results
-            ('Checked In', S.selectedEnvironment.office_1.name,  D.newItem.description)
+             ('Checked In', S.selectedEnvironment.office_1.name,  D.newItem.description)
                 .perform_Item_Check_Out_transaction(powerUser, C.checkoutReasons.lab, 'Check Out from Actions on Search Results', null, true, true)
                 .verify_text_is_present_on_main_container('Actions on Search Results Jobs')
                 .sort_by_descending_order('Start Date')
@@ -55,7 +55,7 @@ for (let i = 0; i < 10; i++) {
                     ])
                     .verify_last_transaction_media_from_CoC()
                 api.auth.log_out(orgAdmin)
-            })
+           })
         });
 
         it('2. Verify Transfer transaction with Uploaded Media and Signature Optional', function () {
