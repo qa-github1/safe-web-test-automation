@@ -2205,34 +2205,36 @@ let basePage = class BasePage {
 
 
     verify_content_of_specific_cell_in_first_table_row(columnTitle, cellContent, headerCellTag = 'th') {
-        firstRowInResultsTable(0).within(($list) => {
-            if (cellContent) {
-                if (this.isObject(cellContent)) {
-                    for (let property in cellContent) {
-                        resultsTableHeaderFromRoot().contains(headerCellTag, columnTitle).invoke('index').then((i) => {
-                            cy.get('td').eq(i).invoke('text').then(function (textFound) {
-                                assert.include(textFound, cellContent[property]);
-                            })
 
-                        })
-                    }
-                } else if (Array.isArray(cellContent)) {
-                    cellContent.forEach(function (value) {
-                        resultsTableHeaderFromRoot().contains(headerCellTag, columnTitle).invoke('index').then((i) => {
-                            cy.get('td').eq(i).invoke('text').then(function (textFound) {
-                                assert.include(textFound, value);
-                            })
-                        })
-                    })
-                } else {
-                    resultsTableHeaderFromRoot().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
-                        cy.get('td').eq(i).invoke('text').then(function (textFound) {
-                            assert.include(textFound, cellContent.toString().trim());
-                        })
-                    });
-                }
-            }
-        });
+        this.verify_content_of_specific_table_row_by_provided_column_title_and_value(0, columnTitle, cellContent, headerCellTag)
+        // firstRowInResultsTable(0).within(($list) => {
+        //     if (cellContent) {
+        //         if (this.isObject(cellContent)) {
+        //             for (let property in cellContent) {
+        //                 resultsTableHeaderFromRoot().contains(headerCellTag, columnTitle).invoke('index').then((i) => {
+        //                     cy.get('td').eq(i).invoke('text').then(function (textFound) {
+        //                         assert.include(textFound, cellContent[property]);
+        //                     })
+        //
+        //                 })
+        //             }
+        //         } else if (Array.isArray(cellContent)) {
+        //             cellContent.forEach(function (value) {
+        //                 resultsTableHeaderFromRoot().contains(headerCellTag, columnTitle).invoke('index').then((i) => {
+        //                     cy.get('td').eq(i).invoke('text').then(function (textFound) {
+        //                         assert.include(textFound, value);
+        //                     })
+        //                 })
+        //             })
+        //         } else {
+        //             resultsTableHeaderFromRoot().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
+        //                 cy.get('td').eq(i).invoke('text').then(function (textFound) {
+        //                     assert.include(textFound, cellContent.toString().trim());
+        //                 })
+        //             });
+        //         }
+        //     }
+        // });
         return this;
     };
 
@@ -2268,90 +2270,9 @@ let basePage = class BasePage {
     //        return this;
     //    };
 
-    // verify_content_of_specified_cell_in_specified_table_row(rowNumber, columnTitle, cellContent, headerCellTag = 'th') {
-    //
-    //     specificRowInResultsTable(rowNumber - 1).within(($list) => {
-    //         if (cellContent) {
-    //             if (this.isObject(cellContent)) {
-    //                 for (let property in cellContent) {
-    //                     resultsTableHeaderFromRoot().contains(headerCellTag, columnTitle).invoke('index').then((i) => {
-    //                         cy.get('td').eq(i).invoke('text').then(function (textFound) {
-    //                             assert.include(textFound, cellContent[property]);
-    //                         })
-    //
-    //                     })
-    //                 }
-    //             } else if (Array.isArray(cellContent)) {
-    //                 cellContent.forEach(function (value) {
-    //                     resultsTableHeaderFromRoot().contains(headerCellTag, columnTitle).invoke('index').then((i) => {
-    //                         cy.get('td').eq(i).invoke('text').then(function (textFound) {
-    //                             assert.include(textFound, value);
-    //                         })
-    //                     })
-    //                 })
-    //             } else {
-    //                 resultsTableHeaderFromRoot().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
-    //                     cy.get('td').eq(i).invoke('text').then(function (textFound) {
-    //                         assert.include(textFound, cellContent.toString().trim());
-    //                     })
-    //                 });
-    //             }
-    //         }
-    //     });
-    //     return this;
-    // };
-
-    // verify_content_of_specified_cell_in_specified_table_row(rowNumber, columnTitle, cellContent, headerCellTag = 'th') {
-    //     let self = this;
-    //
-    //         if (cellContent) {
-    //             resultsTableHeader()
-    //                 .contains(headerCellTag, columnTitle)
-    //                 .not('ng-hide')
-    //                 .invoke('index')
-    //                 .then((i) => {
-    //                     // IMPORTANT: keep this as a function, not resolved yet
-    //                     const getCell = () => specificRowInResultsTable(rowNumber - 1).find('td').eq(i);
-    //
-    //                     if (this.isObject(cellContent)) {
-    //                         for (let property in cellContent) {
-    //                             self.verify_text(getCell, cellContent[property]);
-    //                         }
-    //                     } else if (Array.isArray(cellContent)) {
-    //                         cellContent.forEach((value) => {
-    //                             self.verify_text(getCell, value);
-    //                         });
-    //                     } else {
-    //                         self.verify_text(getCell, cellContent.toString().trim());
-    //                     }
-    //                 });
-    //         }
-    //
-    //
-    //     // if (Array.isArray(cellContent)) {
-    //     //     resultsTableHeader().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
-    //     //         specificRowInResultsTable(rowNumber).find('td').eq(i).invoke('text').then(function (textFound) {
-    //     //             cellContent.forEach(function (value) {
-    //     //                 self.verify_text(specificRowInResultsTable(rowNumber).find('td').eq(i), value);
-    //     //             });
-    //     //         });
-    //     //     });
-    //     // } else {
-    //     //     resultsTableHeader()
-    //     //         .contains(headerCellTag, columnTitle)
-    //     //         .not('ng-hide')
-    //     //         .invoke('index')
-    //     //         .then((i) => {
-    //     //             const getCellText = () => specificRowInResultsTable(rowNumber).find('td').eq(i)
-    //     //             self.verify_text(getCellText, cellContent);
-    //     //         });
-    //     // }
-    //
-    //     return this;
-    // }
 
     verify_content_of_specific_table_row_by_provided_column_title_and_value(
-        rowNumber,
+        rowIndex,
         columnTitle,
         cellContent,
         headerCellTag = 'th',
@@ -2369,7 +2290,7 @@ let basePage = class BasePage {
             .not('ng-hide')
             .invoke('index')
             .then((i) => {
-                const getCell = () => specificRowInResultsTable(rowNumber).find('td').eq(i);
+                const getCell = () => specificRowInResultsTable(rowIndex).find('td').eq(i);
 
                 // Normalize to array for consistent iteration
                 const values = Array.isArray(cellContent) ? cellContent : [cellContent];
