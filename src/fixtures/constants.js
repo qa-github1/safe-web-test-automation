@@ -40,6 +40,12 @@ C = {
         recalculateCasesToDispose: 'Recalculate Cases to Dispose',
         updateCases: `Update Cases`,
         closeCases: `Close Cases`,
+        active: 'Active',
+        inactive: 'Inactive',
+        organization: 'Organization',
+        groups: 'Groups',
+        new: 'New',
+        users: 'Users',
         closeXCases: X => `Close ${X} Cases`,
         viewXCases: X => `View ${X} Cases`,
     },
@@ -353,6 +359,10 @@ C = {
         },
         caseActions: {
             massUpdate: "Mass Update"
+        },
+        tagActions: {
+            deactivate: "Deactivate",
+            activate: "Activate"
         },
         userActions: {
             sendVerificationEmail: 'Send Verification Email',
@@ -846,6 +856,9 @@ C.labels = {
     },
     tasksPage: {
         title: 'Tasks'
+    },
+    tagsPage: {
+        title: 'Tags'
     },
     userAdmin: {
         title: 'User Admin'

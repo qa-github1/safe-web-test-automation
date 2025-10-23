@@ -31,6 +31,7 @@ let
     exportedSearches = e => sideMenu().find('[translate="NAV.EXPORTED_SEARCHES"]'),
     scan = e => sideMenu().find('[tooltip="Scan"]'),
     tasksList = e => sideMenu().find('.badge'),
+    tagsList = e => sideMenu().find('[tooltip="Tags"]'),
     taskSettings = e => sideMenu().find('[translate="NAV.TSK_SETTINGS"]'),
     massImportButton = e => cy.get('[translate="ITEMS.SCAN.MASS_IMPORT_LIST"]'),
     tools = e => cy.get('[translate="NAV.TOOLS"]').parents('li'),
@@ -198,6 +199,13 @@ export default class Menu extends BasePage {
     click_Tasks () {
         tasksList().click();
         this.verify_text_is_present_on_main_container(C.labels.tasksPage.title);
+        this.verify_Error_toast_message_is_NOT_visible()
+        return this;
+    };
+
+    click_Tags () {
+        tagsList().click();
+        this.verify_text_is_present_on_main_container(C.labels.tagsPage);
         this.verify_Error_toast_message_is_NOT_visible()
         return this;
     };

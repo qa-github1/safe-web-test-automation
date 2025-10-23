@@ -25,16 +25,16 @@ D.getCurrentDateAndRandomNumber = function (randomNumberLenght) {
 
 D.getStorageLocationData = function (locationName, parentId = 0, canStore = true, isActive = true) {
     D[locationName] = {
-            "name": D.currentDateAndRandomNumber + '_' + locationName,
-            "active": isActive,
-            "parentId": parentId,
-            "canStoreHere": canStore
-        }
+        "name": D.currentDateAndRandomNumber + '_' + locationName,
+        "active": isActive,
+        "parentId": parentId,
+        "canStoreHere": canStore
+    }
     return D[locationName]
 }
 
 D.getNewCaseData = function (caseNumber, autoDispoOff = false) {
-   // api.cases.get_most_recent_case();
+    // api.cases.get_most_recent_case();
     caseNumber = caseNumber || this.setNewRandomNo();
 
     D.newCase = Object.assign({}, D.newCustomFormData, {
@@ -102,7 +102,7 @@ D.getNewCaseData = function (caseNumber, autoDispoOff = false) {
 };
 
 D.getEditedCaseData = function (caseNumber, autoDispoOff = false) {
-   // api.cases.get_most_recent_case();
+    // api.cases.get_most_recent_case();
     caseNumber = caseNumber ? caseNumber + '_edited' : D.getRandomNo() + '_edited';
 
     D.editedCase = Object.assign({}, D.editedCustomFormData, {
@@ -337,8 +337,8 @@ D.getEditedItemData = function (specificCaseObject, locationObject, newPerson, r
     specificCaseObject = specificCaseObject || S.selectedEnvironment.oldClosedCase;
 
     //let randomNo = getRandomNo()
-     randomNo = randomNo ?? getRandomNo();
-        D.editedItem = Object.assign({}, D.editedCustomFormData, {
+    randomNo = randomNo ?? getRandomNo();
+    D.editedItem = Object.assign({}, D.editedCustomFormData, {
         updateMadeBy: S.userAccounts.orgAdmin.name,
         submittedById: S.userAccounts.orgAdmin.id,
         submittedByName: `${S.userAccounts.orgAdmin.firstName} ${S.userAccounts.orgAdmin.lastName}`,
@@ -542,14 +542,14 @@ D.getNewUserData = function (officeId, organizationId) {
 
     let randomNo = helper.setNewRandomString();
     officeId = officeId || S.selectedEnvironment.office_1.id;
-   // organizationId = organizationId || S.selectedEnvironment.organizationId;
+    // organizationId = organizationId || S.selectedEnvironment.organizationId;
 
     D.newUser = {
         firstName: 'F' + randomNo,
         //middleName: '',
         middleName: 'M' + randomNo,
         lastName: 'L' + randomNo,
-        firstLastName: 'F' + randomNo +' L' + randomNo,
+        firstLastName: 'F' + randomNo + ' L' + randomNo,
         fullName: 'F' + randomNo + ' ' + 'M' + randomNo + ' ' + 'L' + randomNo,
         personnelNumber: randomNo,
         email: 'qa+' + randomNo + '@trackerproducts.com',
@@ -558,7 +558,7 @@ D.getNewUserData = function (officeId, organizationId) {
         otherPhone: '+1 270-543-4444',
         office: S.selectedEnvironment.office_1.name,
         officeId: officeId,
-       // organizationId: organizationId,
+        // organizationId: organizationId,
         officeGuid: S.selectedEnvironment.office_1.guid,
         active: true,
         password: 'Test12345.',
@@ -566,7 +566,7 @@ D.getNewUserData = function (officeId, organizationId) {
         permissionGroups: [],
         userGroups: [],
         division: 'Patrol',
-  //      divisionId: S.selectedEnvironment.divisions.div1.id ,
+        //      divisionId: S.selectedEnvironment.divisions.div1.id ,
         unit: 'UnitA',
 //        unitId: S.selectedEnvironment.units.div1_unit1.id,
         external: 'Internal',
@@ -652,6 +652,20 @@ D.getNewTaskTemplateData = function () {
     return D.newTaskTemplate;
 };
 
+D.getNewTagsData = function () {
+
+    let randomNo = helper.setNewRandomNo();
+    D.newTags = {
+        tagUsedBy: "Organization",
+        tagName: "Tag" + " " + randomNo,
+        color: "#4b9",
+        tagGroupName: "smj 1",
+        tagNewGroupName: "new group" + " " + randomNo,
+        user: S.userAccounts.orgAdmin.name
+    }
+    return D.newTags;
+};
+
 D.getEditedTaskTemplateData = function (templateId, typeId, subtypeId, taskActionId) {
     templateId = templateId || S.selectedEnvironment.taskTemplates.errorCorrection.templateId
     typeId = typeId || S.selectedEnvironment.taskTemplates.errorCorrection.typeId
@@ -672,7 +686,7 @@ D.getEditedTaskTemplateData = function (templateId, typeId, subtypeId, taskActio
         dueDateDays: 5,
         isDispositionActionAllowed: false,
         isActionAllowedForType: true,
-        tasActionsProperties:[{
+        tasActionsProperties: [{
             id: taskActionId,
             name: S.selectedEnvironment.taskTemplates.errorCorrection.taskAction,
             organizationId: S.selectedEnvironment.orgSettings.id,
@@ -681,7 +695,8 @@ D.getEditedTaskTemplateData = function (templateId, typeId, subtypeId, taskActio
             restangularized: true,
             fromServer: true,
             parentResource: null,
-            restangularCollection: false}],
+            restangularCollection: false
+        }],
     }
 
     return D.editedTaskTemplate;
@@ -996,7 +1011,7 @@ D.getPersonDataWithReducedFields = function (specificCaseObject, arrayOfEnabledF
 D.generateNewDataSet = function (setNullForDisabledFields = false, autoDispoOff = false, forRequiredFieldsOnly = false) {
     D.setNewRandomNo();
     S.getCurrentDate();
-   // api.cases.get_most_recent_case();
+    // api.cases.get_most_recent_case();
     api.cases.get_old_case_data(S.selectedEnvironment.oldClosedCase.id);
 
     //  D.getCustomFormData()
@@ -1033,12 +1048,13 @@ D.getRandomNo();
 
 D.getDataForMultipleCases = function (numberOfCases, startingIndex = 1) {
 
-    for (let i = startingIndex; i < numberOfCases+startingIndex; i++) {
+    for (let i = startingIndex; i < numberOfCases + startingIndex; i++) {
         D['case' + i] = Object.assign({}, D.getNewCaseData());
     }
 }
 
 D.currentDateAndRandomNumber = helper.mediumDate + '_' + helper.getRandomNo(3);
+
 
 
 module.exports = D;

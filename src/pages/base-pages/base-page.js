@@ -139,6 +139,7 @@ let
     firstRowInResultsTableOnModal = e => cy.get('.modal-content').find('tbody').children('tr').first(),
     visibleTable = e => cy.get('.table').not('.ng-hide'),
     checkboxOnFirstRowOnVisbileTable = e => visibleTable().find('tbody').children('tr').first(),
+    checkboxOnLastRowOnVisbileTable = e => visibleTable().find('tbody').children('tr').last(),
     firstRowInResultsTableOnActiveTab = e => active_tab().find('tbody').children('tr').first(),
     checkboxOnFirstRowInResultsTableOnActiveTab = (tableIndex = 0) => active_tab().find('tbody').eq(tableIndex).children('tr').first().find('.bg-grid-checkbox'),
     checkboxOnFirstTableRow = e => resultsTable().find('.bg-grid-checkbox').first(),
@@ -570,7 +571,7 @@ let basePage = class BasePage {
         cy.contains('Menu Customization').click()
         optionsDropdownUnderMenuCustomization().click()
         pageSizesUnderMenuCustomization().contains(pageSize).click()
-        this.pause(5)
+        this.pause(1)
         this.wait_until_spinner_disappears()
         return this;
     }
@@ -605,7 +606,7 @@ let basePage = class BasePage {
     click_number_on_pagination(pageNumber) {
         this.wait_until_spinner_disappears()
         cy.get('.pagination-sm').first().findByText(pageNumber).click()
-        this.pause(3)
+        this.pause(2)
         this.wait_until_spinner_disappears()
         return this;
     }
@@ -2183,7 +2184,7 @@ let basePage = class BasePage {
     };
 
     verify_content_of_last_row_in_results_table(content) {
-
+        this.pause(1)
         if (this.isObject(content)) {
             for (let property in content) {
                 lastRowInResultsTable().should('contain', content[property]);
@@ -2419,6 +2420,13 @@ let basePage = class BasePage {
 
     select_checkbox_on_first_row_on_visible_table() {
         checkboxOnFirstRowOnVisbileTable().click();
+        return this;
+    };
+select_checkbox_on_last_row_on_visible_table() {
+    this.wait_until_spinner_disappears()
+    checkboxOnLastRowOnVisbileTable().should('be.visible');
+    cy.wait(300)
+    checkboxOnLastRowOnVisbileTable().click();
         return this;
     };
 
@@ -3599,6 +3607,8 @@ let basePage = class BasePage {
         D.editedItem.location = ''
         return this;
     }
+
+
 
 
 };
