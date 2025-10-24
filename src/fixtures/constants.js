@@ -396,6 +396,8 @@ C = {
         pastDue: 'Past Due',
         upcoming: 'Upcoming',
         all: 'All',
+        tagGroups: 'Tag Groups',
+        tags: 'Tags'
     },
     itemStatuses: {
         checkedIn: 'Checked In',

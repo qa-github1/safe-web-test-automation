@@ -141,6 +141,7 @@ let
     checkboxOnFirstRowOnVisbileTable = e => visibleTable().find('tbody').children('tr').first(),
     checkboxOnLastRowOnVisbileTable = e => visibleTable().find('tbody').children('tr').last(),
     firstRowInResultsTableOnActiveTab = e => active_tab().find('tbody').children('tr').first(),
+    lastRowInResultsTableOnActiveTab = e => active_tab().find('tbody').children('tr').last(),
     checkboxOnFirstRowInResultsTableOnActiveTab = (tableIndex = 0) => active_tab().find('tbody').eq(tableIndex).children('tr').first().find('.bg-grid-checkbox'),
     checkboxOnFirstTableRow = e => resultsTable().find('.bg-grid-checkbox').first(),
     checkboxToSelectAll = e => cy.get('[ng-model="options.selectAllToggle"]').first(),
@@ -366,6 +367,15 @@ let basePage = class BasePage {
         const regex = new RegExp(`^${text}$`);
         return parentContainer().contains(regex)
     };
+
+    click_element_by_text(text) {
+        cy.contains(text)
+            .should('be.visible')
+            .scrollIntoView()
+            .click({ force: true });
+        return this;
+    }
+
 
     search_history(value) {
         searchBar_history().clear().type(value).type('{enter}');
@@ -2135,18 +2145,19 @@ let basePage = class BasePage {
         return Object.prototype.toString.call(variable) === '[object Object]'
     }
 
-    click_table_cell_based_on_column_name_and_unique_value_in_the_row(columnName, uniqueValueInRow, tableIndex) {
+    // click_table_cell_based_on_column_name_and_unique_value_in_the_row(columnName, uniqueValueInRow, tableIndex) {
+    //
+    //     tableColumnFoundByText(columnName, tableIndex).prevAll()
+    //         .then(columnsBefore => {
+    //             const columnIndex = Cypress.$(columnsBefore).length;
+    //
+    //             //cy.log('column index is' + columnIndex)
+    //
+    //             tableRowFoundByUniqueTextInAnyCell(uniqueValueInRow, tableIndex).find('td').eq(columnIndex).click();
+    //         });
+    //     return this;
+    // };
 
-        tableColumnFoundByText(columnName, tableIndex).prevAll()
-            .then(columnsBefore => {
-                const columnIndex = Cypress.$(columnsBefore).length;
-
-                //cy.log('column index is' + columnIndex)
-
-                tableRowFoundByUniqueTextInAnyCell(uniqueValueInRow, tableIndex).find('td').eq(columnIndex).click();
-            });
-        return this;
-    };
 
     click_table_matrix_cell_based_on_column_name_and_unique_value_in_the_row(columnName, uniqueValueInRow, tableIndex, fieldType = 'input') {
 
@@ -2371,6 +2382,16 @@ let basePage = class BasePage {
                 firstRowInResultsTableOnActiveTab().should('contain', value))
         } else {
             firstRowInResultsTableOnActiveTab().should('contain', content);
+        }
+        return this;
+    };
+
+    verify_content_of_last_row_in_results_table_on_active_tab(content) {
+        if (Array.isArray(content)) {
+            content.forEach(value =>
+                lastRowInResultsTableOnActiveTab().should('contain', value))
+        } else {
+            lastRowInResultsTableOnActiveTab().should('contain', content);
         }
         return this;
     };

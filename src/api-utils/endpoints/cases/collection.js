@@ -16,6 +16,8 @@ exports.add_new_case = function (caseNumber, caseObject) {
     return this;
 };
 
+
+
 // exports.add_custom_form_data_to_existing_case = function (caseObject) {
 //     cy.getLocalStorage("newCase").then(newCase => {
 //         let existingCase = Object.assign(JSON.parse(newCase), caseObject);
