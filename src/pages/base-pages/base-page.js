@@ -3339,8 +3339,8 @@ export default class BasePage {
             .populate_CheckOut_form(takenBy_personOrUserObject, checkOutReason, notes, expectedReturnDate)
 
         if (isActionOnSearchResults) {
-            this.verify_modal_content(' Warning! This action will check out all items found by the current search')
-            this.verify_modal_content('Items shared among Organizations are not included in the transaction')
+            this.verify_modal_content('This action will check out all items found by the current search, except:')
+            this.verify_modal_content('- Items shared among Organizations')
         }
 
         this.click_button_on_modal(C.buttons.ok)
