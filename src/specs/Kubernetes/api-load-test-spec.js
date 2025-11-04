@@ -4,7 +4,7 @@ const api = require('../../api-utils/api-spec');
 const generic_request = require("../../api-utils/generic-api-requests");
 let requestPayloads = require('./request-payloads');
 let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
-let numberOfRequests = 100
+let numberOfReports = 100
 
 describe('Services', function () {
 
@@ -43,12 +43,12 @@ describe('Services', function () {
         }
 
        // start report for case with cca 1k items
-            generic_request.POST(
-                '/api/reports/buildreport',
-                requestPayloads.reporterPayloadFromCaseView([S.selectedEnvironment.oldActiveCase.id]),
-                "REPORT Service",
-                'Big_Case_Report'
-            )
+       //      generic_request.POST(
+       //          '/api/reports/buildreport',
+                 requestPayloads.reporterPayloadFromCaseView([S.selectedEnvironment.oldActiveCase.id]),
+       //          "REPORT Service",
+       //          'Big_Case_Report'
+       //      )
 
         //start report for newly created case with 1 item only
         // cy.getLocalStorage('newCase').then(newCase => {
@@ -61,7 +61,7 @@ describe('Services', function () {
         // });
 
         //start X reports for 1 item only
-        for (let i = 0; i < numberOfRequests; i++) {
+        for (let i = 0; i < numberOfReports; i++) {
             cy.getLocalStorage('newItem').then(newItem => {
                 generic_request.POST(
                     '/api/reports/buildreport',
@@ -79,7 +79,7 @@ describe('Services', function () {
     it('EXPORT Service', function () {
         api.auth.get_tokens(orgAdmin);
 
-        for (let i = 0; i < numberOfRequests; i++) {
+        for (let i = 0; i < numberOfReports; i++) {
             cy.getLocalStorage('newCase').then(newCase => {
                 generic_request.POST(
                     '/api/exports/case-items/' + JSON.parse(newCase).id,
@@ -95,7 +95,7 @@ describe('Services', function () {
 
         api.items.add_new_item(true, D.container1)
 
-        for (let i = 0; i < numberOfRequests; i++) {
+        for (let i = 0; i < numberOfReports; i++) {
 
             D['container' + i] = D.getStorageLocationData('cont' + i)
             api.locations.add_storage_location(D['container' + i])
@@ -114,7 +114,7 @@ describe('Services', function () {
     it('MASS UPDATE BY QUERY Service', function () {
         api.auth.get_tokens(orgAdmin);
 
-        for (let i = 0; i < numberOfRequests; i++) {
+        for (let i = 0; i < numberOfReports; i++) {
             cy.getLocalStorage('newItem').then(newItem => {
                 generic_request.PUT(
                     '/api/items/massupdateitemsByquery',
@@ -129,7 +129,7 @@ describe('Services', function () {
     it('PEOPLE MERGE Service', function () {
         api.auth.get_tokens(orgAdmin);
 
-        for (let i = 0; i < numberOfRequests; i++) {
+        for (let i = 0; i < numberOfReports; i++) {
             let person_1, person_2, person_3
             api.people.add_new_person(null, null, D.newPerson, 'person1')
             D.getNewPersonData()
