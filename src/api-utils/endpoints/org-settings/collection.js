@@ -16,12 +16,27 @@ exports.get_current_org_settings = function (organizationId) {
 
 };
 
+exports.setDisposalReleaseOverride = function (userIds = [], userGroupIds = []) {
+        generic_request.POST(
+            '/api/disposalReleaseOverrides',
+            {"userIds":userIds,"userGroupIds": userGroupIds},
+            "Setting Dispo Override via API");
+    return this
+};
+
 exports.update_dispo_config_for_item_catagories = function (thirdTierApproverGroup) {
         generic_request.PUT(
             '/api/categories/DispositionApprovalConfig',
             body.generate_request_payload_for_setting_dispo_config_for_item_categories(thirdTierApproverGroup),
-            "Dispo Config updated via API",
-            'dispoConfig');
+            "Dispo Config for Item Categories updated via API");
+    return this
+};
+
+exports.update_dispo_config_for_offense_types = function (isAutoDispositionOn = true, skipFutureCaseReviewUpdates = true, daysToFollowUp = 100) {
+        generic_request.PUT(
+            '/api/autoDisposition/settingsV2',
+            body.generate_request_payload_for_setting_dispo_config_for_offense_types(isAutoDispositionOn = true, skipFutureCaseReviewUpdates = true, daysToFollowUp),
+            "Dispo Config for Offense Types updated via API");
     return this
 };
 

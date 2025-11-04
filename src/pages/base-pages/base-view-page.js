@@ -193,17 +193,19 @@ export default class BaseViewPage extends BasePage {
     }
 
     click_Edit() {
-       this.pause(0.5)
-       // edit_button_on_active_tab().click();
+        this.pause(0.5)
+        // edit_button_on_active_tab().click();
 
         //cy.get('.tab-pane.ng-scope.active').within(() => {
-            cy.get('[translate="GENERAL.EDIT"]').first().should('exist') // or .should('exist') for presence check
-            cy.get('[translate="GENERAL.EDIT"]').first().click(); // or .should('exist') for presence check
-       // });
+        cy.get('[translate="GENERAL.EDIT"]').first().should('exist') // or .should('exist') for presence check
+        cy.get('[translate="GENERAL.EDIT"]').first().click(); // or .should('exist') for presence check
+        // });
 
         this.pause(1)
+
         this.wait_element_to_be_visible(save_button_on_active_tab)
         this.verify_Save_isPresent()
+        this.verify_text_is_present_on_main_container('Cancel')
         return this;
     }
 
@@ -224,21 +226,10 @@ export default class BaseViewPage extends BasePage {
     // }
 
     verify_edited_or_old_TEXT_if_field_was_not_edited(labelsOfEditedFields, label, fieldSelector, editedValue, initialValue) {
-        const isDev = S.selectedEnvironment.name === 'dev';
-        const isPentest = S.selectedEnvironment.name === 'pentest';
-
-        if (labelsOfEditedFields.includes(label) && editedValue !== null) {
-            if (isDev) {
-                this.verify_text_2(fieldSelector, editedValue);
-            } else if (isPentest) {
+      if (labelsOfEditedFields.includes(label) && editedValue !== null) {
                 this.verify_text(fieldSelector, editedValue);
-            }
         } else if (initialValue) {
-            if (isDev) {
-                this.verify_text_2(fieldSelector, initialValue);
-            } else if (isPentest) {
                 this.verify_text(fieldSelector, initialValue);
-            }
         }
     }
 
@@ -276,17 +267,13 @@ export default class BaseViewPage extends BasePage {
             // if (oldValueOverwritten) {
             //     this.verify_element_does_NOT_contain_text(fieldSelector, initialValue);
             // }
-           //  else {
-           //     this.verify_text(fieldSelector, initialValue);
-           // }
-        }
-        else if (initialValue) {
+            //  else {
+            //     this.verify_text(fieldSelector, initialValue);
+            // }
+        } else if (initialValue) {
             this.verify_text(fieldSelector, initialValue);
         }
     }
-
-
-
 
 
     verify_value_on_multi_select_fields(labelsOfEditedFields, label, fieldSelector, editedValue, initialValue, oldValueOverwritten = false) {
@@ -399,7 +386,7 @@ export default class BaseViewPage extends BasePage {
         }
         let self = this;
 
-        if(label_TextPairs){
+        if (label_TextPairs) {
             label_TextPairs.forEach(([label, text]) => {
                 if (text !== null) {
                     const fieldGetter = () =>
@@ -409,7 +396,7 @@ export default class BaseViewPage extends BasePage {
             });
         }
 
-        if (label_InputValuePairs){
+        if (label_InputValuePairs) {
             label_InputValuePairs.forEach(([label, value]) => {
                 if (value !== null) {
                     const fieldGetter = () =>
@@ -419,7 +406,7 @@ export default class BaseViewPage extends BasePage {
             });
         }
 
-        if (label_TextareaValuesPairs){
+        if (label_TextareaValuesPairs) {
             label_TextareaValuesPairs.forEach(([label, value]) => {
                 if (value !== null) {
                     const fieldGetter = () =>
@@ -456,6 +443,18 @@ export default class BaseViewPage extends BasePage {
         return this;
     };
 
+    verify_custom_data_is_not_present_on_history(leftOrRightColumn, formName) {
+
+        let formContainer;
+
+        if (leftOrRightColumn === 'left') {
+            formContainer = e => historyView_leftColumn()
+        } else if (leftOrRightColumn === 'right') {
+            formContainer = e => historyView_rightColumn()
+        }
+        this.verify_element_does_NOT_contain_text(formContainer, formName)
+    }
+
     verify_custom_data_on_History(leftOrRightColumn, formName, dataObject) {
 
         let formContainer;
@@ -465,7 +464,6 @@ export default class BaseViewPage extends BasePage {
         } else if (leftOrRightColumn === 'right') {
             formContainer = e => historyView_rightColumn().contains(formName).parents('[ng-repeat="form in forms"]')
         }
-
 
         this.verify_if_Checkbox_is_selected(formContainer, dataObject.custom_checkbox);
         this.verify_selected_option_on_Checkbox_list(formContainer, dataObject.custom_checkboxListOption);
@@ -490,28 +488,25 @@ export default class BaseViewPage extends BasePage {
         return this;
     };
 
-     verify_red_highlighted_history_records(allFieldsOnHistory, redFields) {
-         historyView_leftColumn().within(($form) => {
-             for (let field of allFieldsOnHistory) {
-                 if (redFields.includes(field)) {
-                     cy.contains(field)
-                         .should('have.color', 'rgb(255, 0, 0)')
-                 } else {
+    verify_red_highlighted_history_records(allFieldsOnHistory, redFields) {
+        historyView_leftColumn().within(($form) => {
+            for (let field of allFieldsOnHistory) {
+                if (redFields.includes(field)) {
                     cy.contains(field)
-                         // .then(($el) => {
-                         //     return window.getComputedStyle($el[0])
-                         // })
-                         // .invoke('getPropertyValue', 'color')
-                         // .should('equal', 'rgb(103, 106, 108)')
-                         .should('have.color', 'rgb(103, 106, 108)')
-                 }
-             }
-         })
-         return this;
-     }
-
-
-
+                        .should('have.color', 'rgb(255, 0, 0)')
+                } else {
+                    cy.contains(field)
+                        // .then(($el) => {
+                        //     return window.getComputedStyle($el[0])
+                        // })
+                        // .invoke('getPropertyValue', 'color')
+                        // .should('equal', 'rgb(103, 106, 108)')
+                        .should('have.color', 'rgb(103, 106, 108)')
+                }
+            }
+        })
+        return this;
+    }
 
 
     verify_required_fields(fields) {

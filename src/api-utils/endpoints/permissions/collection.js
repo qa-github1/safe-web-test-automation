@@ -138,7 +138,7 @@ exports.assign_Org_Admin_permissions_to_user = function (userObjectFromLocalStor
 exports.assign_office_based_permissions_to_user = function (userObjectFromLocalStorageOrId, office1_ID, group1_ID, office2_ID = null, group2_ID = null, office3_ID = null, group3_ID = null) {
 
     cy.getLocalStorage(userObjectFromLocalStorageOrId).then(user => {
-        D.newUser  = Object.assign(D.newUser, JSON.parse(user))
+        if (user) D.newUser  = Object.assign(D.newUser, JSON.parse(user))
         let userId = user ? JSON.parse(user).id : userObjectFromLocalStorageOrId;
         generic_request.POST(
             '/api/groups/userperms',

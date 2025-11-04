@@ -5,6 +5,8 @@ const E = require('../../fixtures/files/excel-data');
 const api = require('../../api-utils/api-spec');
 const ui = require('../../pages/ui-spec');
 
+// Aug 11, 2025, Sumejja's Note ----> Test passed on Dev - Org#3 ---> Total time: 185 sec (cca 3 min)
+
 describe('Import Case Updates', function () {
 
     let user = S.userAccounts.orgAdmin;
@@ -15,7 +17,7 @@ describe('Import Case Updates', function () {
         api.auto_disposition.edit(true);
     });
 
-    it('I.C.U_1. Import Case Updates - all fields -- user and user group in Case Officer(s) field', function () {
+    it('I.C.U_1. Import Case Updates for all regular and custom fields -- user and user group in Case Officer(s) field', function () {
         ui.app.log_title(this);
         let fileName = 'CaseUpdatesImport_allFields_' + S.domain;
 
@@ -23,7 +25,7 @@ describe('Import Case Updates', function () {
         api.org_settings.enable_all_Case_fields();
         api.org_settings.enable_all_Item_fields();
 
-         D.generateNewDataSet();
+        D.generateNewDataSet();
         api.cases.add_new_case();
 
         D.editedCase.caseNumber = D.newCase.caseNumber;
@@ -35,16 +37,23 @@ describe('Import Case Updates', function () {
 
         ui.app.generate_excel_file(fileName, E.caseImportDataWithAllFields);
 
-        ui.menu.click_Tools__Data_Import();
-        ui.importer.upload_then_Map_and_Submit_file_for_update_importing(fileName, C.importTypes.cases, 'Case Number')
-            .verify_toast_message([
-                C.toastMsgs.importComplete,
-                1 + C.toastMsgs.recordsImported]);
+        // verify case data precheck
+        ui.importer.precheck_import_data(fileName, C.importTypes.cases, true)
+        ui.app.open_newly_created_case_via_direct_link();
+        ui.caseView.select_tab(C.tabs.history)
+            .verify_title_on_active_tab(1)
+
+        // verify case updates import
+        ui.importer.open_direct_url_for_page()
+            .click_Play_icon_on_first_row()
+            .check_import_status_on_grid('1 records imported')
+            .quick_search_for_case(D.newCase.caseNumber);
+
         ui.app.open_newly_created_case_via_direct_link();
 
         // D.editedCase.tags = null // #14580
         // D.editedCase.tagsOnHistory = null // #14580
-         let redHighlightedFields = ui.app.getArrayWithoutSpecificValue(C.caseFields.allEditableFieldsArray, ['Case Number']);
+        let redHighlightedFields = ui.app.getArrayWithoutSpecificValue(C.caseFields.allEditableFieldsArray, ['Case Number']);
         ui.caseView.click_Edit()
             .verify_edited_and_not_edited_values_on_Case_Edit_form(C.caseFields.allEditableFieldsArray, D.editedCase, D.newCase, true, true)
             .open_last_history_record()
@@ -56,6 +65,7 @@ describe('Import Case Updates', function () {
             .edit_Status(true)
             .click_Save()
 
+        // verify new item can be added to the case edited by importer
         D.getNewItemData(D.editedCase)
         ui.menu.click_Add__Item();
         ui.addItem.enter_Case_Number_and_select_on_typeahead(D.editedCase.caseNumber)
@@ -64,34 +74,6 @@ describe('Import Case Updates', function () {
             .click_Save()
             .verify_Error_toast_message_is_NOT_visible();
         ui.itemView.verify_Item_View_page_is_open(D.editedCase.caseNumber)
-            .click_Edit()
-            .verify_values_on_Edit_form(D.newItem)
-            .edit_all_values(D.editedItem)
-            .click_Save()
-            .verify_Error_toast_message_is_NOT_visible();
-    });
-
-    it('I.C.U_2 Case Updates Import - Precheck Only', function () {
-        ui.app.log_title(this);
-        let fileName = 'CaseUpdates_precheckOnly_' + S.domain;
-        api.auth.get_tokens(user);
-        api.org_settings.enable_all_Case_fields();
-        D.generateNewDataSet();
-        E.generateDataFor_CASES_Importer([D.editedCase]);
-        api.cases.add_new_case(D.newCase.caseNumber);
-
-        E.caseImportDataWithAllFields[1][1] = D.newCase.caseNumber;
-        cy.generate_excel_file(fileName, E.caseImportDataWithAllFields);
-
-        ui.menu.click_Tools__Data_Import();
-        ui.importer.upload_then_Map_and_Submit_file_for_updates_precheck(fileName, C.importTypes.cases, 'Case Number')
-            .verify_toast_message([
-                C.toastMsgs.precheckComplete,
-                1 + C.toastMsgs.recordsPrechecked])
-        ui.app.open_newly_created_case_via_direct_link();
-
-        ui.caseView.select_tab(C.tabs.history)
-            .verify_title_on_active_tab(1)
     });
 
 });

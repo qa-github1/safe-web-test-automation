@@ -19,6 +19,7 @@ describe('Services', function () {
         api.org_settings.enable_all_Case_fields();
         api.org_settings.enable_all_Item_fields();
         api.org_settings.enable_all_Person_fields();
+        api.users.update_current_user_settings(orgAdmin.id, DF.dateTimeFormats.long)
         api.org_settings.update_org_settings(false, true);
         api.org_settings.update_org_settings_by_specifying_property_and_value('containerAutoDeactivate', true)
         api.users.update_current_user_settings(orgAdmin.id, C.currentDateTimeFormat, C.currentDateFormat)
@@ -192,26 +193,33 @@ describe('Services', function () {
 
     xit('11. Auto Disposition', function () {
 
-        api.auth.get_tokens(user);
+        let minDate = helper.setDate(C.currentDateTimeFormat.dateOnly.editMode, 2027, 11, 15);
+        let maxDate = helper.setDate(C.currentDateTimeFormat.dateOnly.editMode, 2027, 11, 15);
+        let redistributeNote = 'Redistributing Case Review dates from ' + minDate + ' to ' + maxDate;
+        let daysToFollowUp = 33
+
+        api.auth.get_tokens(orgAdmin);
+        api.org_settings.enable_all_Case_fields();
+        api.org_settings.update_dispo_config_for_offense_types(true, true, daysToFollowUp)
         ui.menu.click_Settings__Organization()
             .click_element_containing_link(C.labels.organization.tabs.autoDisposition);
         ui.autoDispo.click_disposition_Configuration_For_Case_Offense_Types();
         ui.autoDispo.verify_Redistribute_Case_Review_Date_labels(true)
 
-
-        D.generateNewDataSet()
-        D.getDataForMultipleCases(3)
-        let fileName = 'Case_pastDueReview';
+         D.generateNewDataSet()
+         D.getDataForMultipleCases(3)
+         let fileName = 'Case_pastDueReview';
         D.case1.reviewDate = '';
         D.case2.reviewDate = helper.getSpecificDateInSpecificFormat(DF.dateTimeFormats.long.mask, '01/08/2019');
-        D.case3.reviewDate = helper.getSpecificDateInSpecificFormat(DF.dateTimeFormats.short.mask, '01/08/2030');
+        D.case3.reviewDate = helper.getSpecificDateInSpecificFormat(DF.dateTimeFormats.long.mask, '01/08/2030');
 
         // import 3 cases (NO Review Date, Review Date past due and Upcoming Review Date )
         E.generateDataFor_CASES_Importer([D.case1, D.case2, D.case3]);
         ui.app.generate_excel_file(fileName, E.caseImportDataWithAllFields);
-        ui.menu.click_Tools__Data_Import();
-        ui.importer.upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.cases, null, 1, null,
-            ['Some Review Dates are blank. They will be auto-applied. Select Import to proceed.'])
+        ui.menu.click_Tools__Data_Import()
+        ui.importer.upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.cases, null, 1, 1,
+            ['Some Review Dates are blank. They will be auto-applied. Select Import to proceed.']
+        )
             .verify_toast_message([
                 C.toastMsgs.importComplete,
                 3 + C.toastMsgs.recordsImported])
@@ -223,7 +231,7 @@ describe('Services', function () {
         ui.menu.click_Settings__Organization()
             .click_element_containing_link(C.labels.organization.tabs.autoDisposition);
         ui.autoDispo.click_disposition_Configuration_For_Case_Offense_Types();
-        //   ui.autoDispo.verify_Redistribute_Case_Review_Date_labels(false, 1, 2)
+        ui.autoDispo.verify_Redistribute_Case_Review_Date_labels(false, 1, 2)
         ui.autoDispo.click_button(C.buttons.redestributeCaseReviewDates)
             .verify_modal_content(C.labels.autoDisposition.updateCases)
             .click_button(C.tabs.pastDue)
@@ -231,14 +239,21 @@ describe('Services', function () {
             .click_button(C.buttons.updateCases)
             .verify_toast_message(C.toastMsgs.saved)
             .verify_Redistribute_Case_Review_Date_labels(true, 0, 3)
-            .quick_search_for_case(D.case2.caseNumber)
+        D.case2.reviewDate = helper.getSpecificDateInSpecificFormat(
+            DF.dateTimeFormats.long.mask,
+            '11/15/2027 12:00 AM'
+        );
+
+        // verify change IS applied for Case with 'Past Due Date'
+        ui.app.quick_search_for_case(D.case2.caseNumber)
             .click_button(C.buttons.edit);
         ui.caseView.verify_values_on_Edit_form(D.case2);
 
-        // // verify change is not applied for Case with 'No Review Date'
-        // ui.app.quick_search_for_case(D.case1.caseNumber)
-        //     .click_button(C.buttons.edit);
-        // ui.caseView.verify_values_on_Edit_form(D.case1);
+        // verify change is not applied for Case with 'No Review Date'
+        D.case1.reviewDate = helper.getDateAfterXDaysFromSpecificDate(DF.dateTimeFormats.long.mask, S.currentDate, daysToFollowUp);
+        ui.app.quick_search_for_case(D.case1.caseNumber)
+            .click_button(C.buttons.edit);
+        ui.caseView.verify_values_on_Edit_form(D.case1);
 
         // verify change is not applied for Case with 'Upcoming Review Date'
         ui.app.quick_search_for_case(D.case3.caseNumber)

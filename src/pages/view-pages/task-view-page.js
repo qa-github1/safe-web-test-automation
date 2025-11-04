@@ -107,14 +107,15 @@ export default class TaskViewPage extends BaseViewPage {
     };
 
     click__Approve__from_grid_for_specific_item(rowNumber) {
-        this.pause(1)
+        this.pause(2)
         this.wait_until_spinner_disappears()
+
         approveButtonInSpecificRow(rowNumber).click()
         return this;
     };
 
     click__Reject__from_grid_for_specific_item(rowNumber, note = 'Rejection Note') {
-        this.pause(1)
+        this.pause(2)
         this.wait_until_spinner_disappears()
         rejectButtonInSpecificRow(rowNumber).click()
         this.add_Rejection_note(note)
@@ -177,6 +178,7 @@ export default class TaskViewPage extends BaseViewPage {
     };
 
     set_Action___Approve_for_Disposal(rowNumberRange) {
+       // this.wait_response_from_API_call('getTaskItems')
         this.uncheck_all_rows()
             .click_checkbox_to_select_specific_row(rowNumberRange[0])
             .press_shift_and_click_row(rowNumberRange[1])
@@ -246,6 +248,7 @@ export default class TaskViewPage extends BaseViewPage {
             } else {
                 claimantInputFieldOnApproveForReleaseModal().clear()
                 claimantInputFieldOnApproveForReleaseModal().type(personName)
+                this.pause(0.7)
                 claimantInputFieldOnApproveForReleaseModal().should('have.class', 'ng-not-empty')
                 this.wait_until_spinner_disappears()
                 cy.contains(personName).click()

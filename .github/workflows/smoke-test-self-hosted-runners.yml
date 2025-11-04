@@ -1,5 +1,3 @@
-name: Run Cypress Tests on Self-Hosted Machines
-
 on:
   workflow_dispatch:
     inputs:
@@ -18,7 +16,7 @@ on:
         default: '60000'
         type: choice
         options:
-          - 30000
+          - 60000
           - 80000
           - 90000
       command_timeout:
@@ -27,7 +25,7 @@ on:
         default: '60000'
         type: choice
         options:
-          - 30000
+          - 60000
           - 80000
           - 90000
 
@@ -40,13 +38,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-            spec_group: src/specs/smoke/main-actions-org1.js
+          - spec_group: src/specs/smoke/main-actions-org1.js
             org_number: 1
-            spec_group: src/specs/smoke/main-actions-org2.js
+          - spec_group: src/specs/smoke/main-actions-org2.js
             org_number: 2
-            spec_group: src/specs/smoke/services-org3.js
+          - spec_group: src/specs/smoke/services-org3.js
             org_number: 3
-            spec_group: src/specs/smoke/services-org4.js
+          - spec_group: src/specs/smoke/services-org4.js
             org_number: 4
 
     steps:
@@ -58,7 +56,7 @@ jobs:
       - name: Run Cypress tests
         run: >
           npx cypress run --headless --browser chrome --record
-          --key fe33f9bd-6aca-4be4-965b-9f726b827c82
+          --key a6df584b-4d1e-485f-a673-2c371d167e62
           --group "org-${{ matrix.org_number }}"
           --ci-build-id "${{ github.run_id }}"
           --spec ${{ matrix.spec_group }}

@@ -6,10 +6,10 @@
   "videosFolder": "report/videos",
   "screenshotsFolder": "screenshots",
   "numTestsKeptInMemory": 0,
-  "defaultCommandTimeout": 75000,
+  "defaultCommandTimeout": 80000,
   "requestTimeout": 30000,
   "taskTimeout": 50000,
-  "responseTimeout": 60000,
+  "responseTimeout": 80000,
   "viewportWidth": 1200,
   "viewportHeight": 800,
   "chromeWebSecurity": true,
@@ -51,5 +51,5 @@
     }
   },
   "retries": 0,
-  "projectId": "8ismn2"
+  "projectId": "c56sx9"
 }

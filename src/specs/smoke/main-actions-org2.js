@@ -4,9 +4,11 @@ const S = require('../../fixtures/settings');
 const D = require('../../fixtures/data');
 const api = require('../../api-utils/api-spec');
 const ui = require('../../pages/ui-spec');
+const helper = require("../../support/e2e-helper");
 
 let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
 let powerUser = S.getUserData(S.userAccounts.powerUser);
+let admin_userGroup = S.selectedEnvironment.admin_userGroup;
 let approvedForReleaseItem = {}
 
 before(function () {
@@ -30,7 +32,7 @@ describe('Person', function () {
             api.org_settings.update_org_settings(false, true);
             api.org_settings.enable_all_Person_fields();
 
-           // ADD PERSON
+            // ADD PERSON
             ui.app.open_newly_created_case_via_direct_link()
                 .select_tab(C.tabs.people)
                 .click_element_on_active_tab(C.buttons.addPerson);
@@ -157,7 +159,7 @@ describe('Item Transactions', function () {
             .verify_edited_and_not_edited_values('view', ["Status", "Storage Location"], D.editedItem, D.newItem)
             .select_tab(C.tabs.chainOfCustody)
             .verify_data_on_Chain_of_Custody([
-                [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ``],  ['Check out Reason', `Lab`], ['Note', `test-note1`]],
+                [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ``], ['Check out Reason', `Lab`], ['Note', `test-note1`]],
                 [['Type', 'In'], ['Issued From', orgAdmin.name], ['Issued To', 'New Item Entry'], ['Storage Location', initialItem.location], ['Notes', `Item entered into system.`]],
             ])
             .select_tab(C.tabs.basicInfo)
@@ -182,8 +184,8 @@ describe('Item Transactions', function () {
             .verify_edited_and_not_edited_values('view', ["Custodian"], D.editedItem, D.newItem)
             .select_tab(C.tabs.chainOfCustody)
             .verify_data_on_Chain_of_Custody([
-                [['Type', 'Transfer'], ['Issued From', orgAdmin.name], ['Issued To', powerUser.name], ['Storage Location', ``],  ['Check out Reason', ``], ['Note', `test-note2`]],
-                [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ``],  ['Check out Reason', `Lab`], ['Note', `test-note1`]],
+                [['Type', 'Transfer'], ['Issued From', orgAdmin.name], ['Issued To', powerUser.name], ['Storage Location', ``], ['Check out Reason', ``], ['Note', `test-note2`]],
+                [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ``], ['Check out Reason', `Lab`], ['Note', `test-note1`]],
                 [['Type', 'In'], ['Issued From', orgAdmin.name], ['Issued To', 'New Item Entry'], ['Storage Location', initialItem.location], ['Notes', `Item entered into system.`]],
             ])
             .select_tab(C.tabs.basicInfo)
@@ -228,9 +230,9 @@ describe('Item Transactions', function () {
             .verify_edited_and_not_edited_values('view', ["Status", "Storage Location"], D.editedItem, D.newItem)
             .select_tab(C.tabs.chainOfCustody)
             .verify_data_on_Chain_of_Custody([
-                [['Type', 'In'], ['Issued From', powerUser.name], ['Issued To', orgAdmin.name], ['Storage Location', D.box2.name],  ['Check out Reason', ``], ['Note', `test-note3`]],
-                [['Type', 'Transfer'], ['Issued From', orgAdmin.name], ['Issued To', powerUser.name], ['Storage Location', ``],  ['Check out Reason', ``], ['Note', `test-note2`]],
-                [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ``],  ['Check out Reason', `Lab`], ['Note', `test-note1`]],
+                [['Type', 'In'], ['Issued From', powerUser.name], ['Issued To', orgAdmin.name], ['Storage Location', D.box2.name], ['Check out Reason', ``], ['Note', `test-note3`]],
+                [['Type', 'Transfer'], ['Issued From', orgAdmin.name], ['Issued To', powerUser.name], ['Storage Location', ``], ['Check out Reason', ``], ['Note', `test-note2`]],
+                [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ``], ['Check out Reason', `Lab`], ['Note', `test-note1`]],
                 [['Type', 'In'], ['Issued From', orgAdmin.name], ['Issued To', 'New Item Entry'], ['Storage Location', initialItem.location], ['Notes', `Item entered into system.`]],
             ])
             .select_tab(C.tabs.basicInfo)
@@ -241,10 +243,10 @@ describe('Item Transactions', function () {
             .verify_edited_and_not_edited_values('view', ["Status", "Storage Location"], D.editedItem, D.newItem)
             .select_tab(C.tabs.chainOfCustody)
             .verify_data_on_Chain_of_Custody([
-                [['Type', 'Disposal'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location',''],  ['Check out Reason', ``], ['Note', `test-note4`]],
-                [['Type', 'In'], ['Issued From', powerUser.name], ['Issued To', orgAdmin.name], ['Storage Location', D.box2.name],  ['Check out Reason', ``], ['Note', `test-note3`]],
-                [['Type', 'Transfer'], ['Issued From', orgAdmin.name], ['Issued To', powerUser.name], ['Storage Location', ``],  ['Check out Reason', ``], ['Note', `test-note2`]],
-                [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ``],  ['Check out Reason', `Lab`], ['Note', `test-note1`]],
+                [['Type', 'Disposal'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ''], ['Check out Reason', ``], ['Note', `test-note4`]],
+                [['Type', 'In'], ['Issued From', powerUser.name], ['Issued To', orgAdmin.name], ['Storage Location', D.box2.name], ['Check out Reason', ``], ['Note', `test-note3`]],
+                [['Type', 'Transfer'], ['Issued From', orgAdmin.name], ['Issued To', powerUser.name], ['Storage Location', ``], ['Check out Reason', ``], ['Note', `test-note2`]],
+                [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ``], ['Check out Reason', `Lab`], ['Note', `test-note1`]],
                 [['Type', 'In'], ['Issued From', orgAdmin.name], ['Issued To', 'New Item Entry'], ['Storage Location', initialItem.location], ['Notes', `Item entered into system.`]],
             ])
             .select_tab(C.tabs.basicInfo)
@@ -268,11 +270,11 @@ describe('Item Transactions', function () {
             .verify_edited_and_not_edited_values('view', ["Status", "Storage Location"], D.editedItem, D.newItem)
             .select_tab(C.tabs.chainOfCustody)
             .verify_data_on_Chain_of_Custody([
-                [['Type', 'In'], ['Issued From', powerUser.name], ['Issued To', orgAdmin.name], ['Storage Location', D.box2.name],  ['Check out Reason', ``], ['Note', `test-note5`]],
-                [['Type', 'Disposal'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location',''],  ['Witness', powerUser.name], ['Storage Location',''],  ['Check out Reason', ``], ['Note', `test-note4`]],
-                [['Type', 'In'], ['Issued From', powerUser.name], ['Issued To', orgAdmin.name], ['Storage Location', D.box2.name],  ['Check out Reason', ``], ['Note', `test-note3`]],
-                [['Type', 'Transfer'], ['Issued From', orgAdmin.name], ['Issued To', powerUser.name], ['Storage Location', ``],  ['Check out Reason', ``], ['Note', `test-note2`]],
-                [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ``],  ['Check out Reason', `Lab`], ['Note', `test-note1`]],
+                [['Type', 'In'], ['Issued From', powerUser.name], ['Issued To', orgAdmin.name], ['Storage Location', D.box2.name], ['Check out Reason', ``], ['Note', `test-note5`]],
+                [['Type', 'Disposal'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ''], ['Witness', powerUser.name], ['Storage Location', ''], ['Check out Reason', ``], ['Note', `test-note4`]],
+                [['Type', 'In'], ['Issued From', powerUser.name], ['Issued To', orgAdmin.name], ['Storage Location', D.box2.name], ['Check out Reason', ``], ['Note', `test-note3`]],
+                [['Type', 'Transfer'], ['Issued From', orgAdmin.name], ['Issued To', powerUser.name], ['Storage Location', ``], ['Check out Reason', ``], ['Note', `test-note2`]],
+                [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ``], ['Check out Reason', `Lab`], ['Note', `test-note1`]],
                 [['Type', 'In'], ['Issued From', orgAdmin.name], ['Issued To', 'New Item Entry'], ['Storage Location', initialItem.location], ['Notes', `Item entered into system.`]],
             ])
             .select_tab(C.tabs.basicInfo)
@@ -291,6 +293,65 @@ describe('Item Transactions', function () {
 
         api.locations.get_and_save_any_location_data_to_local_storage('root')
         api.locations.move_location(D.box2.name, 'root')
+
+    });
+});
+describe('Task', function () {
+    it('Add task with all fields' +
+        '-- assign to 1 user' +
+        '-- attach 1 case, 1 item and 1 person' +
+        '-- override template content' +
+        '-- search for task on the grid by Assignee name' +
+        '--verify values on grid' +
+        '-- check email notification with more Task details ', function () {
+
+        ui.app.clear_gmail_inbox(S.gmailAccount);
+        ui.app.log_title(this);
+        api.auth.get_tokens(orgAdmin);
+
+        let powerUser2 = S.userAccounts.basicUser;
+        api.permissions.assign_multiple_users_to_User_Group([powerUser.id, powerUser2.id], admin_userGroup)
+        D.generateNewDataSet()
+        api.cases.add_new_case()
+        api.items.add_new_item()
+        api.people.add_new_person()
+        api.org_settings.update_org_settings_by_specifying_property_and_value(
+            'tasksSettingsConfiguration',
+            {
+                moreDetailsInEmails: true,
+                sendEmailNotifications: true
+            }
+        )
+        let selectedTemplate = S.selectedEnvironment.taskTemplates.other
+        D.getNewTaskData(powerUser, admin_userGroup, S.userAccounts.orgAdmin, 8);
+
+        cy.getLocalStorage('newItem').then(newItem => {
+            D.newItem = Object.assign(D.newItem, JSON.parse(newItem))
+
+            D.newTask.title = 'edited template title'
+            D.newTask.message = 'edited template message'
+            D.newTask.linkedObjects = [
+                {type: 'case', caseNumber: D.newCase.caseNumber},
+                {type: 'item', caseNumber: D.newCase.caseNumber, orgNumber: D.newItem.sequentialOrgId},
+                {type: 'person', personName: D.newPerson.businessName}
+            ]
+
+            D.newTask.caseReviewDate = helper.getSpecificDateInSpecificFormat(C.currentDateFormat.mask, D.newCase.reviewDate)
+            D.newTask.caseReviewNotes = D.newCase.reviewDateNotes
+            ui.menu.click_Tasks();
+            ui.addTask.click_button(C.buttons.addTask)
+                .populate_all_fields(D.newTask, false, false, selectedTemplate)
+                .select_assignees([D.newTask.userGroupName])
+                .click_Save_()
+                .verify_toast_message(C.toastMsgs.saved)
+            ui.taskList.search_for_the_task(powerUser.firstName)
+                .sort_by_descending_order('Creation Date')
+                .verify_newly_created_task_is_shown_in_first_table_row()
+                .search_for_the_newly_created_task()
+                .verify_task_data_on_grid(D.newTask, orgAdmin)
+            ui.addTask.verify_email_content_(powerUser.email, C.tasks.emailTemplates.taskCreated, D.newTask, powerUser.name + ', ' + admin_userGroup.name, 2, false)
+            ui.addTask.verify_email_content_(powerUser2.email, C.tasks.emailTemplates.taskCreated, D.newTask, powerUser.name + ', ' + admin_userGroup.name)
+        })
 
     });
 });

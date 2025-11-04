@@ -22,7 +22,7 @@ let
     serialNoInput = e => cy.get('[translate="ITEM_SERIAL_NUMBER"]').parent().find('[ng-model="field.model"]'),
     orgItemNoInput = e => cy.get('[translate="ITEM_SEQUENTIAL_ORG_ID"]').parent().find('[ng-model="field.model"]'),custodyReasonDropdown = e => cy.get('[translate="ITEM_CUSTODY_REASON"]').parent().find('select').eq(1),
     statusDropdown = e => cy.get('[translate="ITEM_STATUS"]').parent().find('select').eq(1),
-    actionsOnSearchResultsButton = e => cy.get('[ng-disabled="!isAdmin || !canUpdateByQuery"]'),
+    actionsOnSearchResultsButton = e => cy.get('[ng-disabled="selectedItems.length > 0 || options.items.length === 0"]'),
     categoryDropdown = e => cy.get('[class="btn btn-default form-control ui-select-toggle"]').eq(1),
     categoryDropdownOption = e => cy.get('[id="ui-select-choices-row-6-0"]'),
     //categoryDropdown = e => cy.get('[translate="ITEM_CATEGORY"]').parent().find('select').eq(1),
@@ -152,81 +152,80 @@ export default class SearchItemPage extends BaseSearchPage {
         return this;
     };
 
-    verify_item_data_on_grid(userObject, customFormName) {
+    verify_item_data_on_grid(dataObject, customFormName, isDispoStatusEnabled = true) {
         if (customFormName) this.enable_columns_for_specific__Custom_Form_on_the_grid(customFormName)
-        this.enable_all_standard_columns_on_the_grid(C.pages.itemSearch)
+        this.enable_all_standard_columns_on_the_grid(C.pages.itemSearch, isDispoStatusEnabled)
 
         this.verify_values_on_the_grid([
-            ['Office', userObject.officeName.substring(0, 9)],
-            ['Primary Case #', userObject.caseNumber],
-            ['Case Officer(s)', userObject.caseOfficers],
-         //   ['Org#', userObject.],
-          //  ['Item#', userObject.],
-            ['Category', userObject.category],
-            ['Description', userObject.description],
-            ['Recovery Date', userObject.recoveryDate],
-            ['Status', userObject.status],
-            ['Storage Location', userObject.location],
-            ['Created By', userObject.submittedByName],
-            ['Created Date', userObject.createdDate],
-            ['Checkout Reason', userObject.checkoutReason],
-            ['Check Out Date', userObject.checkoutDate],
-            ['Checked Out To', userObject.checkedOutTo_name],
-            ['Expected Return Date', userObject.expectedReturnDate],
-            ['Checked Out Notes', userObject.checkedOutNotes],
-            ['Disposal Method', userObject.disposalMethod],
-            ['Dispose Date', userObject.disposedDate],
-            ['Actual Disposed Date', userObject.actualDisposedDate],
-            ['Disposed By', userObject.disposedByName],
-            ['Disposal Notes', userObject.disposalNotes],
-            ['Additional Barcodes', userObject.additionalBarcodes],
-            ['Tags', userObject.tags],
-            ['Recovered At', userObject.recoveryLocation],
-            ['Recovered By', userObject.recoveredByName],
-            ['Custody Reason', userObject.custodyReason],
-            ['Custodian', userObject.custodian_name],
-            ['Make', userObject.make],
-            ['Model', userObject.model],
-            ['Serial Number', userObject.serialNumber],
-            ['Item Belongs to', userObject.itemBelongsTo],
+            ['Office', dataObject.officeName.substring(0, 9)],
+            ['Primary Case #', dataObject.caseNumber],
+            ['Case Officer(s)', dataObject.caseOfficers],
+         //   ['Org#', dataObject.],
+          //  ['Item#', dataObject.],
+            ['Category', dataObject.category],
+            ['Description', dataObject.description],
+            ['Recovery Date', dataObject.recoveryDate],
+            ['Status', dataObject.status],
+            ['Storage Location', dataObject.location],
+            ['Created By', dataObject.submittedByName],
+            ['Created Date', dataObject.createdDate],
+            ['Checkout Reason', dataObject.checkoutReason],
+            ['Check Out Date', dataObject.checkoutDate],
+            ['Checked Out To', dataObject.checkedOutTo_name],
+            ['Expected Return Date', dataObject.expectedReturnDate],
+            ['Checked Out Notes', dataObject.checkedOutNotes],
+            ['Disposal Method', dataObject.disposalMethod],
+            ['Dispose Date', dataObject.disposedDate],
+            ['Actual Disposed Date', dataObject.actualDisposedDate],
+            ['Disposed By', dataObject.disposedByName],
+            ['Disposal Notes', dataObject.disposalNotes],
+            ['Additional Barcodes', dataObject.additionalBarcodes],
+            ['Tags', dataObject.tags],
+            ['Recovered At', dataObject.recoveryLocation],
+            ['Recovered By', dataObject.recoveredByName],
+            ['Custody Reason', dataObject.custodyReason],
+            ['Custodian', dataObject.custodian_name],
+            ['Make', dataObject.make],
+            ['Model', dataObject.model],
+            ['Serial Number', dataObject.serialNumber],
+            ['Item Belongs to', dataObject.itemBelongsTo],
         ])
 
-        // this approach is more precise (checking value in specific cell based on its title)
-        // and it would be better than the one below (checking values are present "anywhere" in the first row)
-        // BUT it's hard to traverse through the table with many possible custom fields since it takes even the index of the cells that are hidden as we have them in DOM
-        // regardless of setting the selector '.not('ng-hide'), so we don't get the precise index of the visible column
-
         if (customFormName) {
+            // this approach is more precise (checking value in specific cell based on its title)
+            // and it would be better than the one below (checking values are present "anywhere" in the first row)
+            // BUT it's hard to traverse through the table with many possible custom fields since it takes even the index of the cells that are hidden as we have them in DOM
+            // regardless of setting the selector '.not('ng-hide'), so we don't get the precise index of the visible column
             //     this.verify_values_on_the_grid([
-            //         [customFormName + '-Textarea', userObject.custom_textarea],
-            //         [customFormName + '-Textbox', userObject.custom_textbox],
-            //         [customFormName + '-Person', userObject.custom_person],
-            //         [customFormName + '-User', userObject.custom_user_name],
-            //         [customFormName + '-Date', userObject.custom_date],
-            //         [customFormName + '-Email', userObject.custom_email],
-            //         [customFormName + '-Password', userObject.custom_password],
-            //         [customFormName + '-Number', userObject.custom_number],
-            //         [customFormName + '-Checkbox List', userObject.custom_checkboxListOption],
-            //         [customFormName + '-Radiobutton List', userObject.custom_radiobuttonListOption],
-            //         [customFormName + '-Dropdown Typeahead', userObject.custom_dropdownTypeaheadOption],
+            //         [customFormName + '-Textarea', dataObject.custom_textarea],
+            //         [customFormName + '-Textbox', dataObject.custom_textbox],
+            //         [customFormName + '-Person', dataObject.custom_person],
+            //         [customFormName + '-User', dataObject.custom_user_name],
+            //         [customFormName + '-Date', dataObject.custom_date],
+            //         [customFormName + '-Email', dataObject.custom_email],
+            //         [customFormName + '-Password', dataObject.custom_password],
+            //         [customFormName + '-Number', dataObject.custom_number],
+            //         [customFormName + '-Checkbox List', dataObject.custom_checkboxListOption],
+            //         [customFormName + '-Radiobutton List', dataObject.custom_radiobuttonListOption],
+            //         [customFormName + '-Dropdown Typeahead', dataObject.custom_dropdownTypeaheadOption],
             //     ])
 
             this.verify_content_of_first_row_in_results_table([
-                userObject.custom_textarea,
-                userObject.custom_textbox,
-                userObject.custom_person,
-                userObject.custom_user_name,
-                userObject.custom_date,
-                userObject.custom_email,
-                userObject.custom_password,
-                userObject.custom_number,
-                userObject.custom_checkboxListOption,
-                userObject.custom_radiobuttonListOption,
-                userObject.custom_dropdownTypeaheadOption,
+                dataObject.custom_textarea,
+                dataObject.custom_textbox,
+                dataObject.custom_person,
+                dataObject.custom_user_name,
+                dataObject.custom_date,
+                dataObject.custom_email,
+                dataObject.custom_password,
+                dataObject.custom_number,
+                dataObject.custom_checkboxListOption,
+                dataObject.custom_radiobuttonListOption,
+                dataObject.custom_dropdownTypeaheadOption,
             ])
-            if (userObject.custom_checkbox) {
+            if (dataObject.custom_checkbox) {
                 this.verify_content_of_first_row_in_results_table(
-                    userObject.custom_checkbox.toString().charAt(0).toUpperCase() + userObject.custom_checkbox.toString().slice(1),
+                    dataObject.custom_checkbox.toString().charAt(0).toUpperCase() + dataObject.custom_checkbox.toString().slice(1),
                 )
             }
         }

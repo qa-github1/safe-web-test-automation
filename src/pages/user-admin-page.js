@@ -64,7 +64,7 @@ export default class UserAdminPage extends BasePage {
         this.define_API_request_to_be_awaited('POST', '/api/users/search', 'searchUsers')
         this.enterValue(searchInput, email)
         this.wait_response_from_API_call('searchUsers')
-        this.pause(0.5)
+        this.pause(0.7)
         this.wait_until_spinner_disappears();
         return this;
     };
@@ -115,8 +115,10 @@ export default class UserAdminPage extends BasePage {
 
             if (userObject.supervisors) {
                 for (let i = 0; i < userObject.supervisors.length; i++) {
-                    this.type_if_values_provided([
-                        [supervisorInput, userObject.supervisors[i], this.userAndUserGroupTypeaheadOption]])
+                    // this.type_if_values_provided([
+                    //     [supervisorInput, userObject.supervisors[i], this.userAndUserGroupTypeaheadOption]])
+
+                    this.select_typeahead_option(supervisorInput, userObject.supervisors[i], this.typeaheadSelectorItemInGroupItems)
                 }
             }
 
@@ -298,9 +300,9 @@ export default class UserAdminPage extends BasePage {
     }
 
 
-    verify_user_is_not_shown_up_on_grid() {
-        this.verify_records_count_on_grid(0);
-        return this;
+    open_direct_url_for_page() {
+        this.open_url_and_wait_all_GET_requests_to_finish(S.base_url + '/#/' + C.pages.userAdmin.url)
+        return this
     }
 
     deactivateUser(userObject, searchForUser = true) {
@@ -316,6 +318,14 @@ export default class UserAdminPage extends BasePage {
         this.wait_until_spinner_disappears();
         this.pause(1)
 
+        return this;
+    }
+
+    remove_external_user() {
+            this.select_checkbox_on_first_table_row()
+                .click_button(C.buttons.actions)
+                .click_option_on_expanded_menu(C.dropdowns.userActions.removeExternalUsers)
+                .click_button_on_sweet_alert('OK')
         return this;
     }
 

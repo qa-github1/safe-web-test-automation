@@ -16,6 +16,8 @@ D.getRandomNo = function (length) {
 
 D.randomNo = D.getRandomNo();
 D.unreadEmails = []
+D.newCase = {}
+D.newItem = {}
 
 D.getCurrentDateAndRandomNumber = function (randomNumberLenght) {
     return helper.mediumDate + '_' + helper.getRandomNo(randomNumberLenght);
@@ -130,9 +132,9 @@ D.getEditedCaseData = function (caseNumber, autoDispoOff = false) {
         offenseTypeId: S.selectedEnvironment.offenseType2.id,
         offenseType: S.selectedEnvironment.offenseType2.name,
         formData: [],
-        tags: ['cold_case'],
-        tagsForApi: [{tagModelId: -1, name: 'cold_case', color: "#4b749b"}],
-        tagsOnHistory: ['cold_case'],
+        tags: [S.selectedEnvironment.orgTag2.name],
+        tagsForApi: [{tagModelId: -1, name: S.selectedEnvironment.orgTag2.name, color: "#4b749b"}],
+        tagsOnHistory: [S.selectedEnvironment.orgTag2.name],
         reviewDateNotes: 'reviewNotes_EDITED_' + caseNumber,
         checkInProgress: false,
         createdDate: S.currentDate,
@@ -233,6 +235,7 @@ D.getNewItemData = function (specificCaseObject, locationObject, newPerson) {
         disposalMethod: '',
         disposedByName: '',
         disposalNotes: '',
+        disposalUser: S.userAccounts.powerUser.name,
         disposalUserId: S.userAccounts.powerUser.email,
         transactionNotes: 'Item entered into system.',
         checkoutDate: '',
@@ -359,6 +362,7 @@ D.getEditedItemData = function (specificCaseObject, locationObject, newPerson, r
         officeName: S.selectedEnvironment.office_1.name,
         recoveredByGuid: Person_2.guid,
         returnedByGuid: Person_2.guid,
+        returnedByEmail: Person_2.email,
         custodianGuid: '',
         custodianEmail: '',
         formData: [],
@@ -742,11 +746,12 @@ D.getCustomFormData = function () {
         custom_selectListOption_apiFormat: 3,
         custom_dropdownTypeaheadOption: 'test1',
         custom_dropdownTypeaheadOption_apiFormat: 1,
-        custom_date: helper.setDateAndTime(C.currentDateTimeFormat.editMode),
+        custom_date: helper.setDateAndTime(C.currentDateTimeFormat.dateOnly),
         custom_dateISOFormat: helper.setIsoDateAndTime(),
         custom_date_withoutTime: helper.setDateAndTime(C.currentDateTimeFormat.dateOnly),
         custom_user_email: S.userAccounts.basicUser.email,
         custom_user_or_group_names: [S.userAccounts.basicUser.name],
+        custom_userGroup: S.selectedEnvironment.admin_userGroup.name,
         custom_userId: S.userAccounts.basicUser.id,
         custom_userGuid: S.userAccounts.basicUser.guid,
         custom_person: S.selectedEnvironment.person.name,
@@ -805,9 +810,12 @@ D.editedCustomFormData = {
     custom_user_or_group_names: [S.userAccounts.powerUser.name],
     custom_userId: S.userAccounts.powerUser.id,
     custom_userGuid: S.userAccounts.powerUser.guid,
+    custom_userEmail: S.userAccounts.powerUser.email,
+    custom_userGroup: S.selectedEnvironment.readOnly_userGroup.name,
     custom_person: S.selectedEnvironment.person_2.name,
     custom_personGuid: S.selectedEnvironment.person_2.guid,
-    custom_personId: S.selectedEnvironment.person_2.id
+    custom_personId: S.selectedEnvironment.person_2.id,
+    custom_personEmail: S.selectedEnvironment.person_2.email
 }
 
 D.removeValuesForDisabledCaseFields = function (enabledFields) {
@@ -841,6 +849,7 @@ D.removeValuesForDisabledItemFields = function (enabledFields) {
     let itemFields = [
         'recoveryDate',
         'recoveryDateEditMode',
+        'recoveryDate_withoutTime',
         'recoveredBy',
         'recoveryLocation',
         'recoveredByName',
@@ -1017,9 +1026,9 @@ D.generateNewDataSet = function (setNullForDisabledFields = false, autoDispoOff 
 D.setNewRandomNo();
 D.getRandomNo();
 
-D.getDataForMultipleCases = function (numberOfCases) {
+D.getDataForMultipleCases = function (numberOfCases, startingIndex = 1) {
 
-    for (let i = 1; i < numberOfCases + 1; i++) {
+    for (let i = startingIndex; i < numberOfCases+startingIndex; i++) {
         D['case' + i] = Object.assign({}, D.getNewCaseData());
     }
 }

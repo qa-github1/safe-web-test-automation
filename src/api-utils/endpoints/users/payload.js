@@ -1,4 +1,5 @@
 const D = require('../../../fixtures/data.js');
+const S = require('../../../fixtures/settings');
 
 exports.generate_POST_request_payload_for_Add_User = function (userObject) {
 
@@ -40,3 +41,35 @@ exports.generate_POST_request_payload_for_Update_Password = function (currentPas
 };
 
 
+exports.generate_PUT_request_payload_for_Deactivate_User = function (deactivatedUser, keepUser , isReassigned)  {
+
+     let reassignedToUser = isReassigned || S.selectedEnvironment.users.powerUser
+     let reassignedToGroup = isReassigned || S.selectedEnvironment.admin_userGroup
+    let body =
+        {
+            keepUser: keepUser,
+            newUserIds: [reassignedToUser.id],
+            newgroupIds: [reassignedToGroup.id],
+            reassign: isReassigned,
+            userIds: [deactivatedUser]
+        };
+    return body;
+
+};
+
+exports.generate_POST_request_payload_for_User_Search = function (searchString, officeId)  {
+
+    let body =
+        {
+            searchString: searchString,
+            officeID: officeId,
+            count: 100,
+            divisionId: 0,
+            onlyActiveUsers: true,
+            orderBy: "LastName",
+            orderByAsc: true,
+            page: 0,
+            unitId: 0
+        };
+    return body;
+};

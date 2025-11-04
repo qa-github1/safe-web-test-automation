@@ -143,24 +143,21 @@ describe('Services', function () {
 
         D.generateNewDataSet();
         D.getNewItemData(D.newCase);
-        D.newCase.caseOfficers_importFormat =
-            S.userAccounts.orgAdmin.email + ';' +
-            S.selectedEnvironment.admin_userGroup.name
+        D.newCase.caseOfficers_importFormat =S.userAccounts.orgAdmin.email + ';' + S.selectedEnvironment.admin_userGroup.name
         D.newCase.caseOfficers = [S.userAccounts.orgAdmin.name, S.selectedEnvironment.admin_userGroup.name]
 
         E.generateDataFor_CASES_Importer([D.newCase]);
 
         ui.app.generate_excel_file(fileName, E.caseImportDataWithAllFields);
         api.org_settings.enable_all_Case_fields();
-        api.org_settings.enable_all_Item_fields();
+        api.org_settings.enable_all_Item_fields([C.itemFields.itemBelongsTo]);
         api.org_settings.update_org_settings(true, true);
         api.auto_disposition.edit(true);
 
         ui.menu.click_Tools__Data_Import();
         ui.importer.upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.cases)
-            .verify_toast_message([
-                C.toastMsgs.importComplete,
-                1 + C.toastMsgs.recordsImported])
+           // .verify_toast_message([C.toastMsgs.importComplete, 1 + C.toastMsgs.recordsImported])
+            .check_import_status_on_grid('1 records imported')
             .quick_search_for_case(D.newCase.caseNumber);
 
         ui.caseView.verify_Case_View_page_is_open(D.newCase.caseNumber)
@@ -174,7 +171,7 @@ describe('Services', function () {
         D.newItem.caseNumber = D.newCase.caseNumber
         ui.menu.click_Add__Item();
         ui.addItem.enter_Case_Number_and_select_on_typeahead(D.newCase.caseNumber)
-            .populate_all_fields_on_both_forms(D.newItem, false, false)
+            .populate_all_fields_on_both_forms(D.newItem, false, true)
             .select_post_save_action(C.postSaveActions.viewAddedItem)
             .click_Save(D.newItem)
             .verify_Error_toast_message_is_NOT_visible();
@@ -233,18 +230,13 @@ describe('Services', function () {
         ui.taskView
             .open_newly_created_task_via_direct_link()
             .select_tab('Items')
-            .set_large_view()
+            .set_page_size(100)
             .set_Action___Approve_for_Disposal([1, 51])
-            .reload_page()
-            .select_tab('Items')
             .click_Submit_for_Disposition()
             .verify_single_toast_message_if_multiple_shown('Processing...')
             .verify_Dispo_Auth_Job_Status('Complete')
-            .reload_page()
-            .select_tab('Items')
-            .disable_large_view()
             .verify_text_is_present_on_main_container('Approved for Disposal')
-        ui.taskView.set_page_size(100)
+        ui.taskView
             .verify_Disposition_Statuses_on_the_grid([
                 [[...Array(50).keys()], 'Approved for Disposal']])
             .reload_page()

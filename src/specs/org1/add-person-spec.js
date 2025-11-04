@@ -100,6 +100,7 @@ describe('Add Person', function () {
 
             it('1.4. redirect to Case View page', function () {
                 api.auth.get_tokens(orgAdmin);
+                D.generateNewDataSet(true);
                 ui.open_base_url();
                 ui.menu.click_Add__Person();
                 ui.addPerson.populate_all_fields(D.newPerson)
@@ -172,6 +173,9 @@ describe('Add Person', function () {
                 })
 
                 it('3.2. --- with required Custom Form but not filled out, all optional fields on Form', function () {
+
+                    api.auth.get_tokens(orgAdmin);
+                    D.generateNewDataSet(true);
                     D.newPerson.personType = D.newPerson.personTypelinkedToRequiredForm2
                     D.newPerson.personTypeId = D.newPerson.personTypeIdlinkedToRequiredForm2
                     D.newPerson = Object.assign(D.newPerson, D.defaultCustomFormData)

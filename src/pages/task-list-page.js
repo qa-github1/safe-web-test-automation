@@ -37,7 +37,7 @@ export default class TaskListPage extends BasePage {
             ['Last Action Date', taskObject.lastActionDate],
             ['State', taskObject.state],
             ['Status', taskObject.status],
-            ['Type', taskObject.type],
+            ['Task Type', taskObject.type],
             ['Sub Type', taskObject.subtype],
             ['Title', taskObject.title]
         ])
