@@ -785,7 +785,7 @@ D.getCustomFormData = function () {
         custom_number: "10",
         custom_password: "Test123",
         custom_textarea: "custom Textarea",
-        custom_checkbox: false,
+        custom_checkbox: true,
         custom_checkboxListOption: 'Option 1',
         custom_checkboxListOption_apiFormat: {"1": true},
         custom_radiobuttonListOption: 'Option 2',

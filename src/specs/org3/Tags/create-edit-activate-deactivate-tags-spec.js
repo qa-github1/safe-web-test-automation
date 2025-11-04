@@ -3,6 +3,7 @@ const S = require('../../../fixtures/settings');
 const D = require('../../../fixtures/data');
 const api = require('../../../api-utils/api-spec');
 const ui = require('../../../pages/ui-spec');
+const {add_new_case} = require("../../../api-utils/endpoints/cases/collection");
 
 
 let user = S.getUserData(S.userAccounts.orgAdmin);
@@ -334,26 +335,23 @@ for (let i = 0; i < 1; i++) {
             // .set_page_size(10)
             // .click_number_on_pagination("Last")
             // .verify_content_of_last_row_in_results_table(D.editedTag.editedTagGroupName)
+            api.auth.log_out(user)
+
         });
 
-        it.only('7. Create User Tag on Add Case Page', function () {
+        it('7. Create User Tag on Add Case Page', function () {
 
             api.org_settings.enable_all_Case_fields();
             ui.menu.click_Add__Case();
             ui.addCase.populate_all_fields_on_both_forms(D.newCase)
-            const currentTag = D.newCase.tags
             ui.caseView.remove_existing_values_on_specific_multi_select_field("Tags")
             ui.tags.add_user_tag_on_edit_modal(D.newTags, 1)
-            ui.caseView.click_Save()
-                .verify_toast_message(C.toastMsgs.saved)
             ui.addCase.select_post_save_action(C.postSaveActions.viewAddedCase)
-                .reload_page()
-            ui.caseView.verify_edited_and_not_edited_values_on_Case_View_form(C.caseFields.tags, D.newTags, true)
+            ui.app.click_Save()
+                .verify_toast_message(C.toastMsgs.addedNewCase + D.newCase.caseNumber)
+            ui.caseView
                 .click_Edit()
-                .verify_edited_and_not_edited_values_on_Case_Edit_form(C.caseFields.tags, D.newTags, true)
-                .open_last_history_record(0)
-                .verify_red_highlighted_history_records(C.caseFields.tags)
-                .click_cancel_on_history_page()
+                .verify_values_on_Edit_form(D.newTags.tagName)
 
 
             //find newly created User Tag
@@ -373,9 +371,11 @@ for (let i = 0; i < 1; i++) {
                 .click_number_on_pagination("Last")
                 .verify_text_is_visible(D.newTags.tagName)
                 .verify_selected_tags_radiobutton_based_on_status(C.buttons.inactive)
+            api.auth.log_out(user)
 
         });
-        it('7. Create User Tag on Edit Case Page', function () {
+
+        it('8. Create User Tag on Edit Case Page', function () {
             const currentTag = D.newCase.tags[0]
 
             api.org_settings.enable_all_Case_fields();
@@ -413,15 +413,52 @@ for (let i = 0; i < 1; i++) {
                 .click_number_on_pagination("Last")
                 .verify_text_is_visible(D.newTags.tagName)
                 .verify_selected_tags_radiobutton_based_on_status(C.buttons.inactive)
+            api.auth.log_out(user)
 
         });
 
-        it('8. Create User Tag on Edit Item Page', function () {
+        it('9. Create User Tag on Add Item Page', function () {
+            D.generateNewDataSet();
+
+            api.org_settings.enable_all_Item_fields();
+            ui.menu.click_Add__Item()
+            D.newCase.caseNumber = D.newItem.caseNumber
+            ui.addItem.populate_all_fields_on_both_forms(D.newItem, false, false)
+            ui.caseView.remove_existing_values_on_specific_multi_select_field("Tags")
+            ui.tags.add_user_tag_on_edit_modal(D.newTags, 1)
+            ui.addCase.select_post_save_action(C.postSaveActions.viewAddedItem)
+            ui.app.click_Save()
+                .click_Edit()
+            ui.caseView.verify_values_on_Edit_form(D.newTags.tagName)
+
+
+            //find newly created User Tag
+            ui.menu.click_Tags();
+            ui.tags.select_radiobutton(C.buttons.users)
+                .click_number_on_pagination("Last")
+                .verify_content_of_last_row_in_results_table(D.newTags.tagName)
+                .verify_selected_tags_radiobutton_based_on_status(C.buttons.active)
+
+                //deactivate tag
+                .select_checkbox_on_last_row_on_visible_table()
+                .click_button(C.buttons.actions)
+                .click_option_on_expanded_menu(C.dropdowns.tagActions.deactivate)
+                .verify_toast_message("Saved!")
+                .select_radiobutton(C.buttons.inactive)
+                .set_page_size(10)
+                .click_number_on_pagination("Last")
+                .verify_text_is_visible(D.newTags.tagName)
+                .verify_selected_tags_radiobutton_based_on_status(C.buttons.inactive)
+            api.auth.log_out(user)
+
+        });
+
+        it('10. Create User Tag on Edit Item Page', function () {
             const currentTag = D.newCase.tags[0]
 
-            api.org_settings.enable_all_Case_fields();
+            api.org_settings.enable_all_Item_fields()
             api.cases.add_new_case(D.newCase.caseNumber);
-            api.items.add_new_item();
+            api.items.add_new_item(true);
             ui.app.open_newly_created_item_via_direct_link();
             ui.caseView.click_Edit()
                 .remove_specific_values_on_multi_select_fields([currentTag])
