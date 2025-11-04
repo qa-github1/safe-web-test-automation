@@ -235,8 +235,6 @@ describe('Services', function () {
             .click_Submit_for_Disposition()
             .verify_single_toast_message_if_multiple_shown('Processing...')
             .verify_Dispo_Auth_Job_Status('Complete')
-          //  .reload_page()
-          //  .select_tab('Items')
             .verify_text_is_present_on_main_container('Approved for Disposal')
         ui.taskView
             .verify_Disposition_Statuses_on_the_grid([
