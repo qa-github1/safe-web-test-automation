@@ -360,6 +360,11 @@ C = {
             equalsOr: 'equals (or)',
             equalsAnd: 'equals (and)',
             notEquals: 'not equals',
+        },
+        fields: {
+            createdBy: 'Created By',
+            createdDate: 'Created Date',
+            caseNumber: 'Case Number'
         }
     },
     validation_msgs: {

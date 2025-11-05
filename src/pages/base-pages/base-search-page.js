@@ -8,6 +8,8 @@ const S = require('../../fixtures/settings');
 //************************************ ELEMENTS ***************************************//
 
 let searchCriteriaBasedOnFieldLabel = fieldLabel => cy.contains(fieldLabel).parent().find('select[ng-model="field.searchCriteria"]'),
+    searchCriteriaBasedOnSelectedField = fieldName => cy.get('select[ng-model="field.selectedField"]').contains('option', fieldName).parents('div.field-selector').next('.search-fields').find('select[ng-model="field.searchCriteria"]'),
+    typeaheadFieldBasedOnSelectedField = fieldName => cy.get('select[ng-model="field.selectedField"]').contains('option', fieldName).closest('div.field-selector').next('.search-fields').find('div[ng-if*="TYPEAHEAD"]').find('input[ng-model="user.text"]'),
     removeAllButtonForOffices = e => cy.get('[translate="SEARCH.OFFICE_SELECTION"]').parents('.form-group').find('[translate="ORGS.SETTINGS.FORMS.LISTBOX.REMOVE_ALL_BUTTON"]'),
     inputForOffices = e => cy.get('[translate="SEARCH.OFFICE_SELECTION"]').parents('.form-group').find('input[placeholder="Select an office..."]'),
     dateInputField = fieldLabel => cy.contains(fieldLabel).parent().find('input').first(),
@@ -60,8 +62,8 @@ export default class BaseSearchPage extends BasePage {
     }
 
     enter_Date_as_search_criteria(fieldLabel, searchCriteria, firstInput, secondInput) {
-        searchCriteriaBasedOnFieldLabel(fieldLabel).select(searchCriteria);
-
+        //searchCriteriaBasedOnFieldLabel(fieldLabel).select(searchCriteria);
+searchCriteriaBasedOnSelectedField(fieldLabel).select(searchCriteria)
         if (firstInput === 'today') {
             dateField_calendar(fieldLabel).click()
             dateField_today(fieldLabel).click()
@@ -77,13 +79,53 @@ export default class BaseSearchPage extends BasePage {
         return this;
     };
 
-    enter_value_in_typeahead_search_field(fieldLabel, searchCriteria, value) {
-        this.define_API_request_to_be_awaited('GET', 'typeahead', 'typeahead')
-        searchCriteriaBasedOnFieldLabel(fieldLabel).select(searchCriteria);
-        typeaheadInputField(fieldLabel).type(value);
-        this.wait_response_from_API_call('typeahead')
-        this.pause(0.3)
-        typeaheadOption(fieldLabel).click();
+    // enter_value_in_typeahead_search_field(fieldLabel, searchCriteria, value) {
+    //     this.define_API_request_to_be_awaited('GET', 'typeahead', 'typeahead')
+    //     searchCriteriaBasedOnFieldLabel(fieldLabel).select(searchCriteria);
+    //     typeaheadInputField(fieldLabel).type(value);
+    //     this.wait_response_from_API_call('typeahead')
+    //     this.pause(0.3)
+    //     typeaheadOption(fieldLabel).click();
+    //     return this;
+    // };
+
+    // enter_value_in_typeahead_search_v2_field(fieldName, searchCriteria, value) {
+    //     this.define_API_request_to_be_awaited('GET', 'typeahead', 'typeahead')
+    //     searchCriteriaBasedOnSelectedField(fieldName).select(searchCriteria);
+    //     typeaheadFieldBasedOnSelectedField(fieldName).type(value)
+    //         this.pause(3)
+    //             typeaheadFieldBasedOnSelectedField(fieldName).type('{enter}');
+    //     //this.wait_response_from_API_call('typeahead')
+    //    // this.pause(0.3)
+    //    // typeaheadOption(fieldName).click();
+    //     return this;
+    // }
+
+    //TODO: delete two methods commented above after we check that this method below works fine in both scenarios
+    enter_value_in_typeahead_search_field(fieldLabelOrName, searchCriteria, value) {
+        cy.get('toggle[ng-model="searchV2.isV2"]').then($toggle => {
+            const isOn = $toggle.find('.toggle-on').hasClass('btn-primary');
+
+            if (isOn) {
+                searchCriteriaBasedOnSelectedField(fieldLabelOrName).select(searchCriteria);
+                typeaheadFieldBasedOnSelectedField(fieldLabelOrName).type(value);
+                this.pause(3);
+                typeaheadFieldBasedOnSelectedField(fieldLabelOrName).type('{enter}');
+            } else {
+                this.define_API_request_to_be_awaited('GET', 'typeahead', 'typeahead');
+                searchCriteriaBasedOnFieldLabel(fieldLabelOrName).select(searchCriteria);
+                typeaheadInputField(fieldLabelOrName).type(value);
+                this.wait_response_from_API_call('typeahead');
+                this.pause(0.3);
+                typeaheadOption(fieldLabelOrName).click();
+            }
+        });
+
+        return this;
+    }
+
+    choose_search_criteria_v2(fieldName, searchCriteria) {
+        searchCriteriaBasedOnSelectedField(fieldName).select(searchCriteria);
         return this;
     };
 

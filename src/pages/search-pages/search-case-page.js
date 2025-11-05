@@ -38,6 +38,9 @@ let
     optionOnTypeahead = e => cy.get('[ng-repeat="match in matches track by $index"]'),
     searchCaseTextBox = e => cy.get('#searchinput'),
     selectSearchResult = e => cy.get('[ng-click="selectMatch($index)"]'),
+    selectFieldV2 = index => cy.get('[ng-change="v2SelectedFieldChanged(field)"]').eq(index),
+    createdByTypeaheadFieldSearchV2 = fieldName => cy.get('select[ng-model="field.selectedField"]').contains('option', fieldName).parents('div.field-selector').next('.search-fields').find('input[id="tpUserTypeAheadId850"]'),
+
     tableColumn_header = columnTitle => cy.get('thead').contains(columnTitle),
 
     // search Criteria dropdowns
@@ -79,6 +82,11 @@ export default class SearchCasePage extends BaseSearchPage {
         this.enter_value_in_typeahead_search_field('Created By', searchCriteria, email)
         return this;
     };
+
+    select_field_on_search_v2(data, index = 0 ){
+        selectFieldV2(index).select(data);
+        return this;
+    }
 
     select_current_user_checkbox_for_Created_By(searchCriteria) {
         createdBySearchCriteria().select(searchCriteria);

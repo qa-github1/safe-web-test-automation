@@ -51,7 +51,9 @@ let
     logOut = e => cy.get('[tooltip="Logout"]').first(),
     logIn = e => cy.get('[href="#/login"]'),
     dataImport = e => cy.get('[ui-sref="flat-import.view"]'),
-    dragAndDropBox = e => cy.get('[flow-file-success="uploadSuccess($file, $message)"]')
+    dragAndDropBox = e => cy.get('[flow-file-success="uploadSuccess($file, $message)"]'),
+    searchV2ToggleButton = e => cy.get('[ng-model="searchV2.isV2"]'),
+    addSearchCriteriaButton = e => cy.get('[translate="Add Search Criteria"]')
 
 
 export default class Menu extends BasePage {
@@ -106,6 +108,16 @@ export default class Menu extends BasePage {
         this.wait_search_criteria_to_be_visible();
         return this;
     };
+
+    turn_ON_search_v2_toggle(){
+        searchV2ToggleButton().click();
+        return this;
+    }
+
+    click_add_search_criteria_on_v2(){
+        addSearchCriteriaButton().click();
+        return this;
+    }
 
     click_Search__Item () {
          this.click_element_if_does_NOT_have_a_class(searchParent(), 'active')
