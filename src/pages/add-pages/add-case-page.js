@@ -19,6 +19,8 @@ let
     offenseDateInput = e => cy.get('[ng-model="ngModel"]').eq(0),
     reviewDateInput = e => cy.get('[ng-model="case.reviewDate"]').find('[ng-model="ngModel"]'),
     addCaseHeader = e => cy.get('[translate="CASES.ADD.MODAL_HEADING"]'),
+    statusToggleButton = e => cy.get('[ng-model="caseEdit.active"]'),
+    closedDate = e => cy.get('[ng-model="caseEdit.closedDate"]').find('[ng-model="ngModel"]'),
     toastMessage = (timeout = 50000) => cy.get('.toast', {timeout: timeout})
 
 export default class AddCasePage extends BaseAddPage {
@@ -122,6 +124,12 @@ export default class AddCasePage extends BaseAddPage {
         caseNumberInput_autoAssigned().should('be.visible');
         return this;
     };
+
+    close_the_case(data){
+        statusToggleButton().click();
+        closedDate().type(data.closedDate);
+        return this;
+    }
 
 }
 

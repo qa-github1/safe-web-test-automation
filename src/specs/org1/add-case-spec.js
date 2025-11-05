@@ -152,8 +152,8 @@ describe('Add Case', function () {
                 .check_if_Review_Date_and_Notes_fields_are_present(false)
                 .click_Edit()
                 .check_if_Review_Date_and_Notes_fields_are_present(false)
-                cy.wait(2000)
-                ui.caseView.verify_values_on_Edit_form(D.newCase)
+            cy.wait(2000)
+            ui.caseView.verify_values_on_Edit_form(D.newCase)
 
 
             api.auth.get_tokens(orgAdmin);
@@ -173,6 +173,27 @@ describe('Add Case', function () {
                 .click_Edit()
                 .check_if_Review_Date_and_Notes_fields_are_present(true)
                 .verify_values_on_Edit_form(D.newCase)
+        });
+
+        it('1.8 Org Admin - Adding Item to the Closed Case', function () {
+            set_preconditions_for_adding_Case_with_reduced_number_of_fields(this);
+            api.org_settings.disable_Item_fields()
+
+            ui.open_base_url();
+            api.cases.add_new_case(D.newCase.caseNumber);
+            ui.app.open_newly_created_case_via_direct_link()
+            ui.caseView.click_Edit()
+            ui.addCase.close_the_case(D.editedCase)
+                .click_Save()
+            ui.addItem.select_tab(C.tabs.items)
+                .click_element_on_active_tab(C.buttons.addItem)
+                .verify_Add_Item_page_is_open()
+                .populate_all_fields_on_both_forms(D.newItem, false, true, false, true)
+                .select_post_save_action(C.postSaveActions.viewAddedItem)
+                .click_Save()
+                .verify_text_is_present_on_main_container(D.newCase.caseNumber)
+            ui.app.open_newly_created_case_via_direct_link()
+                .verify_text_is_present_on_main_container("Open")
         });
     });
 
@@ -415,36 +436,36 @@ describe('Add Case', function () {
 
     //setting this test just for Org#1 until the issue with shared form gets fixed ----> #14625 ⁃ 'Dropdown Typeahead' on the Shared custom form has options available only in the originating Org
     //if (Cypress.env('orgNum') === 1) {
-        context('7. --- with required Custom Form filled out, all required fields on Form', function () {
+    context('7. --- with required Custom Form filled out, all required fields on Form', function () {
 
-            before(function () {
-                api.auth.get_tokens(orgAdmin);
-                api.auto_disposition.edit(false);
-                api.org_settings.disable_Case_fields();
-                D.generateNewDataSet(true, true);
-                api.org_settings.set_Org_Level_Case_Number_formatting(false, false, false)
-            });
-
-            it('7.1 verify all values are properly saved to the custom form -single user in custom User/User Group field', function () {
-                ui.app.log_title(this);
-
-                api.auth.get_tokens(orgAdmin);
-                D.newCase.offenseType = D.newCase.offenseTypelinkedToRequiredForm1
-                D.newCase.offenseTypeId = D.newCase.offenseTypeIdlinkedToRequiredForm1
-                ui.menu.click_Add__Case();
-                ui.addCase.populate_all_fields_on_both_forms(D.newCase)
-                    .verify_number_of_required_fields_marked_with_asterisk(12)
-                    .verify_Save_button_is_disabled()
-                    .populate_all_fields_on_Custom_Form(D.newCustomFormData)
-                    .select_post_save_action(C.postSaveActions.viewAddedCase)
-                    .click_Save()
-                    .verify_toast_message(C.toastMsgs.addedNewCase + D.newCase.caseNumber);
-                ui.caseView.verify_Case_View_page_is_open(D.newCase.caseNumber)
-                    .click_Edit()
-                    .verify_values_on_Edit_form(D.newCase, true)
-            });
+        before(function () {
+            api.auth.get_tokens(orgAdmin);
+            api.auto_disposition.edit(false);
+            api.org_settings.disable_Case_fields();
+            D.generateNewDataSet(true, true);
+            api.org_settings.set_Org_Level_Case_Number_formatting(false, false, false)
         });
-   // }
+
+        it('7.1 verify all values are properly saved to the custom form -single user in custom User/User Group field', function () {
+            ui.app.log_title(this);
+
+            api.auth.get_tokens(orgAdmin);
+            D.newCase.offenseType = D.newCase.offenseTypelinkedToRequiredForm1
+            D.newCase.offenseTypeId = D.newCase.offenseTypeIdlinkedToRequiredForm1
+            ui.menu.click_Add__Case();
+            ui.addCase.populate_all_fields_on_both_forms(D.newCase)
+                .verify_number_of_required_fields_marked_with_asterisk(12)
+                .verify_Save_button_is_disabled()
+                .populate_all_fields_on_Custom_Form(D.newCustomFormData)
+                .select_post_save_action(C.postSaveActions.viewAddedCase)
+                .click_Save()
+                .verify_toast_message(C.toastMsgs.addedNewCase + D.newCase.caseNumber);
+            ui.caseView.verify_Case_View_page_is_open(D.newCase.caseNumber)
+                .click_Edit()
+                .verify_values_on_Edit_form(D.newCase, true)
+        });
+    });
+    // }
 
     context('8. --- with required Custom Form but not filled out, all optional fields on Form', function () {
 
