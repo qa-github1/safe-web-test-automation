@@ -195,6 +195,23 @@ describe('Add Case', function () {
             ui.app.open_newly_created_case_via_direct_link()
                 .verify_text_is_present_on_main_container("Open")
         });
+
+        it('1.9 Org Admin - Closing Case with undisposed Items', function () {
+            set_preconditions_for_adding_Case_with_reduced_number_of_fields(this);
+            api.org_settings.disable_Item_fields()
+
+            ui.open_base_url();
+            api.cases.add_new_case(D.newCase.caseNumber);
+            api.items.add_new_item(true)
+            ui.app.open_newly_created_case_via_direct_link()
+            ui.caseView.click_Edit()
+            ui.addCase.close_the_case(D.editedCase, true)
+                .click_Save()
+                .verify_text_is_present_on_main_container(D.newCase.caseNumber)
+                .verify_text_is_present_on_main_container("Closed")
+            ui.addItem.select_tab(C.tabs.items)
+                .verify_text_is_present_on_main_container("Showing 1 to 1 of 1 items")
+                .verify_content_of_specific_table_row_by_provided_column_title_and_value(0, "Primary Case #", D.newCase.caseNumber )        });
     });
 
     context('2. --- with Case Number formatting in Org, AutoDispo OFF ', function () {

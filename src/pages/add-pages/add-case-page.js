@@ -125,8 +125,12 @@ export default class AddCasePage extends BaseAddPage {
         return this;
     };
 
-    close_the_case(data){
+    close_the_case(data, closeTheCaseWithUndisposedItems = false){
         statusToggleButton().click();
+        if (closeTheCaseWithUndisposedItems) {
+            cy.contains('Closing a Case with undisposed Items').should('be.visible')
+            this.click_button_on_sweet_alert('OK')
+        }
         closedDate().type(data.closedDate);
         return this;
     }
