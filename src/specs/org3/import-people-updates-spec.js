@@ -23,7 +23,7 @@ describe('Import People Updates', function () {
         D.generateNewDataSet();
         api.cases.add_new_case(D.newCase.caseNumber);
         api.people.add_new_person(true, D.newCase);
-        Object.assign(D.editedPerson, D.editedPersonAddress)
+        Object.assign(D.editedPerson, D.editedPersonAddressForImport)
 
         cy.getLocalStorage("newPerson").then(newPerson => {
             D.editedPerson.guid = JSON.parse(newPerson).guid

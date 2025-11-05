@@ -27,6 +27,13 @@ let
     potentialDuplicatePersonBasedOnLastName = e => cy.get('[ng-if="frm.personlastname.$error.duplicates"]'),
     potentialDuplicatePersonBasedOnDriverLicenseName = e => cy.get('[ng-if="frm.driverLicence.$error.duplicates"]'),
     potentialDuplicatePersonLink = e => cy.get('[translate="GENERAL.PLEASE_CLICK_TO_REVIEW"]'),
+    addressType = e => cy.get('[ng-model="model.addressTypeId"]'),
+    country = e => cy.get('[ng-model="model.countryId"]'),
+    address1 = e => cy.get('[ng-model="model.line1"]'),
+    address2 = e => cy.get('[ng-model="model.line2"]'),
+    city = e => cy.get('[ng-model="model.city"]'),
+    state = e => cy.get('[ng-model="model.stateId"]'),
+    zip = e => cy.get('[ng-model="model.zip"]'),
     toastMessage = (timeout = 50000) => cy.get('.toast', {timeout: timeout})
 
 //************************************ ELEMENTS ***************************************//
@@ -116,6 +123,37 @@ export default class AddPersonPage extends BaseAddPage {
         this.wait_response_from_API_call('addPerson', 200, 'newPerson')
         return this;
     };
+
+    add_person_address(data){
+        addressType().select(data.addressType);
+        country().select(data.country);
+        address1().type(data.line1)
+        address2().type(data.line2)
+        city().type(data.city)
+        state().select(data.state)
+        zip().type(data.zip)
+        return this;
+    }
+
+    edit_person_address(data){
+        addressType().select(data.addressType);
+        country().select(data.country);
+        address1().clear().type(data.line1)
+        address2().clear().type(data.line2)
+        city().clear().type(data.city)
+        zip().clear().type(data.zip)
+        return this;
+    }
+
+    verify_added_address(data){
+        this.verify_text_is_present_on_main_container(data.addressType)
+        this.verify_text_is_present_on_main_container(data.line1)
+        this.verify_text_is_present_on_main_container(data.line2)
+        this.verify_text_is_present_on_main_container(data.city)
+        this.verify_text_is_present_on_main_container(data.zip)
+        return this;
+    }
+
 
 
 }

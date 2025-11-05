@@ -36,18 +36,31 @@ describe('Add Person', function () {
 
         context('All fields enabled', function () {
 
-            it('1.1. -- redirect to View Added Person', function () {
+            it.only('1.1. -- redirect to View Added Person/Add-Edit-Delete Address', function () {
                 set_preconditions_for_adding_Person_with_all_fields(this);
 
                 ui.open_base_url();
                 ui.menu.click_Add__Person();
                 ui.addPerson.populate_all_fields(D.newPerson)
+                    .add_person_address(D.newPersonAddress)
                     .select_post_save_action(C.postSaveActions.viewAddedPerson)
                     .click_Save()
                     .verify_toast_message(C.toastMsgs.saved);
                 ui.personView.verify_Person_View_page_is_open()
+                ui.addPerson.verify_added_address(D.newPersonAddress)
                     .click_button(C.buttons.edit)
-                    .verify_values_on_Edit_form(D.newPerson)
+                ui.personView.verify_values_on_Edit_form(D.newPerson)
+                    .click_button(C.buttons.edit)
+                ui.addPerson.edit_person_address(D.editedPersonAddress)
+                    .click_button(C.buttons.updateAddress)
+                    .verify_toast_message_('Saved!')
+                ui.addPerson.verify_added_address(D.editedPersonAddress)
+                    .click_button(C.buttons.delete)
+                    .click_button(C.buttons.ok)
+                    .verify_toast_message_('Deleted!')
+                    .verify_text_is_present_on_main_container('(No addresses)')
+
+
             });
         });
 
@@ -112,86 +125,86 @@ describe('Add Person', function () {
         })
     })
 
-        context('2. Power User -- all permissions in Office- all fields enabled', function () {
+    context('2. Power User -- all permissions in Office- all fields enabled', function () {
 
-            context('All fields enabled', function () {
+        context('All fields enabled', function () {
 
-                before(function () {
-                    set_preconditions_for_adding_Person_with_all_fields(this);
-                })
-
-                it('2.1. verify that user can add all values', function () {
-
-                    api.auth.get_tokens(orgAdmin);
-                    api.permissions
-                        .update_ALL_permissions_for_an_existing_Permission_group
-                        (permissionGroup_officeAdmin, true, true, true, true)
-
-                    api.permissions.assign_office_based_permissions_to_user(
-                        powerUser.id,
-                        office_1.id, permissionGroup_officeAdmin.id);
-
-                    api.auth.get_tokens(powerUser);
-                    api.users.update_current_user_settings(powerUser.id, C.currentDateTimeFormat, C.currentDateFormat)
-
-                    ui.menu.reload_page()
-                        .click_Add__Person();
-                    ui.addPerson.populate_all_fields(D.newPerson)
-                        .select_post_save_action(C.postSaveActions.viewAddedPerson)
-                        .click_Save()
-                        .verify_toast_message(C.toastMsgs.saved);
-                    ui.personView.verify_Person_View_page_is_open()
-                        .click_button(C.buttons.edit)
-                        .verify_values_on_Edit_form(D.newPerson)
-                })
+            before(function () {
+                set_preconditions_for_adding_Person_with_all_fields(this);
             })
 
-            context('Optional fields disabled', function () {
+            it('2.1. verify that user can add all values', function () {
 
-                before(function () {
-                    set_preconditions_for_adding_Person_with_reduced_number_of_fields(this);
-                })
+                api.auth.get_tokens(orgAdmin);
+                api.permissions
+                    .update_ALL_permissions_for_an_existing_Permission_group
+                    (permissionGroup_officeAdmin, true, true, true, true)
 
-                it('3.1. --- with required Custom Form filled out, all required fields on Form', function () {
-                    D.newPerson.personType = D.newPerson.personTypelinkedToRequiredForm1
-                    D.newPerson.personTypeId = D.newPerson.personTypeIdlinkedToRequiredForm1
-                    D.newPerson = Object.assign(D.newPerson, D.newCustomFormData)
+                api.permissions.assign_office_based_permissions_to_user(
+                    powerUser.id,
+                    office_1.id, permissionGroup_officeAdmin.id);
 
-                    api.auth.get_tokens(powerUser);
-                    ui.open_base_url();
-                    ui.menu.click_Add__Person();
-                    ui.addPerson.populate_all_fields(D.newPerson)
-                        .verify_number_of_required_fields_marked_with_asterisk(12)
-                        .verify_Save_button_is_disabled()
-                        .populate_all_fields_on_Custom_Form(D.newCustomFormData)
-                        .select_post_save_action(C.postSaveActions.viewAddedPerson)
-                        .click_Save()
-                        .verify_toast_message(C.toastMsgs.saved);
-                    ui.personView.verify_Person_View_page_is_open()
-                        .click_button(C.buttons.edit)
-                        .verify_values_on_Edit_form(D.newPerson, true)
-                })
+                api.auth.get_tokens(powerUser);
+                api.users.update_current_user_settings(powerUser.id, C.currentDateTimeFormat, C.currentDateFormat)
 
-                it('3.2. --- with required Custom Form but not filled out, all optional fields on Form', function () {
-
-                    api.auth.get_tokens(orgAdmin);
-                    D.generateNewDataSet(true);
-                    D.newPerson.personType = D.newPerson.personTypelinkedToRequiredForm2
-                    D.newPerson.personTypeId = D.newPerson.personTypeIdlinkedToRequiredForm2
-                    D.newPerson = Object.assign(D.newPerson, D.defaultCustomFormData)
-
-                    api.auth.get_tokens(powerUser);
-                    ui.open_base_url();
-                    ui.menu.click_Add__Person();
-                    ui.addPerson.populate_all_fields(D.newPerson)
-                        .verify_number_of_required_fields_marked_with_asterisk(0)
-                        .select_post_save_action(C.postSaveActions.viewAddedPerson)
-                        .click_Save()
-                        .verify_toast_message(C.toastMsgs.saved);
-                    ui.personView.verify_Person_View_page_is_open()
-                        .click_button(C.buttons.edit)
-                        .verify_values_on_Edit_form(D.newPerson, true)
-                });
-            });
+                ui.menu.reload_page()
+                    .click_Add__Person();
+                ui.addPerson.populate_all_fields(D.newPerson)
+                    .select_post_save_action(C.postSaveActions.viewAddedPerson)
+                    .click_Save()
+                    .verify_toast_message(C.toastMsgs.saved);
+                ui.personView.verify_Person_View_page_is_open()
+                    .click_button(C.buttons.edit)
+                    .verify_values_on_Edit_form(D.newPerson)
+            })
         })
+
+        context('Optional fields disabled', function () {
+
+            before(function () {
+                set_preconditions_for_adding_Person_with_reduced_number_of_fields(this);
+            })
+
+            it('3.1. --- with required Custom Form filled out, all required fields on Form', function () {
+                D.newPerson.personType = D.newPerson.personTypelinkedToRequiredForm1
+                D.newPerson.personTypeId = D.newPerson.personTypeIdlinkedToRequiredForm1
+                D.newPerson = Object.assign(D.newPerson, D.newCustomFormData)
+
+                api.auth.get_tokens(powerUser);
+                ui.open_base_url();
+                ui.menu.click_Add__Person();
+                ui.addPerson.populate_all_fields(D.newPerson)
+                    .verify_number_of_required_fields_marked_with_asterisk(12)
+                    .verify_Save_button_is_disabled()
+                    .populate_all_fields_on_Custom_Form(D.newCustomFormData)
+                    .select_post_save_action(C.postSaveActions.viewAddedPerson)
+                    .click_Save()
+                    .verify_toast_message(C.toastMsgs.saved);
+                ui.personView.verify_Person_View_page_is_open()
+                    .click_button(C.buttons.edit)
+                    .verify_values_on_Edit_form(D.newPerson, true)
+            })
+
+            it('3.2. --- with required Custom Form but not filled out, all optional fields on Form', function () {
+
+                api.auth.get_tokens(orgAdmin);
+                D.generateNewDataSet(true);
+                D.newPerson.personType = D.newPerson.personTypelinkedToRequiredForm2
+                D.newPerson.personTypeId = D.newPerson.personTypeIdlinkedToRequiredForm2
+                D.newPerson = Object.assign(D.newPerson, D.defaultCustomFormData)
+
+                api.auth.get_tokens(powerUser);
+                ui.open_base_url();
+                ui.menu.click_Add__Person();
+                ui.addPerson.populate_all_fields(D.newPerson)
+                    .verify_number_of_required_fields_marked_with_asterisk(0)
+                    .select_post_save_action(C.postSaveActions.viewAddedPerson)
+                    .click_Save()
+                    .verify_toast_message(C.toastMsgs.saved);
+                ui.personView.verify_Person_View_page_is_open()
+                    .click_button(C.buttons.edit)
+                    .verify_values_on_Edit_form(D.newPerson, true)
+            });
+        });
+    })
 })

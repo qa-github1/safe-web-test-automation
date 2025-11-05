@@ -517,7 +517,7 @@ D.getEditedPersonData = function () {
         personTypeId: S.selectedEnvironment.personType2.id
     });
 
-    D.editedPersonAddress = {
+    D.editedPersonAddressForImport = {
         id: 0,
         date: '2020-04-11T05:19:49.040Z',
         entityId: 0,
@@ -529,6 +529,23 @@ D.getEditedPersonData = function () {
         addressTypeId: '',
         countryId: 231,
         isDefaultAddress: true
+    };
+
+    D.editedPersonAddress = {
+        id: 0,
+        date: '2020-04-11T05:19:49.040Z',
+        entityId: 0,
+        line1: 'AddressLine1-edited',
+        line2: 'AddressLine2-edited',
+        city: 'AddressCity-edited',
+        zip: 'ZIP_123-edited',
+        stateId: C.states.Kentucky.id,
+        state: C.states.Alabama.name,
+        addressTypeId: C.addressTypes.home.id,
+        addressType: C.addressTypes.work.name,
+        countryId: 231,
+        country: 'United Kingdom',
+        isDefaultAddress: false
     };
 
     return D.editedPerson;

@@ -40,6 +40,8 @@ C = {
         recalculateCasesToDispose: 'Recalculate Cases to Dispose',
         updateCases: `Update Cases`,
         closeCases: `Close Cases`,
+        updateAddress: 'Update Address',
+        delete: 'Delete',
         closeXCases: X => `Close ${X} Cases`,
         viewXCases: X => `View ${X} Cases`,
     },
@@ -425,7 +427,7 @@ C = {
             id: 1
         },
         Kentucky: {
-            name: 'Kentucky',
+            name: 'KY - Kentucky',
             id: 17
         },
         Texas: {

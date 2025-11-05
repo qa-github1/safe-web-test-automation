@@ -2472,6 +2472,11 @@ export default class BasePage {
         return this;
     };
 
+    verify_text_is_visible(elementTitle) {
+        cy.contains(elementTitle).should('be.visible');
+        return this;
+    };
+
     verify_element_is_not_visible(element) {
         element(10000).should('not.be.visible');
         return this;
