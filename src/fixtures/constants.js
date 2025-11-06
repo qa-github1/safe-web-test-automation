@@ -344,7 +344,8 @@ C = {
             removeFromCase: "Remove From Case",
             changePrimaryCase: "Change Primary Case",
             manageCases: "Manage Cases",
-            massUpdate: "Mass Update"
+            massUpdate: "Mass Update",
+            massUpdateCustomData: "Mass Update Custom Data"
         },
         itemActionsOnSearchResults: {
             checkItemIn:"Check Items In",
