@@ -457,6 +457,12 @@ exports.generate_request_payload_for_disabling_Item_fields = function (fieldsToE
             "name": "ITEM_CUSTODY_REASON",
             "recordType": 1
         },
+        {
+            "orgFieldId": S.selectedEnvironment.fieldIds.item.checkInSignature,
+            "entityType": 1,
+            "name": "ITEM.CHECKIN_SIGNATURE",
+            "recordType": 1
+        },
     ];
 
     if (!shouldFieldBeEnabled(fieldsToEnable, C.itemFields.tags)) {

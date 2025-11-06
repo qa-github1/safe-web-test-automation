@@ -91,6 +91,7 @@ S.ALL_ENVS = {
             dispositionAuthorizationStatus: 44,
             latestTransactionNotes: 48,
             checkInNotes: 43,
+            checkInSignature: 50
         },
         person: {
             businessName: 9,

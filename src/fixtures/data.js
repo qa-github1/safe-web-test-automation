@@ -244,7 +244,10 @@ D.getNewItemData = function (specificCaseObject, locationObject, newPerson) {
         checkedOutTo_name: '',
         checkedOutNotes: '',
         expectedReturnDate: '',
-        dispositionStatus: 'Disposed'
+        dispositionStatus: 'Disposed',
+        checkedOutBy: S.userAccounts.powerUser.fullName,
+        checkedOutTo: S.userAccounts.orgAdmin.fullName,
+
     });
 
     return D.newItem;

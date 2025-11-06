@@ -25,6 +25,11 @@ let
     disabledItemBelongsTo = e => cy.get('span[ng-disabled="true"]'),
     itemBelongsTo = e => cy.get('.form-horizontal').contains('Item Belongs to').parent('div').find('input'),
     additionalBarcodes = e => cy.get('[ng-model="newItem.barcodes[0].value"]'),
+    status = e => cy.get('[ng-model="newItem.statusId"]'),
+    checkedOutBy = e => cy.get('[id="checkedOutBy"]'),
+    checkedOutTo = e => cy.get('[id="takenBy"]'),
+    checkedOutReason = e => cy.get('[id="checkoutReason"]'),
+    checkedOutNotes = e => cy.get('[ng-model="newItem.checkoutNotes"]'),
     serialNumber = e => cy.findByPlaceholderText(C.placeholders.addItem.itemSerialNumber),
     storageLocationInput = e => cy.findByPlaceholderText(C.placeholders.addItem.storageLocation).parent('div').find('input'),
     arrowDownForStorageLocations = e => cy.get('[title="View next location level."]'),
@@ -160,6 +165,7 @@ export default class AddItemPage extends BaseAddPage {
     populate_all_fields_on_second_form(itemObject, skipStorageLocation = false, skipItemBelongsTo = true) {
 
         this.select_typeahead_option(recoveredByInput, itemObject.recoveredByName, this.typeaheadSelectorMatchInMatches)
+        status().select(itemObject.status)
 
         this.type_if_values_provided(
             [
@@ -186,6 +192,21 @@ export default class AddItemPage extends BaseAddPage {
         }
 
         if (itemObject.custodyReason) custodyReason().select(itemObject.custodyReason);
+
+        if (itemObject.status === "Checked Out") {
+            checkedOutBy().type(itemObject.checkedOutBy)
+            this.pause(2)
+            checkedOutBy().type('{enter}')
+            checkedOutTo().type(itemObject.checkedOutTo)
+            this.pause(2)
+            checkedOutTo().type('{enter}')
+            checkedOutReason().select(itemObject.checkoutReason)
+            this.type_if_values_provided(
+                [
+                    [checkedOutNotes, itemObject.checkedOutNotes],
+                ]
+            );
+        }
 
         this.define_API_request_to_be_awaited('POST', 'api/items', 'addItem', 'newItem')
         return this;
