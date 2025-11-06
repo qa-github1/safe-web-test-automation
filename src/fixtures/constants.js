@@ -338,13 +338,13 @@ C = {
             disposeItem: "Dispose Item",
             disposeItems: "Dispose Items",
             undisposeItem: "Undispose Item",
-            undisposeItems: "Undispose Items",
             duplicate: "Duplicate",
             split: "Split",
             addToCase: "Add To Case",
             removeFromCase: "Remove From Case",
             changePrimaryCase: "Change Primary Case",
             manageCases: "Manage Cases",
+            massUpdate: "Mass Update"
         },
         itemActionsOnSearchResults: {
             checkItemIn:"Check Items In",

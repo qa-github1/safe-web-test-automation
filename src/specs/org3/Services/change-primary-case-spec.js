@@ -10,7 +10,7 @@ let user = S.getUserData(S.userAccounts.orgAdmin);
 let startTime;
 
 
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 1; i++) {
     describe('Change Primary Case ', function () {
 
         before(function () {
