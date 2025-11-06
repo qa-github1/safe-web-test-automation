@@ -514,7 +514,8 @@ D.getEditedPersonData = function () {
         formData: [],
         caseNumber: S.selectedEnvironment.oldClosedCase.caseNumber,
         personType: S.selectedEnvironment.personType2.name,
-        personTypeId: S.selectedEnvironment.personType2.id
+        personTypeId: S.selectedEnvironment.personType2.id,
+        caseNote: 'edited case note' + ' ' + randomValue
     });
 
     D.editedPersonAddressForImport = {

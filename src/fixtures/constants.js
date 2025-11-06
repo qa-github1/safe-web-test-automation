@@ -42,6 +42,7 @@ C = {
         closeCases: `Close Cases`,
         updateAddress: 'Update Address',
         delete: 'Delete',
+        changePersonTypeOrCaseNote: 'Change Person Type or Case Note',
         closeXCases: X => `Close ${X} Cases`,
         viewXCases: X => `View ${X} Cases`,
     },
@@ -957,6 +958,10 @@ C.pages = {
     },
     orgSettings: {
         url: 'organizations/settings'
+    },
+    caseViewPeopleTab: {
+        numberOfStandardColumns: 13,
+        numberOfStandardColumnsReduced: 7
     }
 }
 

@@ -21,6 +21,8 @@ let
     email = e => cy.get('[ng-model="person.email"]'),
     race = e => cy.get('[ng-model="person.raceId"]'),
     gender = e => cy.get('[ng-model="person.genderId"]'),
+    personTypeDropdown = e => cy.get('[ng-model="vm.personTypeId"]'),
+    caseNote = e => cy.get('[ng-model="vm.caseNotes"]'),
     dateOfBirth = e => cy.get('[ng-model="person.dob"]').find('[ng-model="ngModel"]'),
     deceasedCheckbox = e => cy.contains('Deceased').parents('.checkbox').find('.icheckbox_square-blue'),
     deceasedCheckboxClickable = e => cy.contains('Deceased').parents('.checkbox').find('.icheckbox_square-blue').find('.iCheck-helper'),
@@ -266,4 +268,10 @@ export default class PersonViewPage extends BaseViewPage {
 
         return this;
     };
+
+    change_person_type_or_case_note(data) {
+        personTypeDropdown().select(data.personType);
+        caseNote().type(data.caseNote);
+        return this;
+    }
 }

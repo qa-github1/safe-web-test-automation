@@ -36,7 +36,7 @@ describe('Add Person', function () {
 
         context('All fields enabled', function () {
 
-            it.only('1.1. -- redirect to View Added Person/Add-Edit-Delete Address', function () {
+            it('1.1. -- redirect to View Added Person & Add-Edit-Delete Address', function () {
                 set_preconditions_for_adding_Person_with_all_fields(this);
 
                 ui.open_base_url();
@@ -57,8 +57,8 @@ describe('Add Person', function () {
                 ui.addPerson.verify_added_address(D.editedPersonAddress)
                     .click_button(C.buttons.delete)
                     .click_button(C.buttons.ok)
-                    .verify_toast_message_('Deleted!')
-                    .verify_text_is_present_on_main_container('(No addresses)')
+                    .verify_text_is_visible('Deleted!')
+                    .verify_text_is_visible('(No addresses)')
 
 
             });
@@ -111,16 +111,27 @@ describe('Add Person', function () {
                     .verify_values_on_Edit_form(D.newPerson)
             })
 
-            it('1.4. redirect to Case View page', function () {
+            it.only('1.4. redirect to Case View page & Change Person Type and Case Note', function () {
                 api.auth.get_tokens(orgAdmin);
                 D.generateNewDataSet(true);
                 ui.open_base_url();
+                //  api.cases.add_new_case()
                 ui.menu.click_Add__Person();
                 ui.addPerson.populate_all_fields(D.newPerson)
                     .select_post_save_action(C.postSaveActions.viewCase)
                     .click_Save()
                     .verify_toast_message(C.toastMsgs.saved);
                 ui.caseView.verify_Case_View_page_is_open(D.newPerson.caseNumber)
+                    .select_tab(C.tabs.people)
+                    .select_checkbox_on_first_table_row_on_active_tab()
+                    .click_Actions()
+                    .click_option_on_expanded_menu(C.buttons.changePersonTypeOrCaseNote)
+                ui.personView.change_person_type_or_case_note(D.editedPerson)
+                    .click_button(C.buttons.ok)
+                    .verify_toast_message("Saved!")
+                    .enable_all_standard_columns_on_the_grid(C.pages.caseViewPeopleTab)
+                    .verify_content_of_specific_table_row_by_provided_column_title_and_value(0, "Person Type", D.editedPerson.personType)
+                    .verify_content_of_specific_table_row_by_provided_column_title_and_value(0, "Case Note", D.editedPerson.caseNote)
             })
         })
     })
