@@ -2770,6 +2770,7 @@ export default class BasePage {
         return this;
     };
 
+
     turn_ON_the_toggle_for_specific_field_on_modal(fieldLabel, parentElementTag = 'div') {
         parentContainerFoundByInnerLabelOnModal(fieldLabel, parentElementTag)
             .find('.toggle-off').last()

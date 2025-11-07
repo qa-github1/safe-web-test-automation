@@ -54,17 +54,17 @@ describe('Inventory Reports', function () {
 
         });
 
-        after(function () {
-            api.auth.get_tokens(orgAdmin);
-
-            // api.locations.delete_empty_storage_locations()
-            api.locations.get_and_save_any_location_data_to_local_storage('root')
-            api.locations.move_location(parent1, 'root')
-            api.locations.move_location(child1_1, 'root')
-            api.locations.move_location(child1_2, 'root')
-            api.locations.move_location(parent2, 'root')
-            api.locations.move_location(child2_1, 'root')
-        })
+        // after(function () {
+        //     api.auth.get_tokens(orgAdmin);
+        //
+        //     // api.locations.delete_empty_storage_locations()
+        //     api.locations.get_and_save_any_location_data_to_local_storage('root')
+        //     api.locations.move_location(parent1, 'root')
+        //     api.locations.move_location(child1_1, 'root')
+        //     api.locations.move_location(child1_2, 'root')
+        //     api.locations.move_location(parent2, 'root')
+        //     api.locations.move_location(child2_1, 'root')
+        // })
 
         it('1.1. DR for single parent location - No Discrepancies Found', function () {
             let reportName = D.getCurrentDateAndRandomNumber(4);
@@ -83,6 +83,24 @@ describe('Inventory Reports', function () {
                 .click_button(C.buttons.runReport)
                 .verify_text_is_present_on_main_container(C.labels.InventoryReports.noDiscrepanciesFound)
                 .verify_summary_table(5, 3, 5, 0, 0)
+            ui.menu.click_Tools__Inventory_Reports()
+            ui.inventoryReports.search_report(reportName)
+                .verify_content_of_first_row_in_results_table(reportName)
+                .hide_report()
+                .verify_modal_content('Please confirm that you would like to hide' + ' ' + reportName)
+                .click_button('Hide')
+                .verify_toast_message('Report Hidden')
+                .select_radiobutton('Hidden')
+                .verify_content_of_first_row_in_results_table(reportName)
+                .hide_report()
+                .verify_modal_content('Please confirm that you would like to activate' + ' ' + reportName)
+                .click_button('Activate')
+                .verify_toast_message('Report Activated')
+                .select_radiobutton('Active')
+                .verify_content_of_first_row_in_results_table(reportName)
+
+
+
         });
 
         it('1.2. DR for single child location - No Discrepancies Found', function () {

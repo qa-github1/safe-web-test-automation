@@ -10,6 +10,9 @@ let
     enterBarcodeButton = e => cy.findByText('Enter Barcode'),
     scannedBarcodesSection = e => cy.get('#barcode'),
     locationBarcodesSection = e => cy.get('#locations'),
+    searchReportField = e => cy.get('[placeholder="Search Reports"]'),
+    hideReport = e => cy.get('[tp-owner-id="report.createdById"]'),
+    inventoryReportsRadiobuttons = e => cy.get('[class="ui-view-main ng-scope"]'),
     storageLocationInput = e => cy.findByPlaceholderText('Please scan or enter the bardcode of the location you would like to audit.')
 
 export default class InventoryReportsPage extends BasePage {
@@ -39,13 +42,13 @@ export default class InventoryReportsPage extends BasePage {
     enter_barcode(barcode, isLocationBarcode = false, isScannedMultipleTimes, withVerification = true) {
         scanBarcodeInput().clear().invoke('val', barcode).trigger('input').type('{enter}')
 
-        if (withVerification){
+        if (withVerification) {
             if (isLocationBarcode) {
                 this.verify_element_does_NOT_contain_text(scannedBarcodesSection, barcode)
                 this.verify_text(locationBarcodesSection, barcode)
                 this.verify_toast_message(C.toastMsgs.locationChanged)
             } else {
-                if (isScannedMultipleTimes){
+                if (isScannedMultipleTimes) {
                     this.verify_toast_message('has already been scanned')
                 }
                 this.verify_text(scannedBarcodesSection, barcode)
@@ -62,5 +65,26 @@ export default class InventoryReportsPage extends BasePage {
         return this;
     };
 
+    search_report(data) {
+        searchReportField().type(data);
+        searchReportField().type('{enter}');
+        this.pause(1)
+        return this;
+    }
 
+    hide_report() {
+        hideReport().click();
+        return this;
+    }
+
+    select_radiobutton(labelText) {
+        inventoryReportsRadiobuttons().should('exist').within(() => {
+            cy.contains('label span', new RegExp(`^\\s*${labelText}\\s*$`, 'i'))
+                .closest('label')
+                .find('input[type="radio"]')
+                .wait(300)
+                .check({force: true});
+        });
+        return this;
+    }
 }
