@@ -4,7 +4,8 @@ const api = require('../../api-utils/api-spec');
 const generic_request = require("../../api-utils/generic-api-requests");
 let requestPayloads = require('./request-payloads');
 let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
-let numberOfReports = 100
+let powerUser = S.getUserData(S.userAccounts.powerUser);
+let numberOfRequests = 1
 
 describe('Services', function () {
 
@@ -16,17 +17,16 @@ describe('Services', function () {
 
     });
 
-    it.only('REPORT Service', function () {
+    it('REPORT Service', function () {
         api.auth.get_tokens(orgAdmin);
 
-        function checkStatusOfJobs(nameOfReportsInCache, secondsToWait = 5) {
+        function checkStatusOfJobs(nameOfReportsInCache, secondsToWait = 30) {
             cy.wait(secondsToWait * 1000)
             nameOfReportsInCache.forEach(reportName => {
                 cy.getLocalStorage(reportName).then(reportId => {
 
                     if (reportId) {
                         generic_request.GET(
-                           // '/api/reports/getcompletereport?jobId=' + 707701, // ---> for checking the large report started on Sep 10, for 1,5k items
                             '/api/reports/getcompletereport?jobId=' + reportId,
                             'response')
 
@@ -42,26 +42,26 @@ describe('Services', function () {
             });
         }
 
-       // start report for case with cca 1k items
-       //      generic_request.POST(
-       //          '/api/reports/buildreport',
-                 requestPayloads.reporterPayloadFromCaseView([S.selectedEnvironment.oldActiveCase.id]),
-       //          "REPORT Service",
-       //          'Big_Case_Report'
-       //      )
+        //start report for case with cca 1k items
+        // generic_request.POST(
+        //     '/api/reports/buildreport',
+        //     requestPayloads.reporterPayloadFromCaseView([S.selectedEnvironment.oldActiveCase.id]),
+        //     "REPORT Service",
+        //     'Big_Case_Report'
+        // )
 
-        //start report for newly created case with 1 item only
-        // cy.getLocalStorage('newCase').then(newCase => {
+        //start X big reports
+        // for (let i = 0; i < numberOfRequests; i++) {
         //     generic_request.POST(
         //         '/api/reports/buildreport',
-        //         requestPayloads.reporterPayloadFromCaseView([JSON.parse(newCase).id]),
+        //         requestPayloads.reporterPayloadFromCaseView([S.selectedEnvironment.oldActiveCase.id]),
         //         "REPORT Service",
-        //         'Small_Case_Report'
+        //         'Big_Case_Report_' + i
         //     )
-        // });
+        // }
 
         //start X reports for 1 item only
-        for (let i = 0; i < numberOfReports; i++) {
+        for (let i = 0; i < numberOfRequests; i++) {
             cy.getLocalStorage('newItem').then(newItem => {
                 generic_request.POST(
                     '/api/reports/buildreport',
@@ -71,15 +71,54 @@ describe('Services', function () {
                 )
             });
         }
-        checkStatusOfJobs(['Big_Case_Report', 'Small_Case_Report', 'Item_Report0', 'Item_Report99']);
 
+        const reports = ['Big_Case_Report'];
+
+        for (let i = 0; i < 100; i++) {
+            reports.push(`Item_Report${i}`);
+        }
+
+        for (let i = 0; i < 100; i++) {
+            reports.push(`Big_Case_Report_${i}`);
+        }
+
+        checkStatusOfJobs(reports);
 
     });
 
     it('EXPORT Service', function () {
-        api.auth.get_tokens(orgAdmin);
+        api.auth.get_tokens(powerUser);
 
-        for (let i = 0; i < numberOfReports; i++) {
+        function checkStatusOfJobs(secondsToWait = 15) {
+            cy.wait(secondsToWait * 1000)
+            generic_request.GET(
+                '/api/exports',
+                'response')
+
+            cy.getLocalStorage('apiResponse').then(apiResponse => {
+                function printStatuses(apiResponse) {
+                    JSON.parse(apiResponse).forEach(item => { // Only first 101 elements
+                        if (item.status === 'Complete') {
+                            cy.log(`✅ Export FINISHED SUCCESSFULLY`);
+                        } else {
+                            cy.log(`❌ Export NOT FINISHED YET, AFTER ${secondsToWait} seconds. Status is: ${item.status}`);
+                        }
+                    });
+                }
+                printStatuses(apiResponse);
+            })
+        }
+
+        cy.getLocalStorage('newCase').then(newCase => {
+            generic_request.POST(
+                '/api/exports/case-items/' + S.selectedEnvironment.oldActiveCase.id,
+                {"orderBy": "SequentialOrgId", "orderByAsc": false, "thenOrderBy": "", "thenOrderByAsc": false},
+                "EXPORT Service",
+            )
+        });
+
+
+        for (let i = 0; i < numberOfRequests; i++) {
             cy.getLocalStorage('newCase').then(newCase => {
                 generic_request.POST(
                     '/api/exports/case-items/' + JSON.parse(newCase).id,
@@ -88,33 +127,53 @@ describe('Services', function () {
                 )
             });
         }
+
+        checkStatusOfJobs()
     });
 
-    it('LOCATIONS MOVE Service', function () {
+    it.only('LOCATIONS MOVE Service', function () {
         api.auth.get_tokens(orgAdmin);
 
-        api.items.add_new_item(true, D.container1)
+        function checkStatusOfJobs(secondsToWait = 15) {
+            cy.wait(secondsToWait * 1000)
+            generic_request.GET(
+                '/api/locations/moveJobs',
+                'response')
 
-        for (let i = 0; i < numberOfReports; i++) {
+            cy.getLocalStorage('apiResponse').then(apiResponse => {
+                function printStatuses(apiResponse) {
+                    JSON.parse(apiResponse).forEach(item => {
+                        if (item.status === 'Complete') {
+                            cy.log(`✅ Location Move Job FINISHED SUCCESSFULLY`);
+                        } else {
+                            cy.log(`❌ Location Move Job NOT FINISHED YET, AFTER ${secondsToWait} seconds. Status is: ${item.status}`);
+                        }
+                    });
+                }
+                printStatuses(apiResponse);
+            })
+        }
+
+
+       // api.items.add_new_item(true, D.container1)
+
+        for (let i = 0; i < numberOfRequests; i++) {
 
             D['container' + i] = D.getStorageLocationData('cont' + i)
             api.locations.add_storage_location(D['container' + i])
             api.locations.update_location(D['container' + i].name, 'isContainer', true)
 
-            cy.getLocalStorage('newItem').then(newItem => {
-                generic_request.PUT(
-                    '/api/items/massupdateitemsByquery',
-                    requestPayloads.actionsByQueryPayload(JSON.parse(newItem).sequentialOrgId),
-                    'LOCATIONS MOVE Service'
-                )
-            });
+            api.locations.get_and_save_any_location_data_to_local_storage('Containers')
+            api.locations.move_location(D['container' + i], 'root')
         }
+
+        checkStatusOfJobs(15)
     });
 
     it('MASS UPDATE BY QUERY Service', function () {
         api.auth.get_tokens(orgAdmin);
 
-        for (let i = 0; i < numberOfReports; i++) {
+        for (let i = 0; i < numberOfRequests; i++) {
             cy.getLocalStorage('newItem').then(newItem => {
                 generic_request.PUT(
                     '/api/items/massupdateitemsByquery',
@@ -129,7 +188,7 @@ describe('Services', function () {
     it('PEOPLE MERGE Service', function () {
         api.auth.get_tokens(orgAdmin);
 
-        for (let i = 0; i < numberOfReports; i++) {
+        for (let i = 0; i < numberOfRequests; i++) {
             let person_1, person_2, person_3
             api.people.add_new_person(null, null, D.newPerson, 'person1')
             D.getNewPersonData()
