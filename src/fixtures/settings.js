@@ -2752,7 +2752,6 @@ S.PENTEST_2 = {
         name: 'Cypress ReadOnly Group',
         id: 2898
     },
-
     taskTemplates: {
         dispoAuth: {
             templateId: 3511,
@@ -2797,12 +2796,15 @@ S.PENTEST_2 = {
             taskActionId: '547',
         },
     },
-
     orgTag1: {tagModelId: 6751, name: 'sensitive information', color: "#ad2355", tagUsedBy: 1},
     orgTag2: {tagModelId: 6752, name: 'eligible for disposal', color: "#4b9b62", tagUsedBy: 1},
-    tagA: {tagModelId: 16809, name: 'Tag_A__', color: "#4b9b62", tagUsedBy: 1},
+    tagA: {tagModelId: 37980, name: 'Tag_A__', color: "#4b9b62", tagUsedBy: 1},
     tagB: {tagModelId: 16810, name: 'Tag_B__', color: "#4b9b62", tagUsedBy: 1},
     tagC: {tagModelId: 16811, name: 'Tag_C__', color: "#4b9b62", tagUsedBy: 1},
+    tagGroup: {
+        name: 'AutoTest_TagGroup1',
+        id: 278
+    }
 
 };
 

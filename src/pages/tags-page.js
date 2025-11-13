@@ -45,20 +45,20 @@ export default class tagsPage extends BasePage {
         return this
     };
 
-    populate_add_tag_modal(data) {
+    populate_add_tag_modal(data, useExistingTagGroup) {
         tagUsedBy().select(data.tagUsedBy);
         tagName().type(data.tagName);
         tagColor().clear();
         tagColor().type(data.color);
-        if (data.tagUsedBy === 'Group' && data.tagGroupName === "smj 1") {
-            tagGroupName().type(data.tagGroupName + '{enter}');
-        } else if (data.tagUsedBy === 'Group' && data.tagGroupName !== "smj 1") {
-            newRadiobutton().click();
-            newTagGroupName().type(data.tagGroupName);
-            selectUserOrGroup().type(data.user)
-            cy.wait(1000)
-            selectUserOrGroup().type('{enter}')
-
+        if (data.tagUsedBy === 'Group') {
+            if (useExistingTagGroup) tagGroupName().type(S.selectedEnvironment.tagGroup.name + '{enter}');
+            else {
+                newRadiobutton().click();
+                newTagGroupName().type(data.tagGroupName);
+                selectUserOrGroup().type(data.user)
+                cy.wait(1000)
+                selectUserOrGroup().type('{enter}')
+            }
         }
         return this;
     }

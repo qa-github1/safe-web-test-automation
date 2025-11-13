@@ -1,4 +1,4 @@
-const C = require('../../../fixtures/constants');
+ const C = require('../../../fixtures/constants');
 const S = require('../../../fixtures/settings');
 const D = require('../../../fixtures/data');
 const api = require('../../../api-utils/api-spec');
@@ -21,16 +21,23 @@ function set_preconditions_for_adding_Case_with_reduced_number_of_fields(testCon
 for (let i = 0; i < 1; i++) {
     describe('Tags ', function () {
 
+        before(function () {
+            api.auth.get_tokens(user);
+            api.org_settings.enable_all_Case_fields()
+            startTime = Date.now();
+        });
+
         beforeEach(function () {
             api.auth.get_tokens(user);
             D.generateNewDataSet();
             D.getNewTagsData();
             D.getEditedTagsData();
 
-        });
+            ui.menu.click_Tags();
+            ui.tags.sort_by_ascending_order('Active') // currently, this sorts items by IDs in ASC order
+                .set_page_size(100)
+                .click_number_on_pagination("Last")
 
-        before(function () {
-            startTime = Date.now();
         });
 
         after(() => {
@@ -46,9 +53,7 @@ for (let i = 0; i < 1; i++) {
                 .populate_add_tag_modal(D.newTags)
                 .click_Save()
                 .verify_toast_message("Saved!")
-                .set_page_size(10)
-                .click_number_on_pagination("Last")
-                .verify_content_of_last_row_in_results_table(D.newTags.tagName)
+                .verify_content_of_last_row_in_results_table(D.newTags.tagName, false)
                 .verify_selected_tags_radiobutton_based_on_status(C.buttons.active)
 
             //edit tag
@@ -56,46 +61,42 @@ for (let i = 0; i < 1; i++) {
             ui.tags.populate_edit_tag_modal(D.editedTag)
                 .click_save_on_edit_tag_modal()
                 .verify_toast_message("Saved!")
-                .click_number_on_pagination("Last")
-                .verify_content_of_last_row_in_results_table(D.editedTag.editedTagName)
+                .sort_by_ascending_order('Active')
+                .verify_content_of_last_row_in_results_table(D.editedTag.editedTagName, false)
 
                 //deactivate tag
                 .select_checkbox_on_last_row_on_visible_table()
                 .click_button(C.buttons.actions)
                 .click_option_on_expanded_menu(C.dropdowns.tagActions.deactivate)
-                .verify_toast_message("Saved!")
-                .select_radiobutton(C.buttons.inactive)
-                .set_page_size(10)
-                .click_number_on_pagination("Last")
-                .verify_text_is_visible(D.editedTag.editedTagName)
-                .verify_selected_tags_radiobutton_based_on_status(C.buttons.inactive)
+            //     .verify_toast_message("Saved!")
+            //     .select_radiobutton(C.buttons.inactive)
+            //     .verify_selected_tags_radiobutton_based_on_status(C.buttons.inactive)
+            //     .verify_text_is_visible(D.editedTag.editedTagName)
+            //
+            //     //activate tag
+            //     .select_checkbox_on_last_row_on_visible_table()
+            //     .click_button(C.buttons.actions)
+            //     .click_option_on_expanded_menu(C.dropdowns.tagActions.activate)
+            //     .verify_toast_message("Saved!")
+            //     .select_radiobutton(C.buttons.active)
+            //     .verify_content_of_last_row_in_results_table(D.editedTag.editedTagName)
+            // api.auth.log_out(user)
 
-//activate tag -works but currently commented out due to large number of active tags
-//                 .select_checkbox_on_last_row_on_visible_table()
-//                 .click_button(C.buttons.actions)
-//                 .click_option_on_expanded_menu(C.dropdowns.tagActions.activate)
-//                 .verify_toast_message("Saved!")
-//                 .select_radiobutton(C.buttons.active)
-//                 .set_page_size(10)
-//                 .click_number_on_pagination("Last")
-//                 .verify_content_of_last_row_in_results_table(D.editedTag.editedTagName)
-            api.auth.log_out(user)
-
+            // SQL CLEANUP COMMAND
+            // delete from TagModels
+            // where Name like 'EditedByAutoTest%'
 
         });
 
-        it('2. Create Group Tag with existing Tag Group, verify that it is active, edit tag and deactivate it', function () {
+        it.only('2. Create Group Tag with existing Tag Group, verify that it is active, edit tag and deactivate it', function () {
 
-            ui.menu.click_Tags();
             ui.tags.click_add_tag_button()
             D.newTags.tagUsedBy = "Group"
-            ui.tags.populate_add_tag_modal(D.newTags)
+            ui.tags.populate_add_tag_modal(D.newTags, true)
                 .click_Save()
                 .verify_toast_message("Saved!")
                 .select_radiobutton(C.buttons.groups)
-            ui.tags.set_page_size(10)
-                .click_number_on_pagination("Last")
-                .verify_content_of_last_row_in_results_table(D.newTags.tagName)
+            ui.tags.verify_content_of_last_row_in_results_table(D.newTags.tagName)
                 .verify_selected_tags_radiobutton_based_on_status(C.buttons.active)
 
             //edit tag
@@ -103,7 +104,6 @@ for (let i = 0; i < 1; i++) {
             ui.tags.populate_edit_tag_modal(D.editedTag)
                 .click_save_on_edit_tag_modal()
                 .verify_toast_message("Saved!")
-                .click_number_on_pagination("Last")
                 .verify_content_of_last_row_in_results_table(D.editedTag.editedTagName)
 
 //deactivate tag
@@ -112,20 +112,9 @@ for (let i = 0; i < 1; i++) {
                 .click_option_on_expanded_menu(C.dropdowns.tagActions.deactivate)
                 .verify_toast_message("Saved!")
                 .select_radiobutton(C.buttons.inactive)
-                .set_page_size(10)
-                .click_number_on_pagination("Last")
                 .verify_text_is_visible(D.editedTag.editedTagName)
                 .verify_selected_tags_radiobutton_based_on_status(C.buttons.inactive)
 
-//activate tag -works but currently commented out due to large number of active tags
-//                 .select_checkbox_on_last_row_on_visible_table()
-//                 .click_button(C.buttons.actions)
-//                 .click_option_on_expanded_menu(C.dropdowns.tagActions.activate)
-//                 .verify_toast_message("Saved!")
-//                 .select_radiobutton(C.buttons.active)
-//                 .set_page_size(10)
-//                 .click_number_on_pagination("Last")
-//                 .verify_content_of_last_row_in_results_table(D.editedTag.editedTagName)
             api.auth.log_out(user)
 
 

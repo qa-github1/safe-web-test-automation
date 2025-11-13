@@ -369,7 +369,8 @@ let basePage = class BasePage {
     };
 
     click_element_by_text(text) {
-        cy.contains(text)
+        cy.log(text)
+        cy.findByText(text)
             .should('be.visible')
             .scrollIntoView()
             .click({ force: true });
@@ -615,7 +616,15 @@ let basePage = class BasePage {
 
     click_number_on_pagination(pageNumber) {
         this.wait_until_spinner_disappears()
-        cy.get('.pagination-sm').first().findByText(pageNumber).click()
+
+        cy.document().then(doc => {
+            const pagination = doc.querySelector('.pagination-sm');
+            if (pagination) {
+                if (pagination.offsetParent !== null) {
+                    cy.get('.pagination-sm').first().findByText(pageNumber).click()
+                }
+            }
+        });
         this.pause(2)
         this.wait_until_spinner_disappears()
         return this;
@@ -2145,18 +2154,18 @@ let basePage = class BasePage {
         return Object.prototype.toString.call(variable) === '[object Object]'
     }
 
-    // click_table_cell_based_on_column_name_and_unique_value_in_the_row(columnName, uniqueValueInRow, tableIndex) {
-    //
-    //     tableColumnFoundByText(columnName, tableIndex).prevAll()
-    //         .then(columnsBefore => {
-    //             const columnIndex = Cypress.$(columnsBefore).length;
-    //
-    //             //cy.log('column index is' + columnIndex)
-    //
-    //             tableRowFoundByUniqueTextInAnyCell(uniqueValueInRow, tableIndex).find('td').eq(columnIndex).click();
-    //         });
-    //     return this;
-    // };
+    click_table_cell_based_on_column_name_and_unique_value_in_the_row(columnName, uniqueValueInRow, tableIndex) {
+
+        tableColumnFoundByText(columnName, tableIndex).prevAll()
+            .then(columnsBefore => {
+                const columnIndex = Cypress.$(columnsBefore).length;
+
+                //cy.log('column index is' + columnIndex)
+
+                tableRowFoundByUniqueTextInAnyCell(uniqueValueInRow, tableIndex).find('td').eq(columnIndex).click();
+            });
+        return this;
+    };
 
 
     click_table_matrix_cell_based_on_column_name_and_unique_value_in_the_row(columnName, uniqueValueInRow, tableIndex, fieldType = 'input') {
@@ -2176,7 +2185,7 @@ let basePage = class BasePage {
         cy.verifyTextAndRetry(() =>
                 firstRowInResultsTable().invoke('text'),
             content,
-            {clickReloadIconBetweenAttempts: true}
+            {clickReloadIconBetweenAttempts: clickReloadIconBetweenAttempts}
         );
         this.wait_until_spinner_disappears()
         return this;
