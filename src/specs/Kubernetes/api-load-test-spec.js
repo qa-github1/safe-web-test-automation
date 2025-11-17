@@ -134,7 +134,7 @@ describe('Services', function () {
     it.only('LOCATIONS MOVE Service', function () {
         api.auth.get_tokens(orgAdmin);
 
-        function checkStatusOfJobs(secondsToWait = 15) {
+        function checkStatusOfJobs(secondsToWait = 5) {
             cy.wait(secondsToWait * 1000)
             generic_request.GET(
                 '/api/locations/moveJobs',
@@ -164,10 +164,11 @@ describe('Services', function () {
             api.locations.update_location(D['container' + i].name, 'isContainer', true)
 
             api.locations.get_and_save_any_location_data_to_local_storage('Containers')
-            api.locations.move_location(D['container' + i], 'root')
+            api.locations.get_and_save_any_location_data_to_local_storage(D['container' + i].name)
+            api.locations.move_location(D['container' + i].name, 'Containers', true)
         }
 
-        checkStatusOfJobs(15)
+        checkStatusOfJobs(5)
     });
 
     it('MASS UPDATE BY QUERY Service', function () {
@@ -216,3 +217,5 @@ describe('Services', function () {
 
 
 });
+
+
