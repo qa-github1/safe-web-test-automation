@@ -40,7 +40,6 @@ export default class tagsPage extends BasePage {
         this.open_url_and_wait_all_GET_requests_to_finish(S.base_url + '/#/tags')
     };
 
-
     click_add_tag_button() {
         addTagButton().click();
         return this
@@ -51,17 +50,17 @@ export default class tagsPage extends BasePage {
         return this
     };
 
-    populate_add_tag_modal(data, useExistingTagGroup) {
-        tagUsedBy().select(data.tagUsedBy);
-        tagName().type(data.tagName);
+    populate_add_tag_modal(data, useExistingTagGroup, newTagGroupObject) {
+        tagUsedBy().select(data.type);
+        tagName().type(data.name);
         tagColor().clear();
         tagColor().type(data.color);
-        if (data.tagUsedBy === 'Group') {
+        if (data.type === 'Group') {
             if (useExistingTagGroup) tagGroupName().type(S.selectedEnvironment.tagGroup.name + '{enter}');
             else {
                 newRadiobutton().click();
-                newTagGroupName().type(data.tagGroupName);
-                this.enter_values_on_single_multi_select_typeahead_field(['Users/Groups', data.tagGroupName, "users/groups"])
+                newTagGroupName().type(newTagGroupObject.name);
+                this.enter_values_on_single_multi_select_typeahead_field(['Users/Groups', [newTagGroupObject.user], "users/groups"])
             }
         }
         return this;
@@ -106,14 +105,14 @@ export default class tagsPage extends BasePage {
     }
 
     search_for_tag_on_tags_page(data) {
-        searchField().type(data.tagName)
+        searchField().type(data.name)
 
         return this;
     }
 
     populate_edit_tag_modal(data) {
-        tagName().clear().type(data.tagName)
-        tagColor().clear().type(data.tagColor)
+        tagName().clear().type(data.name)
+        tagColor().clear().type(data.color)
         return this;
     }
 
@@ -152,7 +151,7 @@ export default class tagsPage extends BasePage {
 
     add_user_tag_on_edit_modal(data,index){
         tagsInput(index).click();
-        tagsInput(index).type(`${data.tagName}{enter}`)
+        tagsInput(index).type(`${data.name}{enter}`)
         return this;
     }
 

@@ -657,29 +657,34 @@ D.getNewTagsData = function () {
 
     let randomNo = helper.setNewRandomNo();
     D.newTag = {
-        tagUsedBy: "Organization",
-        tagName: "AAA__" + randomNo,
+        type: "Organization",
+        name: "AutoTestTag" + randomNo,
         color: "#4b9",
-        tagGroupName: "smj 1",
-        tagNewGroupName: "new group" + " " + randomNo,
-        user: S.userAccounts.orgAdmin.name,
-        userGroup: "Cypress Admin Group",
         newTag1: "tag_1_" + randomNo,
         newTag2: "tag_2_" + randomNo,
         newTag3: "tag_3_" + randomNo,
+    }
+
+    D.newTagGroup = {
+        name: "new TagGroup_" + randomNo,
+        user: S.userAccounts.orgAdmin.name,
+        userGroup: S.selectedEnvironment.admin_userGroup.name
     }
     return D.newTag;
 };
 
 D.getEditedTagsData = function () {
-
     let randomNo = helper.setNewRandomNo();
     D.editedTag = {
-        tagGroupName: "Edited Tag Group" + " " + randomNo,
+        tagUsedBy: "Organization",
+        name: "AutoTestTagEdited" + randomNo,
+        color: "#1069bd"
+    }
+
+    D.editedTagGroup = {
+        name: "Edited TagGroup_" + randomNo,
         user: S.userAccounts.powerUser.name,
-        groupName: "Cypress ReadOnly Group",
-        tagName: "EditedByAutoTest" + " " + randomNo,
-        tagColor: "#1069bd"
+        userGroup: S.selectedEnvironment.readOnly_userGroup.name
     }
     return D.editedTag;
 };

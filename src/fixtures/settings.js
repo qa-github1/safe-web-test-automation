@@ -2805,7 +2805,6 @@ S.PENTEST_2 = {
         name: 'AutoTest_TagGroup1',
         id: 278
     }
-
 };
 
 S.PENTEST_3 = {
@@ -3063,7 +3062,10 @@ S.PENTEST_3 = {
     tagA: {tagModelId: 16829, name: 'Tag_A__', color: "#4b9b62", tagUsedBy: 1},
     tagB: {tagModelId: 16830, name: 'Tag_B__', color: "#4b9b62", tagUsedBy: 1},
     tagC: {tagModelId: 16831, name: 'Tag_C__', color: "#4b9b62", tagUsedBy: 1},
-
+    tagGroup: {
+        name: 'AutoTest_TagGroup1',
+        id: 278
+    },
     taskTemplates: {
         dispoAuth: {
             templateId: 4308,
