@@ -35,6 +35,12 @@ export default class tagsPage extends BasePage {
 
 //************************************ ACTIONS ***************************************//
 
+
+    open_direct_url_for_page() {
+        this.open_url_and_wait_all_GET_requests_to_finish(S.base_url + '/#/tags')
+    };
+
+
     click_add_tag_button() {
         addTagButton().click();
         return this
@@ -55,9 +61,7 @@ export default class tagsPage extends BasePage {
             else {
                 newRadiobutton().click();
                 newTagGroupName().type(data.tagGroupName);
-                selectUserOrGroup().type(data.user)
-                cy.wait(1000)
-                selectUserOrGroup().type('{enter}')
+                this.enter_values_on_single_multi_select_typeahead_field(['Users/Groups', data.tagGroupName, "users/groups"])
             }
         }
         return this;
@@ -108,8 +112,8 @@ export default class tagsPage extends BasePage {
     }
 
     populate_edit_tag_modal(data) {
-        tagName().clear().type(data.editedTagName)
-        tagColor().clear().type(data.editedTagColor)
+        tagName().clear().type(data.tagName)
+        tagColor().clear().type(data.tagColor)
         return this;
     }
 

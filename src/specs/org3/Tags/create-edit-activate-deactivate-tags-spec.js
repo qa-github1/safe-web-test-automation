@@ -1,22 +1,11 @@
- const C = require('../../../fixtures/constants');
+const C = require('../../../fixtures/constants');
 const S = require('../../../fixtures/settings');
 const D = require('../../../fixtures/data');
 const api = require('../../../api-utils/api-spec');
 const ui = require('../../../pages/ui-spec');
-const {add_new_case} = require("../../../api-utils/endpoints/cases/collection");
-
 
 let user = S.getUserData(S.userAccounts.orgAdmin);
 let startTime;
-
-function set_preconditions_for_adding_Case_with_reduced_number_of_fields(testContext) {
-    ui.app.log_title(testContext);
-
-    cy.restoreLocalStorage();
-    api.auth.get_tokens(user);
-    api.org_settings.disable_Case_fields([C.caseFields.tags]);
-    D.generateNewDataSet(true);
-}
 
 for (let i = 0; i < 1; i++) {
     describe('Tags ', function () {
@@ -47,40 +36,71 @@ for (let i = 0; i < 1; i++) {
         });
 
 
-        it('1. Create Organization Tag, verify that it is active, edit tag and deactivate it', function () {
+        it.only('1. Create Organization Tag, verify that it is active, edit tag and deactivate it', function () {
             ui.menu.click_Tags();
             ui.tags.click_add_tag_button()
-                .populate_add_tag_modal(D.newTags)
+                .populate_add_tag_modal(D.newTag)
                 .click_Save()
                 .verify_toast_message("Saved!")
-                .verify_content_of_last_row_in_results_table(D.newTags.tagName, false)
+                .verify_content_of_last_row_in_results_table(D.newTag.tagName, false)
                 .verify_selected_tags_radiobutton_based_on_status(C.buttons.active)
+            ui.app.open_case_url(S.selectedEnvironment.oldActiveCase.id)
+                .click_Edit()
+                .type_Tag_value_and_verify_if_option_is_available_on_dropdown(D.newTag.tagName, true)
 
             //edit tag
-            ui.app.click_element_by_text(D.newTags.tagName)
-            ui.tags.populate_edit_tag_modal(D.editedTag)
+            ui.menu.click_Tags();
+            ui.tags.click_element_by_text(D.newTag.tagName)
+                .populate_edit_tag_modal(D.editedTag)
                 .click_save_on_edit_tag_modal()
                 .verify_toast_message("Saved!")
                 .sort_by_ascending_order('Active')
-                .verify_content_of_last_row_in_results_table(D.editedTag.editedTagName, false)
+                .verify_content_of_last_row_in_results_table(D.editedTag.tagName, false)
 
-                //deactivate tag
-                .select_checkbox_on_last_row_on_visible_table()
+            // attach edited tag to the case
+            D.editedCase.caseNumber = S.selectedEnvironment.oldClosedCase.caseNumber
+            D.editedCase.tags = [D.editedTag.tagName]
+            ui.app.open_case_url(S.selectedEnvironment.oldClosedCase.id)
+                .verify_text_within_container(S.selectedEnvironment.oldClosedCase.caseNumber)
+            ui.caseView.click_Edit()
+                .add_Tags(D.editedCase.tags)
+                .click_Save()
+                .verify_toast_message(C.toastMsgs.saved)
+
+            //deactivate tag
+            ui.menu.click_Tags();
+            ui.tags.select_checkbox_on_last_row_on_visible_table()
                 .click_button(C.buttons.actions)
                 .click_option_on_expanded_menu(C.dropdowns.tagActions.deactivate)
-            //     .verify_toast_message("Saved!")
-            //     .select_radiobutton(C.buttons.inactive)
-            //     .verify_selected_tags_radiobutton_based_on_status(C.buttons.inactive)
-            //     .verify_text_is_visible(D.editedTag.editedTagName)
-            //
-            //     //activate tag
-            //     .select_checkbox_on_last_row_on_visible_table()
-            //     .click_button(C.buttons.actions)
-            //     .click_option_on_expanded_menu(C.dropdowns.tagActions.activate)
-            //     .verify_toast_message("Saved!")
-            //     .select_radiobutton(C.buttons.active)
-            //     .verify_content_of_last_row_in_results_table(D.editedTag.editedTagName)
-            // api.auth.log_out(user)
+                .verify_toast_message("Saved!")
+                .select_radiobutton(C.buttons.inactive)
+                .verify_selected_tags_radiobutton_based_on_status(C.buttons.inactive)
+                .verify_text_is_visible(D.editedTag.tagName)
+
+            // verify that deactivated tag is still visible where it was previously attached but not available on tags typeahead
+            ui.app.open_case_url(S.selectedEnvironment.oldClosedCase.id)
+                .click_Edit()
+                .verify_text_within_container(D.editedTag.tagName)
+            ui.caseView.remove_specific_values_on_multi_select_fields([D.editedTag.tagName])
+                .type_Tag_value_and_verify_if_option_is_available_on_dropdown(D.editedTag.tagName, false)
+                .click_Save()
+                .verify_toast_message(C.toastMsgs.saved)
+                .reload_page()
+                .verify_text_is_NOT_present_on_main_container(D.editedTag.tagName)
+
+            //activate tag
+            ui.menu.click_Tags();
+            ui.tags.select_radiobutton(C.buttons.inactive)
+                .select_checkbox_on_last_row_on_visible_table()
+                .click_button(C.buttons.actions)
+                .click_option_on_expanded_menu(C.dropdowns.tagActions.activate)
+                .verify_toast_message("Saved!")
+                .select_radiobutton(C.buttons.active)
+                .verify_content_of_last_row_in_results_table(D.editedTag.tagName)
+            ui.app.open_case_url(S.selectedEnvironment.oldActiveCase.id)
+                .click_Edit()
+                .type_Tag_value_and_verify_if_option_is_available_on_dropdown(D.editedTag.tagName, true)
+
 
             // SQL CLEANUP COMMAND
             // delete from TagModels
@@ -88,23 +108,23 @@ for (let i = 0; i < 1; i++) {
 
         });
 
-        it.only('2. Create Group Tag with existing Tag Group, verify that it is active, edit tag and deactivate it', function () {
+        it('2. Create Group Tag with existing Tag Group, verify that it is active, edit tag and deactivate it', function () {
 
             ui.tags.click_add_tag_button()
-            D.newTags.tagUsedBy = "Group"
-            ui.tags.populate_add_tag_modal(D.newTags, true)
+            D.newTag.tagUsedBy = "Group"
+            ui.tags.populate_add_tag_modal(D.newTag, true)
                 .click_Save()
                 .verify_toast_message("Saved!")
                 .select_radiobutton(C.buttons.groups)
-            ui.tags.verify_content_of_last_row_in_results_table(D.newTags.tagName)
+            ui.tags.verify_content_of_last_row_in_results_table(D.newTag.tagName)
                 .verify_selected_tags_radiobutton_based_on_status(C.buttons.active)
 
             //edit tag
-            ui.app.click_element_by_text(D.newTags.tagName)
+            ui.app.click_element_by_text(D.newTag.tagName)
             ui.tags.populate_edit_tag_modal(D.editedTag)
                 .click_save_on_edit_tag_modal()
                 .verify_toast_message("Saved!")
-                .verify_content_of_last_row_in_results_table(D.editedTag.editedTagName)
+                .verify_content_of_last_row_in_results_table(D.editedTag.tagName)
 
 //deactivate tag
             ui.tags.select_checkbox_on_last_row_on_visible_table()
@@ -112,7 +132,7 @@ for (let i = 0; i < 1; i++) {
                 .click_option_on_expanded_menu(C.dropdowns.tagActions.deactivate)
                 .verify_toast_message("Saved!")
                 .select_radiobutton(C.buttons.inactive)
-                .verify_text_is_visible(D.editedTag.editedTagName)
+                .verify_text_is_visible(D.editedTag.tagName)
                 .verify_selected_tags_radiobutton_based_on_status(C.buttons.inactive)
 
             api.auth.log_out(user)
@@ -124,24 +144,24 @@ for (let i = 0; i < 1; i++) {
 
             ui.menu.click_Tags();
             ui.tags.click_add_tag_button()
-            D.newTags.tagUsedBy = "Group"
-            D.newTags.tagGroupName = "new group" + " " + D.getRandomNo()
-            ui.tags.populate_add_tag_modal(D.newTags)
+            D.newTag.tagUsedBy = "Group"
+            D.newTag.tagGroupName = "new group" + " " + D.getRandomNo()
+            ui.tags.populate_add_tag_modal(D.newTag)
                 .click_Save()
                 .verify_toast_message("Saved!")
                 .select_radiobutton(C.buttons.groups)
                 .set_page_size(10)
                 .click_number_on_pagination("Last")
-                .verify_content_of_last_row_in_results_table(D.newTags.tagName)
+                .verify_content_of_last_row_in_results_table(D.newTag.tagName)
                 .verify_selected_tags_radiobutton_based_on_status(C.buttons.active)
 
             //edit tag
-            ui.app.click_element_by_text(D.newTags.tagName)
+            ui.app.click_element_by_text(D.newTag.tagName)
             ui.tags.populate_edit_tag_modal(D.editedTag)
                 .click_save_on_edit_tag_modal()
                 .verify_toast_message("Saved!")
                 .click_number_on_pagination("Last")
-                .verify_content_of_last_row_in_results_table(D.editedTag.editedTagName)
+                .verify_content_of_last_row_in_results_table(D.editedTag.tagName)
 
             //deactivate tag
             ui.tags.select_checkbox_on_last_row_on_visible_table()
@@ -151,7 +171,7 @@ for (let i = 0; i < 1; i++) {
                 .select_radiobutton(C.buttons.inactive)
                 .set_page_size(10)
                 .click_number_on_pagination("Last")
-                .verify_text_is_visible(D.editedTag.editedTagName)
+                .verify_text_is_visible(D.editedTag.tagName)
                 .verify_selected_tags_radiobutton_based_on_status(C.buttons.inactive)
 
             //activate tag - works but currently commented out due to large number of active tags
@@ -162,7 +182,7 @@ for (let i = 0; i < 1; i++) {
             // .select_radiobutton(C.buttons.active)
             // .set_page_size(10)
             // .click_number_on_pagination("Last")
-            // .verify_content_of_last_row_in_results_table(D.editedTag.editedTagName)
+            // .verify_content_of_last_row_in_results_table(D.editedTag.tagName)
             api.auth.log_out(user)
 
 
@@ -172,23 +192,23 @@ for (let i = 0; i < 1; i++) {
 
             ui.menu.click_Tags();
             ui.tags.click_add_tag_button()
-            D.newTags.tagUsedBy = "User"
-            ui.tags.populate_add_tag_modal(D.newTags)
+            D.newTag.tagUsedBy = "User"
+            ui.tags.populate_add_tag_modal(D.newTag)
                 .click_Save()
                 .verify_toast_message("Saved!")
                 .select_radiobutton(C.buttons.users)
                 .set_page_size(10)
                 .click_number_on_pagination("Last")
-                .verify_content_of_last_row_in_results_table(D.newTags.tagName)
+                .verify_content_of_last_row_in_results_table(D.newTag.tagName)
                 .verify_selected_tags_radiobutton_based_on_status(C.buttons.active)
 
             //edit tag
-            ui.app.click_element_by_text(D.newTags.tagName)
+            ui.app.click_element_by_text(D.newTag.tagName)
             ui.tags.populate_edit_tag_modal(D.editedTag)
                 .click_save_on_edit_tag_modal()
                 .verify_toast_message("Saved!")
                 .click_number_on_pagination("Last")
-                .verify_content_of_last_row_in_results_table(D.editedTag.editedTagName)
+                .verify_content_of_last_row_in_results_table(D.editedTag.tagName)
 
                 //deactivate tag
                 .select_checkbox_on_last_row_on_visible_table()
@@ -198,7 +218,7 @@ for (let i = 0; i < 1; i++) {
                 .select_radiobutton(C.buttons.inactive)
                 .set_page_size(10)
                 .click_number_on_pagination("Last")
-                .verify_text_is_visible(D.editedTag.editedTagName)
+                .verify_text_is_visible(D.editedTag.tagName)
                 .verify_selected_tags_radiobutton_based_on_status(C.buttons.inactive)
 
             //activate tag - works but currently commented out due to large number of active tags
@@ -209,7 +229,7 @@ for (let i = 0; i < 1; i++) {
             // .select_radiobutton(C.buttons.active)
             // .set_page_size(10)
             // .click_number_on_pagination("Last")
-            // .verify_content_of_last_row_in_results_table(D.editedTag.editedTagName)
+            // .verify_content_of_last_row_in_results_table(D.editedTag.tagName)
             api.auth.log_out(user)
 
 
@@ -220,25 +240,25 @@ for (let i = 0; i < 1; i++) {
             ui.menu.click_Tags();
             ui.app.select_tab(C.tabs.tagGroups)
             ui.tags.click_add_tag_group_button()
-            //  .populate_add_tag_group_modal(D.newTags, 1)
+            //  .populate_add_tag_group_modal(D.newTag, 1)
             //  ui.app.verify_text_is_visible("Already exists!")
-            D.newTags.tagGroupName = "new group test" + " " + D.getRandomNo()
-            ui.tags.populate_add_tag_group_modal(D.newTags)
-                .add_tags_on_add_tag_group_modal(D.newTags)
+            D.newTag.tagGroupName = "new group test" + " " + D.getRandomNo()
+            ui.tags.populate_add_tag_group_modal(D.newTag)
+                .add_tags_on_add_tag_group_modal(D.newTag)
                 .click_Ok()
                 .set_page_size(10)
                 .click_number_on_pagination("Last")
                 .verify_selected_tags_radiobutton_based_on_status(C.buttons.active)
-                .verify_content_of_last_row_in_results_table(D.newTags.tagGroupName)
+                .verify_content_of_last_row_in_results_table(D.newTag.tagGroupName)
             ui.app.verify_content_of_last_row_in_results_table_on_active_tab("1")
 
             //edit tag
-            ui.app.click_element_by_text(D.newTags.tagGroupName)
+            ui.app.click_element_by_text(D.newTag.tagGroupName)
             ui.tags.populate_edit_tag_group_modal(D.editedTag)
                 .click_Ok()
                 .verify_toast_message("Saved!")
                 .click_number_on_pagination("Last")
-                .verify_content_of_last_row_in_results_table(D.editedTag.editedTagGroupName)
+                .verify_content_of_last_row_in_results_table(D.editedTag.tagGroupName)
 
                 //deactivate tag
                 .select_checkbox_on_last_row_on_visible_table()
@@ -251,13 +271,13 @@ for (let i = 0; i < 1; i++) {
             ui.tags.select_radiobutton(C.buttons.groups)
                 .set_page_size(10)
                 .click_number_on_pagination("Last")
-                .verify_content_of_last_row_in_results_table(D.editedTag.editedTagGroupName)
-                .verify_content_of_last_row_in_results_table(D.newTags.newTag1)
+                .verify_content_of_last_row_in_results_table(D.editedTag.tagGroupName)
+                .verify_content_of_last_row_in_results_table(D.newTag.newTag1)
             ui.app.select_tab(C.tabs.tagGroups)
             ui.tags.select_radiobutton(C.buttons.inactive)
                 .set_page_size(10)
                 .click_number_on_pagination("Last")
-                .verify_text_is_visible(D.editedTag.editedTagGroupName)
+                .verify_text_is_visible(D.editedTag.tagGroupName)
                 .verify_selected_tags_radiobutton_based_on_status(C.buttons.inactive)
 
             //activate tag - works but currently commented out due to large number of active tags
@@ -268,7 +288,7 @@ for (let i = 0; i < 1; i++) {
             // .select_radiobutton(C.buttons.active)
             // .set_page_size(10)
             // .click_number_on_pagination("Last")
-            // .verify_content_of_last_row_in_results_table(D.editedTag.editedTagGroupName)
+            // .verify_content_of_last_row_in_results_table(D.editedTag.tagGroupName)
             api.auth.log_out(user)
         });
 
@@ -277,23 +297,23 @@ for (let i = 0; i < 1; i++) {
             ui.menu.click_Tags();
             ui.app.select_tab(C.tabs.tagGroups)
             ui.tags.click_add_tag_group_button()
-            D.newTags.tagGroupName = "new group test" + " " + D.getRandomNo()
-            ui.tags.populate_add_tag_group_modal(D.newTags)
-                .add_tags_on_add_tag_group_modal(D.newTags)
+            D.newTag.tagGroupName = "new group test" + " " + D.getRandomNo()
+            ui.tags.populate_add_tag_group_modal(D.newTag)
+                .add_tags_on_add_tag_group_modal(D.newTag)
                 .click_Ok()
                 .verify_selected_tags_radiobutton_based_on_status(C.buttons.active)
                 .set_page_size(10)
                 .click_number_on_pagination("Last")
-                .verify_content_of_last_row_in_results_table(D.newTags.tagGroupName)
+                .verify_content_of_last_row_in_results_table(D.newTag.tagGroupName)
             ui.app.verify_content_of_last_row_in_results_table_on_active_tab("1")
 
             //edit tag
-            ui.app.click_element_by_text(D.newTags.tagGroupName)
+            ui.app.click_element_by_text(D.newTag.tagGroupName)
             ui.tags.populate_edit_tag_group_modal(D.editedTag)
                 .click_Ok()
                 .verify_toast_message("Saved!")
                 .click_number_on_pagination("Last")
-                .verify_content_of_last_row_in_results_table(D.editedTag.editedTagGroupName)
+                .verify_content_of_last_row_in_results_table(D.editedTag.tagGroupName)
 
                 //deactivate tag
                 .select_checkbox_on_last_row_on_visible_table()
@@ -306,13 +326,13 @@ for (let i = 0; i < 1; i++) {
             ui.tags.select_radiobutton(C.buttons.groups)
                 .set_page_size(10)
                 .click_number_on_pagination("Last")
-                .verify_content_of_last_row_in_results_table(D.editedTag.editedTagGroupName)
-                .verify_content_of_last_row_in_results_table(D.newTags.newTag1)
+                .verify_content_of_last_row_in_results_table(D.editedTag.tagGroupName)
+                .verify_content_of_last_row_in_results_table(D.newTag.newTag1)
             ui.app.select_tab(C.tabs.tagGroups)
             ui.tags.select_radiobutton(C.buttons.inactive)
                 .set_page_size(10)
                 .click_number_on_pagination("Last")
-                .verify_text_is_visible(D.editedTag.editedTagGroupName)
+                .verify_text_is_visible(D.editedTag.tagGroupName)
                 .verify_selected_tags_radiobutton_based_on_status(C.buttons.inactive)
 
             //activate tag - works but currently commented out due to large number of active tags
@@ -323,7 +343,7 @@ for (let i = 0; i < 1; i++) {
             // .select_radiobutton(C.buttons.active)
             // .set_page_size(10)
             // .click_number_on_pagination("Last")
-            // .verify_content_of_last_row_in_results_table(D.editedTag.editedTagGroupName)
+            // .verify_content_of_last_row_in_results_table(D.editedTag.tagGroupName)
             api.auth.log_out(user)
 
         });
@@ -334,20 +354,20 @@ for (let i = 0; i < 1; i++) {
             ui.menu.click_Add__Case();
             ui.addCase.populate_all_fields_on_both_forms(D.newCase)
             ui.caseView.remove_existing_values_on_specific_multi_select_field("Tags")
-            ui.tags.add_user_tag_on_edit_modal(D.newTags, 1)
+            ui.tags.add_user_tag_on_edit_modal(D.newTag, 1)
             ui.addCase.select_post_save_action(C.postSaveActions.viewAddedCase)
             ui.app.click_Save()
                 .verify_toast_message(C.toastMsgs.addedNewCase + D.newCase.caseNumber)
             ui.caseView
                 .click_Edit()
-                .verify_values_on_Edit_form(D.newTags.tagName)
+                .verify_values_on_Edit_form(D.newTag.tagName)
 
 
             //find newly created User Tag
             ui.menu.click_Tags();
             ui.tags.select_radiobutton(C.buttons.users)
                 .click_number_on_pagination("Last")
-                .verify_content_of_last_row_in_results_table(D.newTags.tagName)
+                .verify_content_of_last_row_in_results_table(D.newTag.tagName)
                 .verify_selected_tags_radiobutton_based_on_status(C.buttons.active)
 
                 //deactivate tag
@@ -358,7 +378,7 @@ for (let i = 0; i < 1; i++) {
                 .select_radiobutton(C.buttons.inactive)
                 .set_page_size(10)
                 .click_number_on_pagination("Last")
-                .verify_text_is_visible(D.newTags.tagName)
+                .verify_text_is_visible(D.newTag.tagName)
                 .verify_selected_tags_radiobutton_based_on_status(C.buttons.inactive)
             api.auth.log_out(user)
 
@@ -373,13 +393,13 @@ for (let i = 0; i < 1; i++) {
             ui.app.open_newly_created_case_via_direct_link()
             ui.caseView.click_Edit()
                 .remove_specific_values_on_multi_select_fields([currentTag])
-            ui.tags.add_user_tag_on_edit_modal(D.newTags, 3)
+            ui.tags.add_user_tag_on_edit_modal(D.newTag, 3)
             ui.caseView.click_Save()
                 .verify_toast_message(C.toastMsgs.saved)
                 .reload_page()
-                .verify_edited_and_not_edited_values_on_Case_View_form(C.caseFields.tags, D.newTags, true)
+                .verify_edited_and_not_edited_values_on_Case_View_form(C.caseFields.tags, D.newTag, true)
                 .click_Edit()
-                .verify_edited_and_not_edited_values_on_Case_Edit_form(C.caseFields.tags, D.newTags, true)
+                .verify_edited_and_not_edited_values_on_Case_Edit_form(C.caseFields.tags, D.newTag, true)
                 .open_last_history_record(0)
                 .verify_red_highlighted_history_records(C.caseFields.tags)
                 .click_cancel_on_history_page()
@@ -389,7 +409,7 @@ for (let i = 0; i < 1; i++) {
             ui.menu.click_Tags();
             ui.tags.select_radiobutton(C.buttons.users)
                 .click_number_on_pagination("Last")
-                .verify_content_of_last_row_in_results_table(D.newTags.tagName)
+                .verify_content_of_last_row_in_results_table(D.newTag.tagName)
                 .verify_selected_tags_radiobutton_based_on_status(C.buttons.active)
 
                 //deactivate tag
@@ -400,7 +420,7 @@ for (let i = 0; i < 1; i++) {
                 .select_radiobutton(C.buttons.inactive)
                 .set_page_size(10)
                 .click_number_on_pagination("Last")
-                .verify_text_is_visible(D.newTags.tagName)
+                .verify_text_is_visible(D.newTag.tagName)
                 .verify_selected_tags_radiobutton_based_on_status(C.buttons.inactive)
             api.auth.log_out(user)
 
@@ -414,18 +434,18 @@ for (let i = 0; i < 1; i++) {
             D.newCase.caseNumber = D.newItem.caseNumber
             ui.addItem.populate_all_fields_on_both_forms(D.newItem, false, false)
             ui.caseView.remove_existing_values_on_specific_multi_select_field("Tags")
-            ui.tags.add_user_tag_on_edit_modal(D.newTags, 1)
+            ui.tags.add_user_tag_on_edit_modal(D.newTag, 1)
             ui.addCase.select_post_save_action(C.postSaveActions.viewAddedItem)
             ui.app.click_Save()
                 .click_Edit()
-            ui.caseView.verify_values_on_Edit_form(D.newTags.tagName)
+            ui.caseView.verify_values_on_Edit_form(D.newTag.tagName)
 
 
             //find newly created User Tag
             ui.menu.click_Tags();
             ui.tags.select_radiobutton(C.buttons.users)
                 .click_number_on_pagination("Last")
-                .verify_content_of_last_row_in_results_table(D.newTags.tagName)
+                .verify_content_of_last_row_in_results_table(D.newTag.tagName)
                 .verify_selected_tags_radiobutton_based_on_status(C.buttons.active)
 
                 //deactivate tag
@@ -436,7 +456,7 @@ for (let i = 0; i < 1; i++) {
                 .select_radiobutton(C.buttons.inactive)
                 .set_page_size(10)
                 .click_number_on_pagination("Last")
-                .verify_text_is_visible(D.newTags.tagName)
+                .verify_text_is_visible(D.newTag.tagName)
                 .verify_selected_tags_radiobutton_based_on_status(C.buttons.inactive)
             api.auth.log_out(user)
 
@@ -451,13 +471,13 @@ for (let i = 0; i < 1; i++) {
             ui.app.open_newly_created_item_via_direct_link();
             ui.caseView.click_Edit()
                 .remove_specific_values_on_multi_select_fields([currentTag])
-            ui.tags.add_user_tag_on_edit_modal(D.newTags, 1)
+            ui.tags.add_user_tag_on_edit_modal(D.newTag, 1)
             ui.itemView.click_Save()
                 .verify_toast_message(C.toastMsgs.saved)
                 .reload_page()
-                .verify_edited_and_not_edited_values_on_Item_View_form(C.itemFields.tags, D.newTags, true)
+                .verify_edited_and_not_edited_values_on_Item_View_form(C.itemFields.tags, D.newTag, true)
                 .click_Edit()
-                .verify_edited_and_not_edited_values_on_Item_Edit_form(C.itemFields.tags, D.newTags, true)
+                .verify_edited_and_not_edited_values_on_Item_Edit_form(C.itemFields.tags, D.newTag, true)
                 .open_last_history_record(0)
                 .verify_red_highlighted_history_records(C.itemFields.tags)
                 .click_cancel_on_history_page()
@@ -467,7 +487,7 @@ for (let i = 0; i < 1; i++) {
             ui.menu.click_Tags();
             ui.tags.select_radiobutton(C.buttons.users)
                 .click_number_on_pagination("Last")
-                .verify_content_of_last_row_in_results_table(D.newTags.tagName)
+                .verify_content_of_last_row_in_results_table(D.newTag.tagName)
                 .verify_selected_tags_radiobutton_based_on_status(C.buttons.active)
 
                 //deactivate tag
@@ -478,7 +498,7 @@ for (let i = 0; i < 1; i++) {
                 .select_radiobutton(C.buttons.inactive)
                 .set_page_size(10)
                 .click_number_on_pagination("Last")
-                .verify_text_is_visible(D.newTags.tagName)
+                .verify_text_is_visible(D.newTag.tagName)
                 .verify_selected_tags_radiobutton_based_on_status(C.buttons.inactive)
 
         });

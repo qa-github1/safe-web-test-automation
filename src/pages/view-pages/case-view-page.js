@@ -30,6 +30,7 @@ let
     offenseLocationInput = e => cy.get('[ng-model="caseEdit.offenseLocation"]'),
     offenseDescriptionInput = e => cy.get('[ng-model="caseEdit.offenseDescription"]'),
     active_form = e => cy.get('.form-horizontal').not('.ng-hide'),
+    tagsInputWithinActiveForm = e =>  active_form().find('[label="\'GENERAL.TAGS\'"]').find('input'),
     tagsInput = e => cy.contains('Tags').parent('div').find('input'),
     offenseType = e => cy.get('[name="offenseType"]').eq(0),
     // tagsInput = e => tagsContainer().find('input[role="combobox"]'),
@@ -321,6 +322,23 @@ export default class CaseViewPage extends BaseViewPage {
         if (oldCaseObject) this.verify_all_values_on_history_in_specific_column(oldCaseObject, 'right', customFormName, isNewlyAttachedForm )
         return this;
     };
+
+    add_Tags(tagsArray) {
+        this.enter_values_on_several_multi_select_typeahead_fields(
+            [
+                [tagsInputWithinActiveForm, tagsArray, this.lastTagOnTypeahead],
+            ]);
+        return this
+    }
+
+    remove_Tags(tagsArray) {
+        this.enter_values_on_several_multi_select_typeahead_fields(
+            [
+                [tagsInputWithinActiveForm, tagsArray, this.lastTagOnTypeahead],
+            ]);
+        return this
+    }
+
 
     edit_Status(setToActive) {
         let that = this

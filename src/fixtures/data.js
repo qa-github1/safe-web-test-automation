@@ -656,7 +656,7 @@ D.getNewTaskTemplateData = function () {
 D.getNewTagsData = function () {
 
     let randomNo = helper.setNewRandomNo();
-    D.newTags = {
+    D.newTag = {
         tagUsedBy: "Organization",
         tagName: "AAA__" + randomNo,
         color: "#4b9",
@@ -667,23 +667,19 @@ D.getNewTagsData = function () {
         newTag1: "tag_1_" + randomNo,
         newTag2: "tag_2_" + randomNo,
         newTag3: "tag_3_" + randomNo,
-        editedTagName: "Edited Tag" + " " + randomNo,
-        editedTagColor: "#1069bd"
-
     }
-    return D.newTags;
+    return D.newTag;
 };
 
 D.getEditedTagsData = function () {
 
     let randomNo = helper.setNewRandomNo();
     D.editedTag = {
-         editedTagGroupName: "Edited Tag Group" + " " + randomNo,
-        editedUser: S.userAccounts.powerUser.name,
-        editedGroup: "Cypress ReadOnly Group",
-        editedTagName: "EditedByAutoTest" + " " + randomNo,
-        editedTagColor: "#1069bd"
-
+        tagGroupName: "Edited Tag Group" + " " + randomNo,
+        user: S.userAccounts.powerUser.name,
+        groupName: "Cypress ReadOnly Group",
+        tagName: "EditedByAutoTest" + " " + randomNo,
+        tagColor: "#1069bd"
     }
     return D.editedTag;
 };
