@@ -235,18 +235,13 @@ describe('Services', function () {
         ui.taskView
             .open_newly_created_task_via_direct_link()
             .select_tab('Items')
-            .set_large_view()
+            .set_page_size(100)
             .set_Action___Approve_for_Disposal([1, 51])
-            .reload_page()
-            .select_tab('Items')
             .click_Submit_for_Disposition()
             .verify_single_toast_message_if_multiple_shown('Processing...')
             .verify_Dispo_Auth_Job_Status('Complete')
-            .reload_page()
-            .select_tab('Items')
-            .disable_large_view()
             .verify_text_is_present_on_main_container('Approved for Disposal')
-        ui.taskView.set_page_size(100)
+        ui.taskView
             .verify_Disposition_Statuses_on_the_grid([
                 [[...Array(50).keys()], 'Approved for Disposal']])
             .reload_page()

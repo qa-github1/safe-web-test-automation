@@ -4693,7 +4693,7 @@ S.customForms = {
     casesFormWithRequiredFields: 'Required fields - Cypress Cases Form - Org#' + S.orgNum,
     caseFormWithOptionalFields: 'Optional fields - Cypress Case Form - Org#' + S.orgNum,
     itemFormWithRequiredFields: 'Required fields - Cypress Items Form - Org#' + S.orgNum,
-    itemFormWithOptionalFields: 'Optional fields - Cypress Items Form - Org#' + S.orgNum,
+    itemFormWithOptionalFields: 'Optional fields - Cypress Item Form - Org#' + S.orgNum,
     userFormWithRequiredFields: 'Required fields - Cypress Users Form - Org#' + S.orgNum,
     userFormWithOptionalFields: 'Optional fields - Cypress Users Form - Org#' + S.orgNum,
     peopleFormWithRequiredFields: 'Required fields - Cypress People Form - Org#' + S.orgNum,
@@ -4708,7 +4708,7 @@ S.colors = {
 
 S.gmailAccount = {
     email: 'qa@trackerproducts.com',
-    password: 'prya dorm gqbm ygrf'
+    password: 'ymvv duvc gbpv oyne'
 };
 
 S.userAccounts = accounts.getTestAccounts(S.selectedEnvironment, S.orgNum);

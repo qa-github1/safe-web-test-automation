@@ -3559,8 +3559,10 @@ select_checkbox_on_last_row_on_visible_table() {
             .populate_CheckOut_form(takenBy_personOrUserObject, checkOutReason, notes, expectedReturnDate)
 
         if (isActionOnSearchResults) {
-            this.verify_modal_content(' Warning! This action will check out all items found by the current search')
-            this.verify_modal_content('Items shared among Organizations are not included in the transaction')
+            this.verify_modal_content('This action will check out all items found by the current search')
+            // ToDo: we need to ensure that Item Sharing/CLP is ON/OFF in Org before verifying the full warning.
+            //  For now, I’ve excluded the part related to shared/CLP items. It can be added later once we define the precondition for displaying this part of the warning in the test
+            //this.verify_modal_content('- Items shared among Organizations')
         }
         this.upload_file_and_verify_toast_msg('image.png', null)
 
