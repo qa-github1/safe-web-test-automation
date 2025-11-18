@@ -119,26 +119,41 @@ exports.update_location = function (locationName, propertyName, propertyValue) {
     })
 };
 
-exports.move_location = function (locationName, newParentlocationName) {
-    let log;
+exports.move_location = function (locationName, newParentlocationName, locationNameInLocalStorage = false) {
+    let log
     exports.get_storage_locations();
     cy.getLocalStorage(newParentlocationName).then(parentLoc => {
-        cy.getLocalStorage('locations').then(locationsArray => {
-            JSON.parse(locationsArray).forEach(loc => {
-                if (loc.name.includes(locationName)) {
-
+        if (locationNameInLocalStorage) {
+            cy.getLocalStorage(locationName).then(loc => {
+                let locationToMove = JSON.parse(loc)
+                if (newParentlocationName) {
+                    locationToMove.parentId = JSON.parse(parentLoc).id;
+                    log = `Moving location (${locationToMove.name}) via API to the new parent location (${JSON.parse(parentLoc).name})`
+                }
+                generic_request.PUT(
+                    '/api/locations/' +  locationToMove.id,
+                    locationToMove,
+                    log
+                )
+            })
+        }
+        else{
+            cy.getLocalStorage('locations').then(locationsArray => {
+                JSON.parse(locationsArray).forEach(loc => {
                     if (newParentlocationName) {
                         loc.parentId = JSON.parse(parentLoc).id;
                         log = `Moving location (${loc.name}) via API to the new parent location (${JSON.parse(parentLoc).name})`
                     }
-                    generic_request.PUT(
-                        '/api/locations/' + loc.id,
-                        loc,
-                        log
-                    )
-                }
+                    if (loc.name.includes(locationName)) {
+                        generic_request.PUT(
+                            '/api/locations/' + loc.id,
+                            loc,
+                            log
+                        )
+                    }
+                })
             })
-        })
+        }
     })
 };
 //

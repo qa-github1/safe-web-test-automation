@@ -228,8 +228,8 @@ describe('Import Item Updates', function () {
             D.getDisposedItemData()
             D.newItem.actualDisposedDate = '';
             D.editedItem.disposalNotes = 'Disposed_through_Importer'
-            let CoC_newItemEntry = S.chainOfCustody.SAFE.newItemEntry;
-            let CoC_disposal = S.chainOfCustody.SAFE.disposal(D.editedItem);
+            // let CoC_newItemEntry = S.chainOfCustody.SAFE.newItemEntry;
+            // let CoC_disposal = S.chainOfCustody.SAFE.disposal(D.editedItem);
 
             cy.getLocalStorage("newItem").then(newItem => {
                 D.editedItem.barcode = JSON.parse(newItem).barcode;
@@ -247,10 +247,10 @@ describe('Import Item Updates', function () {
                     .click_Edit()
                     .verify_edited_and_not_edited_values_on_Item_Edit_form(allEditedFields, D.editedItem, D.newItem, true, true)
                     .select_tab(C.tabs.chainOfCustody)
-                    .verify_content_of_sequential_rows_in_results_table([
-                        CoC_disposal,
-                        CoC_newItemEntry
-                    ])
+                     .verify_data_on_Chain_of_Custody([
+                         [['Type', 'Disposals'], ['Issued From', D.editedItem.disposedByName], ['Issued To', D.editedItem.disposedByName], ['Notes', D.editedItem.disposalNotes]],
+                         [['Type', 'In'], ['Issued From', orgAdmin.name], ['Issued To', 'New Item Entry'], ['Storage Location', D.newItem.location], ['Notes', `Item entered into system.`]],
+                     ])
                     .open_last_history_record()
                     .verify_all_values_on_history(D.editedItem, originalItem)
                     .verify_red_highlighted_history_records(allEditedFieldsWithoutDisposition, allEditedFieldsWithoutReleasedTo, allEditedFields)

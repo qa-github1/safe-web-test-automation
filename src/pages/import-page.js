@@ -164,7 +164,7 @@ export default class ImportPage extends BasePage {
         for (let i = 0; i < numberOfRetries; i++) {
             cy.get('[ng-repeat="item in data.displayedItems track by $index"]').first().then(($firstRow) => {
                 const rowText = $firstRow.text();
-                cy.log('TEXT IS ' + rowText)
+              //  cy.log('TEXT IS ' + rowText)
                 if (rowText.includes('Saved')) {
                     this.pause(1)
                     i = numberOfRetries
@@ -251,8 +251,8 @@ export default class ImportPage extends BasePage {
         cy.get('[ng-repeat="item in data.displayedItems track by $index"]').first().then(($firstRow) => {
             const rowText = $firstRow.text();
 
-            cy.log('TEXT IS ' + rowText)
             if (rowText.includes(text)) {
+                cy.log('TEXT IS ' + rowText)
                 element().click();
             }
         });
