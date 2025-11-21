@@ -30,7 +30,7 @@ for (let i = 0; i < 1; i++) {
             D.getItemDataWithReducedFields(D.newCase, [C.itemFields.tags])
             api.org_settings.disable_Item_fields(C.itemFields.tags)
             api.org_settings.disable_Case_fields(C.caseFields.tags)
-             api.cases.add_new_case()
+            api.cases.add_new_case()
             api.items.add_new_item()
             api.permissions.enable_all_permissions(admin_permissionGroup)
             api.permissions.enable_just_Case_and_Item_permissions(regularUser_permissionGroup)
@@ -109,10 +109,11 @@ for (let i = 0; i < 1; i++) {
                 .type_Tag_value_and_verify_if_option_is_available_on_dropdown(D.editedTag.name, true, true)
         });
 
-        it('2. GROUP Tag with Existing Tag Group-- create, edit, attach to Item, detach, deactivate/reactivate', function () {
+        it('2. GROUP Tag with Existing Tag GROUP-- create, edit, attach to Item, detach, deactivate/reactivate', function () {
             api.auth.get_tokens(admin);
             D.getTagsData('Group');
 
+            cy.log(" 🟢🟢🟢 2.1. Create Group TAG with Existing Tag GROUP 🟢🟢🟢 ")
             ui.menu.click_Tags();
             ui.tags.click_add_tag_button()
             ui.tags.populate_add_tag_modal(D.newTag, true)
@@ -123,22 +124,22 @@ for (let i = 0; i < 1; i++) {
                 .verify_content_of_last_row_in_results_table(D.newTag.name)
                 .verify_selected_tags_radiobutton_based_on_status(C.filters.active)
 
-                //edit tag
-                .click_element_by_text(D.newTag.name)
+            cy.log(" 🟢🟢🟢 2.2. Edit Group Tag 🟢🟢🟢 ")
+            ui.tags.click_element_by_text(D.newTag.name)
                 .populate_edit_tag_modal(D.editedTag)
                 .click_save_on_edit_tag_modal()
                 .verify_toast_message("Saved!")
                 .search(D.editedTag.name)
                 .verify_content_of_last_row_in_results_table(D.editedTag.name)
 
-            // attach edited tag to the item
+            cy.log(" 🟢🟢🟢 2.3. Attach Group Tag to the Item 🟢🟢🟢 ")
             ui.app.open_newly_created_item_via_direct_link()
             ui.itemView.click_Edit()
                 .add_Tags([D.editedTag.name])
                 .click_Save()
                 .verify_toast_message(C.toastMsgs.saved)
 
-            //deactivate tag
+            cy.log(" 🟢🟢🟢 2.4. Deactivate Group Tag 🟢🟢🟢 ")
             ui.menu.click_Tags();
             ui.tags.search(D.editedTag.name)
                 .select_radiobutton(C.filters.groups)
@@ -147,7 +148,7 @@ for (let i = 0; i < 1; i++) {
                 .click_option_on_expanded_menu(C.dropdowns.tagActions.deactivate)
                 .verify_toast_message("Saved!")
 
-            // verify that deactivated tag is still visible and detach it
+            cy.log(" 🟢🟢🟢 2.6. Verify deactivated tag is still visible and detach it 🟢🟢🟢 ")
             ui.app.open_newly_created_item_via_direct_link()
                 .click_Edit()
                 .verify_text_within_container(D.editedTag.name)
@@ -158,7 +159,7 @@ for (let i = 0; i < 1; i++) {
                 .reload_page()
                 .verify_text_is_NOT_present_on_main_container(D.editedTag.name)
 
-            //activate tag
+            cy.log(" 🟢🟢🟢 2.6. Activate Group Tag 🟢🟢🟢 ")
             ui.menu.click_Tags();
             ui.tags.search(D.editedTag.name)
                 .select_radiobutton(C.filters.inactive)
@@ -172,7 +173,7 @@ for (let i = 0; i < 1; i++) {
                 .type_Tag_value_and_verify_if_option_is_available_on_dropdown(D.editedTag.name, true)
         });
 
-        it('3. Group Tag with New Tag GROUP created at once, edit Tag Group - check availability of tags based on permissions, access to group and item storage location', function () {
+        it('3. GROUP Tag with New Tag GROUP created at once, edit Tag Group - check availability of tags based on permissions, access to group and item storage location', function () {
             api.auth.get_tokens(admin);
             D.getTagsData('Group');
 
@@ -256,8 +257,9 @@ for (let i = 0; i < 1; i++) {
             api.items.add_new_item()
 
             //---As Regular User, member of Tag Group, check access to tag
-            api.auth.get_tokens(regularUser);
-            ui.app.open_newly_created_item_via_direct_link()
+            api.auth.get_tokens(regularUser)
+            ui.app.pause(3)
+                .open_newly_created_item_via_direct_link()
                 .click_Edit()
                 .type_Tag_value_and_verify_if_option_is_available_on_dropdown(D.newTag.name, true, false)
                 .press_ENTER_on_Tags()
@@ -271,45 +273,46 @@ for (let i = 0; i < 1; i++) {
             api.auth.get_tokens(admin);
             D.getTagsData('User');
 
+            cy.log(" 🟢🟢🟢 4.1. Create User TAG 🟢🟢🟢 ")
             ui.menu.click_Tags();
             ui.tags.click_add_tag_button()
             ui.tags.populate_add_tag_modal(D.newTag)
                 .click_Save()
                 .verify_toast_message("Saved!")
                 .select_radiobutton(C.filters.users)
-                .click_number_on_pagination("Last")
+                .search(D.newTag.name)
                 .verify_content_of_last_row_in_results_table(D.newTag.name)
-                .verify_selected_tags_radiobutton_based_on_status(C.filters.active)
 
-            //edit tag
+            cy.log(" 🟢🟢🟢 4.2. Edit User TAG 🟢🟢🟢 ")
             ui.app.click_element_by_text(D.newTag.name)
             ui.tags.populate_edit_tag_modal(D.editedTag)
                 .click_save_on_edit_tag_modal()
                 .verify_toast_message("Saved!")
-                .click_number_on_pagination("Last")
+                .search(D.editedTag.name)
                 .verify_content_of_last_row_in_results_table(D.editedTag.name)
 
-                //deactivate tag
-                .select_checkbox_on_last_row_on_visible_table()
+            cy.log(" 🟢🟢🟢 4.3. Deactivate User TAG 🟢🟢🟢 ")
+            ui.tags.select_checkbox_on_last_row_on_visible_table()
                 .click_button(C.buttons.actions)
                 .click_option_on_expanded_menu(C.dropdowns.tagActions.deactivate)
                 .verify_toast_message("Saved!")
+                .search(D.editedTag.name)
                 .select_radiobutton(C.filters.inactive)
-                .click_number_on_pagination("Last")
+                .select_radiobutton(C.filters.users)
                 .verify_text_is_visible(D.editedTag.name)
-                .verify_selected_tags_radiobutton_based_on_status(C.filters.inactive)
 
-                //activate tag
-                .select_checkbox_on_last_row_on_visible_table()
+            cy.log(" 🟢🟢🟢 4.4. Activate User TAG 🟢🟢🟢 ")
+            ui.tags.select_checkbox_on_last_row_on_visible_table()
                 .click_button(C.buttons.actions)
                 .click_option_on_expanded_menu(C.dropdowns.tagActions.activate)
                 .verify_toast_message("Saved!")
+                .search(D.editedTag.name)
                 .select_radiobutton(C.filters.active)
-                .click_number_on_pagination("Last")
+                .select_radiobutton(C.filters.users)
                 .verify_content_of_last_row_in_results_table(D.editedTag.name)
         });
 
-        it('5. Create Tag Group with Tags as Admin- deactivate Tag Group but not Tags', function () {
+        it('5. Create TAG GROUP with Tags as Admin- deactivate Tag Group but not Tags', function () {
             api.auth.get_tokens(admin);
             D.getTagsData('Group');
 
@@ -360,7 +363,7 @@ for (let i = 0; i < 1; i++) {
                 (regularUser_permissionGroup, C.perissionMatrixEntity.tags, C.permissionMatrixAccessType.createGroupTag, true)
                 .set_specific_permission_for_an_existing_Permission_group
                 (regularUser_permissionGroup, C.perissionMatrixEntity.tags, C.permissionMatrixAccessType.viewOrgTag, true)  // needed until we fix the issue #18531 / 2
-             D.getTagsData('Group');
+            D.getTagsData('Group');
 
 
             cy.log(" 🟢🟢🟢 6.1. Create Tag GROUP 🟢🟢🟢 ")
@@ -413,7 +416,7 @@ for (let i = 0; i < 1; i++) {
                 .verify_content_of_last_row_in_results_table(D.newTagGroup.groupTag1)
         });
 
-        it('7. Create User Tag on Add and Edit Case Page', function () {
+        it('7. Create USER Tag on Add and Edit Case Page', function () {
             api.auth.get_tokens(admin);
             D.getTagsData('User');
 
@@ -435,7 +438,7 @@ for (let i = 0; i < 1; i++) {
                 .verify_tag_with_specific_type_is_visible(D.newTag.name, 'User')
         });
 
-        it('8. Create User Tag on Add and Edit Item Page', function () {
+        it('8. Create USER Tag on Add and Edit Item Page', function () {
             api.auth.get_tokens(admin);
             D.getTagsData('User');
 

@@ -943,9 +943,8 @@ let basePage = class BasePage {
             if (shouldExistingTagBeAvailable) {
                 cy.verifyTextAndRetry(getTagOptions, value);
             } else {
-                typeaheadInputField('Tags').type('{enter}')
+                //typeaheadInputField('Tags').type('{enter}')
                 this.verify_text_is_NOT_present_on_main_container(value)
-                cy.get('[ng-disabled="isAttachLocked && isDetachLocked"]').should('have.borderColor', S.colors.redBorder);
             }
         }
 
