@@ -694,6 +694,18 @@ exports.generate_request_payload_for_editing_Org = function (
 ) {
     let body = Object.assign({}, orgSettings)
 
+    if (touchScreenSignature === 'both') {
+        body.useCaseLevelPermissions = useCLP;
+        body.itemBelongsToShowsAllPeople = itemBelongsToShowsAllPeople;
+
+        body.signatureConfiguration.defaultSignatureDevice = 0; // 0 = touch screen
+        body.signatureConfiguration.noSignatureDeviceSelected = true;
+        body.signatureConfiguration.topazSignatureDeviceSelected = false;
+        body.signatureConfiguration.touchScreenSignatureDeviceSelected = true;
+
+        body.personViewConfiguration.formattingString = personFormattingString;
+        return body;
+    }
     let defaultSignatureDevice = touchScreenSignature ? 0 : 2;
     let noSignature = !touchScreenSignature;
 

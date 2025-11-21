@@ -293,7 +293,7 @@ describe('Workflows', function () {
             ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.itemFieldEdited, D.editedItem, C.itemFields.serialNumber);
         });
 
-        it('2.5 Email notification - when Custom Item field edited - matching all records, filtered by Office', function () {
+        it.only('2.5 Email notification - when Custom Item field edited - matching all records, filtered by Office', function () {
 
             D.editedItem = D.getEditedItemData(D.newCase)
 

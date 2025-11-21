@@ -2,11 +2,12 @@ const C = require('../../../fixtures/constants');
 const generic_request = require('../../generic-api-requests');
 const body = require('./payload');
 const D = require("../../../fixtures/data");
+const api = require("../../api-spec");
 
-exports.set_VIEW_permissions_for_an_existing_Permission_group = function (group, shouldEnable) {
+exports.set_VIEW_permissions_for_an_existing_Permission_group = function (group, shouldEnable, shouldEnableIfOwner) {
     generic_request.POST(
         '/api/security/organizations/bulksave',
-        body.generate_POST_request_payload_for_bulk_saving_VIEW_PERMISSIONS(group, shouldEnable),
+        body.generate_POST_request_payload_for_bulk_saving_VIEW_PERMISSIONS(group, shouldEnable, shouldEnableIfOwner),
         "Permissions updated via API")
 };
 
@@ -17,10 +18,10 @@ exports.set_CREATE_permissions_for_an_existing_Permission_group = function (grou
         "Permissions updated via API")
 };
 
-exports.set_UPDATE_permissions_for_an_existing_Permission_group = function (group, shouldEnable) {
+exports.set_UPDATE_permissions_for_an_existing_Permission_group = function (group, shouldEnable, shouldEnableIfOwner) {
     generic_request.POST(
         '/api/security/organizations/bulksave',
-        body.generate_POST_request_payload_for_bulk_saving_UPDATE_PERMISSIONS(group, shouldEnable),
+        body.generate_POST_request_payload_for_bulk_saving_UPDATE_PERMISSIONS(group, shouldEnable, shouldEnableIfOwner),
         "Permissions updated via API")
 };
 
@@ -38,10 +39,47 @@ function getPermissionId(group, entity, accessType) {
         id = group.startingIndexForViewPermissions
     }
 
+    // CASES - View If Owner
     if (entity === C.perissionMatrixEntity.cases && accessType === C.permissionMatrixAccessType.viewIfOwner) {
         id = group.startingIndexForViewPermissions + 1
     }
 
+    // CASES - Create
+    if (entity === C.perissionMatrixEntity.cases && accessType === C.permissionMatrixAccessType.create) {
+        id = group.startingIndexForCreatePermissions
+    }
+
+    // CASES - Update All
+    if (entity === C.perissionMatrixEntity.cases && accessType === C.permissionMatrixAccessType.updateAll) {
+        id = group.startingIndexForUpdatePermissions
+    }
+    //_____________________________________________________________________________________________________________________
+
+    // ITEMS - View
+    if (entity === C.perissionMatrixEntity.items && accessType === C.permissionMatrixAccessType.viewAll) {
+        id = group.startingIndexForViewPermissions + 2
+    }
+
+    // ITEMS - View If Owner
+    if (entity === C.perissionMatrixEntity.items && accessType === C.permissionMatrixAccessType.viewIfOwner) {
+        id = group.startingIndexForViewPermissions + 3
+    }
+
+    // ITEMS - Create
+    if (entity === C.perissionMatrixEntity.items && accessType === C.permissionMatrixAccessType.create) {
+        id = group.startingIndexForCreatePermissions + 1
+    }
+
+    // ITEMS - Update All
+    if (entity === C.perissionMatrixEntity.items && accessType === C.permissionMatrixAccessType.updateAll) {
+        id = group.startingIndexForUpdatePermissions + 3
+    }
+
+    // ITEMS - Update If Owner
+    if (entity === C.perissionMatrixEntity.items && accessType === C.permissionMatrixAccessType.updateIfOwner) {
+        id = group.startingIndexForUpdatePermissions + 4
+    }
+//_____________________________________________________________________________________________________________________
 
     // AUTO DISPO - View
     if (entity === C.perissionMatrixEntity.autoDispo && accessType === C.permissionMatrixAccessType.viewAll) {
@@ -58,7 +96,39 @@ function getPermissionId(group, entity, accessType) {
 
     // AUTO DISPO - Update
     if (entity === C.perissionMatrixEntity.autoDispo && accessType === C.permissionMatrixAccessType.updateAll) {
-        id = group.startingIndexForUpdatePermissions + 14
+        id = group.startingIndexForUpdatePermissions + 15
+    }
+
+//_____________________________________________________________________________________________________________________
+    // TAGS - View Org Tags
+    if (entity === C.perissionMatrixEntity.tags && accessType === C.permissionMatrixAccessType.viewAll) {
+        id = group.startingIndexForViewPermissions + 20
+    }
+
+    // TAGS - Create Group Tags
+    if (entity === C.perissionMatrixEntity.tags && accessType === C.permissionMatrixAccessType.createGroupTag) {
+        id = group.startingIndexForCreatePermissions + 20
+    }
+
+    // TAGS - Create Personal Tags
+    if (entity === C.perissionMatrixEntity.tags && accessType === C.permissionMatrixAccessType.createPersonalTag) {
+        id = group.startingIndexForCreatePermissions + 21
+    }
+
+//_____________________________________________________________________________________________________________________
+    // TAGS GROUPS- View Tag Group
+    if (entity === C.perissionMatrixEntity.tagGroups && accessType === C.permissionMatrixAccessType.viewAll) {
+        id = group.startingIndexForViewPermissions + 21
+    }
+
+    // TAGS - Create Tags Group
+    if (entity === C.perissionMatrixEntity.tagGroups && accessType === C.permissionMatrixAccessType.create) {
+        id = group.startingIndexForCreatePermissions + 22
+    }
+
+    // TAGS - Update Tag Group
+    if (entity === C.perissionMatrixEntity.tagGroups && accessType === C.permissionMatrixAccessType.updateAll) {
+        id = group.startingIndexForUpdatePermissions + 22
     }
 
     return id
@@ -72,9 +142,51 @@ exports.set_specific_permission_for_an_existing_Permission_group = function (gro
         '/api/security/organizations/' + permissionId,
         body.generate_PUT_request_payload_for_setting_specific_permission(group, permissionId, entity, accessType, shouldEnable),
         "Permissions updated via API")
+    return this
 };
 
-exports.set_CRUD_permissions_for_specific_entity_on_existing_Permission_group = function (group, entity, viewAll, viewIfOwner, create, updateAll, updateIfOwner, setDispoAction, delete_, deleteIfOwner, ) {
+// exports.set_CRUD_permissions_for_specific_entity = function (group, entity, shouldEnable) {
+//     exports.set_specific_permission_for_an_existing_Permission_group
+//     (group, entity, C.permissionMatrixAccessType.viewAll, shouldEnable)
+//         .set_specific_permission_for_an_existing_Permission_group
+//         (group, entity, C.permissionMatrixAccessType.create, shouldEnable)
+//         .set_specific_permission_for_an_existing_Permission_group
+//         (group, entity, C.permissionMatrixAccessType.updateAll, shouldEnable)
+//     return this
+// };
+
+exports.enable_all_permissions = function (group) {
+    exports.update_ALL_permissions_for_an_existing_Permission_group
+    (group, true, true, true, true)
+}
+
+exports.disable_all_permissions = function (group) {
+    exports.update_ALL_permissions_for_an_existing_Permission_group
+    (group, false, false, false, false, false, false)
+}
+
+exports.enable_just_Case_and_Item_permissions = function (group) {
+
+    exports.disable_all_permissions(group)
+
+    exports.set_specific_permission_for_an_existing_Permission_group
+    (group, C.perissionMatrixEntity.cases, C.permissionMatrixAccessType.viewAll, true)
+        .set_specific_permission_for_an_existing_Permission_group
+        (group, C.perissionMatrixEntity.cases, C.permissionMatrixAccessType.create, true)
+        .set_specific_permission_for_an_existing_Permission_group
+        (group, C.perissionMatrixEntity.cases, C.permissionMatrixAccessType.updateAll, true)
+
+        .set_specific_permission_for_an_existing_Permission_group
+        (group, C.perissionMatrixEntity.items, C.permissionMatrixAccessType.viewAll, true)
+        .set_specific_permission_for_an_existing_Permission_group
+        (group, C.perissionMatrixEntity.items, C.permissionMatrixAccessType.create, true)
+        .set_specific_permission_for_an_existing_Permission_group
+        (group, C.perissionMatrixEntity.items, C.permissionMatrixAccessType.updateAll, true)
+
+    return this
+};
+
+exports.set_CRUD_permissions_for_specific_entity_on_existing_Permission_group = function (group, entity, viewAll, viewIfOwner, create, updateAll, updateIfOwner, setDispoAction, delete_, deleteIfOwner,) {
 
     let viewAllPermissionId = getPermissionId(group, entity, C.permissionMatrixAccessType.viewAll)
     let viewIfOwnerPermissionId = getPermissionId(group, entity, C.permissionMatrixAccessType.viewIfOwner)
@@ -82,48 +194,48 @@ exports.set_CRUD_permissions_for_specific_entity_on_existing_Permission_group = 
     let updateAllPermissionId = getPermissionId(group, entity, C.permissionMatrixAccessType.updateAll)
     let updateIfOwnerPermissionId = getPermissionId(group, entity, C.permissionMatrixAccessType.updateIfOwner)
 
-    if(viewAll !== null){
+    if (viewAll) {
         generic_request.PUT(
             '/api/security/organizations/' + viewAllPermissionId,
             body.generate_PUT_request_payload_for_setting_specific_permission(group, viewAllPermissionId, entity, C.permissionMatrixAccessType.viewAll, viewAll),
             "Permissions updated via API")
     }
-
-    if(viewIfOwner !== null){
+    if (viewIfOwner) {
         generic_request.PUT(
             '/api/security/organizations/' + viewIfOwnerPermissionId,
             body.generate_PUT_request_payload_for_setting_specific_permission(group, viewIfOwnerPermissionId, entity, C.permissionMatrixAccessType.viewIfOwner, viewIfOwner),
             "Permissions updated via API")
     }
-    if(create !== null){
+    if (create) {
         generic_request.PUT(
             '/api/security/organizations/' + createPermissionId,
             body.generate_PUT_request_payload_for_setting_specific_permission(group, createPermissionId, entity, C.permissionMatrixAccessType.create, create),
             "Permissions updated via API")
     }
-    if(updateAll !== null){
+    if (updateAll) {
         generic_request.PUT(
             '/api/security/organizations/' + updateAllPermissionId,
             body.generate_PUT_request_payload_for_setting_specific_permission(group, updateAllPermissionId, entity, C.permissionMatrixAccessType.updateAll, updateAll),
             "Permissions updated via API")
     }
-    if(updateIfOwner !== null){
+    if (updateIfOwner) {
         generic_request.PUT(
             '/api/security/organizations/' + updateIfOwnerPermissionId,
             body.generate_PUT_request_payload_for_setting_specific_permission(group, updateIfOwnerPermissionId, entity, C.permissionMatrixAccessType.updateIfOwner, updateIfOwner),
             "Permissions updated via API")
     }
+    return this
 };
 
-exports.update_ALL_permissions_for_an_existing_Permission_group = function (group, createEnabled, viewEnabled, updateEnabled, deleteEnabled) {
-    exports.set_VIEW_permissions_for_an_existing_Permission_group(group, viewEnabled);
+exports.update_ALL_permissions_for_an_existing_Permission_group = function (group, createEnabled, viewEnabled, updateEnabled, deleteEnabled, viewIfOwnerEnabled = !viewEnabled, updateIfOwnerEnabled = !updateEnabled) {
+    exports.set_VIEW_permissions_for_an_existing_Permission_group(group, viewEnabled, viewIfOwnerEnabled);
     exports.set_CREATE_permissions_for_an_existing_Permission_group(group, createEnabled);
-    exports.set_UPDATE_permissions_for_an_existing_Permission_group(group, updateEnabled);
+    exports.set_UPDATE_permissions_for_an_existing_Permission_group(group, updateEnabled, updateIfOwnerEnabled);
     exports.set_DELETE_permissions_for_an_existing_Permission_group(group, deleteEnabled);
     return this;
 };
 
-exports.assign_Org_Admin_permissions_to_user = function (userObjectFromLocalStorageOrId, office1_ID, group1_ID , office2_ID = null, group2_ID = null, office3_ID = null, group3_ID = null) {
+exports.assign_Org_Admin_permissions_to_user = function (userObjectFromLocalStorageOrId, office1_ID, group1_ID, office2_ID = null, group2_ID = null, office3_ID = null, group3_ID = null) {
 
     cy.getLocalStorage(userObjectFromLocalStorageOrId).then(user => {
         let userId = user ? JSON.parse(user).id : userObjectFromLocalStorageOrId;
@@ -138,7 +250,7 @@ exports.assign_Org_Admin_permissions_to_user = function (userObjectFromLocalStor
 exports.assign_office_based_permissions_to_user = function (userObjectFromLocalStorageOrId, office1_ID, group1_ID, office2_ID = null, group2_ID = null, office3_ID = null, group3_ID = null) {
 
     cy.getLocalStorage(userObjectFromLocalStorageOrId).then(user => {
-        if (user) D.newUser  = Object.assign(D.newUser, JSON.parse(user))
+        if (user) D.newUser = Object.assign(D.newUser, JSON.parse(user))
         let userId = user ? JSON.parse(user).id : userObjectFromLocalStorageOrId;
         generic_request.POST(
             '/api/groups/userperms',

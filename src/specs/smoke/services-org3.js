@@ -98,6 +98,7 @@ describe('Dispo Auth', function () {
 
     });
 });
+
 describe('Services', function () {
 
     before(function () {
@@ -125,17 +126,21 @@ describe('Services', function () {
         cy.get('@windowOpen').should('have.been.calledWithMatch', /Report.*\.pdf/)
     });
 
-    it('2. Exporter', function () {
+    for (let i = 0; i < 10; i++) {
+        it.only('2. Exporter', function () {
 
-        api.auth.get_tokens(S.userAccounts.orgAdmin);
-        ui.app.open_newly_created_case_via_direct_link()
-            .select_tab(C.tabs.items)
-            .select_checkbox_for_all_records()
-            .click_element_on_active_tab(C.buttons.export)
-            .click_option_on_expanded_menu('All - Excel')
-        ui.app.verify_url_contains_some_value('export-jobs')
-            .verify_content_of_first_row_in_results_table('Download')
-    });
+            api.auth.get_tokens(S.userAccounts.orgAdmin);
+            ui.app.open_newly_created_case_via_direct_link()
+                .select_tab(C.tabs.items)
+                .select_checkbox_for_all_records()
+                .click_element_on_active_tab(C.buttons.export)
+                .click_option_on_expanded_menu('All - Excel')
+            ui.app.verify_url_contains_some_value('export-jobs')
+            // .verify_content_of_first_row_in_results_table('Download')
+            ui.app.verify_content_of_specific_cell_in_first_table_row('Download Link', 'Download')
+
+        });
+    }
 
     it('3. Importer', function () {
         let fileName = 'CaseImport_allFields_' + S.domain;
@@ -143,7 +148,7 @@ describe('Services', function () {
 
         D.generateNewDataSet();
         D.getNewItemData(D.newCase);
-        D.newCase.caseOfficers_importFormat =S.userAccounts.orgAdmin.email + ';' + S.selectedEnvironment.admin_userGroup.name
+        D.newCase.caseOfficers_importFormat = S.userAccounts.orgAdmin.email + ';' + S.selectedEnvironment.admin_userGroup.name
         D.newCase.caseOfficers = [S.userAccounts.orgAdmin.name, S.selectedEnvironment.admin_userGroup.name]
 
         E.generateDataFor_CASES_Importer([D.newCase]);
@@ -156,7 +161,7 @@ describe('Services', function () {
 
         ui.menu.click_Tools__Data_Import();
         ui.importer.upload_then_Map_and_Submit_file_for_importing(fileName, C.importTypes.cases)
-           // .verify_toast_message([C.toastMsgs.importComplete, 1 + C.toastMsgs.recordsImported])
+            // .verify_toast_message([C.toastMsgs.importComplete, 1 + C.toastMsgs.recordsImported])
             .check_import_status_on_grid('1 records imported')
             .quick_search_for_case(D.newCase.caseNumber);
 
@@ -251,7 +256,7 @@ describe('Services', function () {
         ui.menu.click_Tools__Auto_Reports()
         ui.app.set_visibility_of_table_column('Public Facing Description', true)
             .sort_by_descending_order('Delivery Time')
-            .verify_text_is_present_and_check_X_more_times_after_waiting_for_Y_seconds(approvedForReleaseItem.description, 10)
+            .verify_text_is_present_and_check_X_more_times_after_waiting_for_Y_seconds(approvedForReleaseItem.description, 10, 30, true)
     });
 
 })

@@ -91,6 +91,7 @@ S.ALL_ENVS = {
             dispositionAuthorizationStatus: 44,
             latestTransactionNotes: 48,
             checkInNotes: 43,
+            checkInSignature: 50,
         },
         person: {
             businessName: 9,
@@ -1422,7 +1423,6 @@ S.DEV_3 = {...S.ALL_ENVS, ...S.DEV_3};
 
 S.DEV_4 = {...S.ALL_ENVS, ...S.DEV_4};
 
-
 S.QA_1 = {
     orgSettings: {
         id: 3,
@@ -1477,7 +1477,6 @@ S.QA_1 = {
             id: 1322,
             guid: 'bcc373aa-d790-ed11-833a-0254a7906fb1'
         },
-        // basic user should be corrected for QA1 (it was copied from Pentest just to fill missing reference
         basicUser: {
             id: 43530,
             guid: '2af70873-db6f-ed11-832d-021f02b7478f'
@@ -1513,18 +1512,6 @@ S.QA_1 = {
         taskFormWithRequiredFields: 2547,
         taskFormWithOptionalFields: 2548
     },
-    locations: [
-        {
-            id: 476096,
-            guid: '67d3a4e4-8c55-4ee4-ab66-e225b114dc35',
-            name: "CypressLocation1"
-        },
-        {
-            id: 510384,
-            guid: '7a706961-0771-42da-9d49-a72dffc9c3f2',
-            name: "CypressLocation2"
-        }
-    ],
     caseForReport: {
         id: null,
     },
@@ -1736,6 +1723,56 @@ S.QA_1 = {
             message: 'Message-forAutomatedTests'
         },
     },
+    orgTag1: {tagModelId: 6548, name: 'sensitive information', color: "#ad2355", tagUsedBy: 1},
+    orgTag2: {tagModelId: 6714, name: 'eligible for disposal', color: "#4b9b62", tagUsedBy: 1},
+    tagA: {tagModelId: 16806, name: 'Tag_A__', color: "#4b9b62", tagUsedBy: 1},
+    tagB: {tagModelId: 16807, name: 'Tag_B__', color: "#4b9b62", tagUsedBy: 1},
+    tagC: {tagModelId: 16812, name: 'Tag_C__', color: "#4b9b62", tagUsedBy: 1},
+    fieldIds: {
+        case: {
+            offenseLocation: 29,
+            offenseDescription: 30,
+            tags: 31,
+            offenseDate: 34,
+            linkedCases: 45
+        },
+        item: {
+            recoveredAt: 5,
+            custodyReason: 6,
+            recoveredBy: 7,
+            make: 8,
+            model: 9,
+            serialNumber: 10,
+            barcodes: 15,
+            tags: 11,
+            description: 12,
+            recoveryDate: 13,
+            itemBelongsTo: 14,
+            releasedTo: 35,
+            expectedReturnDate: 16,
+            actualDisposedDate: 17,
+            publicFacingDescription: 34,
+            dispositionAuthorizationStatus: 32,
+            latestTransactionNotes: 36,
+            checkInNotes: 31,
+            checkInSignature: 37
+        },
+        person: {
+            businessName: 9,
+            middleName: 10,
+            alias: 11,
+            dob: 12,
+            driverLicense: 13,
+            race: 14,
+            gender: 15,
+            mobilePhone: 16,
+            otherPhone: 17,
+            deceased: 18,
+            juvenile: 19,
+            email: 39,
+            address: 40,
+        },
+    }
 };
 
 S.QA_2 = {
@@ -2559,6 +2596,23 @@ S.PENTEST_2 = {
         taskFormWithRequiredFields: 2547,
         taskFormWithOptionalFields: 2548
     },
+    itemCustomForm: {
+        name: "Optional fields - Cypress Items Form - Org #2",
+        id: 24316,
+        checkboxListId: "field7181",
+        radioButtonListId: "field7183",
+        selectListId: "field7185",
+        dropdownTypeahead: "field7187",
+        number: "field7173",
+        password: "field7175",
+        textbox: "field7169",
+        email: "field7171",
+        textarea: "field7177",
+        checkbox: "field7179",
+        date: "field7193",
+        user: "field7189",
+        person: "field7191",
+    },
     locations: [
         {
             id: 477682,
@@ -2698,7 +2752,6 @@ S.PENTEST_2 = {
         name: 'Cypress ReadOnly Group',
         id: 2898
     },
-
     taskTemplates: {
         dispoAuth: {
             templateId: 3511,
@@ -2743,13 +2796,15 @@ S.PENTEST_2 = {
             taskActionId: '547',
         },
     },
-
     orgTag1: {tagModelId: 6751, name: 'sensitive information', color: "#ad2355", tagUsedBy: 1},
     orgTag2: {tagModelId: 6752, name: 'eligible for disposal', color: "#4b9b62", tagUsedBy: 1},
-    tagA: {tagModelId: 16809, name: 'Tag_A__', color: "#4b9b62", tagUsedBy: 1},
+    tagA: {tagModelId: 37980, name: 'Tag_A__', color: "#4b9b62", tagUsedBy: 1},
     tagB: {tagModelId: 16810, name: 'Tag_B__', color: "#4b9b62", tagUsedBy: 1},
     tagC: {tagModelId: 16811, name: 'Tag_C__', color: "#4b9b62", tagUsedBy: 1},
-
+    tagGroup: {
+        name: 'AutoTest_TagGroup1',
+        id: 278
+    }
 };
 
 S.PENTEST_3 = {
@@ -2885,12 +2940,12 @@ S.PENTEST_3 = {
     //     id: 105156,
     // },
     oldClosedCase: {
-        id: 7743123,
-        caseNumber: 'Closed Case-AutomatedTest',
+        id: 7743205,
+        caseNumber: 'AutomatedTest-Closed Case',
         createdDate: '12/28/2022',
-        offenseDate: '12/21/2022',
+        offenseDate: '12/20/2022',
         reviewDate: '12/30/2022',
-        closedDate: '12/28/2022',
+        closedDate: '09/10/2025',
     },
     oldActiveCase: {
         id: 7743098,
@@ -2960,8 +3015,8 @@ S.PENTEST_3 = {
     },
     regularUser_permissionGroup: {
         name: 'Cypress - Regular User',
-        id: 4589,
-        startingIndexForViewPermissions: 82124,
+        id: 4619,
+        startingIndexForViewPermissions: 93678,
         get startingIndexForCreatePermissions() {
             return S.PENTEST_3.regularUser_permissionGroup.startingIndexForViewPermissions + 22
         },
@@ -3007,7 +3062,10 @@ S.PENTEST_3 = {
     tagA: {tagModelId: 16829, name: 'Tag_A__', color: "#4b9b62", tagUsedBy: 1},
     tagB: {tagModelId: 16830, name: 'Tag_B__', color: "#4b9b62", tagUsedBy: 1},
     tagC: {tagModelId: 16831, name: 'Tag_C__', color: "#4b9b62", tagUsedBy: 1},
-
+    tagGroup: {
+        name: 'AutoTest_TagGroup1',
+        id: 278
+    },
     taskTemplates: {
         dispoAuth: {
             templateId: 4308,
@@ -4647,7 +4705,7 @@ S.customForms = {
 }
 
 S.colors = {
-    redBorder: "rgb(231,24,45)"
+  redBorder: "rgb(231,24,45)"
 };
 
 S.gmailAccount = {

@@ -33,7 +33,6 @@ export default class AutoDispoPage extends BasePage {
 
     //************************************ ACTIONS ***************************************//
 
-
     open_direct_url_for_page() {
         this.open_url_and_wait_all_GET_requests_to_finish(S.base_url + '/#/' + C.pages.orgSettings.url)
         return this

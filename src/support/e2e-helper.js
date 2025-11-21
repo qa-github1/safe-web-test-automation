@@ -278,13 +278,13 @@ exports.setNewRandomNo = function () {
     return exports.randomNo = this.getCurrentDateInSpecificFormat('mdyy') + Math.floor(1000000 * Math.random() + 1).toString()
 };
 
-exports.setNewRandomString = function (length = 3) {
+exports.setNewRandomString = function (length = 3, dataMask = 'mmmmddyyhhmm') {
     var randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
     var result = '';
     for (var i = 0; i < length; i++) {
         result += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
     }
-    exports.randomString = dateFormat(Date(), 'mmmmddyyhhmm') + result;
+    exports.randomString = dateFormat(Date(), dataMask) + result;
     return exports.randomString.toLowerCase();
 };
 

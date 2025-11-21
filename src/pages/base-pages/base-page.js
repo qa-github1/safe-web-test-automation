@@ -1,4 +1,4 @@
-import authApi from "../../api-utils/endpoints/auth";
+import authApi, {log_out} from "../../api-utils/endpoints/auth";
 import orgSettingsApi from "../../api-utils/endpoints/org-settings/collection";
 import '../../support/commands';
 import {selectedEnvironment} from "../../fixtures/settings";
@@ -31,6 +31,7 @@ let
     addItem = e => cy.get('[translate="CASES.LIST.BUTTON_ADD_ITEM"]'),
     active_tab = e => cy.get('[class="tab-pane ng-scope active"]'),
     quickSearch = e => cy.get('[name="navbarSearchField"]'),
+    customDataType = e => cy.get('ng-transclude > .form-control'),
     tableColumn_header = columnTitle => cy.get('thead').contains(columnTitle),
     tableColumn_header_arrowUp = columnTitle => cy.get('thead').contains(columnTitle).parent().find('.order'),
     tableColumn_header_sortingArrow = columnTitle => cy.get('thead').contains(columnTitle).parent().find('.order'),
@@ -47,6 +48,7 @@ let
     modalBodySectionAboveFooter = e => cy.get('.modal-body').children('div').last(),
     itemCategoryOnMassUpdate = e => cy.get('[ng-model="item.categoryId"]'),
     sweetAlert = e => cy.get('[data-animation="pop"]'),
+    lastCoCMediaButton = e => cy.get('[class="btn btn-default btn-xs btn-block ng-binding"]').eq(1),
     typeaheadList = e => cy.get('.ui-select-choices'),
     firstTypeaheadOption = e => cy.get('.ui-select-choices-row').first(),
     //highlightedOptionOnTypeahead = e => cy.get('.ui-select-choices-row-inner').last(),
@@ -55,9 +57,11 @@ let
     specificPersonOnItemBelongsToTypeahead = person => cy.get('[ng-repeat="person in $select.items"]').contains(person),
     firstMatchOnTypeahead = e => cy.get('[ng-repeat="match in matches track by $index"]').first(),
     caseOfficersOverwrite = e => cy.get('[ng-model="toggle.caseOfficersOverwrite"]'),
+    overwriteForm = e => cy.get('[ng-model="massUpdateOptions.overwrite"]'),
     replaceTagsRadioButton = e => cy.get('[translate="MASS.UPDATE.OVERWRITE_EXISTING_TAGS"]'),
     tagsTypeaheadList = e => cy.get('[repeat="tagModel in allTagModels | filter: $select.search"]'),
     orgTagIconOnTagsTypeaheadList = e => tagsTypeaheadList().find('[ng-if="model.tagUsedBy==1"]'),
+    tagsInputWithinActiveForm = e => active_form().find('[label="\'GENERAL.TAGS\'"]').find('input'),
     linkByText = linkText => cy.get('a').contains(linkText),
     linkByTextOnFirstTableRow = linkText => cy.get('tr').first().contains(linkText),
     linkWrappedInElement = (linkText, parentElementTag) => cy.contains(linkText).parent(parentElementTag),
@@ -82,12 +86,13 @@ let
     expandedMenu = e => cy.get('button[aria-expanded="true"]'),
     optionOnExpandedMenu = option => expandedMenu().next().contains(option).parent('li'),
     dropdownOnModal = e => modal().children().get('select'),
-    notesOnModal = e => modal().children().find('textarea'),
-    noteOnModal = e => modal().children().get('[placeholder="Note"]'),
+    notesOnModal = e => modal().children().contains('Notes').parents('tp-modal-field').find('ng-transclude').find('.form-control'),
     tableOnModal = e => modal().find('tbody'),
     asterisks = e => cy.get('[ng-if="form.state[field.name].$error.required"]'),
     optionOnTypeahead = option => cy.get('.dropdown-menu[aria-hidden="false"]').contains(option),
     mainContainer = e => cy.get('.ui-view-main'),
+    recoveryDate = e => cy.get('[ng-model="item.recoveryDate"]').last(),
+    itemBelongsTo = e => cy.get('[placeholder="Persons for search"]').last(),
     textOnMainContainer = text => cy.get('.ui-view-main').contains(text),
     toastMessage = (timeout = 50000) => cy.get('.toast', {timeout: timeout}),
     firstToastMessage = (timeout = 50000) => cy.get('.toast', {timeout: timeout}).first(),
@@ -134,9 +139,12 @@ let
     lastRowInResultsTable = e => resultsTable().children('tr').last(),
     firstRowInResultsTableOnModal = e => cy.get('.modal-content').find('tbody').children('tr').first(),
     visibleTable = e => cy.get('.table').not('.ng-hide'),
-    checkboxOnFirstRowOnVisbileTable = e => visibleTable().find('tbody').children('tr').first(),
-    firstRowInResultsTableOnActiveTab = e => active_tab().find('tbody').children('tr').first(),
-    checkboxOnFirstRowInResultsTableOnActiveTab = (tableIndex = 0) => active_tab().find('tbody').eq(tableIndex).children('tr').first().find('.bg-grid-checkbox'),
+    checkboxOnFirstRowOnVisibleTable = e => visibleTable().find('tbody').children('tr').first(),
+    checkboxOnLastRowOnVisibleTable = e => visibleTable().find('tbody').children('tr').last().find('.bg-grid-checkbox'),
+    firstRowInResultsTableOnActiveTab = e => active_tab().find('tbody').children('tr').first().find('.bg-grid-checkbox'),
+    lastRowInResultsTableOnActiveTab = e => active_tab().find('tbody').children('tr').last(),
+    checkboxOnFirstRowInResultsTableOnActiveTab = (tableIndex = 0) => active_tab().find('tbody').eq(tableIndex)
+        .children('tr').first().find('.bg-grid-checkbox'),
     checkboxOnFirstTableRow = e => resultsTable().find('.bg-grid-checkbox').first(),
     checkboxToSelectAll = e => cy.get('[ng-model="options.selectAllToggle"]').first(),
     statisticsBlock = e => cy.get('.statistic-block').first(),
@@ -176,7 +184,7 @@ let
     itemsCountOnSearchGrid = e => resultsTable().children('tr').first().find('[ng-click="callbackFunction(item.id)"]'),
     active_form = e => cy.get('.form-horizontal').not('.ng-hide'),
     tagsField = e => active_form().contains('Tags').parent('div'),
-    //tagsField = e => cy.contains('Tags').parent('div').find('ng-transclude'),
+    tagsInputField = e => active_form().find('[label="\'GENERAL.TAGS\'"]').find('input'),
     tagsInput = e => active_form().contains('Tags').parent('div').find('input'),
     actionsContainer = e => cy.get('[translate="GENERAL.ACTIONS"]').closest('div'),
     actionsContainerOnSearchPage = e => cy.get('[title="Select an item or items for which you would like to perform Action."]').closest('div'),
@@ -249,7 +257,7 @@ let dashboardGetRequests = [
     '/api/access/offices'
 ]
 
-export default class BasePage {
+let basePage = class BasePage {
 
     constructor() {
         this.typeaheadSelectorMatchInMatches = typeaheadSelectorMatchInMatches;
@@ -362,6 +370,16 @@ export default class BasePage {
         return parentContainer().contains(regex)
     };
 
+    click_element_by_text(text) {
+        cy.log(text)
+        cy.findByText(text)
+            .should('be.visible')
+            .scrollIntoView()
+            .click({force: true});
+        return this;
+    }
+
+
     search_history(value) {
         searchBar_history().clear().type(value).type('{enter}');
 
@@ -378,6 +396,16 @@ export default class BasePage {
         addItemHeader().should('be.visible');
         return this;
     };
+
+    verify_tag_with_specific_type_is_visible(tagName, tagType) {
+        if (tagType === 'Org') {
+            cy.contains(tagName).parents('[ng-repeat="tag in tags"]').find('i').should('have.class', 'fa-building')
+        } else if (tagType === 'Group') {
+            cy.contains(tagName).parents('[ng-repeat="tag in tags"]').find('i').should('have.class', 'fa-group')
+        } else if (tagType === 'User') {
+            cy.contains(tagName).parents('[ng-repeat="tag in tags"]').find('i').should('have.class', 'fa-user')
+        }
+    }
 
     verify_text_is_present_on_main_container(text) {
         this.toastMessage().should('not.exist');
@@ -566,7 +594,7 @@ export default class BasePage {
         cy.contains('Menu Customization').click()
         optionsDropdownUnderMenuCustomization().click()
         pageSizesUnderMenuCustomization().contains(pageSize).click()
-        this.pause(5)
+        this.pause(1)
         this.wait_until_spinner_disappears()
         return this;
     }
@@ -600,8 +628,16 @@ export default class BasePage {
 
     click_number_on_pagination(pageNumber) {
         this.wait_until_spinner_disappears()
-        cy.get('.pagination-sm').first().findByText(pageNumber).click()
-        this.pause(3)
+
+        cy.document().then(doc => {
+            const pagination = doc.querySelector('.pagination-sm');
+            if (pagination) {
+                if (pagination.offsetParent !== null) {
+                    cy.get('.pagination-sm').first().findByText(pageNumber).click()
+                }
+            }
+        });
+        this.pause(2)
         this.wait_until_spinner_disappears()
         return this;
     }
@@ -837,7 +873,6 @@ export default class BasePage {
 
                 }
 
-
                 if (typeof LabelValueArray[0] === 'string' || LabelValueArray[0] instanceof String) {
                     // typeaheadInputField(LabelValueArray[0]).clear().invoke('val', LabelValueArray[1][i]).trigger('input')
                     typeaheadInputField(LabelValueArray[0])
@@ -865,12 +900,53 @@ export default class BasePage {
                 }
 
                 cy.wait(200)
-                highlightedOptionOnTypeahead().click({force: true})
+
+                if (LabelValueArray[3] === '{enter}') {
+                    typeaheadInputField(LabelValueArray[0]).type('{enter}')
+                }
+                else{
+                    highlightedOptionOnTypeahead().click({force: true})
+                }
                 cy.wait(200)
 
             }
         }
+        return this;
+    };
 
+    type_Tag_value_and_verify_if_option_is_available_on_dropdown(value, shouldExistingTagBeAvailable, shouldHaveOptionToCreatePersonalTag) {
+        tagsInputField()
+            .clear()
+            .invoke('val', value)
+            .trigger('input')
+            .then($input => {
+                cy.wait(500).then(() => {
+                    const currentVal = $input.val();
+                    const newVal = currentVal.slice(0, -1);
+                    cy.wrap($input).invoke('val', newVal).trigger('input');
+                });
+            });
+
+        let getTagOptions = () => {
+            return highlightedOptionOnTypeahead().parents('.ui-select-choices-content').invoke('text')
+        };
+
+        if (shouldHaveOptionToCreatePersonalTag) {
+            if (shouldExistingTagBeAvailable) {
+                cy.verifyTextAndRetry(getTagOptions, value);
+                cy.verifyTextAndRetry(getTagOptions, 'Create Personal Tag');
+            } else {
+                cy.verifyTextAndRetry(getTagOptions, 'Create Personal Tag');
+                cy.verifyTextAndRetry(getTagOptions, 'Create Personal Tag');
+            }
+        } else {
+            if (shouldExistingTagBeAvailable) {
+                cy.verifyTextAndRetry(getTagOptions, value);
+            } else {
+                //typeaheadInputField('Tags').type('{enter}')
+                this.verify_text_is_NOT_present_on_main_container(value)
+            }
+        }
 
         return this;
     };
@@ -964,6 +1040,12 @@ export default class BasePage {
                 }
             });
         }
+        return this;
+    };
+
+    verify_last_transaction_media_from_CoC() {
+        lastCoCMediaButton().click();
+        this.verify_content_of_results_table('image.png')
         return this;
     };
 
@@ -1427,6 +1509,7 @@ export default class BasePage {
         return this;
     };
 
+
     click_Actions(useButtonOnActiveTab) {
         this.pause(1)
         this.wait_until_modal_disappears()
@@ -1514,6 +1597,12 @@ export default class BasePage {
         return this;
     };
 
+    press_ENTER_on_Tags(element) {
+        tagsInputField().type('{enter}');
+        this.pause(0.5)
+        return this;
+    };
+
     press_ENTER_on_field_found_by_label(label) {
         inputFieldFoundByLabel(label).type('{enter}');
         return this;
@@ -1545,7 +1634,6 @@ export default class BasePage {
 
     open_url_and_wait_all_GET_requests_to_finish(urlToOpen, partOfRequestUrl) {
         if (partOfRequestUrl) {
-            cy.server();
             this.define_API_request_to_be_mocked('GET', partOfRequestUrl)
             cy.visit(urlToOpen);
             this.wait_response_from_API_call(partOfRequestUrl)
@@ -1556,7 +1644,7 @@ export default class BasePage {
             this.wait_until_spinner_disappears()
             this.click_toast_message_if_visible()
         }
-        return this;
+        return this
     };
 
     open_direct_url_for_page(page) {
@@ -2077,11 +2165,6 @@ export default class BasePage {
         return this;
     };
 
-    enter_note_on_modal(note) {
-        noteOnModal().type(note);
-        return this;
-    };
-
     verify_number_of_required_fields_marked_with_asterisk(count) {
         asterisks().should('have.length', count)
         return this;
@@ -2140,6 +2223,7 @@ export default class BasePage {
         return this;
     };
 
+
     click_table_matrix_cell_based_on_column_name_and_unique_value_in_the_row(columnName, uniqueValueInRow, tableIndex, fieldType = 'input') {
 
         tableColumnFoundByText(columnName, tableIndex).prevAll()
@@ -2157,7 +2241,7 @@ export default class BasePage {
         cy.verifyTextAndRetry(() =>
                 firstRowInResultsTable().invoke('text'),
             content,
-            {clickReloadIconBetweenAttempts: true}
+            {clickReloadIconBetweenAttempts: clickReloadIconBetweenAttempts}
         );
         this.wait_until_spinner_disappears()
         return this;
@@ -2175,8 +2259,17 @@ export default class BasePage {
         return this;
     };
 
-    verify_content_of_last_row_in_results_table(content) {
 
+    add_Tags(tagsArray) {
+        this.enter_values_on_several_multi_select_typeahead_fields(
+            [
+                [tagsInputWithinActiveForm, tagsArray, this.lastTagOnTypeahead],
+            ]);
+        return this
+    }
+
+    verify_content_of_last_row_in_results_table(content) {
+        this.pause(1)
         if (this.isObject(content)) {
             for (let property in content) {
                 lastRowInResultsTable().should('contain', content[property]);
@@ -2198,34 +2291,36 @@ export default class BasePage {
 
 
     verify_content_of_specific_cell_in_first_table_row(columnTitle, cellContent, headerCellTag = 'th') {
-        firstRowInResultsTable(0).within(($list) => {
-            if (cellContent) {
-                if (this.isObject(cellContent)) {
-                    for (let property in cellContent) {
-                        resultsTableHeaderFromRoot().contains(headerCellTag, columnTitle).invoke('index').then((i) => {
-                            cy.get('td').eq(i).invoke('text').then(function (textFound) {
-                                assert.include(textFound, cellContent[property]);
-                            })
 
-                        })
-                    }
-                } else if (Array.isArray(cellContent)) {
-                    cellContent.forEach(function (value) {
-                        resultsTableHeaderFromRoot().contains(headerCellTag, columnTitle).invoke('index').then((i) => {
-                            cy.get('td').eq(i).invoke('text').then(function (textFound) {
-                                assert.include(textFound, value);
-                            })
-                        })
-                    })
-                } else {
-                    resultsTableHeaderFromRoot().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
-                        cy.get('td').eq(i).invoke('text').then(function (textFound) {
-                            assert.include(textFound, cellContent.toString().trim());
-                        })
-                    });
-                }
-            }
-        });
+        this.verify_content_of_specific_table_row_by_provided_column_title_and_value(0, columnTitle, cellContent, headerCellTag)
+        // firstRowInResultsTable(0).within(($list) => {
+        //     if (cellContent) {
+        //         if (this.isObject(cellContent)) {
+        //             for (let property in cellContent) {
+        //                 resultsTableHeaderFromRoot().contains(headerCellTag, columnTitle).invoke('index').then((i) => {
+        //                     cy.get('td').eq(i).invoke('text').then(function (textFound) {
+        //                         assert.include(textFound, cellContent[property]);
+        //                     })
+        //
+        //                 })
+        //             }
+        //         } else if (Array.isArray(cellContent)) {
+        //             cellContent.forEach(function (value) {
+        //                 resultsTableHeaderFromRoot().contains(headerCellTag, columnTitle).invoke('index').then((i) => {
+        //                     cy.get('td').eq(i).invoke('text').then(function (textFound) {
+        //                         assert.include(textFound, value);
+        //                     })
+        //                 })
+        //             })
+        //         } else {
+        //             resultsTableHeaderFromRoot().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
+        //                 cy.get('td').eq(i).invoke('text').then(function (textFound) {
+        //                     assert.include(textFound, cellContent.toString().trim());
+        //                 })
+        //             });
+        //         }
+        //     }
+        // });
         return this;
     };
 
@@ -2261,91 +2356,57 @@ export default class BasePage {
     //        return this;
     //    };
 
-    verify_content_of_specified_cell_in_specified_table_row(rowNumber, columnTitle, cellContent, headerCellTag = 'th') {
 
-        specificRowInResultsTable(rowNumber - 1).within(($list) => {
-            if (cellContent) {
-                if (this.isObject(cellContent)) {
-                    for (let property in cellContent) {
-                        resultsTableHeaderFromRoot().contains(headerCellTag, columnTitle).invoke('index').then((i) => {
-                            cy.get('td').eq(i).invoke('text').then(function (textFound) {
-                                assert.include(textFound, cellContent[property]);
-                            })
+    verify_content_of_specific_table_row_by_provided_column_title_and_value(
+        rowIndex,
+        columnTitle,
+        cellContent,
+        headerCellTag = 'th',
+        isCoCTable = false
+    ) {
+        const self = this;
 
-                        })
-                    }
-                } else if (Array.isArray(cellContent)) {
-                    cellContent.forEach(function (value) {
-                        resultsTableHeaderFromRoot().contains(headerCellTag, columnTitle).invoke('index').then((i) => {
-                            cy.get('td').eq(i).invoke('text').then(function (textFound) {
-                                assert.include(textFound, value);
-                            })
-                        })
-                    })
-                } else {
-                    resultsTableHeaderFromRoot().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
-                        cy.get('td').eq(i).invoke('text').then(function (textFound) {
-                            assert.include(textFound, cellContent.toString().trim());
-                        })
-                    });
-                }
-            }
-        });
-        return this;
-    };
+        // Decide which header to use (normal or CoC)
+        const headerFn = isCoCTable
+            ? () => cy.get('.cocTable').find('thead')
+            : resultsTableHeader;
 
-    verify_content_of_specific_table_row_by_provided_column_title_and_value(rowNumber, columnTitle, cellContent, headerCellTag = 'th', isCoCTable = false) {
-        let self = this;
-        let currentEnvironment = Cypress.env('environment');
+        headerFn()
+            .contains(headerCellTag, columnTitle)
+            .not('ng-hide')
+            .invoke('index')
+            .then((i) => {
+                const getCell = () => specificRowInResultsTable(rowIndex).find('td').eq(i);
 
-        if (isCoCTable) {
-            resultsTableHeader = (tableIndex = 0) => cy.get('.cocTable').find('thead')
-            tableStriped = (tableIndex = 0) => cy.get('.cocTable')
-        }
+                // Normalize to array for consistent iteration
+                const values = Array.isArray(cellContent) ? cellContent : [cellContent];
 
-        if (Array.isArray(cellContent)) {
-            resultsTableHeader().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
-                specificRowInResultsTable(rowNumber).find('td').eq(i).invoke('text').then(function (textFound) {
-                    cellContent.forEach(function (value) {
-                        self.verify_text(specificRowInResultsTable(rowNumber).find('td').eq(i), value);
-                    });
+                values.forEach((value) => {
+                    self.verify_text(getCell, value);
                 });
             });
-        } else {
-            resultsTableHeader()
-                .contains(headerCellTag, columnTitle)
-                .not('ng-hide')
-                .invoke('index')
-                .then((i) => {
-                    const getCellText = () => specificRowInResultsTable(rowNumber).find('td').eq(i)
-                    self.verify_text(getCellText, cellContent);
-                });
-        }
+
         return this;
     }
 
-    verify_content_of_CoC_table_row_by_provided_column_title_and_value(rowNumber, columnTitle, cellContent, headerCellTag = 'th') {
-        let self = this;
-        let currentEnvironment = Cypress.env('environment');
+    verify_content_of_CoC_table_row_by_provided_column_title_and_value(rowIndex, columnTitle, cellContent, headerCellTag = 'th') {
+        const self = this;
 
-        if (Array.isArray(cellContent)) {
-            cocTableHeader().contains(headerCellTag, columnTitle).not('ng-hide').invoke('index').then((i) => {
-                specificRowInResultsTable(rowNumber).find('td').eq(i).invoke('text').then(function (textFound) {
-                    cellContent.forEach(function (value) {
-                        self.verify_text(specificRowInResultsTable(rowNumber).find('td').eq(i), value);
-                    });
+        cocTableHeader()
+            .contains(headerCellTag, columnTitle)
+            .not('ng-hide')
+            .invoke('index')
+            .then((i) => {
+                const getCell = () => specificRowInResultsTable(rowIndex).find('td').eq(i);
+
+                // Always work with an array for consistency
+                const values = Array.isArray(cellContent) ? cellContent : [cellContent];
+
+                values.forEach((value) => {
+                    self.verify_text(getCell, value);
                 });
             });
-        } else {
-            cocTableHeader()
-                .contains(headerCellTag, columnTitle)
-                .not('ng-hide')
-                .invoke('index')
-                .then((i) => {
-                    const getCellText = () => specificRowInResultsTable(rowNumber).find('td').eq(i)
-                    self.verify_text(getCellText, cellContent);
-                });
-        }
+
         return this;
     }
 
@@ -2399,6 +2460,16 @@ export default class BasePage {
         return this;
     };
 
+    verify_content_of_last_row_in_results_table_on_active_tab(content) {
+        if (Array.isArray(content)) {
+            content.forEach(value =>
+                lastRowInResultsTableOnActiveTab().should('contain', value))
+        } else {
+            lastRowInResultsTableOnActiveTab().should('contain', content);
+        }
+        return this;
+    };
+
     sort_by_descending_order(columnTitle) {
         tableColumn_header(columnTitle).click()
         sortingArrow().parents('th').invoke('text').then((text) => {
@@ -2443,7 +2514,15 @@ export default class BasePage {
     };
 
     select_checkbox_on_first_row_on_visible_table() {
-        checkboxOnFirstRowOnVisbileTable().click();
+        checkboxOnFirstRowOnVisibleTable().click();
+        return this;
+    };
+
+    select_checkbox_on_last_row_on_visible_table() {
+        this.wait_until_spinner_disappears()
+        checkboxOnLastRowOnVisibleTable().should('be.visible');
+        cy.wait(300)
+        checkboxOnLastRowOnVisibleTable().click();
         return this;
     };
 
@@ -2454,6 +2533,11 @@ export default class BasePage {
 
     verify_text_is_not_visible(elementTitle) {
         cy.contains(elementTitle).should('not.be.visible');
+        return this;
+    };
+
+    verify_text_is_visible(elementTitle) {
+        cy.contains(elementTitle).should('be.visible');
         return this;
     };
 
@@ -2647,7 +2731,9 @@ export default class BasePage {
                 const input = $input[0];
                 input.files = dataTransfer.files;
                 input.dispatchEvent(new Event('change'));
-                this.verify_toast_message(successMessage, false, timeoutInMinutes);
+                if (successMessage) {
+                    this.verify_toast_message(successMessage, false, timeoutInMinutes);
+                }
             });
         });
         return this;
@@ -2795,8 +2881,42 @@ export default class BasePage {
             .parents('.form-group').first()
     }
 
+    turnOnToggleAndReturnParentElementOnCustomForm(label) {
+        return cy.get('.modal-content')
+            .contains('.fg-field-inner label, .fg-field-inner .control-label', new RegExp(`^\\s*${label}\\s*$`))
+            .closest('.fg-field-inner')
+            .as('field')
+            .within(() => {
+                cy.get('[ng-click="onSwitch($event)"]').click({force: true});
+            })
+            .then(() => cy.get('@field'));
+
+    }
+
+    turnOnToggleEnterValueAndPressEnterOnCustomForm(label, value) {
+        this.turnOnToggleAndReturnParentElementOnCustomForm(label)
+            .find('input:visible, textarea:visible')
+            .first()
+            .as('cfInput');
+        cy.get('@cfInput')
+            .should('be.enabled')
+            .clear({force: true})
+            .type(String(value), {force: true})
+        this.pause(2)
+        // cy.wait(1000)
+        cy.get('@cfInput').type('{enter}');
+    }
+
+
     turnOnToggleAndSelectDropdownOption(label, value) {
         this.turnOnToggleAndReturnParentElement(label)
+            .find('select').first()
+            .select(value)
+        this.pause(0.3)
+    }
+
+    turnOnToggleAndSelectDropdownOptionOnCustomForm(label, value) {
+        this.turnOnToggleAndReturnParentElementOnCustomForm(label)
             .find('select').first()
             .select(value)
         this.pause(0.3)
@@ -2825,6 +2945,12 @@ export default class BasePage {
             .type(value)
     }
 
+    turnOnToggleAndEnterValueInTextareaOnCustomForm(label, value) {
+        this.turnOnToggleAndReturnParentElementOnCustomForm(label)
+            .find('textarea').first()
+            .type(value)
+    }
+
     turnOnToggleEnterValueAndPressEnter(label, value) {
         this.turnOnToggleAndReturnParentElement(label)
             .find('input').first()
@@ -2838,6 +2964,15 @@ export default class BasePage {
     turnOnToggleEnterValueAndWaitApiRequestToFinish(label, value, partOfApiRequest) {
         this.define_API_request_to_be_awaited('GET', partOfApiRequest)
         this.turnOnToggleAndReturnParentElement(label)
+            .find('input').first()
+            .clear()
+            .invoke('val', value).trigger('input')
+        this.wait_response_from_API_call(partOfApiRequest)
+    }
+
+    turnOnToggleEnterValueAndWaitApiRequestToFinishOnCustomForm(label, value, partOfApiRequest) {
+        this.define_API_request_to_be_awaited('GET', partOfApiRequest)
+        this.turnOnToggleAndReturnParentElementOnCustomForm(label)
             .find('input').first()
             .clear()
             .invoke('val', value).trigger('input')
@@ -2915,6 +3050,11 @@ export default class BasePage {
         return this
     }
 
+    enable_overwrite_existing_form_data() {
+        overwriteForm().click()
+        return this
+    }
+
     click_on_replace_tags() {
         replaceTagsRadioButton().click()
         return this
@@ -2925,7 +3065,26 @@ export default class BasePage {
         for (let i = 0; i < labelsArray.length; i++) {
             const label = labelsArray[i];
             this.turnOnToggle(label);
+
+            if (label === 'Category' && S.isDispoStatusEnabled()) {
+                this.click('Confirm');
+            }
         }
+
+        return this;
+    }
+
+    turn_off_all_toggles_on_modal(labelsArray) {
+        this.pause(1)
+        for (let i = 0; i < labelsArray.length; i++) {
+            const label = labelsArray[i];
+            this.turnOnToggle(label);
+
+            if (label === 'Category' && S.isDispoStatusEnabled()) {
+                this.click('Confirm');
+            }
+        }
+
         return this;
     }
 
@@ -2983,14 +3142,125 @@ export default class BasePage {
     }
 
 
+    turn_on_and_enter_values_to_all_fields_on_custom_form_modal(labelsArray, valuesArray) {
+
+        for (let i = 0; i < labelsArray.length; i++) {
+            const label = labelsArray[i];
+            const value = valuesArray[i];
+
+            if (['Textbox', 'Email', 'Number', 'Password', 'Person', 'Dropdown Typeahead'].some(v => label === v)) {
+                this.turnOnToggleEnterValueAndPressEnterOnCustomForm(label, value);
+
+            } else if (label === 'Textarea') {
+                this.turnOnToggleAndEnterValueInTextareaOnCustomForm(label, value);
+
+            } else if (label === 'Checkbox') {
+                this.turnOnToggleAndReturnParentElementOnCustomForm(label)
+                    .find('input[type="checkbox"]:visible')
+                    .first()
+                    .then($cb => {
+                        if (value) cy.wrap($cb).check({force: true});
+                        else cy.wrap($cb).uncheck({force: true});
+                    });
+
+            } else if (label === 'Checkbox List') {
+                const values = Array.isArray(value) ? value : [value];
+                this.turnOnToggleAndReturnParentElementOnCustomForm(label).then(($root) => {
+                    values.forEach(v => {
+                        cy.wrap($root)
+                            .contains('.checkbox, .checkbox-inline, label', new RegExp(`^\\s*${v}\\s*$`))
+                            .find('input[type="checkbox"]')
+                            .check({force: true});
+                    });
+                });
+
+            } else if (label === 'Radiobutton List') {
+                this.turnOnToggleAndReturnParentElementOnCustomForm(label)
+                    .contains('.radio, .radio-inline, label', new RegExp(`^\\s*${value}\\s*$`))
+                    .find('input[type="radio"]')
+                    .check({force: true});
+
+            } else if (label === 'Select List') {
+                this.turnOnToggleAndSelectDropdownOptionOnCustomForm(label, value);
+
+            } else if (label === 'User/User Group') {
+                const values = Array.isArray(value) ? value : [value];
+                this.turnOnToggleAndReturnParentElementOnCustomForm(label)
+                    .find('.ui-select-container')
+                    .first()
+                    .as('userSelect');
+
+                values.forEach(v => {
+                    cy.get('@userSelect').click().find('input.ui-select-search').type(v);
+                    //cy.wait(2000);
+                    this.pause(1)
+                    cy.get('.ui-select-choices-row').contains(v).click();
+                });
+
+            }
+
+                //  } else if (label === 'Person') {
+                //      this.turnOnToggleEnterValueAndPressEnterOnCustomForm(label, value);
+
+                // this.turnOnToggleAndReturnParentElementOnCustomForm(label)
+                //     .find('input[ng-model="person.text"]')
+                //     .should('be.enabled')
+                //     .clear({ force: true })
+                //     .type(value, { force: true });
+                // cy.wait(3000)
+                // cy.get('.typeahead .ng-scope, .uib-typeahead-match, .dropdown-menu .ng-scope')
+                //     .first()
+                //     .click({ force: true });
+
+
+            // }
+            else if (label === 'Date') {
+                this.turnOnToggleAndReturnParentElementOnCustomForm(label)
+                    .within(() => {
+                        cy.get('input[tp-datepicker-popup][ng-model="ngModel"]')
+                            .filter(':visible')
+                            .first()
+                            .scrollIntoView()
+                            .click({force: true})
+                            .clear({force: true})
+                            .type(String(value), {force: true})
+                            .type('{enter}')
+                            .blur();
+                    });
+
+
+            } else {
+
+                this.turnOnToggleEnterValueAndPressEnterOnCustomForm(label, value);
+            }
+        }
+
+        return this;
+    }
+
+    choose_custom_form_from_mass_update_cf_modal(itemObject) {
+        customDataType().select(`number:${itemObject.id}`, {force: true}).trigger('change');
+
+        return this;
+    }
+
     enter_values_to_all_fields_on_modal(labelsArray, valuesArray) {
 
         for (let i = 0; i < labelsArray.length; i++) {
             let label = labelsArray[i]
             let value = valuesArray[i]
 
-            if (['Offense Type', ''].some(v => label === v)) {
+            if (['Offense Type', 'Custody Reason'].some(v => label === v)) {
                 this.findElementByLabelAndSelectDropdownOption(label, value)
+            } else if (label === 'Recovered By') {
+                cy.get('[name="recoveredBy"]').clear().type(value)
+                cy.wait(2000)
+                cy.get('[name="recoveredBy"]').type('{enter}');
+
+            } else if (label === 'Submitted By') {
+                cy.get('[name="submittedBy"]').clear().type(value)
+                cy.wait(2000)
+                cy.get('[name="submittedBy"]').type('{enter}');
 
             } else if (['Status'].some(v => label === v)) {
                 if (value === 'Closed') {
@@ -3003,6 +3273,21 @@ export default class BasePage {
                 this.findElementByLabelAndSelectTypeaheadOptionsOnMultiSelectField(label, value)
             } else if (label === 'Offense Location') {
                 cy.get('[name="offenseLocation"]').clear().type(value).click();
+            } else if (label === 'Recovered At') {
+                cy.get('[name="recoveryLocation"]').clear().type(value).click();
+            } else if (label === 'Recovery Date') {
+                //this.enterValue(recoveryDate, value)
+                //   this.findElementByLabelEnterValueAndPressEnter(label, value)
+                cy.get('.col-md-8 > .test > .input-group').clear().type(value)
+                cy.wait(1000)
+                cy.get('.col-md-8 > .test > .input-group').type('{enter}')
+
+            } else if (label === 'Item Belongs to') {
+                this.enterValue(itemBelongsTo, value)
+                firstPersonOnItemBelongsToTypeahead().click()
+            } else if (['Category'].some(v => label === v)) {
+                cy.get('[category-name="item.categoryName"]').click()
+                cy.get('[repeat="category in data.categories | filter: { name: $select.search }"]').contains(value).click();
             } else {
                 this.findElementByLabelEnterValueAndPressEnter(label, value)
             }
@@ -3244,7 +3529,7 @@ export default class BasePage {
         } else {
             this.select_Storage_location(fullLocationPath)
         }
-        this.enter_note_on_modal(note);
+        this.enter_notes_on_modal(note);
         return this;
     }
 
@@ -3270,8 +3555,8 @@ export default class BasePage {
         return this;
     }
 
-    populate_Move_form(locationName, notes) {
-        this.select_Storage_location(locationName)
+    populate_Move_form(fullLocationPath, notes) {
+        this.select_Storage_location(fullLocationPath)
         this.enter_notes_on_modal(notes);
         return this;
     }
@@ -3284,15 +3569,27 @@ export default class BasePage {
     }
 
     perform_Item_CheckIn_transaction(returnedBy_userObject, usePreviousLocation, fullLocationPath, note, isActionOnSearchResults, multipleItems) {
-        const label = multipleItems ? C.dropdowns.itemActions.checkItemsIn : C.dropdowns.itemActions.checkItemIn
+        //const label = multipleItems ? C.dropdowns.itemActions.checkItemsIn : C.dropdowns.itemActions.checkItemIn
+        let label;
+
+        if (isActionOnSearchResults) {
+            label = multipleItems
+                ? C.dropdowns.itemActionsOnSearchResults.checkItemsIn
+                : C.dropdowns.itemActionsOnSearchResults.checkItemIn;
+        } else {
+            label = multipleItems
+                ? C.dropdowns.itemActions.checkItemsIn
+                : C.dropdowns.itemActions.checkItemIn;
+        }
         this.click_option_on_expanded_menu(label)
             .populate_CheckIn_form(returnedBy_userObject, usePreviousLocation, fullLocationPath, note)
 
         if (isActionOnSearchResults) {
-            this.verify_modal_content(' Warning! This action will check out all items found by the current search\n' +
-                'Items shared among Organizations are not included in the transaction')
+            this.verify_modal_content(' Warning! This action will check in all items found by the current search')
+            this.verify_modal_content('Items shared among Organizations are not included in the transaction')
+            cy.signOnCanvas()
         }
-
+        this.upload_file_and_verify_toast_msg('image.png', null)
         this.click_button_on_modal(C.buttons.ok)
             .verify_toast_message('Saved')
             .wait_until_spinner_disappears()
@@ -3307,10 +3604,10 @@ export default class BasePage {
             .populate_CheckIn_form(returnedBy_userObject, usePreviousLocation, fullLocationPath, note)
 
         if (isActionOnSearchResults) {
-            this.verify_modal_content(' Warning! This action will check out all items found by the current search\n' +
-                'Items shared among Organizations are not included in the transaction')
+            this.verify_modal_content(' Warning! This action will check in all items found by the current search')
+            this.verify_modal_content('Items shared among Organizations are not included in the transaction')
         }
-
+        this.upload_file_and_verify_toast_msg('image.png', null)
         this.click_button_on_modal(C.buttons.ok)
             .verify_toast_message('Saved')
             .wait_until_spinner_disappears()
@@ -3330,6 +3627,7 @@ export default class BasePage {
             //  For now, I’ve excluded the part related to shared/CLP items. It can be added later once we define the precondition for displaying this part of the warning in the test
             //this.verify_modal_content('- Items shared among Organizations')
         }
+        this.upload_file_and_verify_toast_msg('image.png', null)
 
         this.click_button_on_modal(C.buttons.ok)
             .verify_toast_message('Saved')
@@ -3348,12 +3646,13 @@ export default class BasePage {
             .populate_Transfer_form(transferTo_userObject, transferFrom_userObject, notes)
 
         if (isActionOnSearchResults) {
-            this.verify_modal_content(' Warning! This action will check out all items found by the current search\n' +
-                'Items shared among Organizations are not included in the transaction')
+            this.verify_modal_content(' Warning! This action will transfer all items found by the current search')
+            this.verify_modal_content('Items shared among Organizations are not included in the transaction')
+            cy.signOnCanvas()
         }
-
+        this.upload_file_and_verify_toast_msg('image.png', null)
         this.click_button_on_modal(C.buttons.ok)
-            .wait_response_from_API_call('api/transfers/V2')
+            //.wait_response_from_API_call('api/transfers/V2')
             .verify_toast_message('Saved')
             .wait_until_spinner_disappears()
         D.editedItem.status = 'Checked Out'
@@ -3365,13 +3664,14 @@ export default class BasePage {
     perform_Item_Move_transaction(fullLocationPath, notes, isActionOnSearchResults, multipleItems) {
         const label = multipleItems ? C.dropdowns.itemActions.moveItems : C.dropdowns.itemActions.moveItem
         this.click_option_on_expanded_menu(label)
-            .populate_Move_form(fullLocationPath, notes)
+        cy.wait(1000)
+        this.populate_Move_form(fullLocationPath, notes)
 
         if (isActionOnSearchResults) {
-            this.verify_modal_content(' Warning! This action will check out all items found by the current search\n' +
-                'Items shared among Organizations are not included in the transaction')
+            this.verify_modal_content(' Warning! This action will move all items found by the current search')
+            this.verify_modal_content('Items shared among Organizations are not included in the transaction')
         }
-
+        this.upload_file_and_verify_toast_msg('image.png', null)
         this.click_button_on_modal(C.buttons.ok)
             .verify_toast_message('Saved')
             .wait_until_spinner_disappears()
@@ -3391,10 +3691,10 @@ export default class BasePage {
         this.populate_disposal_form(witness_userObject, method, notes, isItemInContainer)
 
         if (isActionOnSearchResults) {
-            this.verify_modal_content(' Warning! This action will check out all items found by the current search\n' +
-                'Items shared among Organizations are not included in the transaction')
+            this.verify_modal_content(' Warning! This action will dispose all items found by the current search')
+            this.verify_modal_content('Items shared among Organizations are not included in the transaction')
         }
-
+        this.upload_file_and_verify_toast_msg('image.png', null)
         this.click_button_on_modal(C.buttons.ok)
             .verify_toast_message('Saved')
             .wait_until_spinner_disappears()
@@ -3403,4 +3703,6 @@ export default class BasePage {
         return this;
     }
 
-}
+
+};
+export default basePage
