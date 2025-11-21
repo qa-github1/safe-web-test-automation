@@ -419,6 +419,7 @@ for (let i = 0; i < 1; i++) {
         it('7. Create USER Tag on Add and Edit Case Page', function () {
             api.auth.get_tokens(admin);
             D.getTagsData('User');
+            D.getCaseDataWithReducedFields([C.caseFields.tags])
 
             ui.menu.click_Add__Case();
             ui.addCase.populate_all_fields_on_both_forms(D.newCase)
