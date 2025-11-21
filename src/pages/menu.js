@@ -204,9 +204,11 @@ export default class Menu extends BasePage {
     };
 
     click_Tags () {
+        this.define_API_request_to_be_awaited('GET', '/api/tagModels', 'getTags')
         tagsList().click();
         this.verify_text_is_present_on_main_container(C.labels.tagsPage);
         this.verify_Error_toast_message_is_NOT_visible()
+        this.wait_response_from_API_call('getTags')
         return this;
     };
 

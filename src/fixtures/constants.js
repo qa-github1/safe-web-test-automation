@@ -40,12 +40,6 @@ C = {
         recalculateCasesToDispose: 'Recalculate Cases to Dispose',
         updateCases: `Update Cases`,
         closeCases: `Close Cases`,
-        active: 'Active',
-        inactive: 'Inactive',
-        organization: 'Organization',
-        groups: 'Groups',
-        new: 'New',
-        users: 'Users',
         closeXCases: X => `Close ${X} Cases`,
         viewXCases: X => `View ${X} Cases`,
     },
@@ -830,6 +824,14 @@ C = {
         noPermissionsToAddItemsToCase: `You do not have permissions to add Items to this Case`,
         caseLevelPermissionsForGroups: `Note - you will be applying case level permissions to all users (in all offices) for the following groups:`,
     },
+    filters: {
+        active: 'Active',
+        inactive: 'Inactive',
+        organization: 'Organization',
+        groups: 'Groups',
+        new: 'New',
+        users: 'Users',
+    }
 };
 
 C.labels = {
@@ -1055,12 +1057,14 @@ C.perissionMatrixEntity = {
 
 C.permissionMatrixAccessType = {
     viewAll: 1,
+    viewOrgTag: 1,
     viewIfOwner: 9,
     create: 4,
     updateAll: 3,
     updateIfOwner: 14,
     deleteIfOwner: 15,
     setDispoAction: 16,
+    taskUpdateAllExceptDueDate: 18,
     createOrgTag: 11,
     createGroupTag: 12,
     createPersonalTag: 13,

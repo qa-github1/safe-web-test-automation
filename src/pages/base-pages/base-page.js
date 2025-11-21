@@ -61,6 +61,7 @@ let
     replaceTagsRadioButton = e => cy.get('[translate="MASS.UPDATE.OVERWRITE_EXISTING_TAGS"]'),
     tagsTypeaheadList = e => cy.get('[repeat="tagModel in allTagModels | filter: $select.search"]'),
     orgTagIconOnTagsTypeaheadList = e => tagsTypeaheadList().find('[ng-if="model.tagUsedBy==1"]'),
+    tagsInputWithinActiveForm = e => active_form().find('[label="\'GENERAL.TAGS\'"]').find('input'),
     linkByText = linkText => cy.get('a').contains(linkText),
     linkByTextOnFirstTableRow = linkText => cy.get('tr').first().contains(linkText),
     linkWrappedInElement = (linkText, parentElementTag) => cy.contains(linkText).parent(parentElementTag),
@@ -138,11 +139,12 @@ let
     lastRowInResultsTable = e => resultsTable().children('tr').last(),
     firstRowInResultsTableOnModal = e => cy.get('.modal-content').find('tbody').children('tr').first(),
     visibleTable = e => cy.get('.table').not('.ng-hide'),
-    checkboxOnFirstRowOnVisbileTable = e => visibleTable().find('tbody').children('tr').first(),
-    checkboxOnLastRowOnVisbileTable = e => visibleTable().find('tbody').children('tr').last(),
-    firstRowInResultsTableOnActiveTab = e => active_tab().find('tbody').children('tr').first(),
+    checkboxOnFirstRowOnVisibleTable = e => visibleTable().find('tbody').children('tr').first(),
+    checkboxOnLastRowOnVisibleTable = e => visibleTable().find('tbody').children('tr').last().find('.bg-grid-checkbox'),
+    firstRowInResultsTableOnActiveTab = e => active_tab().find('tbody').children('tr').first().find('.bg-grid-checkbox'),
     lastRowInResultsTableOnActiveTab = e => active_tab().find('tbody').children('tr').last(),
-    checkboxOnFirstRowInResultsTableOnActiveTab = (tableIndex = 0) => active_tab().find('tbody').eq(tableIndex).children('tr').first().find('.bg-grid-checkbox'),
+    checkboxOnFirstRowInResultsTableOnActiveTab = (tableIndex = 0) => active_tab().find('tbody').eq(tableIndex)
+        .children('tr').first().find('.bg-grid-checkbox'),
     checkboxOnFirstTableRow = e => resultsTable().find('.bg-grid-checkbox').first(),
     checkboxToSelectAll = e => cy.get('[ng-model="options.selectAllToggle"]').first(),
     statisticsBlock = e => cy.get('.statistic-block').first(),
@@ -394,6 +396,16 @@ let basePage = class BasePage {
         addItemHeader().should('be.visible');
         return this;
     };
+
+    verify_tag_with_specific_type_is_visible(tagName, tagType) {
+        if (tagType === 'Org') {
+            cy.contains(tagName).parents('[ng-repeat="tag in tags"]').find('i').should('have.class', 'fa-building')
+        } else if (tagType === 'Group') {
+            cy.contains(tagName).parents('[ng-repeat="tag in tags"]').find('i').should('have.class', 'fa-group')
+        } else if (tagType === 'User') {
+            cy.contains(tagName).parents('[ng-repeat="tag in tags"]').find('i').should('have.class', 'fa-user')
+        }
+    }
 
     verify_text_is_present_on_main_container(text) {
         this.toastMessage().should('not.exist');
@@ -888,7 +900,13 @@ let basePage = class BasePage {
                 }
 
                 cy.wait(200)
-                highlightedOptionOnTypeahead().click({force: true})
+
+                if (LabelValueArray[3] === '{enter}') {
+                    typeaheadInputField(LabelValueArray[0]).type('{enter}')
+                }
+                else{
+                    highlightedOptionOnTypeahead().click({force: true})
+                }
                 cy.wait(200)
 
             }
@@ -896,7 +914,7 @@ let basePage = class BasePage {
         return this;
     };
 
-    type_Tag_value_and_verify_if_option_is_available_on_dropdown(value, shouldExistingTagBeAvailable) {
+    type_Tag_value_and_verify_if_option_is_available_on_dropdown(value, shouldExistingTagBeAvailable, shouldHaveOptionToCreatePersonalTag) {
         tagsInputField()
             .clear()
             .invoke('val', value)
@@ -909,17 +927,27 @@ let basePage = class BasePage {
                 });
             });
 
-        highlightedOptionOnTypeahead().parents('.ui-select-choices-row-inner').first().invoke('text').then(text => {
-            const normalizedText = text.replace(/\s+/g, ' ').trim();
-            if (shouldExistingTagBeAvailable){
-                expect(normalizedText).to.not.include('Create Personal Tag');
-                expect(normalizedText).to.include(value);
+        let getTagOptions = () => {
+            return highlightedOptionOnTypeahead().parents('.ui-select-choices-content').invoke('text')
+        };
+
+        if (shouldHaveOptionToCreatePersonalTag) {
+            if (shouldExistingTagBeAvailable) {
+                cy.verifyTextAndRetry(getTagOptions, value);
+                cy.verifyTextAndRetry(getTagOptions, 'Create Personal Tag');
+            } else {
+                cy.verifyTextAndRetry(getTagOptions, 'Create Personal Tag');
+                cy.verifyTextAndRetry(getTagOptions, 'Create Personal Tag');
             }
-            else{
-                expect(normalizedText).to.include('Create Personal Tag');
-                expect(normalizedText).to.include(value);
+        } else {
+            if (shouldExistingTagBeAvailable) {
+                cy.verifyTextAndRetry(getTagOptions, value);
+            } else {
+                typeaheadInputField('Tags').type('{enter}')
+                this.verify_text_is_NOT_present_on_main_container(value)
+                cy.get('[ng-disabled="isAttachLocked && isDetachLocked"]').should('have.borderColor', S.colors.redBorder);
             }
-        });
+        }
 
         return this;
     };
@@ -1567,6 +1595,12 @@ let basePage = class BasePage {
 
     press_ENTER(element) {
         element().type('{enter}');
+        return this;
+    };
+
+    press_ENTER_on_Tags(element) {
+        tagsInputField().type('{enter}');
+        this.pause(0.5)
         return this;
     };
 
@@ -2226,6 +2260,15 @@ let basePage = class BasePage {
         return this;
     };
 
+
+    add_Tags(tagsArray) {
+        this.enter_values_on_several_multi_select_typeahead_fields(
+            [
+                [tagsInputWithinActiveForm, tagsArray, this.lastTagOnTypeahead],
+            ]);
+        return this
+    }
+
     verify_content_of_last_row_in_results_table(content) {
         this.pause(1)
         if (this.isObject(content)) {
@@ -2472,15 +2515,15 @@ let basePage = class BasePage {
     };
 
     select_checkbox_on_first_row_on_visible_table() {
-        checkboxOnFirstRowOnVisbileTable().click();
+        checkboxOnFirstRowOnVisibleTable().click();
         return this;
     };
 
     select_checkbox_on_last_row_on_visible_table() {
         this.wait_until_spinner_disappears()
-        checkboxOnLastRowOnVisbileTable().should('be.visible');
+        checkboxOnLastRowOnVisibleTable().should('be.visible');
         cy.wait(300)
-        checkboxOnLastRowOnVisbileTable().click();
+        checkboxOnLastRowOnVisibleTable().click();
         return this;
     };
 

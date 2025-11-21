@@ -638,6 +638,11 @@ D.getUserData = function (officeId) {
     D.getEditedUserData()
 }
 
+D.getTagsData = function (type) {
+    D.getNewTagsData(type)
+    D.getEditedTagsData(type)
+}
+
 D.getNewTaskTemplateData = function () {
 
     D.newTaskTemplate = {
@@ -653,38 +658,41 @@ D.getNewTaskTemplateData = function () {
     return D.newTaskTemplate;
 };
 
-D.getNewTagsData = function () {
-
-    let randomNo = helper.setNewRandomNo();
+D.getNewTagsData = function (type = 'Org') {
+    let randomNo = helper.setNewRandomString(3,  'mmdd');
     D.newTag = {
-        type: "Organization",
-        name: "AutoTestTag" + randomNo,
+        type: type,
+        name : `Auto_ ${type}_` + randomNo,
         color: "#4b9",
-        newTag1: "tag_1_" + randomNo,
-        newTag2: "tag_2_" + randomNo,
-        newTag3: "tag_3_" + randomNo,
     }
 
     D.newTagGroup = {
-        name: "new TagGroup_" + randomNo,
-        user: S.userAccounts.orgAdmin.name,
-        userGroup: S.selectedEnvironment.admin_userGroup.name
+        name: "_TagGroup_" + randomNo,
+        users: [S.userAccounts.orgAdmin],
+        userNames: [S.userAccounts.orgAdmin.name],
+        userGroups: [S.selectedEnvironment.admin_userGroup],
+        userGroupNames: [S.selectedEnvironment.admin_userGroup.name],
+        groupTag1: "Auto_GroupTag_" + randomNo,
+        groupTag2: "Auto_GroupTag_" + randomNo,
+        color: "#4b9",
     }
     return D.newTag;
 };
 
-D.getEditedTagsData = function () {
-    let randomNo = helper.setNewRandomNo();
+D.getEditedTagsData = function (type = 'Org') {
+    let randomNo = helper.setNewRandomString(3,  'mmdd');
     D.editedTag = {
-        tagUsedBy: "Organization",
-        name: "AutoTestTagEdited" + randomNo,
+        type: type,
+        name : `AutoEdit_ ${type}_` + randomNo,
         color: "#1069bd"
     }
 
     D.editedTagGroup = {
         name: "Edited TagGroup_" + randomNo,
-        user: S.userAccounts.powerUser.name,
-        userGroup: S.selectedEnvironment.readOnly_userGroup.name
+        users: [S.userAccounts.powerUser],
+        userNames: [S.userAccounts.powerUser.name],
+        userGroups: [S.selectedEnvironment.readOnly_userGroup],
+        userGroupNames: [S.selectedEnvironment.readOnly_userGroup.name],
     }
     return D.editedTag;
 };

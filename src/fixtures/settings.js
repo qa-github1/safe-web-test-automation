@@ -3015,8 +3015,8 @@ S.PENTEST_3 = {
     },
     regularUser_permissionGroup: {
         name: 'Cypress - Regular User',
-        id: 4589,
-        startingIndexForViewPermissions: 82124,
+        id: 4619,
+        startingIndexForViewPermissions: 93678,
         get startingIndexForCreatePermissions() {
             return S.PENTEST_3.regularUser_permissionGroup.startingIndexForViewPermissions + 22
         },
@@ -4705,7 +4705,7 @@ S.customForms = {
 }
 
 S.colors = {
-    redBorder: "rgb(231,24,45)"
+  redBorder: "rgb(231,24,45)"
 };
 
 S.gmailAccount = {

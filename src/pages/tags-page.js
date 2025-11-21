@@ -15,7 +15,7 @@ let
     tagGroupName = e => cy.get('[placeholder="Tag Group Name"]'),
     tagName = e => cy.get('[id="tagName"]'),
     tagColor = e => cy.get('.modal-body').find('[ng-model="tagModel.color"]').first(),
-    tagGroupColor = e => cy.get('.modal-body').find('[ng-model="tagGroup.color"]').first(),
+    groupTagColor = e => cy.get('.modal-body').find('[ng-model="tagGroup.color"]').first(),
     //tagsRadiobuttons = e => cy.get('[class="form-group"]').eq(0)
     tagsRadiobuttons = e => cy.get('[class="tab-content"]'),
     newRadiobutton = e => cy.get('[title="New"]'),
@@ -24,8 +24,7 @@ let
     selectUserOrGroup = e => cy.get('[placeholder="Start typing to search for users/groups"]').eq(1),
     searchField = e => cy.get('[placeholder="Search"]'),
     saveButtonEditTagModal = e => cy.get('[translate="GENERAL.BUTTON_SAVE"]'),
-    editUserOrGroup = e => cy.get('[id="userSelection"]'),
-    tagsInput = index => cy.get('[placeholder="Enter Tag Name"]').eq(index)
+    editUserOrGroup = e => cy.get('[id="userSelection"]')
 
 
 export default class tagsPage extends BasePage {
@@ -51,7 +50,9 @@ export default class tagsPage extends BasePage {
     };
 
     populate_add_tag_modal(data, useExistingTagGroup, newTagGroupObject) {
-        tagUsedBy().select(data.type);
+        let type = data.type === 'Org' ? 'Organization' : data.type;
+
+        tagUsedBy().select(type);
         tagName().type(data.name);
         tagColor().clear();
         tagColor().type(data.color);
@@ -60,7 +61,8 @@ export default class tagsPage extends BasePage {
             else {
                 newRadiobutton().click();
                 newTagGroupName().type(newTagGroupObject.name);
-                this.enter_values_on_single_multi_select_typeahead_field(['Users/Groups', [newTagGroupObject.user], "users/groups"])
+                this.enter_values_on_single_multi_select_typeahead_field(['Users/Groups', [newTagGroupObject.userNames], "users/groups", '{enter}'])
+                this.enter_values_on_single_multi_select_typeahead_field(['Users/Groups', [newTagGroupObject.userGroupNames], "users/groups", '{enter}'])
             }
         }
         return this;
@@ -91,22 +93,24 @@ export default class tagsPage extends BasePage {
     }
 
     populate_add_tag_group_modal(data) {
-        tagGroupName().clear().type(data.tagGroupName)
-        selectUserOrGroup().type(`${data.userGroup}{enter}`)
-        tagGroupColor().clear();
-        tagGroupColor().type(data.color);
+        tagGroupName().clear().type(data.name)
+        this.enter_values_on_single_multi_select_typeahead_field(['Users/Groups', [data.userNames], "users/groups", '{enter}'])
+        this.enter_values_on_single_multi_select_typeahead_field(['Users/Groups', [data.userGroupNames], "users/groups", '{enter}'])
+        tagsBoxOnAddTagGroupModal().click();
+        tagsBoxOnAddTagGroupModal().type(`${data.groupTag1}{enter}`)
+        tagsBoxOnAddTagGroupModal().type(`${data.groupTag2}{enter}`)
+        groupTagColor().clear().type(data.color)
         return this;
     }
 
     add_tags_on_add_tag_group_modal(data) {
         tagsBoxOnAddTagGroupModal().click();
-        tagsBoxOnAddTagGroupModal().type(`${data.newTag1}{enter}`)
+        tagsBoxOnAddTagGroupModal().type(`${data.groupTag1}{enter}`)
         return this;
     }
 
-    search_for_tag_on_tags_page(data) {
-        searchField().type(data.name)
-
+    search(tagName) {
+        searchField().clear().type(tagName)
         return this;
     }
 
@@ -122,39 +126,23 @@ export default class tagsPage extends BasePage {
     }
 
     populate_edit_tag_group_modal(data) {
-        tagGroupName().clear().type(data.editedTagGroupName);
-        this.remove_existing_and_add_new_user_or_group(data.editedUser)
+        tagGroupName().clear().type(data.name);
+        this.remove_existing_users_or_groups()
+        this.enter_values_on_single_multi_select_typeahead_field(['Users/Groups', [data.userNames], "users/groups", '{enter}'])
+        this.enter_values_on_single_multi_select_typeahead_field(['Users/Groups', [data.userGroupNames], "users/groups", '{enter}'])
         return this;
     }
 
-    remove_existing_and_add_new_user_or_group(userName) {
+    remove_existing_users_or_groups() {
         editUserOrGroup().should('exist').within(() => {
             cy.get('.ui-select-match-close').then($closeBtns => {
                 if ($closeBtns.length) {
                     cy.wrap($closeBtns).each($btn => cy.wrap($btn).click({force: true}));
                 }
             });
-
-            cy.get('input.ui-select-search, input[type="search"]')
-                .filter(':visible')
-                .first()
-                .should('be.visible')
-                .click({force: true})
-                .clear({force: true})
-                .type(userName)
-                .wait(1000)
-                .type('{enter}');
         });
-
         return this;
     }
-
-    add_user_tag_on_edit_modal(data,index){
-        tagsInput(index).click();
-        tagsInput(index).type(`${data.name}{enter}`)
-        return this;
-    }
-
 
 }
 
