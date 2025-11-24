@@ -3,6 +3,8 @@ const body = require('./payload');
 const C = require('../../../fixtures/constants');
 const S = require('../../../fixtures/settings');
 const DF = require('../../../support/date-time-formatting');
+const D = require("../../../fixtures/data");
+const {keep_some_values_in_local_storage} = require("../auth");
 
 exports.add_new_user = function (propertyToSave = 'newUser', dataObject) {
     generic_request.POST(
@@ -33,26 +35,18 @@ exports.accept_SLA = function () {
     return this;
 };
 
-exports.deactivate_users = function (arrayOfUsersIdsOrObjectsInStorage) {
-    let userIds = []
-    arrayOfUsersIdsOrObjectsInStorage.forEach((user, index, array) => {
-        cy.getLocalStorage(user).then(user => {
+ exports.deactivate_users = function (userObjectFromLocalStorageOrId, keepUser = true, isReassigned = false, propertyToSave = "newUser") {
+     cy.getLocalStorage(userObjectFromLocalStorageOrId).then(user => {
+         let userId = user ? JSON.parse(user).id : userObjectFromLocalStorageOrId;
 
-            if (user) {
-                userIds.push(JSON.parse(user).id)
-            } else {
-                userIds = arrayOfUsersIdsOrObjectsInStorage
-            }
-
-            if (index === (array.length - 1)) {
                 generic_request.PUT(
-                    '/api/users/DeactivateUsers',
-                    userIds,
-                    'Deactivating users via API with IDs_______' + userIds
+                    '/api/users/DeactivateUsersAndReassign',
+                    body.generate_PUT_request_payload_for_Deactivate_User(userId, keepUser, isReassigned),
+                    'Deactivating users via API with IDs_______' + userId,
+                    propertyToSave
                 );
-            }
-        })
-    })
+     });
+
     return this;
 };
 
@@ -128,6 +122,17 @@ exports.get_current_user_settings = function (userId) {
         '/api/users/' + userId + '/userSettings',
         'Getting current user settings via API for user with ID_____' + userId,
         'currentUserSettings'
+    );
+    return this;
+}
+
+exports.get_user_data = function (userEmail, officeId, propertyToSave = 'newUser') {
+
+    generic_request.POST(
+        '/api/users/search',
+        body.generate_POST_request_payload_for_User_Search(userEmail, officeId),
+        'Fetching User Data via API with Email_______' + userEmail,
+        propertyToSave
     );
     return this;
 }

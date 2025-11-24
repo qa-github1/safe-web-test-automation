@@ -23,7 +23,7 @@ let
     orgItemNoInput = e => cy.get('[translate="ITEM_SEQUENTIAL_ORG_ID"]').parent().find('[ng-model="field.model"]'),
     custodyReasonDropdown = e => cy.get('[translate="ITEM_CUSTODY_REASON"]').parent().find('select').eq(1),
     statusDropdown = e => cy.get('[translate="ITEM_STATUS"]').parent().find('select').eq(1),
-    actionsOnSearchResultsButton = e => cy.get('[ng-disabled="!isAdmin || !canUpdateByQuery"]'),
+    actionsOnSearchResultsButton = e => cy.get('[ng-disabled="selectedItems.length > 0 || options.items.length === 0"]'),
     categoryDropdown = e => cy.get('[class="btn btn-default form-control ui-select-toggle"]').eq(1),
     categoryDropdownOption = e => cy.get('[id="ui-select-choices-row-6-0"]'),
     //categoryDropdown = e => cy.get('[translate="ITEM_CATEGORY"]').parent().find('select').eq(1),

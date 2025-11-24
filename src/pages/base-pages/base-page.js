@@ -61,6 +61,7 @@ let
     replaceTagsRadioButton = e => cy.get('[translate="MASS.UPDATE.OVERWRITE_EXISTING_TAGS"]'),
     tagsTypeaheadList = e => cy.get('[repeat="tagModel in allTagModels | filter: $select.search"]'),
     orgTagIconOnTagsTypeaheadList = e => tagsTypeaheadList().find('[ng-if="model.tagUsedBy==1"]'),
+    tagsInputWithinActiveForm = e => active_form().find('[label="\'GENERAL.TAGS\'"]').find('input'),
     linkByText = linkText => cy.get('a').contains(linkText),
     linkByTextOnFirstTableRow = linkText => cy.get('tr').first().contains(linkText),
     linkWrappedInElement = (linkText, parentElementTag) => cy.contains(linkText).parent(parentElementTag),
@@ -138,9 +139,12 @@ let
     lastRowInResultsTable = e => resultsTable().children('tr').last(),
     firstRowInResultsTableOnModal = e => cy.get('.modal-content').find('tbody').children('tr').first(),
     visibleTable = e => cy.get('.table').not('.ng-hide'),
-    checkboxOnFirstRowOnVisbileTable = e => visibleTable().find('tbody').children('tr').first(),
-    firstRowInResultsTableOnActiveTab = e => active_tab().find('tbody').children('tr').first(),
-    checkboxOnFirstRowInResultsTableOnActiveTab = (tableIndex = 0) => active_tab().find('tbody').eq(tableIndex).children('tr').first().find('.bg-grid-checkbox'),
+    checkboxOnFirstRowOnVisibleTable = e => visibleTable().find('tbody').children('tr').first(),
+    checkboxOnLastRowOnVisibleTable = e => visibleTable().find('tbody').children('tr').last().find('.bg-grid-checkbox'),
+    firstRowInResultsTableOnActiveTab = e => active_tab().find('tbody').children('tr').first().find('.bg-grid-checkbox'),
+    lastRowInResultsTableOnActiveTab = e => active_tab().find('tbody').children('tr').last(),
+    checkboxOnFirstRowInResultsTableOnActiveTab = (tableIndex = 0) => active_tab().find('tbody').eq(tableIndex)
+        .children('tr').first().find('.bg-grid-checkbox'),
     checkboxOnFirstTableRow = e => resultsTable().find('.bg-grid-checkbox').first(),
     checkboxToSelectAll = e => cy.get('[ng-model="options.selectAllToggle"]').first(),
     statisticsBlock = e => cy.get('.statistic-block').first(),
@@ -180,7 +184,7 @@ let
     itemsCountOnSearchGrid = e => resultsTable().children('tr').first().find('[ng-click="callbackFunction(item.id)"]'),
     active_form = e => cy.get('.form-horizontal').not('.ng-hide'),
     tagsField = e => active_form().contains('Tags').parent('div'),
-    //tagsField = e => cy.contains('Tags').parent('div').find('ng-transclude'),
+    tagsInputField = e => active_form().find('[label="\'GENERAL.TAGS\'"]').find('input'),
     tagsInput = e => active_form().contains('Tags').parent('div').find('input'),
     actionsContainer = e => cy.get('[translate="GENERAL.ACTIONS"]').closest('div'),
     actionsContainerOnSearchPage = e => cy.get('[title="Select an item or items for which you would like to perform Action."]').closest('div'),
@@ -366,6 +370,16 @@ let basePage = class BasePage {
         return parentContainer().contains(regex)
     };
 
+    click_element_by_text(text) {
+        cy.log(text)
+        cy.findByText(text)
+            .should('be.visible')
+            .scrollIntoView()
+            .click({force: true});
+        return this;
+    }
+
+
     search_history(value) {
         searchBar_history().clear().type(value).type('{enter}');
 
@@ -382,6 +396,16 @@ let basePage = class BasePage {
         addItemHeader().should('be.visible');
         return this;
     };
+
+    verify_tag_with_specific_type_is_visible(tagName, tagType) {
+        if (tagType === 'Org') {
+            cy.contains(tagName).parents('[ng-repeat="tag in tags"]').find('i').should('have.class', 'fa-building')
+        } else if (tagType === 'Group') {
+            cy.contains(tagName).parents('[ng-repeat="tag in tags"]').find('i').should('have.class', 'fa-group')
+        } else if (tagType === 'User') {
+            cy.contains(tagName).parents('[ng-repeat="tag in tags"]').find('i').should('have.class', 'fa-user')
+        }
+    }
 
     verify_text_is_present_on_main_container(text) {
         this.toastMessage().should('not.exist');
@@ -570,7 +594,7 @@ let basePage = class BasePage {
         cy.contains('Menu Customization').click()
         optionsDropdownUnderMenuCustomization().click()
         pageSizesUnderMenuCustomization().contains(pageSize).click()
-        this.pause(5)
+        this.pause(1)
         this.wait_until_spinner_disappears()
         return this;
     }
@@ -604,8 +628,16 @@ let basePage = class BasePage {
 
     click_number_on_pagination(pageNumber) {
         this.wait_until_spinner_disappears()
-        cy.get('.pagination-sm').first().findByText(pageNumber).click()
-        this.pause(3)
+
+        cy.document().then(doc => {
+            const pagination = doc.querySelector('.pagination-sm');
+            if (pagination) {
+                if (pagination.offsetParent !== null) {
+                    cy.get('.pagination-sm').first().findByText(pageNumber).click()
+                }
+            }
+        });
+        this.pause(2)
         this.wait_until_spinner_disappears()
         return this;
     }
@@ -841,7 +873,6 @@ let basePage = class BasePage {
 
                 }
 
-
                 if (typeof LabelValueArray[0] === 'string' || LabelValueArray[0] instanceof String) {
                     // typeaheadInputField(LabelValueArray[0]).clear().invoke('val', LabelValueArray[1][i]).trigger('input')
                     typeaheadInputField(LabelValueArray[0])
@@ -869,12 +900,53 @@ let basePage = class BasePage {
                 }
 
                 cy.wait(200)
-                highlightedOptionOnTypeahead().click({force: true})
+
+                if (LabelValueArray[3] === '{enter}') {
+                    typeaheadInputField(LabelValueArray[0]).type('{enter}')
+                }
+                else{
+                    highlightedOptionOnTypeahead().click({force: true})
+                }
                 cy.wait(200)
 
             }
         }
+        return this;
+    };
 
+    type_Tag_value_and_verify_if_option_is_available_on_dropdown(value, shouldExistingTagBeAvailable, shouldHaveOptionToCreatePersonalTag) {
+        tagsInputField()
+            .clear()
+            .invoke('val', value)
+            .trigger('input')
+            .then($input => {
+                cy.wait(500).then(() => {
+                    const currentVal = $input.val();
+                    const newVal = currentVal.slice(0, -1);
+                    cy.wrap($input).invoke('val', newVal).trigger('input');
+                });
+            });
+
+        let getTagOptions = () => {
+            return highlightedOptionOnTypeahead().parents('.ui-select-choices-content').invoke('text')
+        };
+
+        if (shouldHaveOptionToCreatePersonalTag) {
+            if (shouldExistingTagBeAvailable) {
+                cy.verifyTextAndRetry(getTagOptions, value);
+                cy.verifyTextAndRetry(getTagOptions, 'Create Personal Tag');
+            } else {
+                cy.verifyTextAndRetry(getTagOptions, 'Create Personal Tag');
+                cy.verifyTextAndRetry(getTagOptions, 'Create Personal Tag');
+            }
+        } else {
+            if (shouldExistingTagBeAvailable) {
+                cy.verifyTextAndRetry(getTagOptions, value);
+            } else {
+                //typeaheadInputField('Tags').type('{enter}')
+                this.verify_text_is_NOT_present_on_main_container(value)
+            }
+        }
 
         return this;
     };
@@ -1438,7 +1510,6 @@ let basePage = class BasePage {
     };
 
 
-
     click_Actions(useButtonOnActiveTab) {
         this.pause(1)
         this.wait_until_modal_disappears()
@@ -1526,6 +1597,12 @@ let basePage = class BasePage {
         return this;
     };
 
+    press_ENTER_on_Tags(element) {
+        tagsInputField().type('{enter}');
+        this.pause(0.5)
+        return this;
+    };
+
     press_ENTER_on_field_found_by_label(label) {
         inputFieldFoundByLabel(label).type('{enter}');
         return this;
@@ -1557,7 +1634,6 @@ let basePage = class BasePage {
 
     open_url_and_wait_all_GET_requests_to_finish(urlToOpen, partOfRequestUrl) {
         if (partOfRequestUrl) {
-            cy.server();
             this.define_API_request_to_be_mocked('GET', partOfRequestUrl)
             cy.visit(urlToOpen);
             this.wait_response_from_API_call(partOfRequestUrl)
@@ -1568,7 +1644,7 @@ let basePage = class BasePage {
             this.wait_until_spinner_disappears()
             this.click_toast_message_if_visible()
         }
-        return this;
+        return this
     };
 
     open_direct_url_for_page(page) {
@@ -2147,6 +2223,7 @@ let basePage = class BasePage {
         return this;
     };
 
+
     click_table_matrix_cell_based_on_column_name_and_unique_value_in_the_row(columnName, uniqueValueInRow, tableIndex, fieldType = 'input') {
 
         tableColumnFoundByText(columnName, tableIndex).prevAll()
@@ -2164,7 +2241,7 @@ let basePage = class BasePage {
         cy.verifyTextAndRetry(() =>
                 firstRowInResultsTable().invoke('text'),
             content,
-            {clickReloadIconBetweenAttempts: true}
+            {clickReloadIconBetweenAttempts: clickReloadIconBetweenAttempts}
         );
         this.wait_until_spinner_disappears()
         return this;
@@ -2182,8 +2259,17 @@ let basePage = class BasePage {
         return this;
     };
 
-    verify_content_of_last_row_in_results_table(content) {
 
+    add_Tags(tagsArray) {
+        this.enter_values_on_several_multi_select_typeahead_fields(
+            [
+                [tagsInputWithinActiveForm, tagsArray, this.lastTagOnTypeahead],
+            ]);
+        return this
+    }
+
+    verify_content_of_last_row_in_results_table(content) {
+        this.pause(1)
         if (this.isObject(content)) {
             for (let property in content) {
                 lastRowInResultsTable().should('contain', content[property]);
@@ -2374,6 +2460,16 @@ let basePage = class BasePage {
         return this;
     };
 
+    verify_content_of_last_row_in_results_table_on_active_tab(content) {
+        if (Array.isArray(content)) {
+            content.forEach(value =>
+                lastRowInResultsTableOnActiveTab().should('contain', value))
+        } else {
+            lastRowInResultsTableOnActiveTab().should('contain', content);
+        }
+        return this;
+    };
+
     sort_by_descending_order(columnTitle) {
         tableColumn_header(columnTitle).click()
         sortingArrow().parents('th').invoke('text').then((text) => {
@@ -2418,7 +2514,15 @@ let basePage = class BasePage {
     };
 
     select_checkbox_on_first_row_on_visible_table() {
-        checkboxOnFirstRowOnVisbileTable().click();
+        checkboxOnFirstRowOnVisibleTable().click();
+        return this;
+    };
+
+    select_checkbox_on_last_row_on_visible_table() {
+        this.wait_until_spinner_disappears()
+        checkboxOnLastRowOnVisibleTable().should('be.visible');
+        cy.wait(300)
+        checkboxOnLastRowOnVisibleTable().click();
         return this;
     };
 
@@ -2799,7 +2903,7 @@ let basePage = class BasePage {
             .clear({force: true})
             .type(String(value), {force: true})
         this.pause(2)
-       // cy.wait(1000)
+        // cy.wait(1000)
         cy.get('@cfInput').type('{enter}');
     }
 
@@ -3079,7 +3183,7 @@ let basePage = class BasePage {
             } else if (label === 'Select List') {
                 this.turnOnToggleAndSelectDropdownOptionOnCustomForm(label, value);
 
-            } else if (label === 'User/User Group' ) {
+            } else if (label === 'User/User Group') {
                 const values = Array.isArray(value) ? value : [value];
                 this.turnOnToggleAndReturnParentElementOnCustomForm(label)
                     .find('.ui-select-container')
@@ -3135,7 +3239,7 @@ let basePage = class BasePage {
     }
 
     choose_custom_form_from_mass_update_cf_modal(itemObject) {
-        customDataType().select(`number:${itemObject.id}`, { force: true }).trigger('change');
+        customDataType().select(`number:${itemObject.id}`, {force: true}).trigger('change');
 
         return this;
     }
@@ -3148,16 +3252,14 @@ let basePage = class BasePage {
 
             if (['Offense Type', 'Custody Reason'].some(v => label === v)) {
                 this.findElementByLabelAndSelectDropdownOption(label, value)
-            }
-            else if (label === 'Recovered By') {
+            } else if (label === 'Recovered By') {
                 cy.get('[name="recoveredBy"]').clear().type(value)
-                    cy.wait(2000)
+                cy.wait(2000)
                 cy.get('[name="recoveredBy"]').type('{enter}');
 
-            }
-            else if (label === 'Submitted By') {
+            } else if (label === 'Submitted By') {
                 cy.get('[name="submittedBy"]').clear().type(value)
-                    cy.wait(2000)
+                cy.wait(2000)
                 cy.get('[name="submittedBy"]').type('{enter}');
 
             } else if (['Status'].some(v => label === v)) {
@@ -3173,10 +3275,9 @@ let basePage = class BasePage {
                 cy.get('[name="offenseLocation"]').clear().type(value).click();
             } else if (label === 'Recovered At') {
                 cy.get('[name="recoveryLocation"]').clear().type(value).click();
-            }
-            else if (label === 'Recovery Date') {
+            } else if (label === 'Recovery Date') {
                 //this.enterValue(recoveryDate, value)
-             //   this.findElementByLabelEnterValueAndPressEnter(label, value)
+                //   this.findElementByLabelEnterValueAndPressEnter(label, value)
                 cy.get('.col-md-8 > .test > .input-group').clear().type(value)
                 cy.wait(1000)
                 cy.get('.col-md-8 > .test > .input-group').type('{enter}')
@@ -3521,8 +3622,10 @@ let basePage = class BasePage {
             .populate_CheckOut_form(takenBy_personOrUserObject, checkOutReason, notes, expectedReturnDate)
 
         if (isActionOnSearchResults) {
-            this.verify_modal_content(' Warning! This action will check out all items found by the current search')
-            this.verify_modal_content('Items shared among Organizations are not included in the transaction')
+            this.verify_modal_content('This action will check out all items found by the current search')
+            // ToDo: we need to ensure that Item Sharing/CLP is ON/OFF in Org before verifying the full warning.
+            //  For now, I’ve excluded the part related to shared/CLP items. It can be added later once we define the precondition for displaying this part of the warning in the test
+            //this.verify_modal_content('- Items shared among Organizations')
         }
         this.upload_file_and_verify_toast_msg('image.png', null)
 

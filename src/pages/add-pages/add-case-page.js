@@ -14,6 +14,7 @@ let
     caseOfficerTypeahead = e => cy.get('[ng-repeat="item in $group.items"]').first(),
     offenseLocationInput = e => cy.findByPlaceholderText(C.placeholders.addCase.offenseLocation),
     tagsInput = e => cy.findAllByPlaceholderText(C.placeholders.addCase.addTags).eq(1),
+    tagsInputWithinActiveForm = e => active_form().find('[label="\'CASES.EDIT.TAGS\'"]').find('input'),
     offenseDescriptionInput = e => cy.findByPlaceholderText(C.placeholders.addCase.offenseDescription),
     reviewDateNotes = e => cy.findByPlaceholderText(C.placeholders.addCase.reviewDateNotes),
     offenseDateInput = e => cy.get('[ng-model="ngModel"]').eq(0),
@@ -97,6 +98,14 @@ export default class AddCasePage extends BaseAddPage {
         caseNumberInput_enabled().type(caseNo);
         return this;
     };
+
+    add_Tags(tagsArray) {
+        this.enter_values_on_several_multi_select_typeahead_fields(
+            [
+                [tagsInputWithinActiveForm, tagsArray, this.lastTagOnTypeahead],
+            ]);
+        return this
+    }
 
     populate_all_fields_on_both_forms(caseObject, clearPrefix = false) {
         this.wait_until_spinner_disappears();

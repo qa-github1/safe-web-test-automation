@@ -2752,7 +2752,6 @@ S.PENTEST_2 = {
         name: 'Cypress ReadOnly Group',
         id: 2898
     },
-
     taskTemplates: {
         dispoAuth: {
             templateId: 3511,
@@ -2797,13 +2796,15 @@ S.PENTEST_2 = {
             taskActionId: '547',
         },
     },
-
     orgTag1: {tagModelId: 6751, name: 'sensitive information', color: "#ad2355", tagUsedBy: 1},
     orgTag2: {tagModelId: 6752, name: 'eligible for disposal', color: "#4b9b62", tagUsedBy: 1},
-    tagA: {tagModelId: 16809, name: 'Tag_A__', color: "#4b9b62", tagUsedBy: 1},
+    tagA: {tagModelId: 37980, name: 'Tag_A__', color: "#4b9b62", tagUsedBy: 1},
     tagB: {tagModelId: 16810, name: 'Tag_B__', color: "#4b9b62", tagUsedBy: 1},
     tagC: {tagModelId: 16811, name: 'Tag_C__', color: "#4b9b62", tagUsedBy: 1},
-
+    tagGroup: {
+        name: 'AutoTest_TagGroup1',
+        id: 278
+    }
 };
 
 S.PENTEST_3 = {
@@ -3014,8 +3015,8 @@ S.PENTEST_3 = {
     },
     regularUser_permissionGroup: {
         name: 'Cypress - Regular User',
-        id: 4589,
-        startingIndexForViewPermissions: 82124,
+        id: 4619,
+        startingIndexForViewPermissions: 93678,
         get startingIndexForCreatePermissions() {
             return S.PENTEST_3.regularUser_permissionGroup.startingIndexForViewPermissions + 22
         },
@@ -3061,7 +3062,10 @@ S.PENTEST_3 = {
     tagA: {tagModelId: 16829, name: 'Tag_A__', color: "#4b9b62", tagUsedBy: 1},
     tagB: {tagModelId: 16830, name: 'Tag_B__', color: "#4b9b62", tagUsedBy: 1},
     tagC: {tagModelId: 16831, name: 'Tag_C__', color: "#4b9b62", tagUsedBy: 1},
-
+    tagGroup: {
+        name: 'AutoTest_TagGroup1',
+        id: 278
+    },
     taskTemplates: {
         dispoAuth: {
             templateId: 4308,
@@ -4691,7 +4695,7 @@ S.customForms = {
     casesFormWithRequiredFields: 'Required fields - Cypress Cases Form - Org#' + S.orgNum,
     caseFormWithOptionalFields: 'Optional fields - Cypress Case Form - Org#' + S.orgNum,
     itemFormWithRequiredFields: 'Required fields - Cypress Items Form - Org#' + S.orgNum,
-    itemFormWithOptionalFields: 'Optional fields - Cypress Items Form - Org#' + S.orgNum,
+    itemFormWithOptionalFields: 'Optional fields - Cypress Item Form - Org#' + S.orgNum,
     userFormWithRequiredFields: 'Required fields - Cypress Users Form - Org#' + S.orgNum,
     userFormWithOptionalFields: 'Optional fields - Cypress Users Form - Org#' + S.orgNum,
     peopleFormWithRequiredFields: 'Required fields - Cypress People Form - Org#' + S.orgNum,
@@ -4701,12 +4705,12 @@ S.customForms = {
 }
 
 S.colors = {
-    redBorder: "rgb(231,24,45)"
+  redBorder: "rgb(231,24,45)"
 };
 
 S.gmailAccount = {
     email: 'qa@trackerproducts.com',
-    password: 'prya dorm gqbm ygrf'
+    password: 'ymvv duvc gbpv oyne'
 };
 
 S.userAccounts = accounts.getTestAccounts(S.selectedEnvironment, S.orgNum);

@@ -322,6 +322,7 @@ export default class CaseViewPage extends BaseViewPage {
         return this;
     };
 
+
     edit_Status(setToActive) {
         let that = this
         edit_form().within(($list) => {

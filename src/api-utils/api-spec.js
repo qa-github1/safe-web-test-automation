@@ -13,5 +13,6 @@ module.exports = {
     transactions : require('./endpoints/transactions/collection'),
     workflows : require('./endpoints/workflows/collection'),
     auto_disposition : require('./endpoints/auto-disposition/collection'),
+    tags : require('./endpoints/tags/collection'),
 
 }

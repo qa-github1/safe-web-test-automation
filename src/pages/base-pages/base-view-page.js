@@ -57,7 +57,8 @@ let
     xButtons_onTagOrUserBoxes = text => active_form().find('[ng-click="$selectMultiple.removeChoice($index)"]'),
     requiredElement = e => cy.get(`label[for="${e}"]`).siblings().find('[ng-message="required"]'),
     deleteFormButton = e => cy.get(`[title="Delete Form"]`).first(),
-    confirmDeleteFormButton = e => cy.get(`[class="confirm"]`).first()
+    confirmDeleteFormButton = e => cy.get(`[class="confirm"]`).first(),
+    cancelButtononHistoryPage = e => cy.get(`[translate="GENERAL.BUTTON_CANCEL"]`).eq(1)
 
 export default class BaseViewPage extends BasePage {
     constructor() {
@@ -176,6 +177,11 @@ export default class BaseViewPage extends BasePage {
 
     click_Save() {
         save_button_on_active_tab().click();
+        return this;
+    }
+
+    click_cancel_on_history_page(){
+        cancelButtononHistoryPage().click();
         return this;
     }
 

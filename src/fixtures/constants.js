@@ -355,6 +355,10 @@ C = {
         caseActions: {
             massUpdate: "Mass Update"
         },
+        tagActions: {
+            deactivate: "Deactivate",
+            activate: "Activate"
+        },
         userActions: {
             sendVerificationEmail: 'Send Verification Email',
             setPermissions: 'Set Permissions',
@@ -387,6 +391,8 @@ C = {
         pastDue: 'Past Due',
         upcoming: 'Upcoming',
         all: 'All',
+        tagGroups: 'Tag Groups',
+        tags: 'Tags'
     },
     itemStatuses: {
         checkedIn: 'Checked In',
@@ -819,6 +825,14 @@ C = {
         noPermissionsToAddItemsToCase: `You do not have permissions to add Items to this Case`,
         caseLevelPermissionsForGroups: `Note - you will be applying case level permissions to all users (in all offices) for the following groups:`,
     },
+    filters: {
+        active: 'Active',
+        inactive: 'Inactive',
+        organization: 'Organization',
+        groups: 'Groups',
+        new: 'New',
+        users: 'Users',
+    }
 };
 
 C.labels = {
@@ -847,6 +861,9 @@ C.labels = {
     },
     tasksPage: {
         title: 'Tasks'
+    },
+    tagsPage: {
+        title: 'Tags'
     },
     userAdmin: {
         title: 'User Admin'
@@ -1041,12 +1058,14 @@ C.perissionMatrixEntity = {
 
 C.permissionMatrixAccessType = {
     viewAll: 1,
+    viewOrgTag: 1,
     viewIfOwner: 9,
     create: 4,
     updateAll: 3,
     updateIfOwner: 14,
     deleteIfOwner: 15,
     setDispoAction: 16,
+    taskUpdateAllExceptDueDate: 18,
     createOrgTag: 11,
     createGroupTag: 12,
     createPersonalTag: 13,

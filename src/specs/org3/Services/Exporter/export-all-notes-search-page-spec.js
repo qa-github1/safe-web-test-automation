@@ -35,25 +35,23 @@ for (let i = 0; i < 1; i++) {
         });
 
 
-        it.only('1. Export All - Note Search Page - Excel', function () {
+        it('1. Export All - Note Search Page - Excel', function () {
             ui.menu.click_Search__Notes()
             ui.searchNotes.run_search_by_Text(note)
-                .click_Search()
-            //     .click_button('Export')
-            //     .click_option_on_expanded_menu('All - Excel')
-            // ui.app.verify_url_contains_some_value('export-jobs')
-            //     .sort_by_descending_order('Start Date')
-            // cy.reload()
-            // ui.app.verify_content_of_specific_cell_in_first_table_row('Download Link', 'Download')
+                 .click_button('Export')
+                 .click_option_on_expanded_menu('All - Excel')
+             ui.app.verify_url_contains_some_value('export-jobs')
+                 .sort_by_descending_order('Start Date')
+             cy.reload()
+             ui.app.verify_content_of_specific_cell_in_first_table_row('Download Link', 'Download')
 
         });
 
-        xit('2. Export All - Note Search Page - CSV', function () {
+        it('2. Export All - Note Search Page - CSV', function () {
             ui.menu.click_Search__Notes()
             ui.searchNotes.run_search_by_Text(note)
-                .click_Search()
                 .click_button('Export')
-                .click_option_on_expanded_menu('All - Excel')
+                .click_option_on_expanded_menu('All - CSV')
             ui.app.verify_url_contains_some_value('export-jobs')
                 .sort_by_descending_order('Start Date')
             cy.reload()
