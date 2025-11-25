@@ -470,7 +470,7 @@ export default class BaseViewPage extends BasePage {
         if (leftOrRightColumn === 'left') {
             formContainer = e => historyView_leftColumn().contains(formName).parents('[ng-repeat="form in forms"]')
         } else if (leftOrRightColumn === 'right') {
-            formContainer = e => historyView_rightColumn().contains(formName).parents('[ng-repeat="form in forms"]')
+            formContainer = e => historyView_rightColumn().contains(formName).parents('[ng-repeat="form in previousForms"]')
         }
 
         this.verify_if_Checkbox_is_selected(formContainer, dataObject.custom_checkbox);
@@ -504,11 +504,6 @@ export default class BaseViewPage extends BasePage {
                         .should('have.color', 'rgb(255, 0, 0)')
                 } else {
                     cy.contains(field)
-                        // .then(($el) => {
-                        //     return window.getComputedStyle($el[0])
-                        // })
-                        // .invoke('getPropertyValue', 'color')
-                        // .should('equal', 'rgb(103, 106, 108)')
                         .should('have.color', 'rgb(103, 106, 108)')
                 }
             }
@@ -517,9 +512,10 @@ export default class BaseViewPage extends BasePage {
     }
 
     delete_first_custom_form_on_edit_page() {
-        deleteFormButtonOnFirstForm().should('be.enabled');
+        deleteFormButtonOnFirstForm().scrollIntoView()
+        deleteFormButtonOnFirstForm().should('be.visible');
         deleteFormButtonOnFirstForm().click();
-        this.pause(1)
+        this.pause(0.5)
         confirmDeleteFormButton().should('be.enabled');
         confirmDeleteFormButton().click();
         return this;

@@ -22,7 +22,10 @@ for (let i = 0; i < 1; i++) {
             cy.log(`⏱ Total time for suite: ${totalSeconds} seconds`);
         });
 
-        let allFieldsLabels = C.itemFields.massUpdateCFModal
+        let addFieldsOnHistory = [
+            ...C.itemFields.allFieldsOnHistory,
+            ...C.customFieldLabels
+        ];
 
         it('1. Mass Update Custom Data when "Overwrite existing form data?" is ON', function () {
             ui.app.log_title(this);
@@ -58,7 +61,7 @@ for (let i = 0; i < 1; i++) {
                 .click_Actions_on_Search_Page()
                 .click_option_on_expanded_menu(C.dropdowns.itemActions.massUpdateCustomData)
                 .choose_custom_form_from_mass_update_cf_modal(S.selectedEnvironment.itemCustomForm)
-                .turn_on_and_enter_values_to_all_fields_on_custom_form_modal(allFieldsLabels, allValues)
+                .turn_on_and_enter_values_to_all_fields_on_custom_form_modal(C.customFieldLabels, allValues)
                 .verify_text_is_visible('Mass updating 1 item')
                 .enable_overwrite_existing_form_data()
                 .click_Ok()
@@ -69,15 +72,13 @@ for (let i = 0; i < 1; i++) {
                 ui.app.open_item_url(JSON.parse(item).id)
                 ui.itemView.select_tab(C.tabs.basicInfo)
             })
+            D.newItem.caseNumber = D.newCase.caseNumber
             ui.itemView.verify_edited_and_not_edited_values_on_Item_View_form(C.itemFields.allFieldsOnItemView, D.newItem)
                 .click_Edit()
-                .verify_edited_and_not_edited_values_on_Item_Edit_form(C.itemFields.allEditableFieldsArray, D.newItem)
                 .verify_custom_data_on_Edit_form(D.editedCustomFormData)
                 .open_last_history_record(0)
-                .verify_red_highlighted_history_records(C.itemFields.massUpdateCFModal)
-            // // TODO: Add later more verifications related to History Page - maybe verify all records
-            api.auth.log_out(user)
-
+               // .verify_all_values_on_history(D.newItem, D.newItem, S.customForms.itemFormWithOptionalFields, false, D.editedCustomFormData, D.newCustomFormData)
+                .verify_red_highlighted_history_records(C.customFieldLabels, addFieldsOnHistory)
         });
 
         it('2. Mass Update Custom Data when "Overwrite existing form data?" is OFF', function () {
@@ -114,7 +115,7 @@ for (let i = 0; i < 1; i++) {
                 .click_Actions_on_Search_Page()
                 .click_option_on_expanded_menu(C.dropdowns.itemActions.massUpdateCustomData)
                 .choose_custom_form_from_mass_update_cf_modal(S.selectedEnvironment.itemCustomForm)
-                .turn_on_and_enter_values_to_all_fields_on_custom_form_modal(allFieldsLabels, allValues)
+                .turn_on_and_enter_values_to_all_fields_on_custom_form_modal(C.customFieldLabels, allValues)
                 .verify_text('Mass updating 1 item')
                 .click_Ok()
                 .verify_toast_message(C.toastMsgs.saved)
@@ -124,16 +125,17 @@ for (let i = 0; i < 1; i++) {
                 ui.app.open_item_url(JSON.parse(item).id)
                 ui.itemView.select_tab(C.tabs.basicInfo)
             })
+
+            D.newItem.caseNumber = D.newCase.caseNumber
             ui.itemView.click_Edit()
+                .verify_edited_and_not_edited_values_on_Item_Edit_form(C.itemFields.allEditableFieldsArray, D.newItem)
                 .verify_custom_data_on_Edit_form(D.newCustomFormData)
                 .delete_first_custom_form_on_edit_page()
                 .verify_edited_and_not_edited_values_on_Item_Edit_form(C.itemFields.allEditableFieldsArray, D.newItem)
                 .verify_custom_data_on_Edit_form(D.editedCustomFormData)
+                .click_Save()
                 .open_last_history_record(0)
-                .verify_red_highlighted_history_records(C.itemFields.massUpdateCFModal)
-            // TODO: Add later more verifications related to History Page - maybe verify all records
-            api.auth.log_out(user)
-
+              //  .verify_all_values_on_history(D.newItem, D.newItem, S.customForms.itemFormWithOptionalFields, false, D.editedCustomFormData, D.newCustomFormData)
         });
     });
 }

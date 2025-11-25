@@ -2598,20 +2598,20 @@ S.PENTEST_2 = {
     },
     itemCustomForm: {
         name: "Optional fields - Cypress Items Form - Org #2",
-        id: 24316,
-        checkboxListId: "field7181",
-        radioButtonListId: "field7183",
-        selectListId: "field7185",
-        dropdownTypeahead: "field7187",
-        number: "field7173",
-        password: "field7175",
-        textbox: "field7169",
-        email: "field7171",
-        textarea: "field7177",
-        checkbox: "field7179",
-        date: "field7193",
-        user: "field7189",
-        person: "field7191",
+        id: 24186,
+        checkboxListId: "field9694", //
+        radioButtonListId: "field9696", //
+        selectListId: "field9698", //
+        dropdownTypeahead: "field9700", //
+        number: "field9686", //
+        password: "field9688", //
+        textbox: "field9682", //
+        email: "field9684",  //
+        textarea: "field9690", //
+        checkbox: "field9692", //
+        date: "field9706", //
+        user: "field9702", //
+        person: "field9704", //
     },
     locations: [
         {
@@ -4692,14 +4692,14 @@ S.oldClosedCase = S.selectedEnvironment.oldClosedCase;
 S.recentCase = S.selectedEnvironment.recentCase;
 
 S.customForms = {
-    casesFormWithRequiredFields: 'Required fields - Cypress Cases Form - Org#' + S.orgNum,
-    caseFormWithOptionalFields: 'Optional fields - Cypress Case Form - Org#' + S.orgNum,
-    itemFormWithRequiredFields: 'Required fields - Cypress Items Form - Org#' + S.orgNum,
-    itemFormWithOptionalFields: 'Optional fields - Cypress Item Form - Org#' + S.orgNum,
-    userFormWithRequiredFields: 'Required fields - Cypress Users Form - Org#' + S.orgNum,
-    userFormWithOptionalFields: 'Optional fields - Cypress Users Form - Org#' + S.orgNum,
-    peopleFormWithRequiredFields: 'Required fields - Cypress People Form - Org#' + S.orgNum,
-    peopleFormWithOptionalFields: 'Optional fields - Cypress People Form - Org#' + S.orgNum,
+    casesFormWithRequiredFields: 'Required fields - Cypress CASE Form - Org#' + S.orgNum,
+    caseFormWithOptionalFields: 'Optional fields - Cypress CASE Form - Org#' + S.orgNum,
+    itemFormWithRequiredFields: 'Required fields - Cypress ITEM Form - Org#' + S.orgNum,
+    itemFormWithOptionalFields: 'Optional fields - Cypress ITEM Form - Org#' + S.orgNum,
+    userFormWithRequiredFields: 'Required fields - Cypress USER Form - Org#' + S.orgNum,
+    userFormWithOptionalFields: 'Optional fields - Cypress USER Form - Org#' + S.orgNum,
+    peopleFormWithRequiredFields: 'Required fields - Cypress PERSON Form - Org#' + S.orgNum,
+    peopleFormWithOptionalFields: 'Optional fields - Cypress PERSON Form - Org#' + S.orgNum,
     // tasksFormWithRequiredFields: 'Cypress Task Form -- required fields',
     // tasksFormWithOptionalFields: 'Cypress Task Form -- optional fields'
 }

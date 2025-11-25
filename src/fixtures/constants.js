@@ -43,6 +43,21 @@ C = {
         closeXCases: X => `Close ${X} Cases`,
         viewXCases: X => `View ${X} Cases`,
     },
+    customFieldLabels: [
+        'Textbox',
+        'Email',
+        'Custom Number',
+        'Password',
+        'Textarea',
+        'Checkbox',
+        'Checkbox List',
+        'Radiobutton List',
+        'Select List',
+        'Dropdown Typeahead',
+        'User/User Group',
+        'Custom Person',
+        'Custom Date'
+    ],
     itemFields: {
         allFieldsOnHistory: [
             'Update Made By',
@@ -110,7 +125,7 @@ C = {
             'Released To',
         ],
         reducedEditableFieldsArray: ['Category'],
-        massUpdateModal : [
+        massUpdateModal: [
             'Description',
             'Recovered At',
             'Recovered By',
@@ -123,7 +138,7 @@ C = {
             'Item Belongs to',
             'Tags',
         ],
-        massUpdateModalWhenAllTogglesAreOn : [
+        massUpdateModalWhenAllTogglesAreOn: [
             'Recovered At',
             'Description',
             'Recovery Date',
@@ -134,21 +149,6 @@ C = {
             'Custody Reason',
             'Model',
             'Make'
-        ],
-        massUpdateCFModal : [
-            'Textbox',
-            'Email',
-            'Number',
-            'Password',
-            'Textarea',
-            'Checkbox',
-            'Checkbox List',
-            'Radiobutton List',
-            'Select List',
-            'Dropdown Typeahead',
-            'User/User Group',
-            'Person',
-            'Date'
         ],
         orgNo: 'Org #',
         active: 'Active',
@@ -348,7 +348,7 @@ C = {
             massUpdateCustomData: "Mass Update Custom Data"
         },
         itemActionsOnSearchResults: {
-            checkItemIn:"Check Items In",
+            checkItemIn: "Check Items In",
             massUpdate: "Mass Update",
             massUpdateCF: "Mass Update Custom Data"
         },
@@ -946,7 +946,7 @@ C.labels = {
                     'Row #2 has Error: Field CaseNumber. Case \'$\' not found.',
                     'Row #2 has Error: The note is neither Case nor Item'
                 ],
-                invalidValues: (invalidDate, invalidItem) =>[
+                invalidValues: (invalidDate, invalidItem) => [
                     'Row #2 has Error: Field UserGUID Email is empty.',
                     'Row #2 has Error: Field UserGUID. User not found. Value: \'\'',
                     'Row #2 has Error: Field OfficeGUID. Office not found',

@@ -851,7 +851,6 @@ let basePage = class BasePage {
         })
     }
 
-
     enter_values_on_single_multi_select_typeahead_field(LabelValueArray) {
 
         if (LabelValueArray[1]) {
@@ -914,7 +913,6 @@ let basePage = class BasePage {
 
         return this;
     };
-
 
     // enter_values_on_single_multi_select_typeahead_field(LabelValueArray) {
     //
@@ -1147,7 +1145,6 @@ let basePage = class BasePage {
         return this;
     };
 
-
     verify_multiple_input_values_in_one_container(container, arrayOfProperties) {
         let i = 0;
         arrayOfProperties.forEach(function (prop) {
@@ -1197,7 +1194,6 @@ let basePage = class BasePage {
         return this;
     }
 
-
     verify_text_on_element_found_by_label(element, expectedText, elementLabel,) {
         if (this.isObject(expectedText)) {
             for (let property in expectedText) {
@@ -1220,7 +1216,6 @@ let basePage = class BasePage {
         return this;
     };
 
-
     // this was the source method that includes retry mechanism
     check_text(element, text, timeoutInSeconds = 60) {
         if (text) {
@@ -1233,7 +1228,6 @@ let basePage = class BasePage {
             cy.verifyTextAndRetry(getTextFn, text, {maxAttempts: maxAttempts, retryInterval: retryInterval});
         }
     }
-
 
     //  AMN: I needed to add this method because we had an issue with reading  empty ' ' on DEV while on Pentest method above worked fine
     // SMJ: commenting out this method, to be deleted later, as we should try to use the check_text() method above on all envs, with retry mechanism which incorporates the trimming of whitespaces as well
@@ -1262,7 +1256,6 @@ let basePage = class BasePage {
     //     });
     // }
 
-
     // check_value(element, value) {
     //     const expected = value?.toString().trim() ?? '';
     //
@@ -1281,7 +1274,6 @@ let basePage = class BasePage {
     //     }
     // }
 
-
     check_value(element, value, timeoutInSeconds = 70) {
 
         if (value) {
@@ -1295,7 +1287,6 @@ let basePage = class BasePage {
             cy.verifyTextAndRetry(getTextFn, value, {maxAttempts: maxAttempts, retryInterval: retryInterval});
         }
     }
-
 
     verify_value_within_container(element, value, container, timeoutInSeconds = 70) {
 
@@ -1356,7 +1347,6 @@ let basePage = class BasePage {
     //     }
     //     return this;
     // };
-
 
     verify_value(element, expectedText) {
         let self = this
@@ -1574,7 +1564,6 @@ let basePage = class BasePage {
         return this;
     };
 
-
     click_Actions(useButtonOnActiveTab) {
         this.pause(1)
         this.wait_until_modal_disappears()
@@ -1599,7 +1588,6 @@ let basePage = class BasePage {
 
         return this;
     };
-
 
     click_Actions_on_Search_Page() {
         this.pause(1)
@@ -1828,7 +1816,7 @@ let basePage = class BasePage {
         let requestOccurred = false;
 
         // Wrap in a Cypress command chain, no Promises
-        cy.wait(0, { timeout: 0 }) // dummy wait to start the chain
+        cy.wait(0, {timeout: 0}) // dummy wait to start the chain
             .then(() => {
                 const start = Date.now();
 
@@ -1868,7 +1856,7 @@ let basePage = class BasePage {
                     }
 
                     // wait a bit and check again
-                    cy.wait(100, { log: false }).then(checkRequest);
+                    cy.wait(100, {log: false}).then(checkRequest);
                 }
 
                 checkRequest();
@@ -1876,7 +1864,6 @@ let basePage = class BasePage {
 
         return this;
     }
-
 
     define_all_dashboard_GET_requests() {
         dashboardGetRequests.forEach(request => {
@@ -2185,7 +2172,6 @@ let basePage = class BasePage {
         return this;
     };
 
-
     uncheck_all_rows() {
         statisticsBlock().invoke('text').then((text) => {
             if (text.includes('Selected')) {
@@ -2386,7 +2372,6 @@ let basePage = class BasePage {
         return this;
     };
 
-
     click_table_matrix_cell_based_on_column_name_and_unique_value_in_the_row(columnName, uniqueValueInRow, tableIndex, fieldType = 'input') {
 
         tableColumnFoundByText(columnName, tableIndex).prevAll()
@@ -2422,7 +2407,6 @@ let basePage = class BasePage {
         return this;
     };
 
-
     add_Tags(tagsArray) {
         this.enter_values_on_several_multi_select_typeahead_fields(
             [
@@ -2451,7 +2435,6 @@ let basePage = class BasePage {
         }
         return this;
     };
-
 
     verify_content_of_specific_cell_in_first_table_row(columnTitle, cellContent, headerCellTag = 'th') {
 
@@ -2518,7 +2501,6 @@ let basePage = class BasePage {
     //        });
     //        return this;
     //    };
-
 
     verify_content_of_specific_table_row_by_provided_column_title_and_value(
         rowIndex,
@@ -3044,6 +3026,32 @@ let basePage = class BasePage {
             .parents('.form-group').first()
     }
 
+    // turnOnAllTogglesOnModal() {
+    //     cy.get('.modal-content').find('.toggle-off').click({multiple: true})
+    //     return this
+    // }
+
+    turnOnAllTogglesOnModal(skip) {
+        cy.get('.modal-content .toggle-off').then($toggles => {
+            let togglesToClick;
+
+            if (skip === 'first') {
+                togglesToClick = $toggles.slice(1);
+            } else if (skip === 'last') {
+                togglesToClick = $toggles.slice(0, -1);
+            } else if (Number.isInteger(skip)) {
+                const zeroIndex = skip - 1;      // convert 1-based → 0-based
+                togglesToClick = $toggles.filter((i) => i !== zeroIndex);
+            } else {
+                togglesToClick = $toggles;
+            }
+
+            cy.wrap(togglesToClick).click({ multiple: true });
+        });
+
+        return this;
+    }
+
     turnOnToggleAndReturnParentElementOnCustomForm(label) {
         return cy.get('.modal-content')
             .contains('.fg-field-inner label, .fg-field-inner .control-label', new RegExp(`^\\s*${label}\\s*$`))
@@ -3053,7 +3061,6 @@ let basePage = class BasePage {
                 cy.get('[ng-click="onSwitch($event)"]').click({force: true});
             })
             .then(() => cy.get('@field'));
-
     }
 
     turnOnToggleEnterValueAndPressEnterOnCustomForm(label, value) {
@@ -3064,9 +3071,19 @@ let basePage = class BasePage {
         cy.get('@cfInput')
             .should('be.enabled')
             .clear({force: true})
-            // .type(String(value), {force: true})
             .invoke('val', value).trigger('input')
-        //   this.wait_until_spinner_disappears()
+        cy.get('@cfInput').type('{enter}');
+    }
+
+    enterValueAndPressEnterOnCustomForm(label, value) {
+        this.turnOnToggleAndReturnParentElementOnCustomForm(label)
+            .find('input:visible, textarea:visible')
+            .first()
+            .as('cfInput');
+        cy.get('@cfInput')
+            .should('be.enabled')
+            .clear({force: true})
+            .invoke('val', value).trigger('input')
         cy.get('@cfInput').type('{enter}');
     }
 
@@ -3304,65 +3321,86 @@ let basePage = class BasePage {
 
     turn_on_and_enter_values_to_all_fields_on_custom_form_modal(labelsArray, valuesArray) {
 
+        this.turnOnAllTogglesOnModal('last')
+
         for (let i = 0; i < labelsArray.length; i++) {
             const label = labelsArray[i];
             const value = valuesArray[i];
 
-            if (['Textbox', 'Email', 'Number', 'Password'].some(v => label === v)) {
-                this.turnOnToggleEnterValueAndPressEnterOnCustomForm(label, value);
-
+            if (['Textbox', 'Email', 'Custom Number', 'Password'].some(v => label === v)) {
+                cy.get('.modal-content')
+                    .contains('.fg-field-inner label, .fg-field-inner .control-label', new RegExp(`^\\s*${label}\\s*$`))
+                    .closest('.fg-field-inner')
+                    .find('input')
+                    .first()
+                    .should('be.enabled')
+                    .clear()
+                    .invoke('val', value).trigger('input')
             } else if (label === 'Textarea') {
-                this.turnOnToggleAndEnterValueInTextareaOnCustomForm(label, value);
-
+                cy.get('.modal-content')
+                    .contains('.fg-field-inner label, .fg-field-inner .control-label', new RegExp(`^\\s*${label}\\s*$`))
+                    .closest('.fg-field-inner')
+                    .find('textarea')
+                    .first()
+                    .should('be.enabled')
+                    .clear()
+                    .invoke('val', value).trigger('input')
             } else if (label === 'Checkbox') {
-                this.turnOnToggleAndReturnParentElementOnCustomForm(label)
+                cy.get('.modal-content')
+                    .contains('.fg-field-inner label, .fg-field-inner .control-label', new RegExp(`^\\s*${label}\\s*$`))
+                    .closest('.fg-field-inner')
                     .find('input[type="checkbox"]:visible')
                     .first()
                     .then($cb => {
-                        if (value) cy.wrap($cb).check({force: true});
-                        else cy.wrap($cb).uncheck({force: true});
-                        this.pause(1)
+                        if (value) cy.wrap($cb).check();
+                        else cy.wrap($cb).uncheck();
                     });
 
             } else if (label === 'Checkbox List') {
                 const values = Array.isArray(value) ? value : [value];
-                this.turnOnToggleAndReturnParentElementOnCustomForm(label).then(($root) => {
-                    values.forEach(v => {
-                        cy.wrap($root)
-                            .contains('.checkbox, .checkbox-inline, label', new RegExp(`^\\s*${v}\\s*$`))
-                            .find('input[type="checkbox"]')
-                            .check({force: true});
-                    });
-                });
-
+                values.forEach(v =>
+                    cy.get('.modal-content')
+                        .contains('.fg-field-inner label, .fg-field-inner .control-label', new RegExp(`^\\s*${label}\\s*$`))
+                        .closest('.fg-field-inner')
+                        .contains('.checkbox, .checkbox-inline, label', new RegExp(`^\\s*${v}\\s*$`))
+                        .find('input[type="checkbox"]')
+                        .check());
             } else if (label === 'Radiobutton List') {
-                this.turnOnToggleAndReturnParentElementOnCustomForm(label)
+                cy.get('.modal-content')
+                    .contains('.fg-field-inner label, .fg-field-inner .control-label', new RegExp(`^\\s*${label}\\s*$`))
+                    .closest('.fg-field-inner')
                     .contains('.radio, .radio-inline, label', new RegExp(`^\\s*${value}\\s*$`))
                     .find('input[type="radio"]')
-                    .check({force: true});
+                    .check();
 
             } else if (label === 'Select List') {
-                this.turnOnToggleAndSelectDropdownOptionOnCustomForm(label, value);
+                cy.get('.modal-content')
+                    .contains('.fg-field-inner label, .fg-field-inner .control-label', new RegExp(`^\\s*${label}\\s*$`))
+                    .closest('.fg-field-inner')
+                    .find('select').first()
+                    .select(value)
 
             } else if (label === 'Dropdown Typeahead') {
                 this.define_API_request_to_be_awaited('GET',
                     'optionsTypeahead?search=' + value.replace(/\s+/g, '%20'),
                     'getOptionTypeahead')
 
-                this.turnOnToggleAndReturnParentElementOnCustomForm(label)
-                    .find('input:visible, textarea:visible')
+                cy.get('.modal-content')
+                    .contains('.fg-field-inner label, .fg-field-inner .control-label', new RegExp(`^\\s*${label}\\s*$`))
+                    .closest('.fg-field-inner')
+                    .find('input')
                     .first()
-                    .as('cfInput');
-                cy.get('@cfInput')
-                    .should('be.enabled')
-                    .clear({force: true})
+                    .as('cfInput')
+                    .clear()
                     .invoke('val', value).trigger('input')
                 this.wait_response_from_API_call("getOptionTypeahead", 200, null, 2000)
                 cy.get('@cfInput').type('{enter}')
 
             } else if (label === 'User/User Group') {
                 const values = Array.isArray(value) ? value : [value];
-                this.turnOnToggleAndReturnParentElementOnCustomForm(label)
+                cy.get('.modal-content')
+                    .contains('.fg-field-inner label, .fg-field-inner .control-label', new RegExp(`^\\s*${label}\\s*$`))
+                    .closest('.fg-field-inner')
                     .find('.ui-select-container')
                     .first()
                     .as('userSelect');
@@ -3377,13 +3415,15 @@ let basePage = class BasePage {
 
                     cy.get('@userSelect').click().find('input.ui-select-search')
                         .invoke('val', v).trigger('input')
-                    this.wait_response_from_API_call("getUserInTypeahead", 200, null, 2000)
-                    this.wait_response_from_API_call("getUserGroupInTypeahead", 200, null, 2000)
+                    this.wait_response_from_API_call("getUserInTypeahead", 200, null, 1500)
+                    this.wait_response_from_API_call("getUserGroupInTypeahead", 200, null, 1500)
                     cy.get('.ui-select-choices-row').contains(v).click();
                 });
-            } else if (label === 'Person') {
+            } else if (label === 'Custom Person') {
                 const values = Array.isArray(value) ? value : [value];
-                this.turnOnToggleAndReturnParentElementOnCustomForm(label)
+                cy.get('.modal-content')
+                    .contains('.fg-field-inner label, .fg-field-inner .control-label', new RegExp(`^\\s*${label}\\s*$`))
+                    .closest('.fg-field-inner')
                     .find('[typeahead="l.id as l.text for l in getPerson($viewValue) | limitTo: 10"]')
                     .first()
                     .as('personSelect');
@@ -3394,14 +3434,14 @@ let basePage = class BasePage {
                         "getPeopleInTypeahead")
 
                     cy.get('@personSelect').invoke('val', v).trigger('input')
-                    this.wait_response_from_API_call("getPeopleInTypeahead", 200, null, 3000)
+                    this.wait_response_from_API_call("getPeopleInTypeahead", 200, null, 2000)
                     cy.get('[matches="matches"]').find('li').click();
                 });
-            }
-            else if (label === 'Date') {
-                this.turnOnToggleAndReturnParentElementOnCustomForm(label)
-                    .within(() => {
-                        cy.get('input[tp-datepicker-popup][ng-model="ngModel"]')
+            } else if (label === 'Custom Date') {
+                cy.get('.modal-content')
+                    .contains('.fg-field-inner label, .fg-field-inner .control-label', new RegExp(`^\\s*${label}\\s*$`))
+                    .closest('.fg-field-inner')
+                    .find('input[tp-datepicker-popup][ng-model="ngModel"]')
                             .filter(':visible')
                             .first()
                             .scrollIntoView()
@@ -3410,9 +3450,16 @@ let basePage = class BasePage {
                             .invoke('val', value).trigger('input')
                             .type('{enter}')
                             .blur();
-                    });
             } else {
-                this.turnOnToggleEnterValueAndPressEnterOnCustomForm(label, value);
+                cy.get('.modal-content')
+                    .contains('.fg-field-inner label, .fg-field-inner .control-label', new RegExp(`^\\s*${label}\\s*$`))
+                    .closest('.fg-field-inner')
+                    .find('input:visible, textarea:visible')
+                    .first()
+                    .should('be.enabled')
+                    .clear({force: true})
+                    .invoke('val', value).trigger('input')
+                cy.get('@cfInput').type('{enter}');
             }
         }
 
@@ -3549,7 +3596,6 @@ let basePage = class BasePage {
         });
     }
 
-
     get_text_from_grid_and_save_in_local_storage(columnTitle, propertyName, headerCellTag = 'th') {
         resultsTableHeader().contains(headerCellTag, columnTitle).invoke('index').then((i) => {
             firstRowInResultsTable().find('td').eq(i).invoke('text').then(function (text) {
@@ -3570,7 +3616,6 @@ let basePage = class BasePage {
         cy.wait(numberOfSeconds * 1000)
         return this
     }
-
 
     populate_all_fields_on_Custom_Form(dataObject) {
         this.type_if_values_provided(
@@ -3661,7 +3706,6 @@ let basePage = class BasePage {
         });
         return this;
     }
-
 
     enterValue(element, arrayOrString) {
         // this is a much faster action than 'element.type()'
