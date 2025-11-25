@@ -56,7 +56,7 @@ let
     xButtons_onTagOrUserBoxes_byFieldLabel = label => active_form().contains(label).parent().find('[ng-click="$selectMultiple.removeChoice($index)"]'),
     xButtons_onTagOrUserBoxes = text => active_form().find('[ng-click="$selectMultiple.removeChoice($index)"]'),
     requiredElement = e => cy.get(`label[for="${e}"]`).siblings().find('[ng-message="required"]'),
-    deleteFormButton = e => cy.get(`[title="Delete Form"]`).first(),
+    deleteFormButtonOnFirstForm = e => cy.get(`[title="Delete Form"]`).first(),
     confirmDeleteFormButton = e => cy.get(`[class="confirm"]`).first(),
     cancelButtononHistoryPage = e => cy.get(`[translate="GENERAL.BUTTON_CANCEL"]`).eq(1)
 
@@ -516,8 +516,11 @@ export default class BaseViewPage extends BasePage {
         return this;
     }
 
-    delete_custom_form_on_edit_page() {
-        deleteFormButton().click();
+    delete_first_custom_form_on_edit_page() {
+        deleteFormButtonOnFirstForm().should('be.enabled');
+        deleteFormButtonOnFirstForm().click();
+        this.pause(1)
+        confirmDeleteFormButton().should('be.enabled');
         confirmDeleteFormButton().click();
         return this;
     }

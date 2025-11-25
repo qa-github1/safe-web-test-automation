@@ -851,6 +851,7 @@ let basePage = class BasePage {
         })
     }
 
+
     enter_values_on_single_multi_select_typeahead_field(LabelValueArray) {
 
         if (LabelValueArray[1]) {
@@ -870,7 +871,6 @@ let basePage = class BasePage {
                     this.define_API_request_to_be_awaited('GET',
                         '/api/people/typeahead',
                         "getPeopleInTypeahead")
-
                 }
 
                 if (typeof LabelValueArray[0] === 'string' || LabelValueArray[0] instanceof String) {
@@ -903,16 +903,81 @@ let basePage = class BasePage {
 
                 if (LabelValueArray[3] === '{enter}') {
                     typeaheadInputField(LabelValueArray[0]).type('{enter}')
-                }
-                else{
+                } else {
                     highlightedOptionOnTypeahead().click({force: true})
                 }
                 cy.wait(200)
 
             }
         }
+
+
         return this;
     };
+
+
+    // enter_values_on_single_multi_select_typeahead_field(LabelValueArray) {
+    //
+    //     if (LabelValueArray[1]) {
+    //         // if there are multiple values in array, repeat the same action to enter all of them
+    //         for (let i = 0; i < LabelValueArray[1].length; i++) {
+    //             // skip getUserinTypeahead if string is empty
+    //             const searchValue = LabelValueArray[1][i] == null ? '' : String(LabelValueArray[1][i]).trim();
+    //             if (searchValue === '') continue;
+    //             if (["users/groups", "usersCF"].includes(LabelValueArray[2])) {
+    //                 this.define_API_request_to_be_awaited('GET',
+    //                     'api/users/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + searchValue.replace(/\s+/g, '%20'),
+    //                     "getUserInTypeahead")
+    //                 this.define_API_request_to_be_awaited('GET',
+    //                     '/api/userGroups/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + searchValue.replace(/\s+/g, '%20'),
+    //                     "getUserGroupInTypeahead")
+    //             } else if (["people", "peopleCF"].includes(LabelValueArray[2])) {
+    //                 this.define_API_request_to_be_awaited('GET',
+    //                     '/api/people/typeahead',
+    //                     "getPeopleInTypeahead")
+    //
+    //             }
+    //
+    //             if (typeof LabelValueArray[0] === 'string' || LabelValueArray[0] instanceof String) {
+    //                 // typeaheadInputField(LabelValueArray[0]).clear().invoke('val', LabelValueArray[1][i]).trigger('input')
+    //                 typeaheadInputField(LabelValueArray[0])
+    //                     .clear()
+    //                     .invoke('val', LabelValueArray[1][i])
+    //                     .trigger('input')
+    //                     .then($input => {
+    //                         // Wait 500ms
+    //                         cy.wait(500).then(() => {
+    //                             // Remove last character
+    //                             const currentVal = $input.val();
+    //                             const newVal = currentVal.slice(0, -1); // remove last character
+    //                             cy.wrap($input).invoke('val', newVal).trigger('input');
+    //                         });
+    //                     });
+    //             } else {
+    //                 LabelValueArray[0]().clear().invoke('val', LabelValueArray[1][i]).trigger('input')
+    //             }
+    //
+    //             if (["users/groups", "usersCF"].includes(LabelValueArray[2])) {
+    //                 this.wait_response_from_API_call("getUserInTypeahead")
+    //                 this.wait_response_from_API_call("getUserGroupInTypeahead")
+    //             } else if (["people", "peopleCF"].includes(LabelValueArray[2])) {
+    //                 this.wait_response_from_API_call("getPeopleInTypeahead")
+    //             }
+    //
+    //             cy.wait(200)
+    //
+    //             if (LabelValueArray[3] === '{enter}') {
+    //                 typeaheadInputField(LabelValueArray[0]).type('{enter}')
+    //             }
+    //             else{
+    //                 highlightedOptionOnTypeahead().click({force: true})
+    //             }
+    //             cy.wait(200)
+    //
+    //         }
+    //     }
+    //     return this;
+    // };
 
     type_Tag_value_and_verify_if_option_is_available_on_dropdown(value, shouldExistingTagBeAvailable, shouldHaveOptionToCreatePersonalTag) {
         tagsInputField()
@@ -1655,9 +1720,27 @@ let basePage = class BasePage {
         if (!alias) {
             alias = partOfRequestUrl;
         }
-        cy.intercept(methodType, '**' + `${partOfRequestUrl}` + '**', (req) => {
-            req.continue(); // Explicitly pass through to backend
-        }).as(alias);
+        // cy.intercept(methodType, '**' + `${partOfRequestUrl}` + '**', (req) => {
+        //     req.continue(); // Explicitly pass through to backend
+        // }).as(alias);
+
+        cy.intercept(
+            methodType,
+            new RegExp(`${partOfRequestUrl}(\\?.*)?$`),
+            req => req.continue()
+        ).as(alias);
+        return this;
+    }
+
+    define_API_request_to_be_awaited2(methodType, partOfRequestUrl, alias) {
+        if (!alias) {
+            alias = partOfRequestUrl;
+        }
+        cy.intercept(
+            methodType,
+            new RegExp(`${partOfRequestUrl}(\\?.*)?$`),
+            req => req.continue()
+        ).as(alias);
         return this;
     }
 
@@ -1686,6 +1769,27 @@ let basePage = class BasePage {
         return this;
     }
 
+    define_API_request_to_be_awaited_with_textual_part_at_the_end_of_url(methodType, partOfRequestUrl, alias) {
+        if (!alias) {
+            alias = partOfRequestUrl;
+        }
+
+        // Matches partOfRequestUrl/<text> optionally followed by ?query=params
+        const urlRegex = new RegExp(`${partOfRequestUrl}/[A-Za-z0-9_-]+(?:\\?.*)?$`);
+
+        cy.intercept(
+            {
+                method: methodType,
+                url: urlRegex
+            },
+            (req) => {
+                req.continue();
+            }
+        ).as(alias);
+
+        return this;
+    }
+
     define_API_request_to_be_mocked(methodType, partOfRequestUrl, alias, response) {
         alias = alias || partOfRequestUrl;
 
@@ -1699,21 +1803,80 @@ let basePage = class BasePage {
         return this;
     };
 
-    wait_response_from_API_call(alias, status = 200, propertyToSaveToLocalStorage) {
-        cy.wait('@' + alias)
-            .then(interception => {
-                // //cy.log('Intercepted response is ' + JSON.stringify(interception))
-                let responseStatus = interception.status || interception.response.statusCode
-                expect(responseStatus).to.equal(status);
-                if (propertyToSaveToLocalStorage) {
-                    cy.setLocalStorage(propertyToSaveToLocalStorage, JSON.stringify(interception.response.body));
-                    if (S.selectedEnvironment[propertyToSaveToLocalStorage]) {
-                        S.selectedEnvironment[propertyToSaveToLocalStorage] = Object.assign(S.selectedEnvironment[propertyToSaveToLocalStorage], interception.response.body);
+    // wait_response_from_API_call(alias, status = 200, propertyToSaveToLocalStorage) {
+    //     cy.wait('@' + alias)
+    //         .then(interception => {
+    //             // //cy.log('Intercepted response is ' + JSON.stringify(interception))
+    //             let responseStatus = interception.status || interception.response.statusCode
+    //             expect(responseStatus).to.equal(status);
+    //             if (propertyToSaveToLocalStorage) {
+    //                 cy.setLocalStorage(propertyToSaveToLocalStorage, JSON.stringify(interception.response.body));
+    //                 if (S.selectedEnvironment[propertyToSaveToLocalStorage]) {
+    //                     S.selectedEnvironment[propertyToSaveToLocalStorage] = Object.assign(S.selectedEnvironment[propertyToSaveToLocalStorage], interception.response.body);
+    //                 }
+    //             }
+    //         })
+    //     return this;
+    // };
+
+    wait_response_from_API_call(
+        alias,
+        status = 200,
+        propertyToSaveToLocalStorage,
+        timeout = 30000
+    ) {
+        let requestOccurred = false;
+
+        // Wrap in a Cypress command chain, no Promises
+        cy.wait(0, { timeout: 0 }) // dummy wait to start the chain
+            .then(() => {
+                const start = Date.now();
+
+                function checkRequest() {
+                    const intercepted = cy.state('requests')[alias];
+
+                    if (intercepted && intercepted.length > 0) {
+                        requestOccurred = true;
+                        const interception = intercepted[0];
+
+                        const responseStatus =
+                            interception.status || interception.response?.statusCode;
+
+                        expect(responseStatus).to.equal(status);
+
+                        if (propertyToSaveToLocalStorage) {
+                            cy.setLocalStorage(
+                                propertyToSaveToLocalStorage,
+                                JSON.stringify(interception.response.body)
+                            );
+
+                            if (S.selectedEnvironment[propertyToSaveToLocalStorage]) {
+                                S.selectedEnvironment[propertyToSaveToLocalStorage] = {
+                                    ...S.selectedEnvironment[propertyToSaveToLocalStorage],
+                                    ...interception.response.body,
+                                };
+                            }
+                        }
+
+                        return;
                     }
+
+                    // timeout reached
+                    if (Date.now() - start > timeout) {
+                        cy.log(`⚠️ No API call triggered for @${alias} within ${timeout}ms — continuing test`);
+                        return;
+                    }
+
+                    // wait a bit and check again
+                    cy.wait(100, { log: false }).then(checkRequest);
                 }
-            })
+
+                checkRequest();
+            });
+
         return this;
-    };
+    }
+
 
     define_all_dashboard_GET_requests() {
         dashboardGetRequests.forEach(request => {
@@ -2901,9 +3064,9 @@ let basePage = class BasePage {
         cy.get('@cfInput')
             .should('be.enabled')
             .clear({force: true})
-            .type(String(value), {force: true})
-        this.pause(2)
-        // cy.wait(1000)
+            // .type(String(value), {force: true})
+            .invoke('val', value).trigger('input')
+        //   this.wait_until_spinner_disappears()
         cy.get('@cfInput').type('{enter}');
     }
 
@@ -2942,13 +3105,13 @@ let basePage = class BasePage {
     turnOnToggleAndEnterValueInTextarea(label, value) {
         this.turnOnToggleAndReturnParentElement(label)
             .find('textarea').first()
-            .type(value)
+            .invoke('val', value).trigger('input')
     }
 
     turnOnToggleAndEnterValueInTextareaOnCustomForm(label, value) {
         this.turnOnToggleAndReturnParentElementOnCustomForm(label)
             .find('textarea').first()
-            .type(value)
+            .invoke('val', value).trigger('input')
     }
 
     turnOnToggleEnterValueAndPressEnter(label, value) {
@@ -2991,8 +3154,6 @@ let basePage = class BasePage {
 
         this.turnOnToggleAndReturnParentElement(label)
             .find('input').first()
-            // .clear()
-            // .invoke('val', value).trigger('input')
             .clear()
             .invoke('val', value)
             .then($el => {
@@ -3141,14 +3302,13 @@ let basePage = class BasePage {
         return this
     }
 
-
     turn_on_and_enter_values_to_all_fields_on_custom_form_modal(labelsArray, valuesArray) {
 
         for (let i = 0; i < labelsArray.length; i++) {
             const label = labelsArray[i];
             const value = valuesArray[i];
 
-            if (['Textbox', 'Email', 'Number', 'Password', 'Person', 'Dropdown Typeahead'].some(v => label === v)) {
+            if (['Textbox', 'Email', 'Number', 'Password'].some(v => label === v)) {
                 this.turnOnToggleEnterValueAndPressEnterOnCustomForm(label, value);
 
             } else if (label === 'Textarea') {
@@ -3161,6 +3321,7 @@ let basePage = class BasePage {
                     .then($cb => {
                         if (value) cy.wrap($cb).check({force: true});
                         else cy.wrap($cb).uncheck({force: true});
+                        this.pause(1)
                     });
 
             } else if (label === 'Checkbox List') {
@@ -3183,6 +3344,22 @@ let basePage = class BasePage {
             } else if (label === 'Select List') {
                 this.turnOnToggleAndSelectDropdownOptionOnCustomForm(label, value);
 
+            } else if (label === 'Dropdown Typeahead') {
+                this.define_API_request_to_be_awaited('GET',
+                    'optionsTypeahead?search=' + value.replace(/\s+/g, '%20'),
+                    'getOptionTypeahead')
+
+                this.turnOnToggleAndReturnParentElementOnCustomForm(label)
+                    .find('input:visible, textarea:visible')
+                    .first()
+                    .as('cfInput');
+                cy.get('@cfInput')
+                    .should('be.enabled')
+                    .clear({force: true})
+                    .invoke('val', value).trigger('input')
+                this.wait_response_from_API_call("getOptionTypeahead", 200, null, 2000)
+                cy.get('@cfInput').type('{enter}')
+
             } else if (label === 'User/User Group') {
                 const values = Array.isArray(value) ? value : [value];
                 this.turnOnToggleAndReturnParentElementOnCustomForm(label)
@@ -3191,29 +3368,36 @@ let basePage = class BasePage {
                     .as('userSelect');
 
                 values.forEach(v => {
-                    cy.get('@userSelect').click().find('input.ui-select-search').type(v);
-                    //cy.wait(2000);
-                    this.pause(1)
+                    this.define_API_request_to_be_awaited('GET',
+                        'api/users/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + v.replace(/\s+/g, '%20'),
+                        "getUserInTypeahead")
+                    this.define_API_request_to_be_awaited('GET',
+                        '/api/userGroups/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + v.replace(/\s+/g, '%20'),
+                        "getUserGroupInTypeahead")
+
+                    cy.get('@userSelect').click().find('input.ui-select-search')
+                        .invoke('val', v).trigger('input')
+                    this.wait_response_from_API_call("getUserInTypeahead", 200, null, 2000)
+                    this.wait_response_from_API_call("getUserGroupInTypeahead", 200, null, 2000)
                     cy.get('.ui-select-choices-row').contains(v).click();
                 });
+            } else if (label === 'Person') {
+                const values = Array.isArray(value) ? value : [value];
+                this.turnOnToggleAndReturnParentElementOnCustomForm(label)
+                    .find('[typeahead="l.id as l.text for l in getPerson($viewValue) | limitTo: 10"]')
+                    .first()
+                    .as('personSelect');
 
+                values.forEach(v => {
+                    this.define_API_request_to_be_awaited('GET',
+                        'people/typeahead',
+                        "getPeopleInTypeahead")
+
+                    cy.get('@personSelect').invoke('val', v).trigger('input')
+                    this.wait_response_from_API_call("getPeopleInTypeahead", 200, null, 3000)
+                    cy.get('[matches="matches"]').find('li').click();
+                });
             }
-
-                //  } else if (label === 'Person') {
-                //      this.turnOnToggleEnterValueAndPressEnterOnCustomForm(label, value);
-
-                // this.turnOnToggleAndReturnParentElementOnCustomForm(label)
-                //     .find('input[ng-model="person.text"]')
-                //     .should('be.enabled')
-                //     .clear({ force: true })
-                //     .type(value, { force: true });
-                // cy.wait(3000)
-                // cy.get('.typeahead .ng-scope, .uib-typeahead-match, .dropdown-menu .ng-scope')
-                //     .first()
-                //     .click({ force: true });
-
-
-            // }
             else if (label === 'Date') {
                 this.turnOnToggleAndReturnParentElementOnCustomForm(label)
                     .within(() => {
@@ -3223,14 +3407,11 @@ let basePage = class BasePage {
                             .scrollIntoView()
                             .click({force: true})
                             .clear({force: true})
-                            .type(String(value), {force: true})
+                            .invoke('val', value).trigger('input')
                             .type('{enter}')
                             .blur();
                     });
-
-
             } else {
-
                 this.turnOnToggleEnterValueAndPressEnterOnCustomForm(label, value);
             }
         }

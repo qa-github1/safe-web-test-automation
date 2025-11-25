@@ -3,8 +3,6 @@ const S = require('../../fixtures/settings');
 const D = require('../../fixtures/data');
 const api = require('../../api-utils/api-spec');
 const ui = require('../../pages/ui-spec');
-const {editedCase} = require("../../fixtures/data");
-const helper = require("../../support/e2e-helper");
 
 let user = S.getUserData(S.userAccounts.orgAdmin);
 let startTime;
@@ -14,7 +12,8 @@ for (let i = 0; i < 1; i++) {
 
         before(function () {
             startTime = Date.now();
-
+            api.auth.get_tokens(user)
+            api.users.update_current_user_settings(user.id, C.currentDateTimeFormat)
         });
 
         after(() => {
@@ -25,22 +24,7 @@ for (let i = 0; i < 1; i++) {
 
         let allFieldsLabels = C.itemFields.massUpdateCFModal
 
-        let requiredFieldsLabels = [
-            'Recovered At',
-            'Description',
-            'Recovery Date',
-            'Item Belongs to',
-            'Recovered By',
-            'Submitted By',
-            'Category',
-            'Custody Reason'
-        ]
-
-        let multiSelectFieldsLabels = [
-            'Tags',
-        ]
-
-        it('1. Mass Update Custom Data when "Overwrite existing form data?" is ON', function () {
+        it.only('1. Mass Update Custom Data when "Overwrite existing form data?" is ON', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(user);
             api.org_settings.update_org_settings(false, true);
@@ -65,7 +49,7 @@ for (let i = 0; i < 1; i++) {
             api.org_settings.enable_all_Item_fields();
             api.cases.add_new_case()
             api.items.add_new_item()
-                .add_custom_form_data_to_existing_item_2(D.newCustomFormData);
+                .add_custom_form_data_to_existing_item();
             ui.menu.click_Search__Item()
             ui.searchItem
                 .enter_Description('contains', D.newItem.description)
@@ -96,7 +80,7 @@ for (let i = 0; i < 1; i++) {
 
         });
 
-        it.only('2. Mass Update Custom Data when "Overwrite existing form data?" is OFF', function () {
+        it('2. Mass Update Custom Data when "Overwrite existing form data?" is OFF', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(user);
             api.org_settings.update_org_settings(false, true);
@@ -121,7 +105,7 @@ for (let i = 0; i < 1; i++) {
             api.org_settings.enable_all_Item_fields();
             api.cases.add_new_case()
             api.items.add_new_item()
-                .add_custom_form_data_to_existing_item_2(D.newCustomFormData);
+                .add_custom_form_data_to_existing_item(D.newCustomFormData);
             ui.menu.click_Search__Item()
             ui.searchItem
                 .enter_Description('contains', D.newItem.description)
@@ -143,7 +127,7 @@ for (let i = 0; i < 1; i++) {
             ui.itemView.verify_edited_and_not_edited_values_on_Item_View_form(C.itemFields.allFieldsOnItemView, D.newItem)
                 .click_Edit()
                 .verify_custom_data_on_Edit_form(D.newCustomFormData)
-                .delete_custom_form_on_edit_page()
+                .delete_first_custom_form_on_edit_page()
                 .verify_edited_and_not_edited_values_on_Item_Edit_form(C.itemFields.allEditableFieldsArray, D.newItem)
                 .verify_custom_data_on_Edit_form(D.editedCustomFormData)
                 .open_last_history_record(0)
