@@ -71,25 +71,25 @@ for (let i = 0; i < 1; i++) {
                     .click_Actions_on_Search_Page()
                     .click_option_on_expanded_menu(C.dropdowns.itemActions.massUpdate)
                     .turn_on_and_enter_values_to_all_fields_on_modal(allFieldsLabels, allValues)
-                //     .verify_text_above_modal_footer('Mass updating 1 item')
-                //     .click_Ok()
-                //     .verify_toast_message(C.toastMsgs.saved)
-                //
-                // cy.getLocalStorage('newItem1').then(item => {
-                //     ui.app.open_item_url(JSON.parse(item).id)
-                //     ui.itemView.select_tab(C.tabs.basicInfo)
-                // })
-                // D.editedItem.submittedBy = 'Power User'
-                // // TODO: Please review if this is enough to verify only fields that are modified
-                // ui.itemView.verify_edited_and_not_edited_values_on_Item_View_form(C.itemFields.massUpdateModal, D.editedItem)
-                //     .click_Edit()
-                //     .verify_edited_and_not_edited_values_on_Item_Edit_form(C.itemFields.massUpdateModal, D.editedItem)
-                //     .open_last_history_record(0)
-                //     .verify_red_highlighted_history_records(C.itemFields.massUpdateModal)
-                // //TODO: Please review this method below if we want to  include an extra verification
-                // // .verify_all_values_on_history(D.editedItem, D.newItem)
-                //
-                // api.auth.log_out(user)
+                    .verify_text_above_modal_footer('Mass updating 1 item')
+                    .click_Ok()
+                    .verify_toast_message(C.toastMsgs.saved)
+
+                cy.getLocalStorage('newItem1').then(item => {
+                    ui.app.open_item_url(JSON.parse(item).id)
+                    ui.itemView.select_tab(C.tabs.basicInfo)
+                })
+                D.editedItem.submittedBy = 'Power User'
+                // TODO: Please review if this is enough to verify only fields that are modified
+                ui.itemView.verify_edited_and_not_edited_values_on_Item_View_form(C.itemFields.massUpdateModal, D.editedItem)
+                    .click_Edit()
+                    .verify_edited_and_not_edited_values_on_Item_Edit_form(C.itemFields.massUpdateModal, D.editedItem)
+                    .open_last_history_record(0)
+                    .verify_red_highlighted_history_records(C.itemFields.massUpdateModal)
+                //TODO: Please review this method below if we want to  include an extra verification
+                // .verify_all_values_on_history(D.editedItem, D.newItem)
+
+                api.auth.log_out(user)
 
             });
 
