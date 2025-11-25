@@ -295,13 +295,13 @@ export default class ItemViewPage extends BaseViewPage {
         return this;
     }
 
-    verify_all_values_on_history(newItemObject, oldItemObject, customFormName = null, isNewlyAttachedForm = false) {
-        this.verify_all_values_on_history_in_specific_column(newItemObject, 'left', customFormName)
-        if (oldItemObject) this.verify_all_values_on_history_in_specific_column(oldItemObject, 'right', customFormName, isNewlyAttachedForm)
+    verify_all_values_on_history(newItemObject, oldItemObject, customFormName = null, isNewlyAttachedForm = false, newFormData, oldFormData) {
+        this.verify_all_values_on_history_in_specific_column(newItemObject, 'left', customFormName, isNewlyAttachedForm, newFormData, oldFormData)
+        if (oldItemObject) this.verify_all_values_on_history_in_specific_column(oldItemObject, 'right', customFormName, isNewlyAttachedForm, newFormData, oldFormData)
         return this;
     };
 
-    verify_all_values_on_history_in_specific_column(dataObject, leftOrRightColumn, customFormName, isNewlyAttachedForm) {
+    verify_all_values_on_history_in_specific_column(dataObject, leftOrRightColumn, customFormName, isNewlyAttachedForm, newFormData, oldFormData) {
 
         this.verify_all_values_on_history_for_standard_fields(leftOrRightColumn,
             [
@@ -336,8 +336,11 @@ export default class ItemViewPage extends BaseViewPage {
             if (isNewlyAttachedForm && leftOrRightColumn === 'right'){
              this.verify_custom_data_is_not_present_on_history(leftOrRightColumn, customFormName)
             }
-            else{
-                this.verify_custom_data_on_History(leftOrRightColumn, customFormName, dataObject)
+            else if (leftOrRightColumn === 'left') {
+                this.verify_custom_data_on_History(leftOrRightColumn, customFormName, newFormData)
+            }
+            else if (leftOrRightColumn === 'right') {
+                this.verify_custom_data_on_History(leftOrRightColumn, customFormName, oldFormData)
             }
         }
         return this;

@@ -55,7 +55,7 @@ exports.add_new_item = function (toNewCase = true, locationObjectOrName = null, 
 exports.add_custom_form_data_to_existing_item = function (itemObject) {
     cy.getLocalStorage("newItem").then(newItem => {
         let itemData = Object.assign(JSON.parse(newItem), itemObject);
-        itemData.tags = itemObject.tagsForApi
+        if (itemObject.tagsForApi) itemData.tags = itemObject.tagsForApi
         itemData.barcodes = JSON.parse(newItem).barcodes
         generic_request.PUT(
             '/api/items/' + itemData.id,
@@ -66,22 +66,6 @@ exports.add_custom_form_data_to_existing_item = function (itemObject) {
     return this;
 };
 
-exports.add_custom_form_data_to_existing_item_2 = function (itemObject) {
-    cy.getLocalStorage("newItem").then(newItem => {
-        let itemData = Object.assign(JSON.parse(newItem), itemObject);
-        // TODO:I know that this is the same method as the one above, but
-        // I was not able to figure it out why method above passes for workflow
-        // and failed if I comment itemData.tags row
-        // I will leave like this until Sumejja's review
-        itemData.barcodes = JSON.parse(newItem).barcodes
-        generic_request.PUT(
-            '/api/items/' + itemData.id,
-            body.generate_PUT_request_payload_for_editing_existing_item(itemData, true),
-            'Adding custom form to the existing item via API with ID_______' + itemData.id
-        );
-    });
-    return this;
-};
 
 exports.add_item_to_case = function (existingCaseId) {
     cy.getLocalStorage("newItem").then(newItem => {
