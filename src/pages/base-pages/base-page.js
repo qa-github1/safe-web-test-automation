@@ -3381,9 +3381,9 @@ let basePage = class BasePage {
                     .select(value)
 
             } else if (label === 'Dropdown Typeahead') {
-                this.define_API_request_to_be_awaited('GET',
-                    'optionsTypeahead?search=' + value.replace(/\s+/g, '%20'),
-                    'getOptionTypeahead')
+                // this.define_API_request_to_be_awaited('GET',
+                //     'optionsTypeahead?search=' + value.replace(/\s+/g, '%20'),
+                //     'getOptionTypeahead')
 
                 cy.get('.modal-content')
                     .contains('.fg-field-inner label, .fg-field-inner .control-label', new RegExp(`^\\s*${label}\\s*$`))
@@ -3393,8 +3393,9 @@ let basePage = class BasePage {
                     .as('cfInput')
                     .clear()
                     .invoke('val', value).trigger('input')
-                this.wait_response_from_API_call("getOptionTypeahead", 200, null, 2000)
-                cy.get('@cfInput').type('{enter}')
+               // this.wait_response_from_API_call("getOptionTypeahead", 200, null, 2000)
+               // cy.get('@cfInput').type('{enter}')
+                cy.get('[ng-repeat="match in matches track by $index"]').first().click()
 
             } else if (label === 'User/User Group') {
                 const values = Array.isArray(value) ? value : [value];
@@ -3415,9 +3416,10 @@ let basePage = class BasePage {
 
                     cy.get('@userSelect').click().find('input.ui-select-search')
                         .invoke('val', v).trigger('input')
+                    this.pause(0.5)
                     this.wait_response_from_API_call("getUserInTypeahead", 200, null, 1500)
                     this.wait_response_from_API_call("getUserGroupInTypeahead", 200, null, 1500)
-                    cy.get('.ui-select-choices-row').contains(v).click();
+                     cy.get('.ui-select-choices-row').contains(v).click();
                 });
             } else if (label === 'Custom Person') {
                 const values = Array.isArray(value) ? value : [value];
@@ -3429,13 +3431,13 @@ let basePage = class BasePage {
                     .as('personSelect');
 
                 values.forEach(v => {
-                    this.define_API_request_to_be_awaited('GET',
-                        'people/typeahead',
-                        "getPeopleInTypeahead")
+                    // this.define_API_request_to_be_awaited('GET',
+                    //     'people/typeahead',
+                    //     "getPeopleInTypeahead")
 
                     cy.get('@personSelect').invoke('val', v).trigger('input')
-                    this.wait_response_from_API_call("getPeopleInTypeahead", 200, null, 2000)
-                    cy.get('[matches="matches"]').find('li').click();
+                  //  this.wait_response_from_API_call("getPeopleInTypeahead", 200, null, 2000)
+                    cy.get('[ng-repeat="match in matches track by $index"]').first().click();
                 });
             } else if (label === 'Custom Date') {
                 cy.get('.modal-content')

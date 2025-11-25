@@ -67,7 +67,6 @@ for (let i = 0; i < 1; i++) {
                 .click_Ok()
                 .verify_toast_message(C.toastMsgs.saved)
 
-
             cy.getLocalStorage('newItem').then(item => {
                 ui.app.open_item_url(JSON.parse(item).id)
                 ui.itemView.select_tab(C.tabs.basicInfo)
@@ -77,7 +76,7 @@ for (let i = 0; i < 1; i++) {
                 .click_Edit()
                 .verify_custom_data_on_Edit_form(D.editedCustomFormData)
                 .open_last_history_record(0)
-               // .verify_all_values_on_history(D.newItem, D.newItem, S.customForms.itemFormWithOptionalFields, false, D.editedCustomFormData, D.newCustomFormData)
+                .verify_all_values_on_history(D.newItem, D.newItem, S.customForms.itemFormWithOptionalFields, false, D.editedCustomFormData, D.newCustomFormData)
                 .verify_red_highlighted_history_records(C.customFieldLabels, addFieldsOnHistory)
         });
 
@@ -120,12 +119,10 @@ for (let i = 0; i < 1; i++) {
                 .click_Ok()
                 .verify_toast_message(C.toastMsgs.saved)
 
-
             cy.getLocalStorage('newItem').then(item => {
                 ui.app.open_item_url(JSON.parse(item).id)
                 ui.itemView.select_tab(C.tabs.basicInfo)
             })
-
             D.newItem.caseNumber = D.newCase.caseNumber
             ui.itemView.click_Edit()
                 .verify_edited_and_not_edited_values_on_Item_Edit_form(C.itemFields.allEditableFieldsArray, D.newItem)
@@ -135,7 +132,7 @@ for (let i = 0; i < 1; i++) {
                 .verify_custom_data_on_Edit_form(D.editedCustomFormData)
                 .click_Save()
                 .open_last_history_record(0)
-              //  .verify_all_values_on_history(D.newItem, D.newItem, S.customForms.itemFormWithOptionalFields, false, D.editedCustomFormData, D.newCustomFormData)
+                .verify_all_values_on_history(D.newItem, D.newItem, S.customForms.itemFormWithOptionalFields, false, D.editedCustomFormData, D.newCustomFormData)
         });
     });
 }
