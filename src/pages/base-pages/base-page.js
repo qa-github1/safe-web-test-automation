@@ -3427,7 +3427,7 @@ let basePage = class BasePage {
 
     turn_on_and_enter_values_to_all_fields_on_custom_form_modal(labelsArray, valuesArray) {
 
-        this.turnOnAllTogglesOnModal('last')
+        this.turnOnAllTogglesOnModal()
 
         for (let i = 0; i < labelsArray.length; i++) {
             const label = labelsArray[i];
@@ -3558,6 +3558,8 @@ let basePage = class BasePage {
                     .invoke('val', value).trigger('input')
                     .type('{enter}')
                     .blur();
+
+                this.pause(3)
             } else {
                 cy.get('.modal-content')
                     .contains('.fg-field-inner label, .fg-field-inner .control-label', new RegExp(`^\\s*${label}\\s*$`))
