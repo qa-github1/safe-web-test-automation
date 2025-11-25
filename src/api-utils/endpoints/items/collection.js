@@ -55,7 +55,7 @@ exports.add_new_item = function (toNewCase = true, locationObjectOrName = null, 
 exports.add_custom_form_data_to_existing_item = function (itemObject) {
     cy.getLocalStorage("newItem").then(newItem => {
         let itemData = Object.assign(JSON.parse(newItem), itemObject);
-        itemData.tags = itemObject? itemObject.tagsForApi : null
+        if (itemObject.tagsForApi) itemData.tags = itemObject.tagsForApi
         itemData.barcodes = JSON.parse(newItem).barcodes
         generic_request.PUT(
             '/api/items/' + itemData.id,

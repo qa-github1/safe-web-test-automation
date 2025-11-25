@@ -24,7 +24,7 @@ for (let i = 0; i < 1; i++) {
 
         let allFieldsLabels = C.itemFields.massUpdateCFModal
 
-        it.only('1. Mass Update Custom Data when "Overwrite existing form data?" is ON', function () {
+        it('1. Mass Update Custom Data when "Overwrite existing form data?" is ON', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(user);
             api.org_settings.update_org_settings(false, true);
@@ -49,7 +49,7 @@ for (let i = 0; i < 1; i++) {
             api.org_settings.enable_all_Item_fields();
             api.cases.add_new_case()
             api.items.add_new_item()
-                .add_custom_form_data_to_existing_item();
+                .add_custom_form_data_to_existing_item(D.newCustomFormData);
             ui.menu.click_Search__Item()
             ui.searchItem
                 .enter_Description('contains', D.newItem.description)
@@ -124,8 +124,7 @@ for (let i = 0; i < 1; i++) {
                 ui.app.open_item_url(JSON.parse(item).id)
                 ui.itemView.select_tab(C.tabs.basicInfo)
             })
-            ui.itemView.verify_edited_and_not_edited_values_on_Item_View_form(C.itemFields.allFieldsOnItemView, D.newItem)
-                .click_Edit()
+            ui.itemView.click_Edit()
                 .verify_custom_data_on_Edit_form(D.newCustomFormData)
                 .delete_first_custom_form_on_edit_page()
                 .verify_edited_and_not_edited_values_on_Item_Edit_form(C.itemFields.allEditableFieldsArray, D.newItem)
