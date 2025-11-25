@@ -3558,8 +3558,6 @@ let basePage = class BasePage {
                     .invoke('val', value).trigger('input')
                     .type('{enter}')
                     .blur();
-
-                this.pause(3)
             } else {
                 cy.get('.modal-content')
                     .contains('.fg-field-inner label, .fg-field-inner .control-label', new RegExp(`^\\s*${label}\\s*$`))
