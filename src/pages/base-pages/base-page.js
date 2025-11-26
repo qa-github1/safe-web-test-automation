@@ -141,7 +141,7 @@ let
     visibleTable = e => cy.get('.table').not('.ng-hide'),
     checkboxOnFirstRowOnVisibleTable = e => visibleTable().find('tbody').children('tr').first(),
     checkboxOnLastRowOnVisibleTable = e => visibleTable().find('tbody').children('tr').last().find('.bg-grid-checkbox'),
-    firstRowInResultsTableOnActiveTab = e => active_tab().find('tbody').children('tr').first().find('.bg-grid-checkbox'),
+    firstRowInResultsTableOnActiveTab = e => active_tab().find('tbody').children('tr').first(),
     lastRowInResultsTableOnActiveTab = e => active_tab().find('tbody').children('tr').last(),
     checkboxOnFirstRowInResultsTableOnActiveTab = (tableIndex = 0) => active_tab().find('tbody').eq(tableIndex)
         .children('tr').first().find('.bg-grid-checkbox'),
@@ -1708,15 +1708,9 @@ let basePage = class BasePage {
         if (!alias) {
             alias = partOfRequestUrl;
         }
-        // cy.intercept(methodType, '**' + `${partOfRequestUrl}` + '**', (req) => {
-        //     req.continue(); // Explicitly pass through to backend
-        // }).as(alias);
-
-        cy.intercept(
-            methodType,
-            new RegExp(`${partOfRequestUrl}(\\?.*)?$`),
-            req => req.continue()
-        ).as(alias);
+        cy.intercept(methodType, '**' + `${partOfRequestUrl}` + '**', (req) => {
+            req.continue(); // Explicitly pass through to backend
+        }).as(alias);
         return this;
     }
 
@@ -1791,23 +1785,23 @@ let basePage = class BasePage {
         return this;
     };
 
-    // wait_response_from_API_call(alias, status = 200, propertyToSaveToLocalStorage) {
-    //     cy.wait('@' + alias)
-    //         .then(interception => {
-    //             // //cy.log('Intercepted response is ' + JSON.stringify(interception))
-    //             let responseStatus = interception.status || interception.response.statusCode
-    //             expect(responseStatus).to.equal(status);
-    //             if (propertyToSaveToLocalStorage) {
-    //                 cy.setLocalStorage(propertyToSaveToLocalStorage, JSON.stringify(interception.response.body));
-    //                 if (S.selectedEnvironment[propertyToSaveToLocalStorage]) {
-    //                     S.selectedEnvironment[propertyToSaveToLocalStorage] = Object.assign(S.selectedEnvironment[propertyToSaveToLocalStorage], interception.response.body);
-    //                 }
-    //             }
-    //         })
-    //     return this;
-    // };
+    wait_response_from_API_call(alias, status = 200, propertyToSaveToLocalStorage) {
+        cy.wait('@' + alias)
+            .then(interception => {
+                // //cy.log('Intercepted response is ' + JSON.stringify(interception))
+                let responseStatus = interception.status || interception.response.statusCode
+                expect(responseStatus).to.equal(status);
+                if (propertyToSaveToLocalStorage) {
+                    cy.setLocalStorage(propertyToSaveToLocalStorage, JSON.stringify(interception.response.body));
+                    if (S.selectedEnvironment[propertyToSaveToLocalStorage]) {
+                        S.selectedEnvironment[propertyToSaveToLocalStorage] = Object.assign(S.selectedEnvironment[propertyToSaveToLocalStorage], interception.response.body);
+                    }
+                }
+            })
+        return this;
+    };
 
-    wait_response_from_API_call(
+    wait_response_from_API_call_extended(
         alias,
         status = 200,
         propertyToSaveToLocalStorage,

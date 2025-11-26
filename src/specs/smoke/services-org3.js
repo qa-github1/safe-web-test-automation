@@ -126,21 +126,19 @@ describe('Services', function () {
         cy.get('@windowOpen').should('have.been.calledWithMatch', /Report.*\.pdf/)
     });
 
-    for (let i = 0; i < 10; i++) {
-        it.only('2. Exporter', function () {
+    it('2. Exporter', function () {
 
-            api.auth.get_tokens(S.userAccounts.orgAdmin);
-            ui.app.open_newly_created_case_via_direct_link()
-                .select_tab(C.tabs.items)
-                .select_checkbox_for_all_records()
-                .click_element_on_active_tab(C.buttons.export)
-                .click_option_on_expanded_menu('All - Excel')
-            ui.app.verify_url_contains_some_value('export-jobs')
-            // .verify_content_of_first_row_in_results_table('Download')
-            ui.app.verify_content_of_specific_cell_in_first_table_row('Download Link', 'Download')
+        api.auth.get_tokens(S.userAccounts.orgAdmin);
+        ui.app.open_newly_created_case_via_direct_link()
+            .select_tab(C.tabs.items)
+            .select_checkbox_for_all_records()
+            .click_element_on_active_tab(C.buttons.export)
+            .click_option_on_expanded_menu('All - Excel')
+        ui.app.verify_url_contains_some_value('export-jobs')
+        // .verify_content_of_first_row_in_results_table('Download')
+        ui.app.verify_content_of_specific_cell_in_first_table_row('Download Link', 'Download')
 
-        });
-    }
+    });
 
     it('3. Importer', function () {
         let fileName = 'CaseImport_allFields_' + S.domain;

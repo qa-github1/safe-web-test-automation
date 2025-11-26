@@ -501,11 +501,22 @@ E.generateDataFor_LOCATIONS_Importer = function (numberOfLocations = 3) {
         groups: '',
     }
 
-    E.childLocation1 = {
-        name: 'child1' + randomNo,
+    E.childLocation = {
+        name: randomNo,
         items: 0,
         isActive: false,
-        legacyBarcode: 'child1' + randomNo,
+        legacyBarcode: 'Box' + randomNo,
+        parentLocationBarcode: 'parent1' + randomNo,
+        isContainer: false,
+        isStorage: true,
+        groups: '',
+    }
+
+    E.childLocation1 = {
+        name: '1_' + randomNo,
+        items: 0,
+        isActive: false,
+        legacyBarcode: 'child' + randomNo,
         parentLocationBarcode: 'parent1' + randomNo,
         isContainer: false,
         isStorage: true,
@@ -513,7 +524,7 @@ E.generateDataFor_LOCATIONS_Importer = function (numberOfLocations = 3) {
     }
 
     E.childLocation2 = {
-        name: 'child2' + randomNo,
+        name: '2_' + randomNo,
         items: 0,
         isActive: false,
         legacyBarcode: 'child2' + randomNo,
@@ -532,24 +543,30 @@ E.generateDataFor_LOCATIONS_Importer = function (numberOfLocations = 3) {
             switch (i) {
                 case 0:
                     locationObject = E.parentLocation1
+                    E.locationsImportAllFields.push([
+                        locationObject.name,
+                        locationObject.isActive,
+                        locationObject.legacyBarcode,
+                        locationObject.parentLocationBarcode,
+                        locationObject.isContainer,
+                        locationObject.isStorage,
+                        S.selectedEnvironment.office_1.guid
+                    ])
                     break;
-                case 1:
-                    locationObject = E.childLocation1
-                    break;
-                case 2:
-                    locationObject = E.childLocation2
+                default:
+                    locationObject = E.childLocation
+
+                    E.locationsImportAllFields.push([
+                        i + '_' + locationObject.name,
+                        locationObject.isActive,
+                        i + '_' + locationObject.name,
+                        locationObject.parentLocationBarcode,
+                        locationObject.isContainer,
+                        locationObject.isStorage,
+                        S.selectedEnvironment.office_1.guid
+                    ])
                     break;
             }
-
-            E.locationsImportAllFields.push([
-                locationObject.name,
-                locationObject.isActive,
-                locationObject.legacyBarcode,
-                locationObject.parentLocationBarcode,
-                locationObject.isContainer,
-                locationObject.isStorage,
-                S.selectedEnvironment.office_1.guid
-            ])
 
             E.locationsImportRequiredFields.push([
                 E.parentLocation1.name,
