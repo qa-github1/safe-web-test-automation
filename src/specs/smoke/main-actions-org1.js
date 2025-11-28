@@ -270,3 +270,163 @@ describe('Item', function () {
             })
         });
 });
+
+describe('Item Transactions', function () {
+
+    it('Verify all transactions, data changes and enabled/disabled actions based on Item status', function () {
+        ui.app.log_title(this);
+
+        api.auth.get_tokens(orgAdmin);
+        api.org_settings.enable_all_Item_fields(C.itemFields.dispositionStatus);
+        D.generateNewDataSet()
+        let initialItem = Object.assign({}, D.newItem)
+        api.cases.add_new_case()
+        api.items.add_new_item();
+        D.box2 = D.getStorageLocationData('BOX_2')
+        api.locations.add_storage_location(D.box2)
+
+        ui.app.open_newly_created_item_via_direct_link();
+        ui.itemView
+            //CHECK OUT
+            .click_Actions()
+            .perform_Item_Check_Out_transaction(orgAdmin, C.checkoutReasons.lab, 'test-note1', D.currentDate)
+            .verify_edited_and_not_edited_values('view', ["Status", "Storage Location"], D.editedItem, D.newItem)
+            .select_tab(C.tabs.chainOfCustody)
+            .verify_data_on_Chain_of_Custody([
+                [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ``], ['Check out Reason', `Lab`], ['Note', `test-note1`]],
+                [['Type', 'In'], ['Issued From', orgAdmin.name], ['Issued To', 'New Item Entry'], ['Storage Location', initialItem.location], ['Notes', `Item entered into system.`]],
+            ])
+            .select_tab(C.tabs.basicInfo)
+            .click_Actions()
+            .verify_enabled_and_disabled_options_under_Actions_dropdown(
+                [
+                    'Check Item In',
+                    'Transfer Item',
+                    'Dispose Item',
+                    'Duplicate',
+                    'Split',
+                    'Manage Cases'],
+                [
+                    'Check Item Out',
+                    'Move Item',
+                    'Undispose Item',
+                ])
+
+
+            //TRANSFER
+            .perform_Item_Transfer_transaction(powerUser, orgAdmin, 'test-note2')
+            .verify_edited_and_not_edited_values('view', ["Custodian"], D.editedItem, D.newItem)
+            .select_tab(C.tabs.chainOfCustody)
+            .verify_data_on_Chain_of_Custody([
+                [['Type', 'Transfer'], ['Issued From', orgAdmin.name], ['Issued To', powerUser.name], ['Storage Location', ``], ['Check out Reason', ``], ['Note', `test-note2`]],
+                [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ``], ['Check out Reason', `Lab`], ['Note', `test-note1`]],
+                [['Type', 'In'], ['Issued From', orgAdmin.name], ['Issued To', 'New Item Entry'], ['Storage Location', initialItem.location], ['Notes', `Item entered into system.`]],
+            ])
+            .select_tab(C.tabs.basicInfo)
+            .click_Actions()
+            .verify_enabled_and_disabled_options_under_Actions_dropdown(
+                [
+                    'Check Item In',
+                    'Transfer Item',
+                    'Dispose Item',
+                    'Duplicate',
+                    'Split',
+                    'Manage Cases'],
+                [
+                    'Check Item Out',
+                    'Move Item',
+                    'Undispose Item',
+                ])
+
+        //CHECK IN
+        ui.searchItem
+            .run_search_by_Item_Description(D.newItem.description)
+            .select_row_on_the_grid_that_contains_specific_value(D.newItem.description)
+            .click_Actions()
+            .perform_Item_CheckIn_transaction(powerUser, false, D.box2.name, 'test-note3')
+            .click_Actions()
+            .verify_enabled_and_disabled_options_under_Actions_dropdown_on_Search_Page(
+                [
+                    'Check Item Out',
+                    'Move Item',
+                    'Dispose Item',
+                    'Duplicate',
+                    'Split',
+                    'Manage Cases'],
+                [
+                    'Check Item In',
+                    'Transfer Item',
+                    'Undispose Item'
+                ])
+            .click_Actions()
+            .click_View_on_first_table_row()
+        ui.itemView.verify_Item_View_page_is_open(D.newCase.caseNumber)
+            .verify_edited_and_not_edited_values('view', ["Status", "Storage Location"], D.editedItem, D.newItem)
+            .select_tab(C.tabs.chainOfCustody)
+            .verify_data_on_Chain_of_Custody([
+                [['Type', 'In'], ['Issued From', powerUser.name], ['Issued To', orgAdmin.name], ['Storage Location', D.box2.name], ['Check out Reason', ``], ['Note', `test-note3`]],
+                [['Type', 'Transfer'], ['Issued From', orgAdmin.name], ['Issued To', powerUser.name], ['Storage Location', ``], ['Check out Reason', ``], ['Note', `test-note2`]],
+                [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ``], ['Check out Reason', `Lab`], ['Note', `test-note1`]],
+                [['Type', 'In'], ['Issued From', orgAdmin.name], ['Issued To', 'New Item Entry'], ['Storage Location', initialItem.location], ['Notes', `Item entered into system.`]],
+            ])
+            .select_tab(C.tabs.basicInfo)
+
+            //DISPOSAL
+            .click_Actions()
+            .perform_Item_Disposal_transaction(powerUser, C.disposalMethods.auctioned, 'test-note4')
+            .verify_edited_and_not_edited_values('view', ["Status", "Storage Location"], D.editedItem, D.newItem)
+            .select_tab(C.tabs.chainOfCustody)
+            .verify_data_on_Chain_of_Custody([
+                [['Type', 'Disposal'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ''], ['Check out Reason', ``], ['Note', `test-note4`]],
+                [['Type', 'In'], ['Issued From', powerUser.name], ['Issued To', orgAdmin.name], ['Storage Location', D.box2.name], ['Check out Reason', ``], ['Note', `test-note3`]],
+                [['Type', 'Transfer'], ['Issued From', orgAdmin.name], ['Issued To', powerUser.name], ['Storage Location', ``], ['Check out Reason', ``], ['Note', `test-note2`]],
+                [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ``], ['Check out Reason', `Lab`], ['Note', `test-note1`]],
+                [['Type', 'In'], ['Issued From', orgAdmin.name], ['Issued To', 'New Item Entry'], ['Storage Location', initialItem.location], ['Notes', `Item entered into system.`]],
+            ])
+            .select_tab(C.tabs.basicInfo)
+            .click_Actions()
+            .verify_enabled_and_disabled_options_under_Actions_dropdown(
+                [
+                    'Undispose Item',
+                    'Duplicate',
+                    'Manage Cases'],
+                [
+                    'Check Item In',
+                    'Check Item Out',
+                    'Move Item',
+                    'Transfer Item',
+                    'Dispose Item',
+                    // 'Split' // uncomment this when bugs gets fixed -- card  #14841 /#20
+                ])
+
+            //UNDISPOSAL
+            .perform_Item_Undisposal_transaction(powerUser, true, D.box2.name, 'test-note5')
+            .verify_edited_and_not_edited_values('view', ["Status", "Storage Location"], D.editedItem, D.newItem)
+            .select_tab(C.tabs.chainOfCustody)
+            .verify_data_on_Chain_of_Custody([
+                [['Type', 'In'], ['Issued From', powerUser.name], ['Issued To', orgAdmin.name], ['Storage Location', D.box2.name], ['Check out Reason', ``], ['Note', `test-note5`]],
+                [['Type', 'Disposal'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ''], ['Witness', powerUser.name], ['Storage Location', ''], ['Check out Reason', ``], ['Note', `test-note4`]],
+                [['Type', 'In'], ['Issued From', powerUser.name], ['Issued To', orgAdmin.name], ['Storage Location', D.box2.name], ['Check out Reason', ``], ['Note', `test-note3`]],
+                [['Type', 'Transfer'], ['Issued From', orgAdmin.name], ['Issued To', powerUser.name], ['Storage Location', ``], ['Check out Reason', ``], ['Note', `test-note2`]],
+                [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ``], ['Check out Reason', `Lab`], ['Note', `test-note1`]],
+                [['Type', 'In'], ['Issued From', orgAdmin.name], ['Issued To', 'New Item Entry'], ['Storage Location', initialItem.location], ['Notes', `Item entered into system.`]],
+            ])
+            .select_tab(C.tabs.basicInfo)
+            .click_Actions()
+            .verify_enabled_and_disabled_options_under_Actions_dropdown([
+                'Check Item Out',
+                'Move Item',
+                'Dispose Item',
+                'Duplicate',
+                'Split',
+                'Manage Cases'], [
+                'Check Item In',
+                'Transfer Item',
+                'Undispose Item'
+            ])
+
+        api.locations.get_and_save_any_location_data_to_local_storage('root')
+        api.locations.move_location(D.box2.name, 'root')
+
+    });
+});

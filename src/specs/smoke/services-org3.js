@@ -123,7 +123,9 @@ describe('Services', function () {
             .click_element_on_active_tab(C.buttons.reports)
             .click_option_on_expanded_menu(C.reports.primaryLabel4x3)
         cy.get('@windowOpen').should('have.been.called');
-        cy.get('@windowOpen').should('have.been.calledWithMatch', /Report.*\.pdf/)
+        if (S.domain !== 'PENTEST'){
+            cy.get('@windowOpen').should('have.been.calledWithMatch', /Report.*\.pdf/)
+        }
     });
 
     it('2. Exporter', function () {

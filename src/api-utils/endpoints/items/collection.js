@@ -122,7 +122,7 @@ exports.get_item_data = function (itemId) {
     });
 };
 
-exports.get_items_from_specific_case = function (caseNumber, numberOfPagesWith1000Items = 1, storeAllItemsToLocalStorage = false) {
+exports.get_items_from_specific_case = function (caseNumber, numberOfPagesWith1000Items = 1, storeAllItemsToLocalStorage = false, timeout = 60000) {
     let barcodes = []
 
     cy.getLocalStorage("newCase").then(caseData => {
@@ -142,13 +142,14 @@ exports.get_items_from_specific_case = function (caseNumber, numberOfPagesWith10
                         json: true,
                         body: {
                             "orderBy": "SequentialCaseId",
-                            "orderByAsc": true,
+                            "orderByAsc": false,
                             "thenOrderBy": "",
                             "thenOrderByAsc": false,
                             "pageSize": 1000,
                             "pageNumber": i
                         },
                         headers: JSON.parse(headers),
+                        timeout: timeout,
                     }).then(response => {
                         let caseItemsObjects = response.body.entities
 

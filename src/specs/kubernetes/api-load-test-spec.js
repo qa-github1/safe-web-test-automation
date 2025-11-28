@@ -5,12 +5,12 @@ const generic_request = require("../../api-utils/generic-api-requests");
 let requestPayloads = require('./request-payloads');
 let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
 let powerUser = S.getUserData(S.userAccounts.powerUser);
-let numberOfRequests = 1
+let numberOfRequests = 20
 
 describe('Services', function () {
 
     before(function () {
-        api.auth.get_tokens(orgAdmin);
+        api.auth.get_tokens_without_page_reload(orgAdmin);
         D.generateNewDataSet();
         api.cases.add_new_case()
         api.items.add_new_item()
@@ -132,7 +132,7 @@ describe('Services', function () {
     });
 
     it.only('LOCATIONS MOVE Service', function () {
-        api.auth.get_tokens(orgAdmin);
+        api.auth.get_tokens_without_page_reload(orgAdmin);
 
         function checkStatusOfJobs(secondsToWait = 5) {
             cy.wait(secondsToWait * 1000)
@@ -155,20 +155,22 @@ describe('Services', function () {
         }
 
 
-       // api.items.add_new_item(true, D.container1)
-
         for (let i = 0; i < numberOfRequests; i++) {
-
+            cy.log ('adding location  and item' + i)
             D['container' + i] = D.getStorageLocationData('cont' + i)
             api.locations.add_storage_location(D['container' + i])
-            api.locations.update_location(D['container' + i].name, 'isContainer', true)
+            api.items.add_new_item(true, D['container' + i])
+        }
 
+        for (let i = 0; i < numberOfRequests; i++) {
+            cy.log ('Moving location  ' + i)
             api.locations.get_and_save_any_location_data_to_local_storage('Containers')
             api.locations.get_and_save_any_location_data_to_local_storage(D['container' + i].name)
             api.locations.move_location(D['container' + i].name, 'Containers', true)
         }
 
         checkStatusOfJobs(5)
+        // }
     });
 
     it('MASS UPDATE BY QUERY Service', function () {

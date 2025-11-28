@@ -343,27 +343,29 @@ describe('Inventory Reports', function () {
         })
     });
 
-    context('2. Scanning 1000 items', function () {
+    xcontext('2. Scanning 1000 items', function () {
         // this test is excluded from the regular regression suite for now, to reduce the total execution time
-        xit('3. Scanning 1000 items during Inventory report', function () {
+        it('3. Scanning 1000 items during Inventory report', function () {
 
             api.auth.get_tokens(orgAdmin);
             api.org_settings.disable_Item_fields([C.itemFields.description])
             // setting 20 items here for now, but we can adjust the number at any point
             var numberOfRecords = 1000
 
+            let rootLoc = D.currentDateAndRandomNumber + '_' +  'rootLoc'
+
             D.getNewCaseData()
             D.getNewItemData(D.newCase)
-            api.locations.add_storage_location('RootLevel')
+            api.locations.add_storage_location(rootLoc)
             api.cases.add_new_case()
-            D.newItem.location = D['RootLevel'][0].name
+            D.newItem.location = rootLoc
             E.generateDataFor_ITEMS_Importer([D.newItem], null, null, numberOfRecords);
             cy.generate_excel_file('Items_forTestingInventoryReports', E.itemImportDataWithMinimumFields);
             ui.menu.click_Tools__Data_Import();
             ui.importer.import_data('Items_forTestingInventoryReports', C.importTypes.items)
 
             api.cases.quick_case_search(D.newCase.caseNumber)
-            api.items.get_items_from_specific_case(D.newCase.caseNumber, 2)
+            api.items.get_items_from_specific_case(D.newCase.caseNumber, 1, false, 120000)
 
             let reportName = D.getCurrentDateAndRandomNumber(4);
 
@@ -373,7 +375,7 @@ describe('Inventory Reports', function () {
             cy.getLocalStorage("RootLevel").then(parentLoc => {
                 cy.getLocalStorage("barcodes").then(barcodes => {
                     let barcodesArray = barcodes.split(",")
-                    ui.inventoryReports.start_report(reportName, JSON.parse(parentLoc).barcode)
+                    ui.inventoryReports.start_report(reportName, D[rootLoc].barcode)
                     for (let i = 0; i < numberOfRecords; i++) {
                         ui.inventoryReports.enter_barcode_(barcodesArray[i])
                         if (i === numberOfRecords - 1) ui.app.pause(3)
