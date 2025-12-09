@@ -3372,6 +3372,7 @@ let basePage = class BasePage {
                 });
 
             } else if (['Recovered By', 'Submitted By'].some(v => label === v)) {
+                const lastChar = value.slice(-1);
                 parentContainerFoundByInnerLabelOnModal(label, 'tp-modal-field')
                     .find('input').first()
                     .clear()

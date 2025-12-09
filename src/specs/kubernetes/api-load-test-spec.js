@@ -89,7 +89,7 @@ describe('Services', function () {
 
     });
 
-    it.only('EXPORT Service', function () {
+    it('EXPORT Service', function () {
         api.auth.get_tokens(powerUser);
 
         function checkStatusOfJobs(secondsToWait = 15) {
@@ -141,7 +141,7 @@ describe('Services', function () {
         checkStatusOfJobs()
     });
 
-    it('LOCATIONS MOVE Service', function () {
+    it.only('LOCATIONS MOVE Service', function () {
         api.auth.get_tokens(orgAdmin);
 
         function checkStatusOfJobs(secondsToWait = 5) {
@@ -167,18 +167,18 @@ describe('Services', function () {
 
 
         // create root level location with X number of items
-        // let numberOfBigLocs = 40
-        // let numberOfItemsInBigLocs = 1500
-        // for (let i = 1; i < numberOfBigLocs; i++) {
-        //     D['bigLoc' + i] = D.getStorageLocationData('bigLoc' + i)
-        //     api.locations.add_storage_location(D['bigLoc' + i])
-        //     api.locations.get_and_save_any_location_data_to_local_storage('Containers')
-        //     //  api.locations.get_and_save_any_location_data_to_local_storage( 'bigLoc' + i, null, 'Containers')
-        //     api.locations.get_and_save_any_location_data_to_local_storage('bigLoc' + i)
-        //     for (let j = 0; j < numberOfItemsInBigLocs; j++) {
-        //         api.items.add_new_item(true, 'bigLoc' + i)
-        //     }
-        // }
+        let numberOfBigLocs = 29
+        let numberOfItemsInBigLocs = 150
+        for (let i = 23; i < numberOfBigLocs; i++) {
+            // D['bigLoc' + i] = D.getStorageLocationData('bigLoc' + i)
+            // api.locations.add_storage_location(D['bigLoc' + i])
+            // api.locations.get_and_save_any_location_data_to_local_storage('Containers')
+            //  api.locations.get_and_save_any_location_data_to_local_storage( 'bigLoc' + i, null, 'Containers')
+            api.locations.get_and_save_any_location_data_to_local_storage('Box' + i)
+            for (let j = 0; j < numberOfItemsInBigLocs; j++) {
+                api.items.add_new_item(true, 'Box' + i)
+            }
+        }
 
         // numberOfRequests = 3
         // for (let i = 1; i < (numberOfRequests+1); i++) {

@@ -2917,6 +2917,23 @@ S.PENTEST_3 = {
         taskFormWithRequiredFields: 2547,
         taskFormWithOptionalFields: 2548
     },
+    itemCustomForm: {
+        name: "Optional fields - Cypress ITEM Form - Org#3",
+        id: 24311,
+        checkboxListId: "field1844",
+        radioButtonListId: "field1846",
+        selectListId: "field1848",
+        dropdownTypeahead: "field1850",
+        number: "field1836",
+        password: "field1838",
+        textbox: "field1832",
+        email: "field1834",
+        textarea: "field1840",
+        checkbox: "field1842",
+        date: "field1856",
+        user: "field1852",
+        person: "field1854",
+    },
     locations: [
         {
             id: 487927,
