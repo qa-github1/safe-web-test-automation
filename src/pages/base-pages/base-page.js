@@ -214,7 +214,7 @@ let
     systemService = e => cy.get('[ng-repeat="systemService in systemServices"]'),
     systemServiceName = e => cy.get('[ng-repeat="systemService in systemServices"] .ng-binding'),
     systemServiceStatus = e => cy.get('[ng-repeat="systemService in systemServices"] span'),
-    searchBar_history = e => cy.get('[ng-model="options.searchFilter"]'),
+    searchBar = e => cy.get('[ng-model="options.searchFilter"]'),
     searchButton = e => cy.get('#search-button'),
     typeaheadInputField = fieldLabel => cy.contains(fieldLabel).parent().find('input').first(),
     dropdownField = fieldLabel => cy.findByLabelText(fieldLabel).parent().find('select').eq(0),
@@ -362,9 +362,10 @@ export default class BasePage {
         return parentContainer().contains(regex)
     };
 
-    search_history(value) {
-        searchBar_history().clear().type(value).type('{enter}');
-
+    search_by_specific_value(value) {
+        searchBar().clear().type(value).type('{enter}');
+        this.pause(2)
+     this.wait_until_spinner_disappears()
         return this;
     }
 

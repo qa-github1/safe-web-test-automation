@@ -123,6 +123,7 @@ describe('Add Person', function () {
                     .verify_toast_message(C.toastMsgs.saved);
                 ui.caseView.verify_Case_View_page_is_open(D.newPerson.caseNumber)
                     .select_tab(C.tabs.people)
+                    .search_by_specific_value(D.newPerson.firstName)
                     .select_checkbox_on_first_table_row_on_active_tab()
                     .click_Actions()
                     .click_option_on_expanded_menu(C.buttons.changePersonTypeOrCaseNote)
@@ -132,6 +133,15 @@ describe('Add Person', function () {
                     .enable_all_standard_columns_on_the_grid(C.pages.caseViewPeopleTab)
                     .verify_content_of_specific_table_row_by_provided_column_title_and_value(0, "Person Type", D.editedPerson.personType)
                     .verify_content_of_specific_table_row_by_provided_column_title_and_value(0, "Case Note", D.editedPerson.caseNote)
+                    .click_Actions()
+                    .click_option_on_expanded_menu(C.buttons.removeSelectedPerson)
+                    .verify_text_is_visible('Are you sure you want to remove these people from the case?')
+                    .verify_text_is_visible(D.newPerson.firstName)
+                    .click_button(C.buttons.removeFromCase)
+                    .verify_toast_message("Success")
+                    .verify_text_is_NOT_present_on_main_container(D.newPerson.firstName)
+
+
             })
         })
     })

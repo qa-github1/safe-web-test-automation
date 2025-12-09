@@ -271,6 +271,7 @@ export default class PersonViewPage extends BaseViewPage {
 
     change_person_type_or_case_note(data) {
         personTypeDropdown().select(data.personType);
+        caseNote().clear();
         caseNote().type(data.caseNote);
         return this;
     }

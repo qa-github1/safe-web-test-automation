@@ -43,6 +43,8 @@ C = {
         updateAddress: 'Update Address',
         delete: 'Delete',
         changePersonTypeOrCaseNote: 'Change Person Type or Case Note',
+        removeSelectedPerson: 'Remove Selected Person',
+        removeFromCase: 'Remove From Case',
         closeXCases: X => `Close ${X} Cases`,
         viewXCases: X => `View ${X} Cases`,
     },
