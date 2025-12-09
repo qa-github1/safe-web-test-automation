@@ -41,9 +41,8 @@ for (let i = 0; i < 1; i++) {
             'Tags',
         ]
 
-
         context('1. All fields enabled in Org Settings', function () {
-            it('1.1 All fields turned on and edited', function () {
+            it.only('1.1 All fields turned on and edited', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(user);
                 D.generateNewDataSet();

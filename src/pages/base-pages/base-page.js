@@ -473,7 +473,6 @@ let basePage = class BasePage {
         let request = 'typeahead?allOffices=true&hideOverlay=true&search=' + caseNumber.replace(/\s+/g, '%20');
         this.define_API_request_to_be_awaited('GET', request)
         this.enterValue(quickSearch, caseNumber)
-        // quickSearch().clear().type(caseNumber).trigger('input');
         this.wait_response_from_API_call(request, 200);
 
         if (shouldFind) {
@@ -1805,7 +1804,7 @@ let basePage = class BasePage {
         alias,
         status = 200,
         propertyToSaveToLocalStorage,
-        timeout = 30000
+        timeout = 1000
     ) {
         let requestOccurred = false;
 
@@ -3033,19 +3032,30 @@ let basePage = class BasePage {
     //     return this
     // }
 
-    turnOnAllTogglesOnModal(skip) {
-        cy.get('.modal-content .toggle-off').then($toggles => {
+    turnOnOnlySpecificTogglesOnModal(toggleNumbers) {
+        cy.get('.modal-content .toggle-off')
+            .filter(':contains("Off")').then($toggles => {
             let togglesToClick;
 
-            if (skip === 'first') {
-                togglesToClick = $toggles.slice(1);
-            } else if (skip === 'last') {
-                togglesToClick = $toggles.slice(0, -1);
-            } else if (Number.isInteger(skip)) {
-                const zeroIndex = skip - 1;      // convert 1-based → 0-based
-                togglesToClick = $toggles.filter((i) => i !== zeroIndex);
-            } else {
+            if (toggleNumbers === 'all') {
                 togglesToClick = $toggles;
+
+            } else if (toggleNumbers === 'none') {
+                togglesToClick = [];
+
+            } else {
+                // Ensure values are in array form
+                const numbersArray = Array.isArray(toggleNumbers)
+                    ? toggleNumbers
+                    : [toggleNumbers];
+
+                // Convert 1-based → 0-based
+                const targetIndexes = numbersArray.map(n => n - 1);
+
+                // Keep only elements whose index *is* in the list
+                togglesToClick = $toggles.filter((i) =>
+                    targetIndexes.includes(i)
+                );
             }
 
             cy.wrap(togglesToClick).click({ multiple: true });
@@ -3053,6 +3063,39 @@ let basePage = class BasePage {
 
         return this;
     }
+
+
+    turnOnAllTogglesOnModal(skip) {
+        cy.get('.modal-content .toggle-off')
+            .filter(':contains("Off")').then($toggles => {
+            let togglesToClick;
+
+            if (skip === 'first') {
+                togglesToClick = $toggles.slice(1);
+
+            } else if (skip === 'last') {
+                togglesToClick = $toggles.slice(0, -1);
+
+            } else if (Number.isInteger(skip)) {
+                // single number → 1-based -> 0-based
+                const zeroIndex = skip - 1;
+                togglesToClick = $toggles.filter((i) => i !== zeroIndex);
+
+            } else if (Array.isArray(skip)) {
+                // array of numbers → map 1-based -> 0-based
+                const zeroIndexes = skip.map(n => n - 1);
+                togglesToClick = $toggles.filter((i) => !zeroIndexes.includes(i));
+
+            } else {
+                // no skipping
+                togglesToClick = $toggles;
+            }
+
+            cy.wrap(togglesToClick).click({multiple: true});
+        });
+        return this;
+    }
+
 
     turnOnToggleAndReturnParentElementOnCustomForm(label) {
         return cy.get('.modal-content')
@@ -3268,62 +3311,125 @@ let basePage = class BasePage {
         return this;
     }
 
-    turn_on_and_enter_values_to_all_fields_on_modal(labelsArray, valuesArray) {
+    enter_values_to_all_fields_on_Mass_Update_modal(labelsArray, valuesArray, itemsOrCases) {
 
         for (let i = 0; i < labelsArray.length; i++) {
             let label = labelsArray[i]
             let value = valuesArray[i]
 
             if (['Offense Type', 'Custody Reason'].some(v => label === v)) {
-                this.turnOnToggleAndSelectDropdownOption(label, value)
-
+                parentContainerFoundByInnerLabelOnModal(label, 'tp-modal-field')
+                    .find('select').first()
+                    .select(value)
             } else if (['Category'].some(v => label === v)) {
                 this.turnOnToggle(label)
                 if (S.isDispoStatusEnabled()) this.click('Confirm')
-
-                // parentContainerFoundByInnerLabelOnModal(label, 'tp-modal-field')
-                //     .find('[ng-click="onSwitch($event)"]').first()
-                //     .parents('.form-group').first()
-                //     .find('input').first().click()
-
                 cy.get('[category-name="item.categoryName"]').click()
                 cy.get('[repeat="category in data.categories | filter: { name: $select.search }"]').contains(value).click();
 
             } else if (['Tags'].some(v => label === v)) {
-                this.turnOnToggleEnterValueAndWaitApiRequestToFinish(label, value, 'tagTypeahead')
+                // this.turnOnToggleEnterValueAndWaitApiRequestToFinish(label, value, 'tagTypeahead')
+                // orgTagIconOnTagsTypeaheadList().click()
+
+                parentContainerFoundByInnerLabelOnModal(label, 'tp-modal-field')
+                    .find('input').first()
+                    .clear()
+                    .invoke('val', value).trigger('input')
+
+                cy.get('[repeat="tagModel in allTagModels | filter: $select.search"]').should('be.visible')
                 orgTagIconOnTagsTypeaheadList().click()
 
             } else if (['Status'].some(v => label === v)) {
-                this.turnOnToggleAndReturnParentElement(label)
-                    .then(() => {
-                        if (value === 'Closed') {
-                            parentContainerFoundByInnerLabelOnModal(labelsArray[i]).find('[title="Toggle Open/Closed"]').click();
-                        }
-                    });
+                if (value === 'Closed') {
+                    parentContainerFoundByInnerLabelOnModal(label, 'tp-modal-field').find('[title="Toggle Open/Closed"]').click();
+                }
             } else if (['Review Date Notes'].some(v => label === v)) {
-                this.turnOnToggleAndEnterValueInTextarea(label, value)
+                parentContainerFoundByInnerLabelOnModal(label, 'tp-modal-field')
+                    .find('textarea').first()
+                    .invoke('val', value).trigger('input')
 
             } else if (['Case Officer(s)'].some(v => label === v)) {
-                this.turnOnToggleAndSelectTypeaheadOptionsOnMultiSelectField(label, value)
+                const values = Array.isArray(value) ? value : [value];
+                parentContainerFoundByInnerLabelOnModal(label, 'tp-modal-field')
+                    .find('.ui-select-container')
+                    .first()
+                    .as('userSelect');
+
+                values.forEach(v => {
+                    this.define_API_request_to_be_awaited('GET',
+                        'api/users/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + v.replace(/\s+/g, '%20'),
+                        "getUserInTypeahead")
+                    this.define_API_request_to_be_awaited('GET',
+                        '/api/userGroups/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + v.replace(/\s+/g, '%20'),
+                        "getUserGroupInTypeahead")
+
+                    cy.get('@userSelect').click().find('input.ui-select-search')
+                        .invoke('val', v).trigger('input')
+                    this.pause(0.5)
+                    this.wait_response_from_API_call("getUserInTypeahead", 200, null, 1500)
+                    this.wait_response_from_API_call("getUserGroupInTypeahead", 200, null, 1500)
+                    cy.get('.ui-select-choices-row').contains(v).click();
+                });
 
             } else if (['Recovered By', 'Submitted By'].some(v => label === v)) {
-                this.turnOnToggleAndEnterValueToInputFieldWithLastCharacterReentering(label, value, this.typeaheadSelectorMatchInMatches)
+                parentContainerFoundByInnerLabelOnModal(label, 'tp-modal-field')
+                    .find('input').first()
+                    .clear()
+                    .invoke('val', value)
+                    .then($el => {
+                        cy.wait(500).then(() => {
+                            // Check if the element exists in the DOM
+                            cy.document().then(doc => {
+                                const exists = doc.querySelector(this.typeaheadSelectorMatchInMatches);
+                                if (!exists) {
+                                    cy.wrap($el).type('{backspace}').type(lastChar);
+                                }
+                            });
+                        });
+                    });
                 firstMatchOnTypeahead().click()
-
             } else if (['Item Belongs to'].some(v => label === v)) {
-                this.turnOnToggleAndEnterValueToInputField(label, value)
+                parentContainerFoundByInnerLabelOnModal(label, 'tp-modal-field')
+                    .find('input').first()
+                    .clear()
+                    .invoke('val', value).trigger('input')
                 firstPersonOnItemBelongsToTypeahead().click()
 
             } else {
-                this.turnOnToggleEnterValueAndPressEnter(label, value)
+                parentContainerFoundByInnerLabelOnModal(label, 'tp-modal-field')
+                    .find('input').first()
+                    .should('be.enabled')
+                    .clear()
+                    .invoke('val', value).trigger('input')
+                    .type('{enter}')
             }
         }
         return this
     }
 
+    turn_on_and_enter_values_to_all_fields_on_Mass_Update_Cases_modal(labelsArray, valuesArray) {
+        this.turnOnAllTogglesOnModal(
+            7) // Open/Closed toggles and Status toggle
+      this.enter_values_to_all_fields_on_Mass_Update_modal(labelsArray, valuesArray)
+        return this
+    }
+
+    turn_on_and_enter_values_to_all_fields_on_modal(labelsArray, valuesArray, itemsOrCases = 'items') {
+
+        if (itemsOrCases === 'items'){
+            this.turnOnAllTogglesOnModal(5)
+        }
+        else{
+            this.turnOnAllTogglesOnModal(
+                7) // Open/Closed toggles and Status toggle
+        }
+        this.enter_values_to_all_fields_on_Mass_Update_modal(labelsArray, valuesArray)
+        return this
+    }
+
     turn_on_and_enter_values_to_all_fields_on_custom_form_modal(labelsArray, valuesArray) {
 
-        this.turnOnAllTogglesOnModal('last')
+        this.turnOnAllTogglesOnModal()
 
         for (let i = 0; i < labelsArray.length; i++) {
             const label = labelsArray[i];
@@ -3395,8 +3501,8 @@ let basePage = class BasePage {
                     .as('cfInput')
                     .clear()
                     .invoke('val', value).trigger('input')
-               // this.wait_response_from_API_call("getOptionTypeahead", 200, null, 2000)
-               // cy.get('@cfInput').type('{enter}')
+                // this.wait_response_from_API_call("getOptionTypeahead", 200, null, 2000)
+                // cy.get('@cfInput').type('{enter}')
                 cy.get('[ng-repeat="match in matches track by $index"]').first().click()
 
             } else if (label === 'User/User Group') {
@@ -3421,7 +3527,7 @@ let basePage = class BasePage {
                     this.pause(0.5)
                     this.wait_response_from_API_call("getUserInTypeahead", 200, null, 1500)
                     this.wait_response_from_API_call("getUserGroupInTypeahead", 200, null, 1500)
-                     cy.get('.ui-select-choices-row').contains(v).click();
+                    cy.get('.ui-select-choices-row').contains(v).click();
                 });
             } else if (label === 'Custom Person') {
                 const values = Array.isArray(value) ? value : [value];
@@ -3438,7 +3544,7 @@ let basePage = class BasePage {
                     //     "getPeopleInTypeahead")
 
                     cy.get('@personSelect').invoke('val', v).trigger('input')
-                  //  this.wait_response_from_API_call("getPeopleInTypeahead", 200, null, 2000)
+                    //  this.wait_response_from_API_call("getPeopleInTypeahead", 200, null, 2000)
                     cy.get('[ng-repeat="match in matches track by $index"]').first().click();
                 });
             } else if (label === 'Custom Date') {
@@ -3446,14 +3552,14 @@ let basePage = class BasePage {
                     .contains('.fg-field-inner label, .fg-field-inner .control-label', new RegExp(`^\\s*${label}\\s*$`))
                     .closest('.fg-field-inner')
                     .find('input[tp-datepicker-popup][ng-model="ngModel"]')
-                            .filter(':visible')
-                            .first()
-                            .scrollIntoView()
-                            .click({force: true})
-                            .clear({force: true})
-                            .invoke('val', value).trigger('input')
-                            .type('{enter}')
-                            .blur();
+                    .filter(':visible')
+                    .first()
+                    .scrollIntoView()
+                    .click({force: true})
+                    .clear({force: true})
+                    .invoke('val', value).trigger('input')
+                    .type('{enter}')
+                    .blur();
             } else {
                 cy.get('.modal-content')
                     .contains('.fg-field-inner label, .fg-field-inner .control-label', new RegExp(`^\\s*${label}\\s*$`))
