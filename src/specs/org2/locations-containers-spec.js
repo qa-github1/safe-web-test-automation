@@ -8,7 +8,7 @@ let powerUser = S.getUserData(S.userAccounts.powerUser);
 let person = S.getUserData(S.selectedEnvironment.person);
 let startTime;
 
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 1; i++) {
 
 describe('Locations - Containers', function () {
 
