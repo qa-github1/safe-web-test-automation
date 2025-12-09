@@ -164,8 +164,8 @@ export default class ImportPage extends BasePage {
         for (let i = 0; i < numberOfRetries; i++) {
             cy.get('[ng-repeat="item in data.displayedItems track by $index"]').first().then(($firstRow) => {
                 const rowText = $firstRow.text();
-                cy.log('TEXT IS ' + rowText)
-                if (rowText.includes('Saved')) {
+              //  cy.log('TEXT IS ' + rowText)
+                if (rowText.includes(text)) {
                     this.pause(1)
                     i = numberOfRetries
                 }
@@ -173,12 +173,67 @@ export default class ImportPage extends BasePage {
         }
     }
 
+    pause_if_text1_is_found_or_click_element_if_text2_is_found_in_first_table_row(text1, text2, elementToClick, pauseSeconds = 1, numberOfRetries, log) {
+        function checkRow(retries) {
+            if (retries <= 0) {
+                throw new Error('Max retries reached');
+            }
+
+            cy.get('[ng-repeat="item in data.displayedItems track by $index"]')
+                .first()
+                .then(($firstRow) => {
+                    const rowText = $firstRow.text();
+
+                    if (rowText.includes('records')) {
+                        cy.log('SUCCESS ' + rowText);
+                    } else if (rowText.includes(text1)) {
+                        cy.log('FOUND text1');
+                        cy.wait(1000);
+                    } else if (rowText.includes(text2)) {
+                        cy.log('TEXT IS ' + rowText);
+                        elementToClick().click();
+                    } else {
+                        cy.wait(1000);
+                        checkRow(retries - 1); // try again
+                    }
+                });
+        }
+
+        checkRow(numberOfRetries);
+        }
+
+    click_element_if_text_appears_in_first_table_row(text, element) {
+        cy.get('[ng-repeat="item in data.displayedItems track by $index"]').first().then(($firstRow) => {
+            const rowText = $firstRow.text();
+
+            if (rowText.includes(text)) {
+                cy.log('TEXT IS ' + rowText)
+                element().click();
+            }
+        });
+    }
+
+
     retry_failed_import(iconToClick) {
-        this.pause(2)
-        this.pause_if_text_is_found('Saved', 1, 3)
-        this.click_element_if_text_appears_in_first_table_row('Finished with errors', iconToClick)
-        this.pause_if_text_is_found('Queued', 1, 60)
-        this.click_element_if_text_appears_in_first_table_row('Finished with errors', iconToClick)
+        // this.pause(2)
+        // this.click_element_if_text_appears_in_first_table_row('Finished with errors', iconToClick)
+        // this.pause(2)
+        // this.pause_if_text_is_found('Queued', 1, 60)
+        // this.click_element_if_text_appears_in_first_table_row('Finished with errors', iconToClick)
+        // this.pause_if_text_is_found('Queued', 1, 60)
+        // this.click_element_if_text_appears_in_first_table_row('Finished with errors', iconToClick)
+
+        this.pause_if_text1_is_found_or_click_element_if_text2_is_found_in_first_table_row
+        ('Queued', 'Finished with errors', iconToClick, 1, 60, '****** Attempt 1 ****** ')
+
+
+        this.pause_if_text1_is_found_or_click_element_if_text2_is_found_in_first_table_row
+        ('Queued', 'Finished with errors', iconToClick, 1, 60, '****** Attempt 2 ****** ')
+
+
+        this.pause_if_text1_is_found_or_click_element_if_text2_is_found_in_first_table_row
+        ('Queued', 'Finished with errors', iconToClick, 1, 60, '****** Attempt 3 ****** ')
+
     }
 
     import_data(fileName, importType, isUpdate, timeoutInMinutes = 5) {
@@ -246,17 +301,6 @@ export default class ImportPage extends BasePage {
             .retry_failed_import(playIconInTheFirstRow)
         return this;
     };
-
-    click_element_if_text_appears_in_first_table_row(text, element) {
-        cy.get('[ng-repeat="item in data.displayedItems track by $index"]').first().then(($firstRow) => {
-            const rowText = $firstRow.text();
-
-            cy.log('TEXT IS ' + rowText)
-            if (rowText.includes(text)) {
-                element().click();
-            }
-        });
-    }
 
 
     verify_text_is_present_on_first_row(text) {

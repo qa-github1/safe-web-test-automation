@@ -1,9 +1,9 @@
-const C = require('../../fixtures/constants');
-const S = require('../../fixtures/settings');
-const D = require('../../fixtures/data');
-const E = require('../../fixtures/files/excel-data');
-const api = require('../../api-utils/api-spec');
-const ui = require('../../pages/ui-spec');
+const C = require('../../../../fixtures/constants');
+const S = require('../../../../fixtures/settings');
+const D = require('../../../../fixtures/data');
+const E = require('../../../../fixtures/files/excel-data');
+const api = require('../../../../api-utils/api-spec');
+const ui = require('../../../../pages/ui-spec');
 const _ = require('lodash');
 
 // Aug 11, 2025, Sumejja's Note ----> All tests pass on Dev - Org#3 ---> Total time: 600 sec (10 min)
@@ -49,9 +49,6 @@ describe('Import Item Updates', function () {
             // verify item updates import -- with custom form attached and initially populated by importer
             ui.importer.open_direct_url_for_page()
                 .click_Play_icon_on_first_row()
-                // .verify_toast_message([
-                //     C.toastMsgs.importComplete,
-                //     1 + C.toastMsgs.recordsImported], null, 1);
                 .check_import_status_on_grid('1 records imported')
             let allEditedFields = C.itemFields.allEditableFieldsArray.concat(['Case'])
             ui.itemView.open_newly_created_item_via_direct_link()
@@ -64,7 +61,7 @@ describe('Import Item Updates', function () {
                 .verify_red_highlighted_history_records(allEditedFields)
 
             fileName = 'ItemUpdatesImport_CustomFieldsUpdated';
-            // verify item updates import -- with custom updated by importer
+            // verify item updates import -- with custom data updated by importer
             E.editedCustomFieldsValues = E.generateEditedCustomValues()
             D.editedItem = Object.assign(D.editedItem, D.editedCustomFormData)
             E.generateDataFor_ITEMS_Importer([D.editedItem], S.customForms.itemFormWithOptionalFields, true);
@@ -228,8 +225,8 @@ describe('Import Item Updates', function () {
             D.getDisposedItemData()
             D.newItem.actualDisposedDate = '';
             D.editedItem.disposalNotes = 'Disposed_through_Importer'
-            let CoC_newItemEntry = S.chainOfCustody.SAFE.newItemEntry;
-            let CoC_disposal = S.chainOfCustody.SAFE.disposal(D.editedItem);
+            // let CoC_newItemEntry = S.chainOfCustody.SAFE.newItemEntry;
+            // let CoC_disposal = S.chainOfCustody.SAFE.disposal(D.editedItem);
 
             cy.getLocalStorage("newItem").then(newItem => {
                 D.editedItem.barcode = JSON.parse(newItem).barcode;
@@ -247,10 +244,10 @@ describe('Import Item Updates', function () {
                     .click_Edit()
                     .verify_edited_and_not_edited_values_on_Item_Edit_form(allEditedFields, D.editedItem, D.newItem, true, true)
                     .select_tab(C.tabs.chainOfCustody)
-                    .verify_content_of_sequential_rows_in_results_table([
-                        CoC_disposal,
-                        CoC_newItemEntry
-                    ])
+                     .verify_data_on_Chain_of_Custody([
+                         [['Type', 'Disposals'], ['Issued From', D.editedItem.disposedByName], ['Issued To', D.editedItem.disposedByName], ['Notes', D.editedItem.disposalNotes]],
+                         [['Type', 'In'], ['Issued From', orgAdmin.name], ['Issued To', 'New Item Entry'], ['Storage Location', D.newItem.location], ['Notes', `Item entered into system.`]],
+                     ])
                     .open_last_history_record()
                     .verify_all_values_on_history(D.editedItem, originalItem)
                     .verify_red_highlighted_history_records(allEditedFieldsWithoutDisposition, allEditedFieldsWithoutReleasedTo, allEditedFields)

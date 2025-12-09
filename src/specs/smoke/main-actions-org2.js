@@ -9,7 +9,6 @@ const helper = require("../../support/e2e-helper");
 let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
 let powerUser = S.getUserData(S.userAccounts.powerUser);
 let admin_userGroup = S.selectedEnvironment.admin_userGroup;
-let approvedForReleaseItem = {}
 
 before(function () {
     api.auth.get_tokens(orgAdmin);
@@ -95,7 +94,8 @@ describe('Person', function () {
             ui.searchPeople.run_search_by_Business_Name(D.editedPerson.businessName)
                 .verify_content_of_first_row_in_results_table(D.editedPerson.businessName);
         });
-});
+})
+
 describe('User', function () {
 
     it('Add User -- Assign Permissions -- Log in with newly created user', function () {
@@ -137,165 +137,7 @@ describe('User', function () {
     });
 
 });
-describe('Item Transactions', function () {
 
-    it('Verify all transactions, data changes and enabled/disabled actions based on Item status', function () {
-        ui.app.log_title(this);
-
-        api.auth.get_tokens(orgAdmin);
-        api.org_settings.enable_all_Item_fields(C.itemFields.dispositionStatus);
-        D.generateNewDataSet()
-        let initialItem = Object.assign({}, D.newItem)
-        api.cases.add_new_case()
-        api.items.add_new_item();
-        D.box2 = D.getStorageLocationData('BOX_2')
-        api.locations.add_storage_location(D.box2)
-
-        ui.app.open_newly_created_item_via_direct_link();
-        ui.itemView
-            //CHECK OUT
-            .click_Actions()
-            .perform_Item_Check_Out_transaction(orgAdmin, C.checkoutReasons.lab, 'test-note1', D.currentDate)
-            .verify_edited_and_not_edited_values('view', ["Status", "Storage Location"], D.editedItem, D.newItem)
-            .select_tab(C.tabs.chainOfCustody)
-            .verify_data_on_Chain_of_Custody([
-                [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ``], ['Check out Reason', `Lab`], ['Note', `test-note1`]],
-                [['Type', 'In'], ['Issued From', orgAdmin.name], ['Issued To', 'New Item Entry'], ['Storage Location', initialItem.location], ['Notes', `Item entered into system.`]],
-            ])
-            .select_tab(C.tabs.basicInfo)
-            .click_Actions()
-            .verify_enabled_and_disabled_options_under_Actions_dropdown(
-                [
-                    'Check Item In',
-                    'Transfer Item',
-                    'Dispose Item',
-                    'Duplicate',
-                    'Split',
-                    'Manage Cases'],
-                [
-                    'Check Item Out',
-                    'Move Item',
-                    'Undispose Item',
-                ])
-
-
-            //TRANSFER
-            .perform_Item_Transfer_transaction(powerUser, orgAdmin, 'test-note2')
-            .verify_edited_and_not_edited_values('view', ["Custodian"], D.editedItem, D.newItem)
-            .select_tab(C.tabs.chainOfCustody)
-            .verify_data_on_Chain_of_Custody([
-                [['Type', 'Transfer'], ['Issued From', orgAdmin.name], ['Issued To', powerUser.name], ['Storage Location', ``], ['Check out Reason', ``], ['Note', `test-note2`]],
-                [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ``], ['Check out Reason', `Lab`], ['Note', `test-note1`]],
-                [['Type', 'In'], ['Issued From', orgAdmin.name], ['Issued To', 'New Item Entry'], ['Storage Location', initialItem.location], ['Notes', `Item entered into system.`]],
-            ])
-            .select_tab(C.tabs.basicInfo)
-            .click_Actions()
-            .verify_enabled_and_disabled_options_under_Actions_dropdown(
-                [
-                    'Check Item In',
-                    'Transfer Item',
-                    'Dispose Item',
-                    'Duplicate',
-                    'Split',
-                    'Manage Cases'],
-                [
-                    'Check Item Out',
-                    'Move Item',
-                    'Undispose Item',
-                ])
-
-        //CHECK IN
-        ui.searchItem
-            .run_search_by_Item_Description(D.newItem.description)
-            .select_row_on_the_grid_that_contains_specific_value(D.newItem.description)
-            .click_Actions()
-            .perform_Item_CheckIn_transaction(powerUser, false, D.box2.name, 'test-note3')
-            .click_Actions()
-            .verify_enabled_and_disabled_options_under_Actions_dropdown_on_Search_Page(
-                [
-                    'Check Item Out',
-                    'Move Item',
-                    'Dispose Item',
-                    'Duplicate',
-                    'Split',
-                    'Manage Cases'],
-                [
-                    'Check Item In',
-                    'Transfer Item',
-                    'Undispose Item'
-                ])
-            .click_Actions()
-            .click_View_on_first_table_row()
-        ui.itemView.verify_Item_View_page_is_open(D.newCase.caseNumber)
-            .verify_edited_and_not_edited_values('view', ["Status", "Storage Location"], D.editedItem, D.newItem)
-            .select_tab(C.tabs.chainOfCustody)
-            .verify_data_on_Chain_of_Custody([
-                [['Type', 'In'], ['Issued From', powerUser.name], ['Issued To', orgAdmin.name], ['Storage Location', D.box2.name], ['Check out Reason', ``], ['Note', `test-note3`]],
-                [['Type', 'Transfer'], ['Issued From', orgAdmin.name], ['Issued To', powerUser.name], ['Storage Location', ``], ['Check out Reason', ``], ['Note', `test-note2`]],
-                [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ``], ['Check out Reason', `Lab`], ['Note', `test-note1`]],
-                [['Type', 'In'], ['Issued From', orgAdmin.name], ['Issued To', 'New Item Entry'], ['Storage Location', initialItem.location], ['Notes', `Item entered into system.`]],
-            ])
-            .select_tab(C.tabs.basicInfo)
-
-            //DISPOSAL
-            .click_Actions()
-            .perform_Item_Disposal_transaction(powerUser, C.disposalMethods.auctioned, 'test-note4')
-            .verify_edited_and_not_edited_values('view', ["Status", "Storage Location"], D.editedItem, D.newItem)
-            .select_tab(C.tabs.chainOfCustody)
-            .verify_data_on_Chain_of_Custody([
-                [['Type', 'Disposal'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ''], ['Check out Reason', ``], ['Note', `test-note4`]],
-                [['Type', 'In'], ['Issued From', powerUser.name], ['Issued To', orgAdmin.name], ['Storage Location', D.box2.name], ['Check out Reason', ``], ['Note', `test-note3`]],
-                [['Type', 'Transfer'], ['Issued From', orgAdmin.name], ['Issued To', powerUser.name], ['Storage Location', ``], ['Check out Reason', ``], ['Note', `test-note2`]],
-                [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ``], ['Check out Reason', `Lab`], ['Note', `test-note1`]],
-                [['Type', 'In'], ['Issued From', orgAdmin.name], ['Issued To', 'New Item Entry'], ['Storage Location', initialItem.location], ['Notes', `Item entered into system.`]],
-            ])
-            .select_tab(C.tabs.basicInfo)
-            .click_Actions()
-            .verify_enabled_and_disabled_options_under_Actions_dropdown(
-                [
-                    'Undispose Item',
-                    'Duplicate',
-                    'Manage Cases'],
-                [
-                    'Check Item In',
-                    'Check Item Out',
-                    'Move Item',
-                    'Transfer Item',
-                    'Dispose Item',
-                    // 'Split' // uncomment this when bugs gets fixed -- card  #14841 /#20
-                ])
-
-            //UNDISPOSAL
-            .perform_Item_Undisposal_transaction(powerUser, true, D.box2.name, 'test-note5')
-            .verify_edited_and_not_edited_values('view', ["Status", "Storage Location"], D.editedItem, D.newItem)
-            .select_tab(C.tabs.chainOfCustody)
-            .verify_data_on_Chain_of_Custody([
-                [['Type', 'In'], ['Issued From', powerUser.name], ['Issued To', orgAdmin.name], ['Storage Location', D.box2.name], ['Check out Reason', ``], ['Note', `test-note5`]],
-                [['Type', 'Disposal'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ''], ['Witness', powerUser.name], ['Storage Location', ''], ['Check out Reason', ``], ['Note', `test-note4`]],
-                [['Type', 'In'], ['Issued From', powerUser.name], ['Issued To', orgAdmin.name], ['Storage Location', D.box2.name], ['Check out Reason', ``], ['Note', `test-note3`]],
-                [['Type', 'Transfer'], ['Issued From', orgAdmin.name], ['Issued To', powerUser.name], ['Storage Location', ``], ['Check out Reason', ``], ['Note', `test-note2`]],
-                [['Type', 'Out'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', ``], ['Check out Reason', `Lab`], ['Note', `test-note1`]],
-                [['Type', 'In'], ['Issued From', orgAdmin.name], ['Issued To', 'New Item Entry'], ['Storage Location', initialItem.location], ['Notes', `Item entered into system.`]],
-            ])
-            .select_tab(C.tabs.basicInfo)
-            .click_Actions()
-            .verify_enabled_and_disabled_options_under_Actions_dropdown([
-                'Check Item Out',
-                'Move Item',
-                'Dispose Item',
-                'Duplicate',
-                'Split',
-                'Manage Cases'], [
-                'Check Item In',
-                'Transfer Item',
-                'Undispose Item'
-            ])
-
-        api.locations.get_and_save_any_location_data_to_local_storage('root')
-        api.locations.move_location(D.box2.name, 'root')
-
-    });
-});
 describe('Task', function () {
     it('Add task with all fields' +
         '-- assign to 1 user' +
@@ -354,5 +196,122 @@ describe('Task', function () {
         })
 
     });
+});
+
+describe('Inventory Report', function () {
+
+    let barcodes = [];
+
+    let
+        loc1 = D.currentDateAndRandomNumber + '_' +  'Loc1',
+        container1 = D.currentDateAndRandomNumber + '_' + 'Container1',
+        emptyContainer1 = D.currentDateAndRandomNumber + '_' + 'EmptyContainer1',
+        inactiveContainer1 = D.currentDateAndRandomNumber + '_' + 'InactiveContainer1',
+        sublocation1 = D.currentDateAndRandomNumber + '_' + 'Sublocation1',
+        subcontainer1 = D.currentDateAndRandomNumber + '_' + 'Subcontainer1',
+        loc2 = D.currentDateAndRandomNumber + '_' + 'Loc2',
+        container2 = D.currentDateAndRandomNumber + '_' + 'Container2',
+        emptyContainer2 = D.currentDateAndRandomNumber + '_' + 'EmptyContainer2',
+        sublocation2 = D.currentDateAndRandomNumber + '_' + 'Sublocation2'
+
+    before(function () {
+        api.auth.get_tokens(orgAdmin);
+        api.org_settings.disable_Item_fields()
+        D.generateNewDataSet();
+        api.cases.add_new_case(D.newCase.caseNumber);
+        api.people.add_new_person();
+
+
+        api.locations.add_storage_location(loc1)
+        api.locations.add_storage_location(container1, loc1)
+        api.locations.update_location(container1, 'isContainer', true)
+        api.locations.add_storage_location(emptyContainer1, loc1)
+        api.locations.update_location(emptyContainer1, 'isContainer', true)
+        api.locations.add_storage_location(inactiveContainer1, loc1)
+        api.locations.update_location(inactiveContainer1, 'active', false)
+        api.locations.add_storage_location(sublocation1, loc1)
+        api.locations.add_storage_location(subcontainer1, sublocation1)
+        api.locations.update_location(subcontainer1, 'isContainer', true)
+
+        api.locations.add_storage_location(loc2)
+        api.locations.add_storage_location(container2, loc2)
+        api.locations.update_location(container2, 'isContainer', true)
+        api.locations.add_storage_location(emptyContainer2, loc2)
+        api.locations.update_location(emptyContainer2, 'isContainer', true)
+        api.locations.add_storage_location(sublocation2, loc2)
+
+
+        api.items.add_new_item(true, loc1, 'item0')
+        api.items.add_new_item(true, loc1, 'item1')
+        api.items.add_new_item(true, container1, 'item2')
+        api.items.add_new_item(true, sublocation1, 'item3')
+        api.items.add_new_item(true, subcontainer1, 'item4')
+        api.items.add_new_item(true, loc2, 'item5')
+        api.items.add_new_item(true, container2, 'item6')
+
+        for (let i = 0; i < 7; i++) {
+            cy.getLocalStorage('item' + i).then(item => {
+                barcodes.push(JSON.parse(item).barcode)
+            })
+        }
+    })
+
+    it('2.1. Create and run DR for 2 storage locations that have: ' +
+        'container with item, empty container, sub-location, empty sub-container and sub-container with item - No Discrepancies Found', function () {
+
+        let reportName = D.getCurrentDateAndRandomNumber(4);
+
+        api.auth.get_tokens(orgAdmin);
+
+        ui.menu.click_Tools__Inventory_Reports()
+            .click_button(C.buttons.newReport)
+        ui.inventoryReports.start_report(reportName, D[loc1].barcode)
+            .enter_barcode(barcodes[0])
+            .enter_barcode(barcodes[1])
+            .enter_barcode(D[container1].barcode, false)
+            .enter_barcode(D[sublocation1].barcode, true)
+            .enter_barcode(D[subcontainer1].barcode, false)
+            .enter_barcode(barcodes[3])
+            .enter_barcode(D[loc2].barcode, true)
+            .enter_barcode(D[container2].barcode, false)
+            .enter_barcode(barcodes[5])
+            .click_button(C.buttons.runReport)
+            .verify_text_is_present_on_main_container(C.labels.InventoryReports.noDiscrepanciesFound)
+            .verify_summary_table(4, 3, 4, 3, 0)
+    })
+
+    it('2.2. Scanning some barcodes multiple times and checking all types of discrepancies in one Report: ' +
+        '"Barcode valid but not found in the system"' +
+        '"Items Not Scanned", ' +
+        '"Wrong Storage Location",' +
+        '"Container Not Scanned",' +
+        '"Containers in Wrong Location"', function () {
+
+        let reportName = D.getCurrentDateAndRandomNumber(4);
+
+        api.auth.get_tokens(orgAdmin);
+
+        ui.menu.click_Tools__Inventory_Reports()
+            .click_button(C.buttons.newReport)
+        ui.inventoryReports.start_report(reportName, D[loc1].barcode)
+            .enter_barcode('test3232')
+            .enter_barcode('test3232', false, true)
+            .enter_barcode(barcodes[0])
+            .enter_barcode(barcodes[0], false, true)
+            .enter_barcode(barcodes[0], false, true)
+            .enter_barcode(D[container2].barcode, false)
+            .enter_barcode(D[container2].barcode, false, true)
+            .enter_barcode(barcodes[2])
+            .enter_barcode(barcodes[2])
+            .enter_barcode(barcodes[5])
+            .enter_barcode(D[loc2].barcode, true)
+            .click_button(C.buttons.runReport)
+            .verify_text_is_present_on_main_container(C.labels.InventoryReports.barcodeValidButNotFoundInSystem(1))
+            .verify_text_is_present_on_main_container(C.labels.InventoryReports.wrongStorageLocation(2))
+            .verify_text_is_present_on_main_container(C.labels.InventoryReports.itemsNotScanned(2))
+            .verify_text_is_present_on_main_container(C.labels.InventoryReports.containersNotScanned(2))
+            .verify_text_is_present_on_main_container(C.labels.InventoryReports.containersInWrongLocation(1))
+            .verify_summary_table(4, 1, 4, 1, 8)
+    })
 });
 

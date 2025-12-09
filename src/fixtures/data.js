@@ -64,7 +64,7 @@ D.getNewCaseData = function (caseNumber, autoDispoOff = false) {
         offenseTypeIdlinkedToRequiredForm2: S.selectedEnvironment.offenseTypelinkedToRequiredForm2.id,
         offenseTypelinkedToRequiredForm2: S.selectedEnvironment.offenseTypelinkedToRequiredForm2.name,
         formData: [],
-        tagsForApi: [{tagModelId: -1, name: 'sensitive information', color: "#4b749b"}],
+        tagsForApi: [S.selectedEnvironment.orgTag1],
         tags: ['sensitive information'],
         tagsOnHistory: ['sensitive information'],
         reviewDateNotes: 'reviewNotes_' + caseNumber,
@@ -133,7 +133,7 @@ D.getEditedCaseData = function (caseNumber, autoDispoOff = false) {
         offenseType: S.selectedEnvironment.offenseType2.name,
         formData: [],
         tags: [S.selectedEnvironment.orgTag2.name],
-        tagsForApi: [{tagModelId: -1, name: S.selectedEnvironment.orgTag2.name, color: "#4b749b"}],
+        tagsForApi: [S.selectedEnvironment.orgTag2],
         tagsOnHistory: [S.selectedEnvironment.orgTag2.name],
         reviewDateNotes: 'reviewNotes_EDITED_' + caseNumber,
         checkInProgress: false,
@@ -214,7 +214,7 @@ D.getNewItemData = function (specificCaseObject, locationObject, newPerson) {
         cases: [],
         tags: ['sensitive information'],
         tagsOnHistory: ['sensitive information'],
-        tagsForApi: [{tagModelId: -1, name: 'sensitive information', color: "#4b749b"}],
+        tagsForApi: [S.selectedEnvironment.orgTag1],
         people: [person],
         make: 'make_' + randomNo,
         model: 'model_' + randomNo,
@@ -244,7 +244,11 @@ D.getNewItemData = function (specificCaseObject, locationObject, newPerson) {
         checkedOutTo_name: '',
         checkedOutNotes: '',
         expectedReturnDate: '',
-        dispositionStatus: 'Disposed'
+        customDataType: 'Optional fields - Cypress Item Form - Org #2',
+        dispositionStatus: 'Disposed',
+        subsetTypePercentage: 'Percentage',
+        subsetTypeNumber: 'Number',
+        percentageOrNumberOfItems: '1'
     });
 
     return D.newItem;
@@ -564,7 +568,7 @@ D.getNewUserData = function (officeId, organizationId) {
         division: 'Patrol',
         divisionId: S.selectedEnvironment.divisions.div1.id,
         unit: 'UnitA',
-        unitId: S.selectedEnvironment.units.div1_unit1.id,
+//        unitId: S.selectedEnvironment.units.div1_unit1.id,
         external: 'Internal',
         mfaEnabled: 'No',
         emailDisable: false,
@@ -661,6 +665,11 @@ D.getStorageLocation = function () {
     return newStorageLocation;
 };
 
+D.getTagsData = function (type) {
+    D.getNewTagsData(type)
+    D.getEditedTagsData(type)
+}
+
 D.getNewTaskTemplateData = function () {
 
     D.newTaskTemplate = {
@@ -674,6 +683,45 @@ D.getNewTaskTemplateData = function () {
     }
 
     return D.newTaskTemplate;
+};
+
+D.getNewTagsData = function (type = 'Org') {
+    let randomNo = helper.setNewRandomString(3,  'mmdd');
+    D.newTag = {
+        type: type,
+        name : `Auto_ ${type}_` + randomNo,
+        color: "#4b9",
+    }
+
+    D.newTagGroup = {
+        name: "_TagGroup_" + randomNo,
+        users: [S.userAccounts.orgAdmin],
+        userNames: [S.userAccounts.orgAdmin.name],
+        userGroups: [S.selectedEnvironment.admin_userGroup],
+        userGroupNames: [S.selectedEnvironment.admin_userGroup.name],
+        groupTag1: "Auto_GroupTag_" + randomNo,
+        groupTag2: "Auto_GroupTag_" + randomNo,
+        color: "#4b9",
+    }
+    return D.newTag;
+};
+
+D.getEditedTagsData = function (type = 'Org') {
+    let randomNo = helper.setNewRandomString(3,  'mmdd');
+    D.editedTag = {
+        type: type,
+        name : `AutoEdit_ ${type}_` + randomNo,
+        color: "#1069bd"
+    }
+
+    D.editedTagGroup = {
+        name: "Edited TagGroup_" + randomNo,
+        users: [S.userAccounts.powerUser],
+        userNames: [S.userAccounts.powerUser.name],
+        userGroups: [S.selectedEnvironment.readOnly_userGroup],
+        userGroupNames: [S.selectedEnvironment.readOnly_userGroup.name],
+    }
+    return D.editedTag;
 };
 
 D.getEditedTaskTemplateData = function (templateId, typeId, subtypeId, taskActionId) {
@@ -766,7 +814,7 @@ D.getCustomFormData = function () {
         custom_number: "10",
         custom_password: "Test123",
         custom_textarea: "custom Textarea",
-        custom_checkbox: true,
+        custom_checkbox: false,
         custom_checkboxListOption: 'Option 1',
         custom_checkboxListOption_apiFormat: {"1": true},
         custom_radiobuttonListOption: 'Option 2',
@@ -822,7 +870,7 @@ D.editedCustomFormData = {
     custom_number: "333",
     custom_password: "Test12345",
     custom_textarea: "edited custom Textarea",
-    custom_checkbox: false,
+    custom_checkbox: true,
     custom_checkboxListOption: 'Option 2',
     custom_checkboxListOption_apiFormat: {"2": true},
     custom_radiobuttonListOption: 'Option 3',
@@ -837,6 +885,7 @@ D.editedCustomFormData = {
     custom_date_withoutTime: helper.setDateAndTime(C.currentDateTimeFormat.dateOnly, 2028, 6, 3, 15, 25),
     custom_user_email: S.userAccounts.powerUser.email,
     custom_user_or_group_names: [S.userAccounts.powerUser.name],
+    custom_user_or_group_email: [S.userAccounts.powerUser.email],
     custom_userId: S.userAccounts.powerUser.id,
     custom_userGuid: S.userAccounts.powerUser.guid,
     custom_userEmail: S.userAccounts.powerUser.email,
@@ -898,6 +947,7 @@ D.removeValuesForDisabledItemFields = function (enabledFields) {
         'additionalBarcodes',
         'custodian',
         'itemBelongsToOnHistory',
+        'barcodes',
     ]
 
     dataObjects.forEach(itemObject => {
@@ -1063,6 +1113,7 @@ D.getDataForMultipleCases = function (numberOfCases, startingIndex = 1) {
 }
 
 D.currentDateAndRandomNumber = helper.mediumDate + '_' + helper.getRandomNo(3);
+
 
 
 module.exports = D;

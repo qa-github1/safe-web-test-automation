@@ -7,9 +7,11 @@ const E = require("../../fixtures/files/excel-data");
 const taskView = require("../../pages/ui-spec");
 
 let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
+let approvedForReleaseItem3 = {}
+let approvedForReleaseItem4 = {}
 describe('Dispo Auth', function () {
 
-    it('Add Dispo Task with 11 1DA items and assign to Org Admin, ' +
+    it.only('Add Dispo Task with 11 1DA items and assign to Org Admin, ' +
         '--set different actions for item using all variations' +
         '--using Actions menu and grid, ' +
         '--check statuses and notes upon submission', function () {
@@ -64,11 +66,20 @@ describe('Dispo Auth', function () {
         let address5 = Object.assign({}, D.getNewPersonAddressData())
 
         for (let i = 0; i < 13; i++) {
-            api.items.add_new_item(true, null, 'item' + i)
+          //  api.items.add_new_item(true, null, 'item' + i)
+
+            D['newitem_' + i] = Object.assign({}, D.newItem)
+            D['newitem_' + i].description = i + '__ ' + D.newItem.description
+            api.items.add_new_item(true, null, 'item' + i, D['newitem_' + i])
+
+            cy.getLocalStorage('item3').then(item => {
+                approvedForReleaseItem3 = JSON.parse(item)
+            })
+            cy.getLocalStorage('item4').then(item => {
+                approvedForReleaseItem4 = JSON.parse(item)
+            })
         }
         api.tasks.add_new_task(D.newTask, 12)
-
-        // ui.app.open_url_and_wait_all_GET_requests_to_finish('https://dev.trackerproducts.com/#/view-task/634899')
 
         ui.taskView
             .open_newly_created_task_via_direct_link()
@@ -99,7 +110,7 @@ describe('Dispo Auth', function () {
             .verify_text_is_present_on_main_container('Closed')
     });
 
-    it.only('Add Dispo Task with 100 items and assign to Power User, ' +
+    it('Add Dispo Task with 100 items and assign to Power User, ' +
         '--initiate and complete 2nd and 3rd tier approval' +
         '--use Approve and Reject buttons from grid and Actions menu' +
         '--with and without Dispo Auth Service' +
@@ -255,7 +266,23 @@ describe('Dispo Auth', function () {
                 .verify_text_is_present_on_main_container('Task was closed')
         })
     })
+
+    it('Release Letters', function () {
+
+        ui.app.log_title(this);
+        api.auth.get_tokens(orgAdmin);
+
+        ui.menu.click_Tools__Auto_Reports()
+        ui.app.set_visibility_of_table_column('Public Facing Description', true)
+            .sort_by_descending_order('Delivery Time')
+            .verify_text_is_present_and_check_X_more_times_after_waiting_for_Y_seconds(approvedForReleaseItem3.description, 10, 30, true)
+    });
 });
+
+
+
+
+
 
 // enable this block if you want to generate 3k Release letters
 xdescribe('Generating large number of release letters ', function () {

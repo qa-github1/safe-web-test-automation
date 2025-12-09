@@ -55,9 +55,8 @@ exports.add_new_item = function (toNewCase = true, locationObjectOrName = null, 
 exports.add_custom_form_data_to_existing_item = function (itemObject) {
     cy.getLocalStorage("newItem").then(newItem => {
         let itemData = Object.assign(JSON.parse(newItem), itemObject);
-        itemData.tags = itemObject.tagsForApi
+        if (itemObject.tagsForApi) itemData.tags = itemObject.tagsForApi
         itemData.barcodes = JSON.parse(newItem).barcodes
-
         generic_request.PUT(
             '/api/items/' + itemData.id,
             body.generate_PUT_request_payload_for_editing_existing_item(itemData, true),
@@ -66,6 +65,7 @@ exports.add_custom_form_data_to_existing_item = function (itemObject) {
     });
     return this;
 };
+
 
 exports.add_item_to_case = function (existingCaseId) {
     cy.getLocalStorage("newItem").then(newItem => {
@@ -122,7 +122,7 @@ exports.get_item_data = function (itemId) {
     });
 };
 
-exports.get_items_from_specific_case = function (caseNumber, numberOfPagesWith1000Items = 1, storeAllItemsToLocalStorage = false) {
+exports.get_items_from_specific_case = function (caseNumber, numberOfPagesWith1000Items = 1, storeAllItemsToLocalStorage = false, timeout = 60000) {
     let barcodes = []
 
     cy.getLocalStorage("newCase").then(caseData => {
@@ -142,13 +142,14 @@ exports.get_items_from_specific_case = function (caseNumber, numberOfPagesWith10
                         json: true,
                         body: {
                             "orderBy": "SequentialCaseId",
-                            "orderByAsc": true,
+                            "orderByAsc": false,
                             "thenOrderBy": "",
                             "thenOrderByAsc": false,
                             "pageSize": 1000,
                             "pageNumber": i
                         },
                         headers: JSON.parse(headers),
+                        timeout: timeout,
                     }).then(response => {
                         let caseItemsObjects = response.body.entities
 

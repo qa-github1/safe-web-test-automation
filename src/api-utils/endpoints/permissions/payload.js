@@ -1,7 +1,21 @@
 const S = require('../../../fixtures/settings');
 
-exports.generate_POST_request_payload_for_bulk_saving_VIEW_PERMISSIONS = function (group, shouldEnable) {
 
+exports.generate_PUT_request_payload_for_setting_specific_permission = function (group, permissionId, modelTypeId, accessType, shouldEnable) {
+
+    let body = {
+        "id": permissionId,
+        "entityId": S.selectedEnvironment.orgSettings.id,
+        "groupId": group.id,
+        "accessTypeId": accessType,
+        "modelTypeId": modelTypeId,
+        "grant": shouldEnable,
+    }
+
+    return body;
+};
+
+exports.generate_POST_request_payload_for_bulk_saving_VIEW_PERMISSIONS = function (group, shouldEnable, shouldEnableIfOwner = !shouldEnable) {
     let body = [
         // Cases --> modelTypeId = 4
         {
@@ -19,8 +33,7 @@ exports.generate_POST_request_payload_for_bulk_saving_VIEW_PERMISSIONS = functio
             "groupId": group.id,
             "accessTypeId": 9,  // view ifOwner
             "modelTypeId": 4,
-            "grant": !shouldEnable,
-
+            "grant": shouldEnableIfOwner,
         },
 
         // Items --> modelTypeId = 5
@@ -39,7 +52,7 @@ exports.generate_POST_request_payload_for_bulk_saving_VIEW_PERMISSIONS = functio
             "groupId": group.id,
             "accessTypeId": 9,
             "modelTypeId": 5,
-            "grant": !shouldEnable,
+            "grant": shouldEnableIfOwner,
         },
 
         // Media --> modelTypeId = 7
@@ -57,7 +70,7 @@ exports.generate_POST_request_payload_for_bulk_saving_VIEW_PERMISSIONS = functio
             "groupId": group.id,
             "accessTypeId": 9,
             "modelTypeId": 7,
-            "grant": !shouldEnable,
+            "grant": shouldEnableIfOwner,
         },
 
         // Share Media --> modelTypeId = 44
@@ -85,7 +98,7 @@ exports.generate_POST_request_payload_for_bulk_saving_VIEW_PERMISSIONS = functio
             "groupId": group.id,
             "accessTypeId": 9,
             "modelTypeId": 36,
-            "grant": !shouldEnable,
+            "grant": shouldEnableIfOwner,
         },
 
         // Notes --> modelTypeId = 27
@@ -103,7 +116,7 @@ exports.generate_POST_request_payload_for_bulk_saving_VIEW_PERMISSIONS = functio
             "groupId": group.id,
             "accessTypeId": 9,
             "modelTypeId": 27,
-            "grant": !shouldEnable
+            "grant": shouldEnableIfOwner
         },
 
         // People --> modelTypeId = 11
@@ -171,7 +184,7 @@ exports.generate_POST_request_payload_for_bulk_saving_VIEW_PERMISSIONS = functio
             "groupId": group.id,
             "accessTypeId": 9,
             "modelTypeId": 34,
-            "grant": !shouldEnable,
+            "grant": shouldEnableIfOwner,
         },
 
         // Random Audits --> modelTypeId = 45
@@ -189,7 +202,7 @@ exports.generate_POST_request_payload_for_bulk_saving_VIEW_PERMISSIONS = functio
             "groupId": group.id,
             "accessTypeId": 9,
             "modelTypeId": 45,
-            "grant": !shouldEnable,
+            "grant": shouldEnableIfOwner,
         },
 
         // Tags --> modelTypeId = 8
@@ -212,20 +225,6 @@ exports.generate_POST_request_payload_for_bulk_saving_VIEW_PERMISSIONS = functio
             "grant": shouldEnable,
         }
     ]
-    return body;
-};
-
-exports.generate_PUT_request_payload_for_setting_specific_permission = function (group, permissionId, modelTypeId, accessType, shouldEnable) {
-
-    let body = {
-        "id": permissionId,
-        "entityId": S.selectedEnvironment.orgSettings.id,
-        "groupId": group.id,
-        "accessTypeId": accessType,
-        "modelTypeId": modelTypeId,
-        "grant": shouldEnable,
-    }
-
     return body;
 };
 
@@ -460,7 +459,7 @@ exports.generate_POST_request_payload_for_bulk_saving_CREATE_PERMISSIONS = funct
     return body;
 };
 
-exports.generate_POST_request_payload_for_bulk_saving_UPDATE_PERMISSIONS = function (group, shouldEnable) {
+exports.generate_POST_request_payload_for_bulk_saving_UPDATE_PERMISSIONS = function (group, shouldEnable, shouldEnableIfOwner = !shouldEnable) {
 
     let body = [
         // Cases --> modelTypeId = 4
@@ -478,7 +477,7 @@ exports.generate_POST_request_payload_for_bulk_saving_UPDATE_PERMISSIONS = funct
             "groupId": group.id,
             "accessTypeId": 14,  // update ifOwner
             "modelTypeId": 4,
-            "grant": !shouldEnable,
+            "grant": shouldEnableIfOwner,
         },
 
         {
@@ -505,7 +504,7 @@ exports.generate_POST_request_payload_for_bulk_saving_UPDATE_PERMISSIONS = funct
             "groupId": group.id,
             "accessTypeId": 14,
             "modelTypeId": 5,
-            "grant": !shouldEnable,
+            "grant": shouldEnableIfOwner,
         },
 
         // Media --> modelTypeId = 7
@@ -523,7 +522,7 @@ exports.generate_POST_request_payload_for_bulk_saving_UPDATE_PERMISSIONS = funct
             "groupId": group.id,
             "accessTypeId": 14,
             "modelTypeId": 7,
-            "grant": !shouldEnable,
+            "grant": shouldEnableIfOwner,
         },
 
         // Share Media --> modelTypeId = 44
@@ -551,7 +550,7 @@ exports.generate_POST_request_payload_for_bulk_saving_UPDATE_PERMISSIONS = funct
             "groupId": group.id,
             "accessTypeId": 14,
             "modelTypeId": 27,
-            "grant": !shouldEnable
+            "grant": shouldEnableIfOwner
         },
 
         // People --> modelTypeId = 11
@@ -574,9 +573,19 @@ exports.generate_POST_request_payload_for_bulk_saving_UPDATE_PERMISSIONS = funct
             "grant": shouldEnable,
         },
 
-        // User Admin --> modelTypeId = 10
+        // Tasks
         {
             "id": group.startingIndexForUpdatePermissions + 12,
+            "entityId": S.selectedEnvironment.orgSettings.id,
+            "groupId": group.id,
+            "accessTypeId": 18,
+            "modelTypeId": 14,
+            "grant": false, // Task UpdateAllExceptDueDate
+        },
+
+        // User Admin --> modelTypeId = 10
+        {
+            "id": group.startingIndexForUpdatePermissions + 13,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
             "accessTypeId": 3,
@@ -586,7 +595,7 @@ exports.generate_POST_request_payload_for_bulk_saving_UPDATE_PERMISSIONS = funct
 
         // Storage Locations --> modelTypeId = 6
         {
-            "id": group.startingIndexForUpdatePermissions + 13,
+            "id": group.startingIndexForUpdatePermissions + 14,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
             "accessTypeId": 3,
@@ -596,7 +605,7 @@ exports.generate_POST_request_payload_for_bulk_saving_UPDATE_PERMISSIONS = funct
 
         // AutoDisposition --> modelTypeId = 32
         {
-            "id": group.startingIndexForUpdatePermissions + 14,
+            "id": group.startingIndexForUpdatePermissions + 15,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
             "accessTypeId": 3,
@@ -606,43 +615,43 @@ exports.generate_POST_request_payload_for_bulk_saving_UPDATE_PERMISSIONS = funct
 
         // Inventory Reports --> modelTypeId = 34
         {
-            "id": group.startingIndexForUpdatePermissions + 15,
+            "id": group.startingIndexForUpdatePermissions + 16,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
             "accessTypeId": 3,
             "modelTypeId": 34,
             "grant": shouldEnable,
         },
-        {
-            "id": group.startingIndexForUpdatePermissions + 16,
-            "entityId": S.selectedEnvironment.orgSettings.id,
-            "groupId": group.id,
-            "accessTypeId": 14,
-            "modelTypeId": 34,
-            "grant": !shouldEnable,
-        },
-
-        // Random Audits --> modelTypeId = 45
         {
             "id": group.startingIndexForUpdatePermissions + 17,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
+            "accessTypeId": 14,
+            "modelTypeId": 34,
+            "grant": shouldEnableIfOwner,
+        },
+
+        // Random Audits --> modelTypeId = 45
+        {
+            "id": group.startingIndexForUpdatePermissions + 18,
+            "entityId": S.selectedEnvironment.orgSettings.id,
+            "groupId": group.id,
             "accessTypeId": 3,
             "modelTypeId": 45,
             "grant": shouldEnable,
         },
         {
-            "id": group.startingIndexForUpdatePermissions + 18,
+            "id": group.startingIndexForUpdatePermissions + 19,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
             "accessTypeId": 14, // ifOwner
             "modelTypeId": 45,
-            "grant": !shouldEnable,
+            "grant": shouldEnableIfOwner,
         },
 
         // Tags --> modelTypeId = 8
         {
-            "id": group.startingIndexForUpdatePermissions + 19,
+            "id": group.startingIndexForUpdatePermissions + 20,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
             "accessTypeId": 5, // detach org tags
@@ -650,7 +659,7 @@ exports.generate_POST_request_payload_for_bulk_saving_UPDATE_PERMISSIONS = funct
             "grant": shouldEnable,
         },
         {
-            "id": group.startingIndexForUpdatePermissions + 20,
+            "id": group.startingIndexForUpdatePermissions + 21,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
             "accessTypeId": 4, // attach org tags
@@ -660,7 +669,7 @@ exports.generate_POST_request_payload_for_bulk_saving_UPDATE_PERMISSIONS = funct
 
         // Tag Groups--> modelTypeId = 43
         {
-            "id": group.startingIndexForUpdatePermissions + 21,
+            "id": group.startingIndexForUpdatePermissions + 22,
             "entityId": S.selectedEnvironment.orgSettings.id,
             "groupId": group.id,
             "accessTypeId": 3,
@@ -795,13 +804,14 @@ exports.generate_POST_request_payload_for_assigning_office_based_permissions = f
 };
 
 exports.generate_PUT_request_payload_for_assigning_user_to_User_Group = function (user, group) {
-    let body = {
+    const userIds = user ? [user.id] : [];
+
+    return {
         id: group.id,
         name: group.name,
-        description: 'for test automation',
-        userIds: [user.id]
-    }
-    return body;
+        description: "for test automation",
+        userIds: userIds
+    };
 };
 
 exports.generate_PUT_request_payload_for_assigning_multiple_users_to_User_Group = function (userIdsArray, group) {

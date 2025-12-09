@@ -32,6 +32,7 @@ import AutoDispoPage from "./auto-dispo-page";
 import InventoryReportsPage from "./inventory-reports-page";
 import UserSettingsPage from "./user-settings-page";
 import StorageLocationsPage from "./locations-page";
+import TagsPage from "./tags-page";
 
 const S = require('../fixtures/settings');
 const basePage = new BasePage();
@@ -64,6 +65,7 @@ const userAdmin = new UserAdminPage();
 const workflows = new WorkflowsPage();
 const autoDispo = new AutoDispoPage();
 const inventoryReports = new InventoryReportsPage();
+const tags = new TagsPage();
 
 module.exports = {
     open_base_url: e => cy.visit(S.base_url),
@@ -99,4 +101,5 @@ module.exports = {
     workflows: workflows,
     autoDispo: autoDispo,
     inventoryReports: inventoryReports,
+    tags: tags
 }

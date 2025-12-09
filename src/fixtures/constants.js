@@ -43,6 +43,21 @@ C = {
         closeXCases: X => `Close ${X} Cases`,
         viewXCases: X => `View ${X} Cases`,
     },
+    customFieldLabels: [
+        'Textbox',
+        'Email',
+        'Custom Number',
+        'Password',
+        'Textarea',
+        'Checkbox',
+        'Checkbox List',
+        'Radiobutton List',
+        'Select List',
+        'Dropdown Typeahead',
+        'User/User Group',
+        'Custom Person',
+        'Custom Date'
+    ],
     itemFields: {
         allFieldsOnHistory: [
             'Update Made By',
@@ -68,7 +83,33 @@ C = {
             'Custodian',
             'Public Facing Description',
             'Disposition Status',
+            'Letter Sent to Owner/ Claimant',
             'Tags'],
+        allFieldsOnItemView: [
+            'Org #',
+            'Item #',
+            'Case',
+            'Status',
+            'Recovered At',
+            'Recovery Date',
+            'Recovered By',
+            'Storage Location',
+            'Submitted By',
+            'Category',
+            'Custody Reason',
+            'Serial Number',
+            'Model',
+            'Barcode',
+            'Additional Barcodes',
+            'Make',
+            'Description',
+            'Item Belongs to',
+            'Custodian',
+            'Public Facing Description',
+            'Disposition Status',
+            'Tags',
+            'Disposition Status',
+            'Latest Transaction Notes'],
         allEditableFieldsArray: [
             'Recovered At',
             'Recovery Date',
@@ -82,10 +123,9 @@ C = {
             'Item Belongs to',
             'Tags',
             'Released To',
-          //  'Disposition Status'
         ],
         reducedEditableFieldsArray: ['Category'],
-        massUpdateModal : [
+        massUpdateModal: [
             'Description',
             'Recovered At',
             'Recovered By',
@@ -97,6 +137,18 @@ C = {
             'Model',
             'Item Belongs to',
             'Tags',
+        ],
+        massUpdateModalWhenAllTogglesAreOn: [
+            'Recovered At',
+            'Description',
+            'Recovery Date',
+            'Item Belongs to',
+            'Recovered By',
+            'Submitted By',
+            'Category',
+            'Custody Reason',
+            'Model',
+            'Make'
         ],
         orgNo: 'Org #',
         active: 'Active',
@@ -130,6 +182,8 @@ C = {
         submittedBy: 'Submitted By',
         expectedReturnDate: 'Expected Return Date',
         actualDisposedDate: 'Actual Disposed Date',
+        case: 'Case',
+        caseNumber: 'Case Number'
     },
     personFields: {
         allEditableFieldsArray: [
@@ -254,7 +308,7 @@ C = {
         cypressCaseForm_Date: "Optional fields - Cypress Case Form > Date",
     },
     itemCustomFields: {
-        cypressItemForm_Textbox: "Optional fields - Cypress Items Form > Textbox",
+        cypressItemForm_Textbox: "Optional fields - Cypress Items Form - Org#2 > Textbox",
         cypressItemForm_Email: "Cypress Item Form > Email",
         cypressItemForm_Number: "Cypress Item Form > Number",
         cypressItemForm_Password: "Cypress Item Form > Password",
@@ -284,16 +338,26 @@ C = {
             disposeItem: "Dispose Item",
             disposeItems: "Dispose Items",
             undisposeItem: "Undispose Item",
-            undisposeItems: "Undispose Items",
             duplicate: "Duplicate",
             split: "Split",
             addToCase: "Add To Case",
             removeFromCase: "Remove From Case",
             changePrimaryCase: "Change Primary Case",
             manageCases: "Manage Cases",
+            massUpdate: "Mass Update",
+            massUpdateCustomData: "Mass Update Custom Data"
+        },
+        itemActionsOnSearchResults: {
+            checkItemIn: "Check Items In",
+            massUpdate: "Mass Update",
+            massUpdateCF: "Mass Update Custom Data"
         },
         caseActions: {
             massUpdate: "Mass Update"
+        },
+        tagActions: {
+            deactivate: "Deactivate",
+            activate: "Activate"
         },
         userActions: {
             sendVerificationEmail: 'Send Verification Email',
@@ -327,6 +391,8 @@ C = {
         pastDue: 'Past Due',
         upcoming: 'Upcoming',
         all: 'All',
+        tagGroups: 'Tag Groups',
+        tags: 'Tags'
     },
     itemStatuses: {
         checkedIn: 'Checked In',
@@ -772,6 +838,14 @@ C = {
         noPermissionsToAddItemsToCase: `You do not have permissions to add Items to this Case`,
         caseLevelPermissionsForGroups: `Note - you will be applying case level permissions to all users (in all offices) for the following groups:`,
     },
+    filters: {
+        active: 'Active',
+        inactive: 'Inactive',
+        organization: 'Organization',
+        groups: 'Groups',
+        new: 'New',
+        users: 'Users',
+    }
 };
 
 C.labels = {
@@ -800,6 +874,9 @@ C.labels = {
     },
     tasksPage: {
         title: 'Tasks'
+    },
+    tagsPage: {
+        title: 'Tags'
     },
     userAdmin: {
         title: 'User Admin'
@@ -882,7 +959,7 @@ C.labels = {
                     'Row #2 has Error: Field CaseNumber. Case \'$\' not found.',
                     'Row #2 has Error: The note is neither Case nor Item'
                 ],
-                invalidValues: (invalidDate, invalidItem) =>[
+                invalidValues: (invalidDate, invalidItem) => [
                     'Row #2 has Error: Field UserGUID Email is empty.',
                     'Row #2 has Error: Field UserGUID. User not found. Value: \'\'',
                     'Row #2 has Error: Field OfficeGUID. Office not found',
@@ -942,6 +1019,7 @@ C.pages = {
         numberOfStandardColumnsReduced: 10,
     },
     itemSearch: {
+        url: 'items/search/',
         numberOfStandardColumns: 39,
         numberOfAllColumnsWithDispoStatusEnabled: 65,
         numberOfStandardColumnsReduced: 26,
@@ -993,12 +1071,14 @@ C.perissionMatrixEntity = {
 
 C.permissionMatrixAccessType = {
     viewAll: 1,
+    viewOrgTag: 1,
     viewIfOwner: 9,
     create: 4,
     updateAll: 3,
     updateIfOwner: 14,
     deleteIfOwner: 15,
     setDispoAction: 16,
+    taskUpdateAllExceptDueDate: 18,
     createOrgTag: 11,
     createGroupTag: 12,
     createPersonalTag: 13,

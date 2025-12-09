@@ -91,6 +91,7 @@ S.ALL_ENVS = {
             dispositionAuthorizationStatus: 44,
             latestTransactionNotes: 48,
             checkInNotes: 43,
+            checkInSignature: 50,
         },
         person: {
             businessName: 9,
@@ -1422,7 +1423,6 @@ S.DEV_3 = {...S.ALL_ENVS, ...S.DEV_3};
 
 S.DEV_4 = {...S.ALL_ENVS, ...S.DEV_4};
 
-
 S.QA_1 = {
     orgSettings: {
         id: 3,
@@ -1477,7 +1477,6 @@ S.QA_1 = {
             id: 1322,
             guid: 'bcc373aa-d790-ed11-833a-0254a7906fb1'
         },
-        // basic user should be corrected for QA1 (it was copied from Pentest just to fill missing reference
         basicUser: {
             id: 43530,
             guid: '2af70873-db6f-ed11-832d-021f02b7478f'
@@ -1513,18 +1512,6 @@ S.QA_1 = {
         taskFormWithRequiredFields: 2547,
         taskFormWithOptionalFields: 2548
     },
-    locations: [
-        {
-            id: 476096,
-            guid: '67d3a4e4-8c55-4ee4-ab66-e225b114dc35',
-            name: "CypressLocation1"
-        },
-        {
-            id: 510384,
-            guid: '7a706961-0771-42da-9d49-a72dffc9c3f2',
-            name: "CypressLocation2"
-        }
-    ],
     caseForReport: {
         id: null,
     },
@@ -1736,6 +1723,56 @@ S.QA_1 = {
             message: 'Message-forAutomatedTests'
         },
     },
+    orgTag1: {tagModelId: 6548, name: 'sensitive information', color: "#ad2355", tagUsedBy: 1},
+    orgTag2: {tagModelId: 6714, name: 'eligible for disposal', color: "#4b9b62", tagUsedBy: 1},
+    tagA: {tagModelId: 16806, name: 'Tag_A__', color: "#4b9b62", tagUsedBy: 1},
+    tagB: {tagModelId: 16807, name: 'Tag_B__', color: "#4b9b62", tagUsedBy: 1},
+    tagC: {tagModelId: 16812, name: 'Tag_C__', color: "#4b9b62", tagUsedBy: 1},
+    fieldIds: {
+        case: {
+            offenseLocation: 29,
+            offenseDescription: 30,
+            tags: 31,
+            offenseDate: 34,
+            linkedCases: 45
+        },
+        item: {
+            recoveredAt: 5,
+            custodyReason: 6,
+            recoveredBy: 7,
+            make: 8,
+            model: 9,
+            serialNumber: 10,
+            barcodes: 15,
+            tags: 11,
+            description: 12,
+            recoveryDate: 13,
+            itemBelongsTo: 14,
+            releasedTo: 35,
+            expectedReturnDate: 16,
+            actualDisposedDate: 17,
+            publicFacingDescription: 34,
+            dispositionAuthorizationStatus: 32,
+            latestTransactionNotes: 36,
+            checkInNotes: 31,
+            checkInSignature: 37
+        },
+        person: {
+            businessName: 9,
+            middleName: 10,
+            alias: 11,
+            dob: 12,
+            driverLicense: 13,
+            race: 14,
+            gender: 15,
+            mobilePhone: 16,
+            otherPhone: 17,
+            deceased: 18,
+            juvenile: 19,
+            email: 39,
+            address: 40,
+        },
+    }
 };
 
 S.QA_2 = {
@@ -2559,6 +2596,23 @@ S.PENTEST_2 = {
         taskFormWithRequiredFields: 2547,
         taskFormWithOptionalFields: 2548
     },
+    itemCustomForm: {
+        name: "Optional fields - Cypress Items Form - Org #2",
+        id: 24186,
+        checkboxListId: "field9694", //
+        radioButtonListId: "field9696", //
+        selectListId: "field9698", //
+        dropdownTypeahead: "field9700", //
+        number: "field9686", //
+        password: "field9688", //
+        textbox: "field9682", //
+        email: "field9684",  //
+        textarea: "field9690", //
+        checkbox: "field9692", //
+        date: "field9706", //
+        user: "field9702", //
+        person: "field9704", //
+    },
     locations: [
         {
             id: 477682,
@@ -2698,7 +2752,6 @@ S.PENTEST_2 = {
         name: 'Cypress ReadOnly Group',
         id: 2898
     },
-
     taskTemplates: {
         dispoAuth: {
             templateId: 3511,
@@ -2743,13 +2796,15 @@ S.PENTEST_2 = {
             taskActionId: '547',
         },
     },
-
     orgTag1: {tagModelId: 6751, name: 'sensitive information', color: "#ad2355", tagUsedBy: 1},
     orgTag2: {tagModelId: 6752, name: 'eligible for disposal', color: "#4b9b62", tagUsedBy: 1},
-    tagA: {tagModelId: 16809, name: 'Tag_A__', color: "#4b9b62", tagUsedBy: 1},
+    tagA: {tagModelId: 37980, name: 'Tag_A__', color: "#4b9b62", tagUsedBy: 1},
     tagB: {tagModelId: 16810, name: 'Tag_B__', color: "#4b9b62", tagUsedBy: 1},
     tagC: {tagModelId: 16811, name: 'Tag_C__', color: "#4b9b62", tagUsedBy: 1},
-
+    tagGroup: {
+        name: 'AutoTest_TagGroup1',
+        id: 278
+    }
 };
 
 S.PENTEST_3 = {
@@ -2807,10 +2862,10 @@ S.PENTEST_3 = {
             id: 43683,
             guid: '19330c4f-8c86-ed11-832d-021f02b7478f'
         },
-        // clpUser: {
-        //     id: 43529,
-        //     guid: '99aa4fce-da6f-ed11-832d-021f02b7478f'
-        // },
+        clpUser: {
+            id: null,
+            guid: null
+        },
         basicUser: {
             id: 43684,
             guid: '6729d18f-8e86-ed11-832d-021f02b7478f'
@@ -2831,17 +2886,29 @@ S.PENTEST_3 = {
         }
     },
     units: {
-        unit1: {
+        div1_unit1: {
             name: 'UnitA',
-            id: 88
+            id: null
         },
-        unit2: {
+        div1_unit2: {
             name: 'UnitB',
-            id: 83
+            id: null
         },
-        unit3: {
+        div1_unit3: {
             name: 'UnitC',
-            id: 89
+            id: null
+        },
+        div2_unit1: {
+            name: 'UnitA',
+            id: null
+        },
+        div2_unit2: {
+            name: 'UnitB',
+            id: null
+        },
+        div2_unit3: {
+            name: 'UnitC',
+            id: null
         }
     },
     forms: {
@@ -2849,6 +2916,23 @@ S.PENTEST_3 = {
         userFormWithOptionalFields: 24207,
         taskFormWithRequiredFields: 2547,
         taskFormWithOptionalFields: 2548
+    },
+    itemCustomForm: {
+        name: "Optional fields - Cypress ITEM Form - Org#3",
+        id: 24311,
+        checkboxListId: "field1844",
+        radioButtonListId: "field1846",
+        selectListId: "field1848",
+        dropdownTypeahead: "field1850",
+        number: "field1836",
+        password: "field1838",
+        textbox: "field1832",
+        email: "field1834",
+        textarea: "field1840",
+        checkbox: "field1842",
+        date: "field1856",
+        user: "field1852",
+        person: "field1854",
     },
     locations: [
         {
@@ -2873,15 +2957,15 @@ S.PENTEST_3 = {
     //     id: 105156,
     // },
     oldClosedCase: {
-        id: 7743123,
-        caseNumber: 'Closed Case-AutomatedTest',
+        id: 7743205,
+        caseNumber: 'AutomatedTest-Closed Case',
         createdDate: '12/28/2022',
-        offenseDate: '12/21/2022',
+        offenseDate: '12/20/2022',
         reviewDate: '12/30/2022',
-        closedDate: '12/28/2022',
+        closedDate: '09/10/2025',
     },
     oldActiveCase: {
-        id: 7743205,
+        id: 7743098,
         caseNumber: 'AutomatedTest-Active Case',
         createdDate: '12/28/2022',
         offenseDate: '12/20/2022',
@@ -2948,8 +3032,8 @@ S.PENTEST_3 = {
     },
     regularUser_permissionGroup: {
         name: 'Cypress - Regular User',
-        id: 4589,
-        startingIndexForViewPermissions: 82124,
+        id: 4619,
+        startingIndexForViewPermissions: 93678,
         get startingIndexForCreatePermissions() {
             return S.PENTEST_3.regularUser_permissionGroup.startingIndexForViewPermissions + 22
         },
@@ -2995,7 +3079,10 @@ S.PENTEST_3 = {
     tagA: {tagModelId: 16829, name: 'Tag_A__', color: "#4b9b62", tagUsedBy: 1},
     tagB: {tagModelId: 16830, name: 'Tag_B__', color: "#4b9b62", tagUsedBy: 1},
     tagC: {tagModelId: 16831, name: 'Tag_C__', color: "#4b9b62", tagUsedBy: 1},
-
+    tagGroup: {
+        name: 'AutoTest_TagGroup1',
+        id: 278
+    },
     taskTemplates: {
         dispoAuth: {
             templateId: 4308,
@@ -3040,292 +3127,308 @@ S.PENTEST_3 = {
             taskActionId: 548,
         },
     },
-},
+};
 
-    S.PENTEST_4 = {
-        newUser: {},
-        orgSettings: {
-            id: 557,
-            name: 'Web Test Automtion #4',
-            license: 'CH9byWyGCZWALMV9S5V4BVXKXGS/G6hqnPaCKAnFGeE=',
-            guid: 'f26bc8a3-4630-ed11-832b-021f02b7478f',
-            cals: 10
-        },
+S.PENTEST_4 = {
+    newUser: {},
+    orgSettings: {
+        id: 557,
+        name: 'Web Test Automtion #4',
+        license: 'CH9byWyGCZWALMV9S5V4BVXKXGS/G6hqnPaCKAnFGeE=',
+        guid: 'f26bc8a3-4630-ed11-832b-021f02b7478f',
+        cals: 10
+    },
+    office_1: {
+        id: 1119,
+        guid: 'f36bc8a3-4630-ed11-832b-021f02b7478f',
+        name: "Cypress Office 1",
+        orgAndOfficeName: "Web Test Automtion #4 - Cypress Office 1"
+    },
+    office_2: {
+        id: 1138,
+        name: "Cypress Office 2",
+        orgAndOfficeName: "Web Test Automtion #4 - Cypress Office 2"
+
+    },
+    org2: {
         office_1: {
-            id: 1119,
-            guid: 'f36bc8a3-4630-ed11-832b-021f02b7478f',
+            id: 1118,
+            guid: 'a9e131e6-3d36-eb11-aa49-062d5b58f56e',
             name: "Cypress Office 1",
-            orgAndOfficeName: "Web Test Automtion #4 - Cypress Office 1"
+            orgAndOfficeName: "Web Test Automtion #3 - Cypress Office 1"
         },
-        office_2: {
-            id: 1138,
-            name: "Cypress Office 2",
-            orgAndOfficeName: "Web Test Automtion #4 - Cypress Office 2"
-
+        id: 546,
+        orgName: "Web Test Automation",
+        officeId: 1054,
+        officeName: "Cypress Office 1",
+        orgAndOfficeName: "Web Test Automation - Cypress Office 1"
+    },
+    users: {
+        systemAdminId: 40357,
+        orgAdminId: 43720,
+        systemAdmin: {
+            id: 40357,
+            guid: '0cfa7c01-2f2e-ea11-aa3a-062d5b58f56e'
         },
-        org2: {
-            office_1: {
-                id: 1118,
-                guid: 'a9e131e6-3d36-eb11-aa49-062d5b58f56e',
-                name: "Cypress Office 1",
-                orgAndOfficeName: "Web Test Automtion #3 - Cypress Office 1"
-            },
-            id: 546,
-            orgName: "Web Test Automation",
-            officeId: 1054,
-            officeName: "Cypress Office 1",
-            orgAndOfficeName: "Web Test Automation - Cypress Office 1"
+        orgAdmin: {
+            id: 43720,
+            guid: '00e8a5a3-d98c-ed11-832e-021f02b7478f'
         },
-        users: {
-            systemAdminId: 40357,
-            orgAdminId: 43720,
-            systemAdmin: {
-                id: 40357,
-                guid: '0cfa7c01-2f2e-ea11-aa3a-062d5b58f56e'
-            },
-            orgAdmin: {
-                id: 43720,
-                guid: '00e8a5a3-d98c-ed11-832e-021f02b7478f'
-            },
-            // org2Admin: {
-            //     id: 40727,
-            //     guid: '10589878-e7bb-eb11-aa4f-062d5b58f56e',
-            //     organizationId: 546,
-            //     officeId: 1054
-            // },
-            powerUser: {
-                id: 43721,
-                guid: '19330c4f-8c86-ed11-832d-021f02b7478f'
-            },
-            basicUser: {
-                id: 43722,
-                guid: '9fbf2a88-de8c-ed11-832e-021f02b7478',
-            },
-            blockedUser: {
-                id: 97339,
-                guid: 'db569414-481c-f011-8371-021f02b7478f'
-            },
-        },
-        divisions: {
-            div1: {
-                name: 'Patrol',
-                id: 130
-            },
-            div2: {
-                name: 'Investigations',
-                id: 135
-            }
-        },
-        units: {
-            unit1: {
-                name: 'UnitA',
-                id: 90
-            },
-            unit2: {
-                name: 'UnitB',
-                id: 84
-            },
-            unit3: {
-                name: 'UnitC',
-                id: 91
-            }
-        },
-        forms: {
-            userFormWithRequiredFields: 24214,
-            userFormWithOptionalFields: 24215,
-            taskFormWithRequiredFields: 2547,
-            taskFormWithOptionalFields: 2548
-        },
-        locations: [
-            {
-                id: 487942,
-                guid: '92473db1-d9ce-4d43-8962-25b2d484a681',
-                name: "CypressLocation1"
-            },
-            {
-                id: 487943,
-                guid: '037a10c6-d69b-47b2-ba0f-df7236a740db',
-                name: "CypressLocation2"
-            }
-        ],
-        // // caseForReport: {
-        // //     id: 120799,
-        // // },
-        // // itemForReport: {
-        // //     id: 1726599,
-        // //     description: 'Item for Automated Tests - DON\'T CHANGE ANYTHING'
-        // // },
-        // // personForReport: {
-        // //     id: 105156,
-        // // },
-        oldClosedCase: {
-            id: 7744300,
-            caseNumber: 'AutomatedTest-Closed Case',
-            createdDate: '01/05/2023',
-            offenseDate: '12/21/2022',
-            reviewDate: '12/30/2022',
-            closedDate: '05/02/2023',
-        },
-        oldActiveCase: {
-            id: 7744372,
-            caseNumber: 'AutomatedTest-Active Case',
-            createdDate: '01/05/2023',
-            offenseDate: '12/20/2022',
-            reviewDate: '11/15/2025'
-        },
-        // recentCase: {
-        //     id: 7744372,
-        //     caseNumber: 'AutomatedTest-Active Case'
+        // org2Admin: {
+        //     id: 40727,
+        //     guid: '10589878-e7bb-eb11-aa4f-062d5b58f56e',
+        //     organizationId: 546,
+        //     officeId: 1054
         // },
-        //  existingItems_1kBarcodes: [],
-        person: {
-            name: 'Person_1',
-            fullName: 'Cypress Person_1',
-            id: 6608613,
-            get organizationId() {
-                return S.PENTEST_4.orgSettings.id
-            },
-            userId: null,
-            guid: '1cd84bfd-eee9-4001-8973-9baaac20f681',
-            email: 'qa+person_1@trackerproducts.com'
+        powerUser: {
+            id: 43721,
+            guid: '19330c4f-8c86-ed11-832d-021f02b7478f'
         },
-        person_2: {
-            name: 'Person_2',
-            fullName: 'Cypress Person_2',
-            id: 6609514,
-            get organizationId() {
-                return S.PENTEST_4.orgSettings.id
-            },
-            userId: null,
-            guid: 'dcad04c6-23a5-4c8d-81c6-f2ae59abc65d',
-            email: 'qa+person_2@trackerproducts.com'
+        basicUser: {
+            id: 43722,
+            guid: '9fbf2a88-de8c-ed11-832e-021f02b7478',
         },
-        get recoveredById() {
-            return S.PENTEST_4.person.id
+        blockedUser: {
+            id: 97339,
+            guid: 'db569414-481c-f011-8371-021f02b7478f'
         },
-        admin_permissionGroup: {
-            name: 'Cypress - ADMIN',
-            id: 4597,
-            startingIndexForViewPermissions: 92404,
-            get startingIndexForCreatePermissions() {
-                return S.PENTEST_4.admin_permissionGroup.startingIndexForViewPermissions + 22
-            },
-            get startingIndexForUpdatePermissions() {
-                return S.PENTEST_4.admin_permissionGroup.startingIndexForViewPermissions + 45
-            },
-            get startingIndexForDeletePermissions() {
-                return S.PENTEST_4.admin_permissionGroup.startingIndexForViewPermissions + 67
-            }
+        clpUser: {
+            id: null,
+            guid: null
         },
-        // blocked_permissionGroup: {
-        //     name: 'Cypress - Blocked',
-        //     id: 4450,
-        //     startingIndexForViewPermissions: 65992,
-        //     get startingIndexForCreatePermissions() {
-        //         return S.PENTEST_4.blocked_permissionGroup.startingIndexForViewPermissions + 22
-        //     },
-        //     get startingIndexForUpdatePermissions() {
-        //         return S.PENTEST_4.blocked_permissionGroup.startingIndexForViewPermissions + 45
-        //     },
-        //     get startingIndexForDeletePermissions() {
-        //         return S.PENTEST_4.blocked_permissionGroup.startingIndexForViewPermissions + 67
-        //     }
-        // },
-        regularUser_permissionGroup: {
-            name: 'Cypress - Regular User',
-            id: 4596,
-            startingIndexForViewPermissions: 92329,
-            get startingIndexForCreatePermissions() {
-                return S.PENTEST_4.regularUser_permissionGroup.startingIndexForViewPermissions + 22
-            },
-            get startingIndexForUpdatePermissions() {
-                return S.PENTEST_4.regularUser_permissionGroup.startingIndexForViewPermissions + 45
-            },
-            get startingIndexForDeletePermissions() {
-                return S.PENTEST_4.regularUser_permissionGroup.startingIndexForViewPermissions + 67
-            }
+    },
+    divisions: {
+        div1: {
+            name: 'Patrol',
+            id: 130
         },
+        div2: {
+            name: 'Investigations',
+            id: 135
+        }
+    },
+    units: {
+        div1_unit1: {
+            name: 'UnitA',
+            id: null
+        },
+        div1_unit2: {
+            name: 'UnitB',
+            id: null
+        },
+        div1_unit3: {
+            name: 'UnitC',
+            id: null
+        },
+        div2_unit1: {
+            name: 'UnitA',
+            id: null
+        },
+        div2_unit2: {
+            name: 'UnitB',
+            id: null
+        },
+        div2_unit3: {
+            name: 'UnitC',
+            id: null
+        }
+    },
+    forms: {
+        userFormWithRequiredFields: 24214,
+        userFormWithOptionalFields: 24215,
+        taskFormWithRequiredFields: 2547,
+        taskFormWithOptionalFields: 2548
+    },
+    locations: [
+        {
+            id: 487942,
+            guid: '92473db1-d9ce-4d43-8962-25b2d484a681',
+            name: "CypressLocation1"
+        },
+        {
+            id: 487943,
+            guid: '037a10c6-d69b-47b2-ba0f-df7236a740db',
+            name: "CypressLocation2"
+        }
+    ],
+    // // caseForReport: {
+    // //     id: 120799,
+    // // },
+    // // itemForReport: {
+    // //     id: 1726599,
+    // //     description: 'Item for Automated Tests - DON\'T CHANGE ANYTHING'
+    // // },
+    // // personForReport: {
+    // //     id: 105156,
+    // // },
+    oldClosedCase: {
+        id: 7744300,
+        caseNumber: 'AutomatedTest-Closed Case',
+        createdDate: '01/05/2023',
+        offenseDate: '12/21/2022',
+        reviewDate: '12/30/2022',
+        closedDate: '05/02/2023',
+    },
+    oldActiveCase: {
+        id: 7744372,
+        caseNumber: 'AutomatedTest-Active Case',
+        createdDate: '01/05/2023',
+        offenseDate: '12/20/2022',
+        reviewDate: '11/15/2025'
+    },
+    // recentCase: {
+    //     id: 7744372,
+    //     caseNumber: 'AutomatedTest-Active Case'
+    // },
+    //  existingItems_1kBarcodes: [],
+    person: {
+        name: 'Person_1',
+        fullName: 'Cypress Person_1',
+        id: 6608613,
+        get organizationId() {
+            return S.PENTEST_4.orgSettings.id
+        },
+        userId: null,
+        guid: '1cd84bfd-eee9-4001-8973-9baaac20f681',
+        email: 'qa+person_1@trackerproducts.com'
+    },
+    person_2: {
+        name: 'Person_2',
+        fullName: 'Cypress Person_2',
+        id: 6609514,
+        get organizationId() {
+            return S.PENTEST_4.orgSettings.id
+        },
+        userId: null,
+        guid: 'dcad04c6-23a5-4c8d-81c6-f2ae59abc65d',
+        email: 'qa+person_2@trackerproducts.com'
+    },
+    get recoveredById() {
+        return S.PENTEST_4.person.id
+    },
+    admin_permissionGroup: {
+        name: 'Cypress - ADMIN',
+        id: 4597,
+        startingIndexForViewPermissions: 92404,
+        get startingIndexForCreatePermissions() {
+            return S.PENTEST_4.admin_permissionGroup.startingIndexForViewPermissions + 22
+        },
+        get startingIndexForUpdatePermissions() {
+            return S.PENTEST_4.admin_permissionGroup.startingIndexForViewPermissions + 45
+        },
+        get startingIndexForDeletePermissions() {
+            return S.PENTEST_4.admin_permissionGroup.startingIndexForViewPermissions + 67
+        }
+    },
+    // blocked_permissionGroup: {
+    //     name: 'Cypress - Blocked',
+    //     id: 4450,
+    //     startingIndexForViewPermissions: 65992,
+    //     get startingIndexForCreatePermissions() {
+    //         return S.PENTEST_4.blocked_permissionGroup.startingIndexForViewPermissions + 22
+    //     },
+    //     get startingIndexForUpdatePermissions() {
+    //         return S.PENTEST_4.blocked_permissionGroup.startingIndexForViewPermissions + 45
+    //     },
+    //     get startingIndexForDeletePermissions() {
+    //         return S.PENTEST_4.blocked_permissionGroup.startingIndexForViewPermissions + 67
+    //     }
+    // },
+    regularUser_permissionGroup: {
+        name: 'Cypress - Regular User',
+        id: 4596,
+        startingIndexForViewPermissions: 92329,
+        get startingIndexForCreatePermissions() {
+            return S.PENTEST_4.regularUser_permissionGroup.startingIndexForViewPermissions + 22
+        },
+        get startingIndexForUpdatePermissions() {
+            return S.PENTEST_4.regularUser_permissionGroup.startingIndexForViewPermissions + 45
+        },
+        get startingIndexForDeletePermissions() {
+            return S.PENTEST_4.regularUser_permissionGroup.startingIndexForViewPermissions + 67
+        }
+    },
 
-        readOnly_permissionGroup: {
-            name: 'Cypress - ReadOnly',
-            id: 4478,
-            startingIndexForViewPermissions: 66718,
-            get startingIndexForCreatePermissions() {
-                return S.PENTEST_4.readOnly_permissionGroup.startingIndexForViewPermissions + 22
-            },
-            get startingIndexForUpdatePermissions() {
-                return S.PENTEST_4.readOnly_permissionGroup.startingIndexForViewPermissions + 45
-            },
-            get startingIndexForDeletePermissions() {
-                return S.PENTEST_4.readOnly_permissionGroup.startingIndexForViewPermissions + 67
-            }
+    readOnly_permissionGroup: {
+        name: 'Cypress - ReadOnly',
+        id: 4478,
+        startingIndexForViewPermissions: 66718,
+        get startingIndexForCreatePermissions() {
+            return S.PENTEST_4.readOnly_permissionGroup.startingIndexForViewPermissions + 22
         },
-        // // permissionGroup_noAutoDispo: {
-        // //     name: 'All permissions except AutoDispo',
-        // //     id: 4422
-        // // },
-        admin_userGroup: {
-            name: 'Cypress Admin Group',
-            id: 2912
+        get startingIndexForUpdatePermissions() {
+            return S.PENTEST_4.readOnly_permissionGroup.startingIndexForViewPermissions + 45
         },
-        blocked_userGroup: {
-            name: 'Cypress Blocked Group',
-            id: 2904
+        get startingIndexForDeletePermissions() {
+            return S.PENTEST_4.readOnly_permissionGroup.startingIndexForViewPermissions + 67
+        }
+    },
+    // // permissionGroup_noAutoDispo: {
+    // //     name: 'All permissions except AutoDispo',
+    // //     id: 4422
+    // // },
+    admin_userGroup: {
+        name: 'Cypress Admin Group',
+        id: 2912
+    },
+    blocked_userGroup: {
+        name: 'Cypress Blocked Group',
+        id: 2904
+    },
+    readOnly_userGroup: {
+        name: 'Cypress ReadOnly Group',
+        id: 3146
+    },
+    taskTemplates: {
+        dispoAuth: {
+            templateId: 4309,
+            typeId: 2256,
+            type: 'Disposition Authorization',
+            subtype: '',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 5,
+            useDispositionAuthorizationActions: true,
+            title: 'Disposition Authorization',
+            message: 'Message-forAutomatedTests'
         },
-        readOnly_userGroup: {
-            name: 'Cypress ReadOnly Group',
-            id: 3146
+        other: {
+            templateId: 3383,
+            typeId: 3390,
+            type: 'Other',
+            subtype: '',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 10,
+            useDispositionAuthorizationActions: true,
+            title: 'Title--forAutomatedTests',
+            message: 'Message-forAutomatedTests'
         },
-        taskTemplates: {
-            dispoAuth: {
-                templateId: 4309,
-                typeId: 2256,
-                type: 'Disposition Authorization',
-                subtype: '',
-                active: true,
-                emailUser: true,
-                taskEscalation: true,
-                dueDays: 5,
-                useDispositionAuthorizationActions: true,
-                title: 'Disposition Authorization',
-                message: 'Message-forAutomatedTests'
-            },
-            other: {
-                templateId: 3383,
-                typeId: 3390,
-                type: 'Other',
-                subtype: '',
-                active: true,
-                emailUser: true,
-                taskEscalation: true,
-                dueDays: 10,
-                useDispositionAuthorizationActions: true,
-                title: 'Title--forAutomatedTests',
-                message: 'Message-forAutomatedTests'
-            },
-            errorCorrection: {
-                templateId: 4992,
-                typeId: 1122,
-                type: 'Error Correction',
-                subtypeId: 559,
-                subtype: 'Packaging and Labeling',
-                active: true,
-                emailUser: true,
-                taskEscalation: true,
-                dueDays: 5,
-                useDispositionAuthorizationActions: false,
-                title: 'Title--forAutomatedTests',
-                message: 'Message-forAutomatedTests',
-                taskAction: 'Must be Rendered Safe',
-                taskActionId: 549,
-            },
+        errorCorrection: {
+            templateId: 4992,
+            typeId: 1122,
+            type: 'Error Correction',
+            subtypeId: 559,
+            subtype: 'Packaging and Labeling',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 5,
+            useDispositionAuthorizationActions: false,
+            title: 'Title--forAutomatedTests',
+            message: 'Message-forAutomatedTests',
+            taskAction: 'Must be Rendered Safe',
+            taskActionId: 549,
         },
-        orgTag1: {tagModelId: 16872, name: 'sensitive information', color: "#ad2355", tagUsedBy: 1},
-        orgTag2: {tagModelId: 16873, name: 'eligible for disposal', color: "#4b9b62", tagUsedBy: 1},
-        tagA: {tagModelId: 16874, name: 'Tag_A__', color: "#4b9b62", tagUsedBy: 1},
-        tagB: {tagModelId: 16875, name: 'Tag_B__', color: "#4b9b62", tagUsedBy: 1},
-        tagC: {tagModelId: 16876, name: 'Tag_C__', color: "#4b9b62", tagUsedBy: 1},
-    };
+    },
+    orgTag1: {tagModelId: 16872, name: 'sensitive information', color: "#ad2355", tagUsedBy: 1},
+    orgTag2: {tagModelId: 16873, name: 'eligible for disposal', color: "#4b9b62", tagUsedBy: 1},
+    tagA: {tagModelId: 16874, name: 'Tag_A__', color: "#4b9b62", tagUsedBy: 1},
+    tagB: {tagModelId: 16875, name: 'Tag_B__', color: "#4b9b62", tagUsedBy: 1},
+    tagC: {tagModelId: 16876, name: 'Tag_C__', color: "#4b9b62", tagUsedBy: 1},
+};
 
 S.PENTEST_1 = {...S.ALL_ENVS, ...S.PENTEST_1};
 
@@ -4606,25 +4709,25 @@ S.oldClosedCase = S.selectedEnvironment.oldClosedCase;
 S.recentCase = S.selectedEnvironment.recentCase;
 
 S.customForms = {
-    casesFormWithRequiredFields: 'Required fields - Cypress Cases Form - Org#' + S.orgNum,
-    caseFormWithOptionalFields: 'Optional fields - Cypress Case Form - Org#' + S.orgNum,
-    itemFormWithRequiredFields: 'Required fields - Cypress Items Form - Org#' + S.orgNum,
-    itemFormWithOptionalFields: 'Optional fields - Cypress Item Form - Org#' + S.orgNum,
-    userFormWithRequiredFields: 'Required fields - Cypress Users Form - Org#' + S.orgNum,
-    userFormWithOptionalFields: 'Optional fields - Cypress Users Form - Org#' + S.orgNum,
-    peopleFormWithRequiredFields: 'Required fields - Cypress People Form - Org#' + S.orgNum,
-    peopleFormWithOptionalFields: 'Optional fields - Cypress People Form - Org#' + S.orgNum,
+    casesFormWithRequiredFields: 'Required fields - Cypress CASE Form - Org#' + S.orgNum,
+    caseFormWithOptionalFields: 'Optional fields - Cypress CASE Form - Org#' + S.orgNum,
+    itemFormWithRequiredFields: 'Required fields - Cypress ITEM Form - Org#' + S.orgNum,
+    itemFormWithOptionalFields: 'Optional fields - Cypress ITEM Form - Org#' + S.orgNum,
+    userFormWithRequiredFields: 'Required fields - Cypress USER Form - Org#' + S.orgNum,
+    userFormWithOptionalFields: 'Optional fields - Cypress USER Form - Org#' + S.orgNum,
+    peopleFormWithRequiredFields: 'Required fields - Cypress PERSON Form - Org#' + S.orgNum,
+    peopleFormWithOptionalFields: 'Optional fields - Cypress PERSON Form - Org#' + S.orgNum,
     // tasksFormWithRequiredFields: 'Cypress Task Form -- required fields',
     // tasksFormWithOptionalFields: 'Cypress Task Form -- optional fields'
 }
 
 S.colors = {
-    redBorder: "rgb(231,24,45)"
+  redBorder: "rgb(231,24,45)"
 };
 
 S.gmailAccount = {
     email: 'qa@trackerproducts.com',
-    password: 'prya dorm gqbm ygrf'
+    password: 'ymvv duvc gbpv oyne'
 };
 
 S.userAccounts = accounts.getTestAccounts(S.selectedEnvironment, S.orgNum);

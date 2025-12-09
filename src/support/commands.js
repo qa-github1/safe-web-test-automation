@@ -58,7 +58,7 @@ Cypress.Commands.add('verifyTextAndRetry', (
                 name: 'verifyTextAndRetry',
                 message: passed
                     ? `[✅ Attempt ${attempt}] Found all expected values: [${expectedArray.join(', ')}]`
-                    : `[❌ Attempt ${attempt}] Missing: [${failedMatches.join(', ')}]`,
+                    : `[❌ Attempt ${attempt}] Missing: [${failedMatches.join(', ')}], TEXT FOUND: ${normalizedActual} `,
                 consoleProps: () => ({
                     attempt,
                     expected: expectedArray,
@@ -315,6 +315,44 @@ Cypress.Commands.overwrite('should', (originalFn, subject, expectation, ...args)
     }
     return originalFn(subject, expectation, ...args);
 });
+
+
+Cypress.Commands.add("signOnCanvas", (selector = 'canvas.pad.touchScreen') => {
+    cy.get(selector)
+        .scrollIntoView()
+        .should('be.visible')
+        .then($canvas => {
+            const { left, top, width, height } = $canvas[0].getBoundingClientRect();
+
+            const margin = 6;
+            const midY = top + height / 2;
+            const amp  = (height / 2) - margin;
+            const steps = 8;
+
+
+            let chain = cy.wrap($canvas)
+                .trigger('mousedown', {
+                    which: 1,
+                    clientX: left + margin,
+                    clientY: midY + amp,
+                    force: true
+                });
+
+            for (let i = 1; i <= steps; i++) {
+                const x = left + margin + (i * (width - 2 * margin) / steps);
+                const y = (i % 2 === 0) ? (midY + amp) : (midY - amp);  // dole/gore
+                chain = chain.trigger('mousemove', { which: 1, clientX: x, clientY: y, force: true });
+            }
+
+            chain.trigger('mouseup', { force: true });
+        });
+});
+
+
+
+
+
+
 
 const _ = Cypress._;
 const $ = Cypress.$;

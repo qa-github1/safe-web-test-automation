@@ -47,6 +47,8 @@ let
     tagsField = e => active_form().find('[tagging="addNew"]'),
     tagsInput = e => active_form().contains('Tags').parent('div').find('input'),
     itemStatus = e => cy.get('[ng-model="item.statusId"]'),
+    newPrimaryCaseField = e => cy.get('[name="primaryCaseId"]'),
+    removeOldPrimaryCaseFromItemsCheckbox = e => cy.get('.deepGutter > .icheckbox_square-blue > .iCheck-helper'),
     xButtons_onAdditionalBarcodes = text => active_form().find('[ng-click="removeBarcode($index)"]')
 
 export default class ItemViewPage extends BaseViewPage {
@@ -293,13 +295,13 @@ export default class ItemViewPage extends BaseViewPage {
         return this;
     }
 
-    verify_all_values_on_history(newItemObject, oldItemObject, customFormName = null, isNewlyAttachedForm = false) {
-        this.verify_all_values_on_history_in_specific_column(newItemObject, 'left', customFormName)
-        if (oldItemObject) this.verify_all_values_on_history_in_specific_column(oldItemObject, 'right', customFormName, isNewlyAttachedForm)
+    verify_all_values_on_history(newItemObject, oldItemObject, customFormName = null, isNewlyAttachedForm = false, newFormData, oldFormData) {
+        this.verify_all_values_on_history_in_specific_column(newItemObject, 'left', customFormName, isNewlyAttachedForm, newFormData, oldFormData)
+        if (oldItemObject) this.verify_all_values_on_history_in_specific_column(oldItemObject, 'right', customFormName, isNewlyAttachedForm, newFormData, oldFormData)
         return this;
     };
 
-    verify_all_values_on_history_in_specific_column(dataObject, leftOrRightColumn, customFormName, isNewlyAttachedForm) {
+    verify_all_values_on_history_in_specific_column(dataObject, leftOrRightColumn, customFormName, isNewlyAttachedForm, newFormData, oldFormData) {
 
         this.verify_all_values_on_history_for_standard_fields(leftOrRightColumn,
             [
@@ -334,8 +336,11 @@ export default class ItemViewPage extends BaseViewPage {
             if (isNewlyAttachedForm && leftOrRightColumn === 'right'){
              this.verify_custom_data_is_not_present_on_history(leftOrRightColumn, customFormName)
             }
-            else{
-                this.verify_custom_data_on_History(leftOrRightColumn, customFormName, dataObject)
+            else if (leftOrRightColumn === 'left') {
+                this.verify_custom_data_on_History(leftOrRightColumn, customFormName, newFormData)
+            }
+            else if (leftOrRightColumn === 'right') {
+                this.verify_custom_data_on_History(leftOrRightColumn, customFormName, oldFormData)
             }
         }
         return this;
@@ -370,6 +375,18 @@ export default class ItemViewPage extends BaseViewPage {
 
     verify_data_on_Chain_of_Custody(columnValuePairs) {
         this.verify_values_on_CoC(columnValuePairs, true)
+        return this;
+    }
+
+    change_primary_case(data, removeOldPrimaryCase = true) {
+        newPrimaryCaseField().type(data.caseNumber)
+            cy.wait(1000)
+                newPrimaryCaseField().type('{enter}');
+        return this;
+    }
+
+    click_remove_old_primary_case_checkbox(){
+        removeOldPrimaryCaseFromItemsCheckbox().click();
         return this;
     }
 
