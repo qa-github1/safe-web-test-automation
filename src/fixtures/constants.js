@@ -373,6 +373,15 @@ C = {
         wrongPassword_4th_attempt: 'You typed the password incorrectly 4 times.  You have 1 try until you will be locked out.',
         wrongPassword_5th_attempt: 'The user has had too many failed login attempts and has been locked out for a duration of 1 minute.',
     },
+    editStorageLocationFields: {
+        name: 'Name',
+        groups: 'Groups',
+        legacyBarcode: 'Legacy Barcode',
+        canStoreHere: ' Can Store Here',
+        active: 'Active',
+        container: 'Container',
+        moveStorageLocationTo: 'Move storage location to:'
+    },
     checkoutReasons: {
         lab: 'Lab',
         court: 'Court',
@@ -459,6 +468,10 @@ C = {
         daysCanOnlyBePositiveNumber: 'Days can only be Positive Number',
         locationChanged: 'Location Changed',
         emailsSent: numberOfEmails => `${numberOfEmails} emails sent`
+    },
+    modalMsgs: {
+        moveLocation: 'Moving a storage location will change the listed hierarchy for any use of this storage location (ever). Please make sure you understand the impact of this before you complete the move.',
+        deleteStorageLocation: 'Are you sure you want to delete selected storage location including all it\'s sublocations?'
     },
     importTypes: {
         cases: 'Cases',

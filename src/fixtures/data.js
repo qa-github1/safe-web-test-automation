@@ -4,7 +4,7 @@ const S = require('../fixtures/settings.js');
 const C = require('../fixtures/constants.js');
 const helper = require('../support/e2e-helper.js');
 const {randomNo, getRandomNo} = require("../support/e2e-helper");
-const {testRandomNo} = require("./data");
+const {testRandomNo, newStorageLocation} = require("./data");
 
 D.setNewRandomNo = function () {
     return helper.setNewRandomNo();
@@ -25,16 +25,16 @@ D.getCurrentDateAndRandomNumber = function (randomNumberLenght) {
 
 D.getStorageLocationData = function (locationName, parentId = 0, canStore = true, isActive = true) {
     D[locationName] = {
-            "name": D.currentDateAndRandomNumber + '_' + locationName,
-            "active": isActive,
-            "parentId": parentId,
-            "canStoreHere": canStore
-        }
+        "name": D.currentDateAndRandomNumber + '_' + locationName,
+        "active": isActive,
+        "parentId": parentId,
+        "canStoreHere": canStore
+    }
     return D[locationName]
 }
 
 D.getNewCaseData = function (caseNumber, autoDispoOff = false) {
-   // api.cases.get_most_recent_case();
+    // api.cases.get_most_recent_case();
     caseNumber = caseNumber || this.setNewRandomNo();
 
     D.newCase = Object.assign({}, D.newCustomFormData, {
@@ -102,7 +102,7 @@ D.getNewCaseData = function (caseNumber, autoDispoOff = false) {
 };
 
 D.getEditedCaseData = function (caseNumber, autoDispoOff = false) {
-   // api.cases.get_most_recent_case();
+    // api.cases.get_most_recent_case();
     caseNumber = caseNumber ? caseNumber + '_edited' : D.getRandomNo() + '_edited';
 
     D.editedCase = Object.assign({}, D.editedCustomFormData, {
@@ -333,8 +333,8 @@ D.getEditedItemData = function (specificCaseObject, locationObject, newPerson, r
     specificCaseObject = specificCaseObject || S.selectedEnvironment.oldClosedCase;
 
     //let randomNo = getRandomNo()
-     randomNo = randomNo ?? getRandomNo();
-        D.editedItem = Object.assign({}, D.editedCustomFormData, {
+    randomNo = randomNo ?? getRandomNo();
+    D.editedItem = Object.assign({}, D.editedCustomFormData, {
         updateMadeBy: S.userAccounts.orgAdmin.name,
         submittedById: S.userAccounts.orgAdmin.id,
         submittedByName: `${S.userAccounts.orgAdmin.firstName} ${S.userAccounts.orgAdmin.lastName}`,
@@ -538,14 +538,14 @@ D.getNewUserData = function (officeId, organizationId) {
 
     let randomNo = helper.setNewRandomString();
     officeId = officeId || S.selectedEnvironment.office_1.id;
-   // organizationId = organizationId || S.selectedEnvironment.organizationId;
+    // organizationId = organizationId || S.selectedEnvironment.organizationId;
 
     D.newUser = {
         firstName: 'F' + randomNo,
         //middleName: '',
         middleName: 'M' + randomNo,
         lastName: 'L' + randomNo,
-        firstLastName: 'F' + randomNo +' L' + randomNo,
+        firstLastName: 'F' + randomNo + ' L' + randomNo,
         fullName: 'F' + randomNo + ' ' + 'M' + randomNo + ' ' + 'L' + randomNo,
         personnelNumber: randomNo,
         email: 'qa+' + randomNo + '@trackerproducts.com',
@@ -554,7 +554,7 @@ D.getNewUserData = function (officeId, organizationId) {
         otherPhone: '+1 270-543-4444',
         office: S.selectedEnvironment.office_1.name,
         officeId: officeId,
-       // organizationId: organizationId,
+        // organizationId: organizationId,
         officeGuid: S.selectedEnvironment.office_1.guid,
         active: true,
         password: 'Test12345.',
@@ -562,7 +562,7 @@ D.getNewUserData = function (officeId, organizationId) {
         permissionGroups: [],
         userGroups: [],
         division: 'Patrol',
-        divisionId: S.selectedEnvironment.divisions.div1.id ,
+        divisionId: S.selectedEnvironment.divisions.div1.id,
         unit: 'UnitA',
         unitId: S.selectedEnvironment.units.div1_unit1.id,
         external: 'Internal',
@@ -633,6 +633,34 @@ D.getUserData = function (officeId) {
     D.getEditedUserData()
 }
 
+D.getStorageLocation = function () {
+    let randomNo = helper.setNewRandomString();
+
+    D.newStorageLocation = {
+        name: '0-New-L' + ' ' + randomNo,
+        items: 0,
+        isActive: true,
+        legacyBarcode: '',
+        parentLocationBarcode: '',
+        isContainer: false,
+        isStorage: true,
+        groups: '',
+    },
+
+        D.editedStorageLocation = {
+            name: '0-edited' + ' ' + randomNo,
+            items: 0,
+            isActive: false,
+            legacyBarcode: 'new barcode' + ' ' + randomNo,
+            parentLocationBarcode: '',
+            isContainer: true,
+            isStorage: false,
+            groups: 'Power User',
+            parentMoveLocation: '0 - automation - do not touch'
+        }
+    return newStorageLocation;
+};
+
 D.getNewTaskTemplateData = function () {
 
     D.newTaskTemplate = {
@@ -668,7 +696,7 @@ D.getEditedTaskTemplateData = function (templateId, typeId, subtypeId, taskActio
         dueDateDays: 5,
         isDispositionActionAllowed: false,
         isActionAllowedForType: true,
-        tasActionsProperties:[{
+        tasActionsProperties: [{
             id: taskActionId,
             name: S.selectedEnvironment.taskTemplates.errorCorrection.taskAction,
             organizationId: S.selectedEnvironment.orgSettings.id,
@@ -677,7 +705,8 @@ D.getEditedTaskTemplateData = function (templateId, typeId, subtypeId, taskActio
             restangularized: true,
             fromServer: true,
             parentResource: null,
-            restangularCollection: false}],
+            restangularCollection: false
+        }],
     }
 
     return D.editedTaskTemplate;
@@ -991,7 +1020,7 @@ D.getPersonDataWithReducedFields = function (specificCaseObject, arrayOfEnabledF
 D.generateNewDataSet = function (setNullForDisabledFields = false, autoDispoOff = false, forRequiredFieldsOnly = false) {
     D.setNewRandomNo();
     S.getCurrentDate();
-   // api.cases.get_most_recent_case();
+    // api.cases.get_most_recent_case();
     api.cases.get_old_case_data(S.selectedEnvironment.oldClosedCase.id);
 
     //  D.getCustomFormData()
@@ -1028,7 +1057,7 @@ D.getRandomNo();
 
 D.getDataForMultipleCases = function (numberOfCases, startingIndex = 1) {
 
-    for (let i = startingIndex; i < numberOfCases+startingIndex; i++) {
+    for (let i = startingIndex; i < numberOfCases + startingIndex; i++) {
         D['case' + i] = Object.assign({}, D.getNewCaseData());
     }
 }

@@ -362,6 +362,8 @@ export default class BasePage {
         return parentContainer().contains(regex)
     };
 
+
+
     search_history(value) {
         searchBar_history().clear().type(value).type('{enter}');
 
@@ -2995,6 +2997,8 @@ export default class BasePage {
         }
         return this
     }
+
+
 
 
     enter_values_to_all_fields_on_modal(labelsArray, valuesArray) {
