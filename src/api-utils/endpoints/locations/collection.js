@@ -54,18 +54,18 @@ exports.add_storage_location = function (locationObjectOrName, parentLocationNam
 
     if (isObject(locationObjectOrName)) {
         newLocation = Object.assign({}, locationObjectOrName)
-   } else {
-      newLocation = Object.assign({},
-           {
-          "name": locationObjectOrName,
-          "active": true,
-          "parentId": 0,
-          "canStoreHere": true
-      })
+    } else {
+        newLocation = Object.assign({},
+            {
+                "name": locationObjectOrName,
+                "active": true,
+                "parentId": 0,
+                "canStoreHere": true
+            })
     }
     return cy.getLocalStorage(parentLocationName).then(parentLoc => {
 
-        newLocation.parentId = parentLoc? JSON.parse(parentLoc).id : 0
+        newLocation.parentId = parentLoc ? JSON.parse(parentLoc).id : 0
         generic_request.POST(
             '/api/locations',
             [newLocation],
@@ -100,16 +100,16 @@ exports.update_location = function (locationName, propertyName, propertyValue) {
     let log;
     exports.get_locations_by_name(locationName);
     cy.getLocalStorage(locationName).then(specificLocation => {
-        let loc ={
+        let loc = {
             "id": JSON.parse(specificLocation).id,
             "name": JSON.parse(specificLocation).name,
             "active": JSON.parse(specificLocation).active,
-         //   "parentId": JSON.parse(specificLocation).parentId,
-         //   "parentLocationId": JSON.parse(specificLocation).parentId,
-            "canStoreHere": JSON.parse(specificLocation).canStore? JSON.parse(specificLocation).canStore: true
+            //   "parentId": JSON.parse(specificLocation).parentId,
+            //   "parentLocationId": JSON.parse(specificLocation).parentId,
+            "canStoreHere": JSON.parse(specificLocation).canStore ? JSON.parse(specificLocation).canStore : true
         }
 
-           // JSON.parse(specificLocation)
+        // JSON.parse(specificLocation)
         loc[propertyName] = propertyValue
         generic_request.PUT(
             '/api/locations/' + loc.id,
@@ -131,13 +131,12 @@ exports.move_location = function (locationName, newParentlocationName, locationN
                     log = `Moving location (${locationToMove.name}) via API to the new parent location (${JSON.parse(parentLoc).name})`
                 }
                 generic_request.PUT(
-                    '/api/locations/' +  locationToMove.id,
+                    '/api/locations/' + locationToMove.id,
                     locationToMove,
                     log
                 )
             })
-        }
-        else{
+        } else {
             cy.getLocalStorage('locations').then(locationsArray => {
                 JSON.parse(locationsArray).forEach(loc => {
                     if (newParentlocationName) {
@@ -174,18 +173,22 @@ exports.move_location = function (locationName, newParentlocationName, locationN
 //     });
 // };
 
-exports.get_and_save_any_location_data_to_local_storage = function (fullOrPartialLocationName, parentLocId) {
+exports.get_and_save_any_location_data_to_local_storage = function (fullOrPartialLocationName, parentLocId, parentLocObjectFromLocalStorage) {
 
-    exports.get_storage_locations(parentLocId);
-    cy.getLocalStorage('locations').then(locationsArray => {
-        JSON.parse(locationsArray).forEach(loc => {
+    cy.getLocalStorage(parentLocObjectFromLocalStorage).then(loc => {
+        if (loc) {
+            parentLocId = JSON.parse(loc).id
+        }
 
-            if (loc.name.includes(fullOrPartialLocationName)) {
-                S.selectedEnvironment[fullOrPartialLocationName] = loc
-                cy.setLocalStorage(fullOrPartialLocationName, JSON.stringify(loc))
-            }
+        exports.get_storage_locations(parentLocId);
+        cy.getLocalStorage('locations').then(locationsArray => {
+            JSON.parse(locationsArray).forEach(loc => {
+
+                if (loc.name.includes(fullOrPartialLocationName)) {
+                    S.selectedEnvironment[fullOrPartialLocationName] = loc
+                    cy.setLocalStorage(fullOrPartialLocationName, JSON.stringify(loc))
+                }
+            })
         })
     })
 };
-
-

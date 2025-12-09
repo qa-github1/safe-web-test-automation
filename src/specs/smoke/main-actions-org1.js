@@ -7,7 +7,6 @@ const ui = require('../../pages/ui-spec');
 
 let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
 let powerUser = S.getUserData(S.userAccounts.powerUser);
-let approvedForReleaseItem = {}
 
 before(function () {
     api.auth.get_tokens(orgAdmin);

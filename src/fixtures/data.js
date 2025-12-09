@@ -920,6 +920,7 @@ D.removeValuesForDisabledItemFields = function (enabledFields) {
         'additionalBarcodes',
         'custodian',
         'itemBelongsToOnHistory',
+        'barcodes',
     ]
 
     dataObjects.forEach(itemObject => {

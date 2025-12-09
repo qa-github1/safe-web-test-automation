@@ -4,12 +4,12 @@ const D = require('../../../fixtures/data');
 const S = require('../../../fixtures/settings');
 const api = require("../../api-spec");
 
-exports.add_new_case = function (caseNumber, caseObject) {
+exports.add_new_case = function (caseNumber, caseObject, stringToStoreInLocalStorage = 'newCase') {
     generic_request.POST(
         '/api/cases',
         body.generate_POST_request_payload_for_creating_new_case(caseNumber, caseObject),
         'Creating new case via API with ID_______',
-        'newCase',
+        stringToStoreInLocalStorage,
     );
 
     exports.get_most_recent_case();

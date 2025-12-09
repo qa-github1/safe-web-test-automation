@@ -9,7 +9,6 @@ const helper = require("../../support/e2e-helper");
 let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
 let powerUser = S.getUserData(S.userAccounts.powerUser);
 let admin_userGroup = S.selectedEnvironment.admin_userGroup;
-let approvedForReleaseItem = {}
 
 before(function () {
     api.auth.get_tokens(orgAdmin);

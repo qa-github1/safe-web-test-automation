@@ -5,13 +5,16 @@ const generic_request = require("../../api-utils/generic-api-requests");
 let requestPayloads = require('./request-payloads');
 let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
 let powerUser = S.getUserData(S.userAccounts.powerUser);
-let numberOfRequests = 20
+let numberOfRequests = 10
 
 describe('Services', function () {
 
     before(function () {
         api.auth.get_tokens_without_page_reload(orgAdmin);
-        D.generateNewDataSet();
+        D.getCaseDataWithReducedFields()
+        D.getItemDataWithReducedFields()
+        api.org_settings.disable_Case_fields()
+        api.org_settings.disable_Item_fields()
         api.cases.add_new_case()
         api.items.add_new_item()
 
@@ -86,7 +89,7 @@ describe('Services', function () {
 
     });
 
-    it('EXPORT Service', function () {
+    it.only('EXPORT Service', function () {
         api.auth.get_tokens(powerUser);
 
         function checkStatusOfJobs(secondsToWait = 15) {
@@ -100,26 +103,33 @@ describe('Services', function () {
                     JSON.parse(apiResponse).forEach(item => { // Only first 101 elements
                         if (item.status === 'Complete') {
                             cy.log(`✅ Export FINISHED SUCCESSFULLY`);
+                            cy.log(`***************** File link: *****************`);
+                            cy.log(`${item["s3FileLink"]}`);
+                            cy.log(`***********************************************`);
                         } else {
                             cy.log(`❌ Export NOT FINISHED YET, AFTER ${secondsToWait} seconds. Status is: ${item.status}`);
                         }
                     });
                 }
+
                 printStatuses(apiResponse);
             })
         }
 
-        cy.getLocalStorage('newCase').then(newCase => {
-            generic_request.POST(
-                '/api/exports/case-items/' + S.selectedEnvironment.oldActiveCase.id,
-                {"orderBy": "SequentialOrgId", "orderByAsc": false, "thenOrderBy": "", "thenOrderByAsc": false},
-                "EXPORT Service",
-            )
-        });
-
+        generic_request.POST(
+            '/api/exports/case-items/' + S.selectedEnvironment.oldActiveCase.id,
+            {"orderBy": "SequentialOrgId", "orderByAsc": false, "thenOrderBy": "", "thenOrderByAsc": false},
+            "EXPORT Service",
+        )
 
         for (let i = 0; i < numberOfRequests; i++) {
-            cy.getLocalStorage('newCase').then(newCase => {
+            D.getNewCaseData()
+            api.cases.add_new_case(null, null, 'newCase' + i)
+            cy.wait(3000)
+        }
+
+        for (let i = 0; i < numberOfRequests; i++) {
+            cy.getLocalStorage('newCase' + i).then(newCase => {
                 generic_request.POST(
                     '/api/exports/case-items/' + JSON.parse(newCase).id,
                     {"orderBy": "SequentialOrgId", "orderByAsc": false, "thenOrderBy": "", "thenOrderByAsc": false},
@@ -131,8 +141,8 @@ describe('Services', function () {
         checkStatusOfJobs()
     });
 
-    it.only('LOCATIONS MOVE Service', function () {
-        api.auth.get_tokens_without_page_reload(orgAdmin);
+    it('LOCATIONS MOVE Service', function () {
+        api.auth.get_tokens(orgAdmin);
 
         function checkStatusOfJobs(secondsToWait = 5) {
             cy.wait(secondsToWait * 1000)
@@ -150,26 +160,33 @@ describe('Services', function () {
                         }
                     });
                 }
+
                 printStatuses(apiResponse);
             })
         }
 
 
-        for (let i = 0; i < numberOfRequests; i++) {
-            cy.log ('adding location  and item' + i)
-            D['container' + i] = D.getStorageLocationData('cont' + i)
-            api.locations.add_storage_location(D['container' + i])
-            api.items.add_new_item(true, D['container' + i])
-        }
+        // create root level location with X number of items
+        // let numberOfBigLocs = 40
+        // let numberOfItemsInBigLocs = 1500
+        // for (let i = 1; i < numberOfBigLocs; i++) {
+        //     D['bigLoc' + i] = D.getStorageLocationData('bigLoc' + i)
+        //     api.locations.add_storage_location(D['bigLoc' + i])
+        //     api.locations.get_and_save_any_location_data_to_local_storage('Containers')
+        //     //  api.locations.get_and_save_any_location_data_to_local_storage( 'bigLoc' + i, null, 'Containers')
+        //     api.locations.get_and_save_any_location_data_to_local_storage('bigLoc' + i)
+        //     for (let j = 0; j < numberOfItemsInBigLocs; j++) {
+        //         api.items.add_new_item(true, 'bigLoc' + i)
+        //     }
+        // }
 
-        for (let i = 0; i < numberOfRequests; i++) {
-            cy.log ('Moving location  ' + i)
-            api.locations.get_and_save_any_location_data_to_local_storage('Containers')
-            api.locations.get_and_save_any_location_data_to_local_storage(D['container' + i].name)
-            api.locations.move_location(D['container' + i].name, 'Containers', true)
-        }
-
-        checkStatusOfJobs(5)
+        // numberOfRequests = 3
+        // for (let i = 1; i < (numberOfRequests+1); i++) {
+        //     cy.log ('Moving location  ' + i)
+        //     api.locations.get_and_save_any_location_data_to_local_storage('bigLoc' + i)
+        //     api.locations.get_and_save_any_location_data_to_local_storage('Containers')
+        //     api.locations.move_location('bigLoc' + i, 'Containers', true)
+        //     checkStatusOfJobs(10)
         // }
     });
 

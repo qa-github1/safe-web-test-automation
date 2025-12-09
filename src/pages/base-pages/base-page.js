@@ -2286,6 +2286,14 @@ let basePage = class BasePage {
         return this;
     };
 
+    click_Mass_Download() {
+        cy.document().then(doc => {
+            const el = doc.querySelector('[ng-click="isMassDownloadButtonDisabled() || massDownload()"]');   // raw DOM lookup
+            el.click();                                     // native click
+        });
+        return this;
+    };
+
     click_option_on_typeahead(option) {
         optionOnTypeahead(option).should('be.visible');
         optionOnTypeahead(option).click();
