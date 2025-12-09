@@ -434,6 +434,7 @@ D.getNewPersonData = function (caseObject) {
         active: true,
         deceased: true,
         juvenile: true,
+        addToCaseNote: 'note' + '' + randomValue,
         notes: [],
         addresses: [],
         formData: [],

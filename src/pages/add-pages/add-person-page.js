@@ -6,6 +6,7 @@ import BasePage from "../base-pages/base-page";
 let
     caseNumberInput_enabled = e => cy.get('[typeahead="l as l.text for l in getObject($viewValue) | limitTo: 10"]'),
     personType = e => cy.get('[name="personTypeId"]'),
+    personNote = e => cy.get('[name="personNotes"]'),
     race = e => cy.get('[ng-options="r.id as r.name for r in races"]'),
     gender = e => cy.get('[ng-options="g.id as g.name for g in genders"]'),
     businessName = e => cy.findByPlaceholderText(C.placeholders.addPerson.businessName),
@@ -99,6 +100,7 @@ export default class AddPersonPage extends BaseAddPage {
 
         if (enterCaseNumber) this.type_if_value_provided(caseNumberInput_enabled, personObject.caseNumber);
         if (enterCaseNumber && personObject.personType) personType().select(personObject.personType);
+        if (enterCaseNumber && personObject.personType) personNote().type(personObject.addToCaseNote);
 
         if (personObject.gender) gender().select(personObject.gender);
         if (personObject.race) race().select(personObject.race);
@@ -116,6 +118,7 @@ export default class AddPersonPage extends BaseAddPage {
         this.wait_response_from_API_call('addPerson', 200, 'newPerson')
         return this;
     };
+
 
 
 }

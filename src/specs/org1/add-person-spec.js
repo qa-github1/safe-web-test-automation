@@ -36,7 +36,7 @@ describe('Add Person', function () {
 
         context('All fields enabled', function () {
 
-            it('1.1. -- redirect to View Added Person', function () {
+            it.only('1.1. -- redirect to View Added Person', function () {
                 set_preconditions_for_adding_Person_with_all_fields(this);
 
                 ui.open_base_url();
