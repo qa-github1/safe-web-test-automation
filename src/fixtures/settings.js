@@ -2475,7 +2475,7 @@ S.PENTEST_1 = {
             message: 'Message-forAutomatedTests'
         },
         other: {
-            templateId: 3381,
+            templateId: 3605,
             type: 'Other',
             subtype: '',
             active: true,

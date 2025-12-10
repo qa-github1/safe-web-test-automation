@@ -8,13 +8,13 @@ let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
 let powerUser = S.getUserData(S.userAccounts.powerUser);
 let startTime;
 
-for (let i = 0; i < 1; i++) {
+for (let i = 0; i < 10; i++) {
 
     describe('Task/Case Reassignment', function () {
 
         before(function () {
             api.auth.get_tokens(orgAdmin);
-           api.org_settings.enable_all_Case_fields()
+            api.org_settings.enable_all_Case_fields()
             D.generateNewDataSet();
             startTime = Date.now();
         });
@@ -25,42 +25,42 @@ for (let i = 0; i < 1; i++) {
             cy.log(`⏱ Total time for suite: ${totalSeconds} seconds`);
         });
 
-        it('1. Reassign Active Cases/Tasks is OFF', function () {
-            
-            api.users.add_new_user()
+        // it('1. Reassign Active Cases/Tasks is OFF', function () {
+        //
+        //     api.users.add_new_user()
+        //
+        //     cy.getLocalStorage('newUser').then(user => {
+        //         const newUser = JSON.parse(user)
+        //         D.newTask.assignedUserIds = D.newCase.caseOfficerIds = [newUser.id]
+        //         api.cases.add_new_case();
+        //         api.tasks.add_new_task()
+        //
+        //         ui.menu.click_Settings__User_Admin()
+        //         ui.userAdmin.search_for_user(newUser.email)
+        //             .select_checkbox_on_first_table_row()
+        //             .click_Actions()
+        //             .click_option_on_expanded_menu('Deactivate Users')
+        //             .turn_off_reassign_tasks_and_cases_modal()
+        //             .click_Ok()
+        //             .verify_toast_message('Saved')
+        //             .pause(1)
+        //         ui.userAdmin.search_for_user(newUser.email)
+        //         ui.app.select_radiobutton(C.filters.inactive)
+        //             .verify_content_of_first_row_in_results_table(newUser.email)
+        //             .open_newly_created_case_via_direct_link()
+        //             .click_Edit()
+        //         D.newCase.caseOfficers = newUser.firstLastName
+        //         ui.caseView.verify_values_on_Edit_form(D.newCase)
+        //             .open_newly_created_task_via_direct_link()
+        //         ui.taskView.verify_content_on_assigned_to_field(newUser.name)
+        //
+        //     })
+        // });
 
-            cy.getLocalStorage('newUser').then(user => {
-                const newUser = JSON.parse(user)
-                D.newTask.assignedUserIds = D.newCase.caseOfficerIds = [newUser.id]
-                api.cases.add_new_case();
-                api.tasks.add_new_task()
+        it.only('2. Reassign Cases/Tasks to User(s) with "Keep deactivated user(s) shown" selected', function () {
 
-                ui.menu.click_Settings__User_Admin()
-                ui.userAdmin.search_for_user(newUser.email)
-                    .select_checkbox_on_first_table_row()
-                    .click_Actions()
-                    .click_option_on_expanded_menu('Deactivate Users')
-                    .turn_off_reassign_tasks_and_cases_modal()
-                    .click_Ok()
-                    .verify_toast_message('Saved')
-                .pause(1)
-                ui.userAdmin.search_for_user(newUser.email)
-                ui.app.select_radiobutton(C.filters.inactive)
-                    .verify_content_of_first_row_in_results_table(newUser.email)
-                    .open_newly_created_case_via_direct_link()
-                    .click_Edit()
-                D.newCase.caseOfficers = newUser.firstLastName
-                ui.caseView.verify_values_on_Edit_form(D.newCase)
-                    .open_newly_created_task_via_direct_link()
-                    ui.taskView.verify_content_on_assigned_to_field(newUser.name)
-
-            })
-        });
-
-        xit('1. Reassign Active Cases/Tasks is OFF', function () {
-
-           // api.auth.get_tokens(orgAdmin);
-           // D.generateNewDataSet();
+            // api.auth.get_tokens(orgAdmin);
+            // D.generateNewDataSet();
             api.users.add_new_user()
 
             cy.getLocalStorage('newUser').then(user => {
@@ -75,7 +75,8 @@ for (let i = 0; i < 1; i++) {
                     .click_Actions()
                     .click_option_on_expanded_menu('Deactivate Users')
                     .enter_values_on_reassign_modal([orgAdmin.fullName])
-                    .click_Ok()
+                cy.log(" 🟢🟢🟢 \"Keep deactivated user(s) shown\" selected 🟢🟢🟢 ")
+                ui.app.click_Ok()
                     .verify_toast_message('Processing...')
                     .verify_text_is_present_on_main_container('Reassign Tasks and Cases After Deactivating the User(s)')
                     .verify_content_of_first_row_in_results_table([newUser.email, 'Complete'])
@@ -83,6 +84,9 @@ for (let i = 0; i < 1; i++) {
                     .click_Edit()
                 D.newCase.caseOfficers = [D.newUser.firstLastName, orgAdmin.name]
                 ui.caseView.verify_values_on_Edit_form(D.newCase)
+                    .open_newly_created_task_via_direct_link()
+                ui.taskView.verify_content_on_assigned_to_field(newUser.name)
+                ui.taskView.verify_content_on_assigned_to_field(orgAdmin.name)
             })
         });
 
