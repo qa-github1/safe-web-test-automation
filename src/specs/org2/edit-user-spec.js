@@ -24,6 +24,7 @@ describe('Edit User', function () {
                 .edit_values(D.editedUser)
                 .scroll_and_click(C.buttons.ok)
                 .turn_off_reassign_tasks_and_cases_modal()
+                .click_button(C.buttons.ok)
                 .verify_toast_message(C.toastMsgs.saved)
                 .select_All_Users()
                 .search_for_user(D.editedUser.email)

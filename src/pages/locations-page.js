@@ -25,8 +25,7 @@ let
     storageLocationActiveToggleButton = e => cy.get('[ng-model="location.active"]'),
     storageLocationContainerToggleButton = e => cy.get('[ng-model="location.isContainer"]'),
     moveLocationToToggleButton = e => cy.get('[ng-model="toggle.moveLocationTo"]'),
-    moveLocationToDropdownOption = e => cy.get('[placeholder="type ‘/‘ or start typing a location name"]').eq(1),
-    activeInactiveRadiobuttons = e => cy.get('[class="form-group"]').eq(0)
+    moveLocationToDropdownOption = e => cy.get('[placeholder="type ‘/‘ or start typing a location name"]').eq(1)
 
 export default class StorageLocationsPage extends BasePage {
 
@@ -175,15 +174,6 @@ click_active_storage_location_toggle_button(){
         return this;
 }
 
-    select_radiobutton(labelText) {
-        activeInactiveRadiobuttons().should('exist').within(() => {
-            cy.contains('label span', new RegExp(`^\\s*${labelText}\\s*$`, 'i'))
-                .closest('label')
-                .find('input[type="radio"]')
-                .wait(300)
-                .check({force: true});
-        });
-        return this;
-    }
+
 
 }

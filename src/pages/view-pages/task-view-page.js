@@ -25,6 +25,7 @@ let
     addThisPersonAsClaimantButton = e => cy.get('[translate="DISPO.AUTH.ADD_THIS_PERSON_AS_CLAIMANT"]'),
     claimantFieldOnApproveForReleaseModal = e => cy.get('#claimantId'),
     okButtonOnModal = e => cy.get('[translate="GENERAL.BUTTON_OK"]'),
+    assignedToContainer = e => cy.get('[ng-model="selectedItems.items"]'),
     dispoAuthJobStatus = e => cy.get('[ng-if="job.status !== jobStatusEnum.error"]'),
     claimantInputFieldOnApproveForReleaseModal = e => cy.get('input[placeholder="Select person linked to the case or search for any other person"]'),
     specificClaimantOnTypeahead = personName => cy.get('[ng-repeat="person in $select.items"]').children().contains(personName).first(),
@@ -325,6 +326,12 @@ export default class TaskViewPage extends BaseViewPage {
         this.pause(1)
         return this;
     };
+
+    verify_content_on_assigned_to_field(expectedText){
+        assignedToContainer().should('be.visible')
+            .and('contain.text', expectedText);
+        return this;
+    }
 
 
 }

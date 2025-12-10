@@ -5,7 +5,6 @@ const api = require('../../api-utils/api-spec');
 const ui = require('../../pages/ui-spec');
 let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
 let powerUser = S.getUserData(S.userAccounts.powerUser);
-let person = S.getUserData(S.selectedEnvironment.person);
 let startTime;
 
 for (let i = 0; i < 1; i++) {
@@ -63,9 +62,9 @@ for (let i = 0; i < 1; i++) {
                 .click_active_storage_location_toggle_button()
                 .click_button('Save')
                 .verify_toast_message('Saved!')
-                .select_radiobutton('Inactive')
+                ui.app.select_radiobutton('Inactive')
                 .verify_text_is_present_on_main_container(D.editedStorageLocation.parentMoveLocation)
-                .select_radiobutton('All')
+                ui.app.select_radiobutton('All')
                 .reload_page()
 
             //TODO: here we can add scenario to see if power user group has access to this storage l

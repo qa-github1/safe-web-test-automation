@@ -64,7 +64,7 @@ export default class UserAdminPage extends BasePage {
         this.define_API_request_to_be_awaited('POST', '/api/users/search', 'searchUsers')
         this.enterValue(searchInput, email)
         this.wait_response_from_API_call('searchUsers')
-        this.pause(0.7)
+        this.pause(0.9)
         this.wait_until_spinner_disappears();
         return this;
     };
@@ -349,7 +349,6 @@ export default class UserAdminPage extends BasePage {
 
     turn_off_reassign_tasks_and_cases_modal(){
 reassign_active_tasks_and_cases_toggle_ON().click()
-        this.click_Ok()
         return this;
     }
 
