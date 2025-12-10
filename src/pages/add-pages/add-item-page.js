@@ -100,7 +100,7 @@ export default class AddItemPage extends BaseAddPage {
     get_next_item_id_for_case_and_Org(caseNumber) {
         cy.getLocalStorage("currentUserSettings").then(currentUserSettings => {
             if (!JSON.parse(currentUserSettings).isOrgAdmin) {
-                authApi.get_tokens_without_page_reload(S.userAccounts.orgAdmin)
+                authApi.get_tokens_without_page_load(S.userAccounts.orgAdmin)
             }
         })
         casesApi.quick_case_search(caseNumber);

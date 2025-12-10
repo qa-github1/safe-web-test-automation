@@ -93,7 +93,7 @@ exports.get_tokens = function (selectedUser, arrayOfPropertiesToRetain, specific
     return this;
 }
 
-exports.get_tokens_without_page_reload = function (selectedUser, arrayOfPropertiesToRetain) {
+exports.get_tokens_without_page_load = function (selectedUser, arrayOfPropertiesToRetain) {
 
     ui.app.define_API_request_to_be_awaited('GET', '', 'all_GET_Requests')
     ui.app.define_all_dashboard_GET_requests();

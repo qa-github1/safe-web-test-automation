@@ -209,7 +209,7 @@ for (let i = 0; i < 1; i++) {
 
             cy.log(" 🟢🟢🟢 3.3. MEMBER (user from Member User Group)- has permissions and access to location  🟢🟢🟢 ")
             //---As Admin, set Access To Group
-            api.auth.get_tokens_without_page_reload(admin);
+            api.auth.get_tokens_without_page_load(admin);
             api.permissions.assign_user_to_User_Group(regularUser, D.newTagGroup.userGroups[0])
 
             //---As Regular User, member of Tag Group through a User Group, check access to tag
@@ -252,7 +252,7 @@ for (let i = 0; i < 1; i++) {
 
             cy.log(" 🟢🟢🟢 3.6. MEMBER (user) - has permissions but NO access to location  🟢🟢🟢 ")
             //---As Admin, remove Access To Location for Regular User
-            api.auth.get_tokens_without_page_reload(admin);
+            api.auth.get_tokens_without_page_load(admin);
             api.locations.update_location(D.newItem.location, 'groups', [])
             api.items.add_new_item()
 
