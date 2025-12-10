@@ -167,16 +167,17 @@ describe('Services', function () {
 
 
         // create root level location with X number of items
-        let numberOfBigLocs = 29
-        let numberOfItemsInBigLocs = 150
-        for (let i = 23; i < numberOfBigLocs; i++) {
-            // D['bigLoc' + i] = D.getStorageLocationData('bigLoc' + i)
-            // api.locations.add_storage_location(D['bigLoc' + i])
-            // api.locations.get_and_save_any_location_data_to_local_storage('Containers')
-            //  api.locations.get_and_save_any_location_data_to_local_storage( 'bigLoc' + i, null, 'Containers')
-            api.locations.get_and_save_any_location_data_to_local_storage('Box' + i)
+        let numberOfBigLocs = 4
+        let numberOfItemsInBigLocs = 300
+        for (let i = 0; i < numberOfBigLocs; i++) {
+            D['bigLoc' + i] = D.getStorageLocationData('bigLoc' + i)
+            D['bigLoc' + i].name = 'bigLoc' + i
+            api.locations.add_storage_location(D['bigLoc' + i])
+          //  api.locations.get_and_save_any_location_data_to_local_storage('Containers')
+          //   api.locations.get_and_save_any_location_data_to_local_storage( 'bigLoc' + i, null, 'Containers')
+            api.locations.get_and_save_any_location_data_to_local_storage('bigLoc' + i)
             for (let j = 0; j < numberOfItemsInBigLocs; j++) {
-                api.items.add_new_item(true, 'Box' + i)
+                api.items.add_new_item(true, 'bigLoc' + i)
             }
         }
 
