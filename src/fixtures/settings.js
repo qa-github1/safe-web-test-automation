@@ -2319,6 +2319,23 @@ S.PENTEST_1 = {
         taskFormWithRequiredFields: 2547,
         taskFormWithOptionalFields: 2548
     },
+    itemCustomForm: {
+        name: "Optional fields - Cypress Item Form - Org #1",
+        id: 3424,
+        checkboxListId: "field4810",
+        radioButtonListId: "field4812",
+        selectListId: "field4814",
+        dropdownTypeahead: "field4816",
+        number: "field4802",
+        password: "field4804",
+        textbox: "field4798",
+        email: "field4800",
+        textarea: "field4806",
+        checkbox: "field4808",
+        date: "field4822",
+        user: "field4818",
+        person: "field4820",
+    },
     locations: [
         {
             id: 476096,
@@ -2597,21 +2614,21 @@ S.PENTEST_2 = {
         taskFormWithOptionalFields: 2548
     },
     itemCustomForm: {
-        name: "Optional fields - Cypress Items Form - Org #2",
+        name: "Optional fields - Cypress Item Form - Org #2",
         id: 24186,
-        checkboxListId: "field9694", //
-        radioButtonListId: "field9696", //
-        selectListId: "field9698", //
-        dropdownTypeahead: "field9700", //
-        number: "field9686", //
-        password: "field9688", //
-        textbox: "field9682", //
-        email: "field9684",  //
-        textarea: "field9690", //
-        checkbox: "field9692", //
-        date: "field9706", //
-        user: "field9702", //
-        person: "field9704", //
+        checkboxListId: "field9694",
+        radioButtonListId: "field9696",
+        selectListId: "field9698",
+        dropdownTypeahead: "field9700",
+        number: "field9686",
+        password: "field9688",
+        textbox: "field9682",
+        email: "field9684",
+        textarea: "field9690",
+        checkbox: "field9692",
+        date: "field9706",
+        user: "field9702",
+        person: "field9704",
     },
     locations: [
         {
@@ -3238,6 +3255,23 @@ S.PENTEST_4 = {
         userFormWithOptionalFields: 24215,
         taskFormWithRequiredFields: 2547,
         taskFormWithOptionalFields: 2548
+    },
+    itemCustomForm: {
+        name: "Optional fields - Cypress Item Form - Org#4",
+        id: 24211,
+        checkboxListId: "field7143",
+        radioButtonListId: "field7145",
+        selectListId: "field7147",
+        dropdownTypeahead: "field7149",
+        number: "field7135",
+        password: "field7137",
+        textbox: "field7131",
+        email: "field7133",
+        textarea: "field7139",
+        checkbox: "field7141",
+        date: "field7155",
+        user: "field7151",
+        person: "field7153",
     },
     locations: [
         {
