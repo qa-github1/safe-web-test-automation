@@ -63,7 +63,7 @@ for (let i = 0; i < 1; i++) {
                 .click_active_storage_location_toggle_button()
                 .click_button('Save')
                 .verify_toast_message('Saved!')
-                .select_radiobutton('Inactive')
+                .select_radiobutton(C.filters.inactive)
                 .verify_text_is_present_on_main_container(D.editedStorageLocation.parentMoveLocation)
                 .select_radiobutton('All')
                 .reload_page()
