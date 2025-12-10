@@ -660,7 +660,10 @@ D.getStorageLocation = function () {
             isContainer: true,
             isStorage: false,
             groups: 'Power User',
-            parentMoveLocation: '0 - automation - do not touch'
+            parentMoveLocation: '0 - automation - do not touch',
+            parentStorageLocation: '0 - P - don\'t touch',
+            newContainerName: 'New C' + ' ' + randomNo,
+            moveNote: "note" + ' ' + randomNo
         }
     return newStorageLocation;
 };
