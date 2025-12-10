@@ -197,12 +197,15 @@ describe('Services', function () {
             //   api.locations.get_and_save_any_location_data_to_local_storage('427_parentLoc')
 
 
-            api.locations.get_and_save_any_location_data_to_local_storage('bigLoc' + i)
+          //  api.locations.get_and_save_any_location_data_to_local_storage('bigLoc' + i)
             // api.locations.move_location('bigLoc' + i, '427_parentLoc', true)
             // }
 
             //---------moving items back to the root level
             // for (let i = 0; i < numberOfRequests; i++) {
+
+            api.locations.get_and_save_any_location_data_to_local_storage('521_parentLoc')
+            api.locations.get_and_save_any_location_data_to_local_storage( 'bigLoc' + i, null, '521_parentLoc')
 
             api.locations.move_location_to_root_level('bigLoc' + i)
         }
