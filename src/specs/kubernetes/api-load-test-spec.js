@@ -168,9 +168,9 @@ describe('Services', function () {
         // create root level location with X number of items
         let numberOfBigLocs = 4
         // let numberOfItemsInBigLocs = 300
-        // for (let i = 0; i < numberOfBigLocs; i++) {
-        //     D['bigLoc' + i] = D.getStorageLocationData('bigLoc' + i)
-        //     D['bigLoc' + i].name = 'bigLoc' + i
+        //    for (let i = 0; i < numberOfBigLocs; i++) {
+        //       D['bigLoc' + i] = D.getStorageLocationData('bigLoc' + i)
+        //       D['bigLoc' + i].name = 'bigLoc' + i
         //     api.locations.add_storage_location(D['bigLoc' + i])
         //   //  api.locations.get_and_save_any_location_data_to_local_storage('Containers')
         //   //   api.locations.get_and_save_any_location_data_to_local_storage( 'bigLoc' + i, null, 'Containers')
@@ -185,57 +185,59 @@ describe('Services', function () {
         // api.locations.add_storage_location(D['parentLoc'])
 
         numberOfRequests = numberOfBigLocs
-        /*  for (let i = 0; i < numberOfRequests; i++) {
-              cy.log('Moving location  ' + i)
+        for (let i = 0; i < numberOfRequests; i++) {
+            cy.log('Moving location  ' + i)
 
-             // -------- moving items to newly created parent location
-              api.locations.get_and_save_any_location_data_to_local_storage(D['parentLoc'].name)
-              api.locations.get_and_save_any_location_data_to_local_storage('bigLoc' + i)
-              api.locations.move_location('bigLoc' + i, D['parentLoc'].name, true)
+            // -------- moving items to newly created parent location
+            //     api.locations.get_and_save_any_location_data_to_local_storage(D['parentLoc'].name)
+            //    api.locations.move_location('bigLoc' + i, D['parentLoc'].name, true)
 
 
             //  -------- moving items to specific parent location
-              api.locations.get_and_save_any_location_data_to_local_storage('427_parentLoc')
-              api.locations.get_and_save_any_location_data_to_local_storage('bigLoc' + i)
-              api.locations.move_location('bigLoc' + i, '427_parentLoc', true)
-          }*/
-
-        //---------moving items back to the root level
-        /*  for (let i = 0; i < numberOfRequests; i++) {
-              api.locations.move_location_to_root_level('bigLoc' + i)
-          }*/
+            //   api.locations.get_and_save_any_location_data_to_local_storage('427_parentLoc')
 
 
-        for (let i = 0; i < numberOfRequests; i++) {
             api.locations.get_and_save_any_location_data_to_local_storage('bigLoc' + i)
-            api.items.get_items_stored_in_location('bigLoc' + i)
+            // api.locations.move_location('bigLoc' + i, '427_parentLoc', true)
+            // }
 
-            cy.getLocalStorage("itemIds").then(ids => {
-                // validate CoC for all items in the;location
-                // JSON.parse(ids).forEach(id => {
-                //     api.items.get_item_CoC(id)
-                //     cy.getLocalStorage("itemCoC").then(cocResponse => {
-                //         expect(JSON.parse(cocResponse)['coC'][0].notes).to.equal('bigLoc' + i + ' moved to root level')
-                //     })
-                // })
+            //---------moving items back to the root level
+            // for (let i = 0; i < numberOfRequests; i++) {
 
-
-                // validate CoC for first and last item in the array
-                api.items.get_item_CoC(JSON.parse(ids)[0])
-                cy.getLocalStorage("itemCoC").then(cocResponse => {
-                    expect(JSON.parse(cocResponse)['coC'][0].notes).to.equal('bigLoc' + i + ' moved to root level')
-                })
-                api.items.get_item_CoC(JSON.parse(ids)[299])
-                cy.getLocalStorage("itemCoC").then(cocResponse => {
-                    expect(JSON.parse(cocResponse)['coC'][0].notes).to.equal('bigLoc' + i + ' moved to root level')
-                })
-            })
+            api.locations.move_location_to_root_level('bigLoc' + i)
         }
+
+
+        /*  for (let i = 0; i < numberOfRequests; i++) {
+              api.locations.get_and_save_any_location_data_to_local_storage('bigLoc' + i)
+              api.items.get_items_stored_in_location('bigLoc' + i)
+
+              cy.getLocalStorage("itemIds").then(ids => {
+                  // validate CoC for all items in the;location
+                  // JSON.parse(ids).forEach(id => {
+                  //     api.items.get_item_CoC(id)
+                  //     cy.getLocalStorage("itemCoC").then(cocResponse => {
+                  //         expect(JSON.parse(cocResponse)['coC'][0].notes).to.equal('bigLoc' + i + ' moved to root level')
+                  //     })
+                  // })
+
+
+                  // validate CoC for first and last item in the array
+                  api.items.get_item_CoC(JSON.parse(ids)[0])
+                  cy.getLocalStorage("itemCoC").then(cocResponse => {
+                      expect(JSON.parse(cocResponse)['coC'][0].notes).to.equal('bigLoc' + i + ' moved to root level')
+                  })
+                  api.items.get_item_CoC(JSON.parse(ids)[299])
+                  cy.getLocalStorage("itemCoC").then(cocResponse => {
+                      expect(JSON.parse(cocResponse)['coC'][0].notes).to.equal('bigLoc' + i + ' moved to root level')
+                  })
+              })
+          }*/
 
 
         // checkStatusOfJobs(10)
     });
-
+    
     it('MASS UPDATE BY QUERY Service', function () {
         api.auth.get_tokens(orgAdmin);
 
