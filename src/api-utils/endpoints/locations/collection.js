@@ -155,6 +155,22 @@ exports.move_location = function (locationName, newParentlocationName, locationN
         }
     })
 };
+
+exports.move_location_to_root_level = function (locationName) {
+    exports.get_storage_locations();
+    cy.getLocalStorage(locationName).then(loc => {
+        let locationToMove = JSON.parse(loc)
+        locationToMove.parentId = 0;
+        let log = `Moving location (${locationToMove.name}) via API to the root level`
+        generic_request.PUT(
+            '/api/locations/' + locationToMove.id,
+            locationToMove,
+            log
+        )
+    })
+};
+
+
 //
 // exports.get_and_save_new_location_data_to_local_storage = function (locationName, parentLocName) {
 //    // const newLocation = { ...D.buildStorageLocationData(locationName)[0] };
