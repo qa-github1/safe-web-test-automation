@@ -2,8 +2,8 @@ const S = require('../../../fixtures/settings');
 const D = require('../../../fixtures/data');
 const generic_request = require('../../generic-api-requests');
 const cases = require('../cases/collection');
-const body = require('./payload');
 const ui = require("../../../pages/ui-spec");
+const api = require("../../api-spec");
 
 function isObject(variable) {
     return Object.prototype.toString.call(variable) === '[object Object]'
@@ -51,7 +51,6 @@ exports.add_new_item = function (toNewCase = true, locationObjectOrName = null, 
     return this;
 };
 
-
 exports.add_custom_form_data_to_existing_item = function (itemObject) {
     cy.getLocalStorage("newItem").then(newItem => {
         let itemData = Object.assign(JSON.parse(newItem), itemObject);
@@ -65,7 +64,6 @@ exports.add_custom_form_data_to_existing_item = function (itemObject) {
     });
     return this;
 };
-
 
 exports.add_item_to_case = function (existingCaseId) {
     cy.getLocalStorage("newItem").then(newItem => {
@@ -96,6 +94,36 @@ exports.edit_newly_added_item = function (withCustomFormData = true, randomNo) {
     });
     return this;
 };
+
+exports.get_items_stored_in_location = function (locationName) {
+    cy.getLocalStorage("headers").then(headers => {
+        cy.getLocalStorage(locationName).then(loc => {
+            cy.request({
+                url: S.api_url + '/api/items/getByLocationBarcode?barcode=' + JSON.parse(loc).barcode,
+                method: "GET",
+                json: true,
+                headers: JSON.parse(headers),
+            })
+        });
+    }).then(response => {
+        let itemIds = []
+        response.body.items.forEach(item => {
+            itemIds.push(item.id);
+        })
+        cy.setLocalStorage("itemIds", JSON.stringify(itemIds))
+    })
+}
+
+exports.get_item_CoC = function (itemId) {
+
+    cy.getLocalStorage("newItem").then(newItem => {
+        let id = itemId || JSON.parse(newItem).id
+        generic_request.GET(
+            '/api/items/' + itemId + '/coc',
+            "Fetching the Item CoC Data via API",
+            'itemCoC');
+    });
+}
 
 exports.get_item_history = function (item) {
     cy.getLocalStorage("headers").then(headers => {

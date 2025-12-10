@@ -117,7 +117,7 @@ exports.get_tokens_without_page_load = function (selectedUser, arrayOfProperties
             }
         })
         .then(() => {
-                ui.app.wait_all_dashboard_GET_requests();
+             //   ui.app.wait_all_dashboard_GET_requests();
                 cy.getLocalStorage("token").should("not.equal", null).then(() => {
                     cy.saveLocalStorage().then(() => {
 
