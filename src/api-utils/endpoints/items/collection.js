@@ -115,14 +115,10 @@ exports.get_items_stored_in_location = function (locationName) {
 }
 
 exports.get_item_CoC = function (itemId) {
-
-    cy.getLocalStorage("newItem").then(newItem => {
-        let id = itemId || JSON.parse(newItem).id
-        generic_request.GET(
-            '/api/items/' + itemId + '/coc',
-            "Fetching the Item CoC Data via API",
-            'itemCoC');
-    });
+    generic_request.GET(
+        '/api/items/' + itemId + '/coc',
+        "Fetching the Item CoC Data via API",
+        'itemCoC');
 }
 
 exports.get_item_history = function (item) {

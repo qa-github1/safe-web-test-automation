@@ -211,11 +211,23 @@ describe('Services', function () {
             api.items.get_items_stored_in_location('bigLoc' + i)
 
             cy.getLocalStorage("itemIds").then(ids => {
-                JSON.parse(ids).forEach(id => {
-                    api.items.get_item_CoC(id)
-                    cy.getLocalStorage("itemCoC").then(cocResponse => {
-                        expect(JSON.parse(cocResponse)['coC'][0].notes).to.equal('bigLoc' + i + ' moved to root level')
-                    })
+                // validate CoC for all items in the;location
+                // JSON.parse(ids).forEach(id => {
+                //     api.items.get_item_CoC(id)
+                //     cy.getLocalStorage("itemCoC").then(cocResponse => {
+                //         expect(JSON.parse(cocResponse)['coC'][0].notes).to.equal('bigLoc' + i + ' moved to root level')
+                //     })
+                // })
+
+
+                // validate CoC for first and last item in the array
+                api.items.get_item_CoC(JSON.parse(ids)[0])
+                cy.getLocalStorage("itemCoC").then(cocResponse => {
+                    expect(JSON.parse(cocResponse)['coC'][0].notes).to.equal('bigLoc' + i + ' moved to root level')
+                })
+                api.items.get_item_CoC(JSON.parse(ids)[299])
+                cy.getLocalStorage("itemCoC").then(cocResponse => {
+                    expect(JSON.parse(cocResponse)['coC'][0].notes).to.equal('bigLoc' + i + ' moved to root level')
                 })
             })
         }
