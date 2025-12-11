@@ -3,10 +3,10 @@ const D = require('../../fixtures/data');
 const api = require('../../api-utils/api-spec');
 const generic_request = require("../../api-utils/generic-api-requests");
 let requestPayloads = require('./request-payloads');
-let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
-let powerUser = S.getUserData(S.userAccounts.powerUser);
 let office1 = S.selectedEnvironment.office_1
 let office2 = S.selectedEnvironment.office_2
+let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
+let powerUser = S.getUserData(S.userAccounts.powerUser);
 let numberOfRequests = 10
 
 describe('Services', function () {
@@ -210,11 +210,11 @@ describe('Services', function () {
             // api.locations.move_location_with_request_from_scan_page('bigLoc-edited' + i, '268_parentLoc', office1, orgAdmin)
 
             //  -------- moving locations to specific parent location in another office---> with Locations Move endpoint - POST request
-            api.locations.get_and_save_any_location_data_to_local_storage('268_parentLoc')
-            api.locations.get_and_save_any_location_data_to_local_storage('057_parentLoc')
-            api.locations.get_and_save_any_location_data_to_local_storage('bigLoc-edited' + i, null, '268_parentLoc')
-            //  api.locations.get_and_save_any_location_data_to_local_storage('bigLoc' + i)
-            api.locations.move_location_with_request_from_scan_page('bigLoc-edited' + i, 542708, office2, orgAdmin)
+            // api.locations.get_and_save_any_location_data_to_local_storage('268_parentLoc')
+            // api.locations.get_and_save_any_location_data_to_local_storage('057_parentLoc')
+            // api.locations.get_and_save_any_location_data_to_local_storage('bigLoc-edited' + i, null, '268_parentLoc')
+            // //  api.locations.get_and_save_any_location_data_to_local_storage('bigLoc' + i)
+            // api.locations.move_location_with_request_from_scan_page('bigLoc-edited' + i, 542708, office2, orgAdmin)
 
         }
 
@@ -227,36 +227,66 @@ describe('Services', function () {
 
 
         // ************ Validate Items CoC ************
-        /*   for (let i = 0; i < numberOfRequests; i++) {
-               api.locations.get_and_save_any_location_data_to_local_storage('268_parentLoc')
-               api.locations.get_and_save_any_location_data_to_local_storage( 'bigLoc' + i, null, '268_parentLoc')
-             //  api.locations.get_and_save_any_location_data_to_local_storage('bigLoc' + i)
-               api.items.get_items_stored_in_location('bigLoc' + i)
 
-               cy.getLocalStorage("itemIds").then(ids => {
-                   // validate CoC for all items in the location
-                   // JSON.parse(ids).forEach(id => {
-                   //     api.items.get_item_CoC(id)
-                   //     cy.getLocalStorage("itemCoC").then(cocResponse => {
-                   //         expect(JSON.parse(cocResponse)['coC'][0].notes).to.equal('bigLoc' + i + ' moved to root level')
-                   //     })
-                   // })
+        function fetch_item_last_CoC_record_and_validate_note_about_location_move(itemId, currentLocName, newParentLocName) {
+            api.items.get_item_CoC(itemId)
+            cy.getLocalStorage("itemCoC").then(cocResponse => {
+                if (newParentLocName){
+                    expect(JSON.parse(cocResponse)['coC'][0].notes).to.equal(currentLocName + ' moved to ' + newParentLocName)
+                }
+                else{
+                    expect(JSON.parse(cocResponse)['coC'][0].notes).to.equal(currentLocName + ' moved to root level')
+                }
+            })
+        }
 
+        function validate_CoC_of_all_items_in_specific_location(currentLocName, currentParentLocName) {
+            if (currentParentLocName) {
+                api.locations.get_and_save_any_location_data_to_local_storage(currentParentLocName)
+                api.locations.get_and_save_any_location_data_to_local_storage(currentLocName, null, currentParentLocName)
+            } else {
+                api.locations.get_and_save_any_location_data_to_local_storage(currentLocName)
+            }
+            api.items.get_items_stored_in_location(currentLocName)
 
-                   // validate CoC for first and last item in the array
-                   api.items.get_item_CoC(JSON.parse(ids)[299])
-                   cy.getLocalStorage("itemCoC").then(cocResponse => {
-                    //   expect(JSON.parse(cocResponse)['coC'][0].notes).to.equal('bigLoc' + i + ' moved to root level')
-                       expect(JSON.parse(cocResponse)['coC'][0].notes).to.equal('bigLoc' + i + ' moved to Dec 10, 2025_268_parentLoc')
-                   })
+            cy.getLocalStorage("itemIds").then(ids => {
+                JSON.parse(ids).forEach(id => {
+                    fetch_item_last_CoC_record_and_validate_note_about_location_move(id, currentLocName, currentParentLocName)
+                })
+            })
+        }
 
-                   api.items.get_item_CoC(JSON.parse(ids)[0])
-                   cy.getLocalStorage("itemCoC").then(cocResponse => {
-                    //   expect(JSON.parse(cocResponse)['coC'][0].notes).to.equal('bigLoc' + i + ' moved to root level')
-                       expect(JSON.parse(cocResponse)['coC'][0].notes).to.equal('bigLoc' + i + ' moved to Dec 10, 2025_268_parentLoc')
-                   })
-               })
-           }*/
+        function validate_CoC_of_few_items_in_specific_location(currentLocName, currentParentLocName) {
+            if (currentParentLocName) {
+                api.locations.get_and_save_any_location_data_to_local_storage(currentParentLocName)
+                api.locations.get_and_save_any_location_data_to_local_storage(currentLocName, null, currentParentLocName)
+            } else {
+                api.locations.get_and_save_any_location_data_to_local_storage(currentLocName)
+            }
+            api.items.get_items_stored_in_location(currentLocName)
+
+            cy.getLocalStorage("itemIds").then(ids => {
+                fetch_item_last_CoC_record_and_validate_note_about_location_move(JSON.parse(ids)[0], currentLocName, currentParentLocName)
+
+                fetch_item_last_CoC_record_and_validate_note_about_location_move(JSON.parse(ids)[299], currentLocName, currentParentLocName)
+            })
+        }
+
+        cy.getLocalStorage('headers').then(headers => {
+            let updatedHeaders = JSON.parse(headers);
+            updatedHeaders.officeid = office2.id // need this line only when location is already in office 2
+            cy.setLocalStorage('headers', JSON.stringify(updatedHeaders))
+
+            for (let i = 0; i < numberOfRequests; i++) {
+
+                let currentLocName = 'bigLoc-edited' + i
+                let currentParentLocName = 'Containers'
+                    // currentParentLocNameOrId = null // if location is at root level
+
+               // validate_CoC_of_all_items_in_specific_location(currentLocName, currentParentLocName)
+                validate_CoC_of_few_items_in_specific_location(currentLocName, currentParentLocName)
+            }
+        })
 
 
         /*  for (let i = 0; i < numberOfRequests; i++) {

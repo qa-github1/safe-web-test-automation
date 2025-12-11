@@ -99,6 +99,7 @@ exports.edit_newly_added_item = function (withCustomFormData = true, randomNo) {
 exports.get_items_stored_in_location = function (locationName) {
     cy.getLocalStorage("headers").then(headers => {
         cy.getLocalStorage(locationName).then(loc => {
+
             cy.request({
                 url: S.api_url + '/api/items/getByLocationBarcode?barcode=' + JSON.parse(loc).barcode,
                 method: "GET",
