@@ -203,11 +203,18 @@ describe('Services', function () {
 
 
             //  -------- moving locations to specific parent location within the same office---> with Locations Move endpoint - POST request
-              api.locations.get_and_save_any_location_data_to_local_storage('268_parentLoc')
-              api.locations.get_and_save_any_location_data_to_local_storage('057_parentLoc')
-            api.locations.get_and_save_any_location_data_to_local_storage( 'bigLoc-edited' + i, null, '057_parentLoc')
+            // api.locations.get_and_save_any_location_data_to_local_storage('268_parentLoc')
+            // api.locations.get_and_save_any_location_data_to_local_storage('057_parentLoc')
+            // api.locations.get_and_save_any_location_data_to_local_storage('bigLoc-edited' + i, null, '057_parentLoc')
+            // //  api.locations.get_and_save_any_location_data_to_local_storage('bigLoc' + i)
+            // api.locations.move_location_with_request_from_scan_page('bigLoc-edited' + i, '268_parentLoc', office1, orgAdmin)
+
+            //  -------- moving locations to specific parent location in another office---> with Locations Move endpoint - POST request
+            api.locations.get_and_save_any_location_data_to_local_storage('268_parentLoc')
+            api.locations.get_and_save_any_location_data_to_local_storage('057_parentLoc')
+            api.locations.get_and_save_any_location_data_to_local_storage('bigLoc-edited' + i, null, '268_parentLoc')
             //  api.locations.get_and_save_any_location_data_to_local_storage('bigLoc' + i)
-              api.locations.move_location_with_request_from_scan_page('bigLoc-edited' + i, '268_parentLoc', office1, orgAdmin)
+            api.locations.move_location_with_request_from_scan_page('bigLoc-edited' + i, 542708, office2, orgAdmin)
 
         }
 
@@ -252,13 +259,13 @@ describe('Services', function () {
            }*/
 
 
-      /*  for (let i = 0; i < numberOfRequests; i++) {
-            // ************ Editing Location Name ************
-            api.locations.get_and_save_any_location_data_to_local_storage('268_parentLoc')
-            api.locations.get_and_save_any_location_data_to_local_storage('bigLoc' + i, null, '268_parentLoc')
-            api.locations.get_and_save_any_location_data_to_local_storage('bigLoc' + i)
-            api.locations.update_location('bigLoc' + i, 'Name', 'bigLoc-edited' + i)
-        }*/
+        /*  for (let i = 0; i < numberOfRequests; i++) {
+              // ************ Editing Location Name ************
+              api.locations.get_and_save_any_location_data_to_local_storage('268_parentLoc')
+              api.locations.get_and_save_any_location_data_to_local_storage('bigLoc' + i, null, '268_parentLoc')
+              api.locations.get_and_save_any_location_data_to_local_storage('bigLoc' + i)
+              api.locations.update_location('bigLoc' + i, 'Name', 'bigLoc-edited' + i)
+          }*/
 
         // checkStatusOfJobs(10)
     });

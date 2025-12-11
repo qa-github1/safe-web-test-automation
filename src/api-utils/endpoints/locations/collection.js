@@ -156,19 +156,27 @@ exports.move_location = function (locationName, newParentlocationName, locationN
     })
 };
 
-exports.move_location_with_request_from_scan_page = function (locationName, newParentlocationName, destinationOffice, movedBy) {
+exports.move_location_with_request_from_scan_page = function (locationName, newParentlocationNameOrId, destinationOffice, movedBy) {
     let log
     exports.get_storage_locations();
-    cy.getLocalStorage(newParentlocationName).then(newParentLoc => {
+    cy.getLocalStorage(newParentlocationNameOrId).then(newParentLoc => {
         cy.getLocalStorage(locationName).then(loc => {
             let locationToMove = JSON.parse(loc)
+            let destinationLocId
+
+            if (newParentLoc) {
+                destinationLocId= JSON.parse(newParentLoc).id
+            }
+            else {
+                destinationLocId = newParentlocationNameOrId
+            }
             let destinationLoc = JSON.parse(newParentLoc)
-            log = `Moving location (${locationToMove.name}) via API (request from SCAN PAGE) to the new parent location (${JSON.parse(newParentLoc).name})`
+            log = `Moving location (${locationToMove.name}) via API (request from SCAN PAGE) to the new parent location `
             generic_request.POST(
                 '/api/locations/move',
                 {
                     "sourceLocationIds": [locationToMove.id],
-                    "destinationLocationId": destinationLoc.id,
+                    "destinationLocationId": destinationLocId,
                     "destinationOfficeId": destinationOffice.id,
                     "applyCoC": true,
                     "isLocationNameEdited": false,
