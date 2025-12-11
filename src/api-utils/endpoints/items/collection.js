@@ -1,6 +1,7 @@
 const S = require('../../../fixtures/settings');
 const D = require('../../../fixtures/data');
 const generic_request = require('../../generic-api-requests');
+const body = require('./payload');
 const cases = require('../cases/collection');
 const ui = require("../../../pages/ui-spec");
 const api = require("../../api-spec");
