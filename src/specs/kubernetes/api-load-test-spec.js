@@ -5,6 +5,8 @@ const generic_request = require("../../api-utils/generic-api-requests");
 let requestPayloads = require('./request-payloads');
 let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
 let powerUser = S.getUserData(S.userAccounts.powerUser);
+let office1 = S.selectedEnvironment.office_1
+let office2 = S.selectedEnvironment.office_2
 let numberOfRequests = 10
 
 describe('Services', function () {
@@ -188,16 +190,24 @@ describe('Services', function () {
         for (let i = 0; i < numberOfRequests; i++) {
             cy.log('Moving location  ' + i)
 
-            // -------- moving items to newly created parent location
+            // -------- moving locations to newly created parent location ---> with Locations Update endpoint - PUT request
             //  api.locations.get_and_save_any_location_data_to_local_storage(D['parentLoc'].name)
             //  api.locations.get_and_save_any_location_data_to_local_storage('bigLoc' + i)
             //  api.locations.move_location('bigLoc' + i, D['parentLoc'].name, true)
 
 
-            //  -------- moving items to specific parent location
+            //  -------- moving locations to specific parent location ---> with Locations Update endpoint - PUT request
             //   api.locations.get_and_save_any_location_data_to_local_storage('268_parentLoc')
             //   api.locations.get_and_save_any_location_data_to_local_storage('bigLoc' + i)
             //   api.locations.move_location('bigLoc' + i, '268_parentLoc', true)
+
+
+            //  -------- moving locations to specific parent location within the same office---> with Locations Move endpoint - POST request
+              api.locations.get_and_save_any_location_data_to_local_storage('268_parentLoc')
+              api.locations.get_and_save_any_location_data_to_local_storage('057_parentLoc')
+            api.locations.get_and_save_any_location_data_to_local_storage( 'bigLoc-edited' + i, null, '057_parentLoc')
+            //  api.locations.get_and_save_any_location_data_to_local_storage('bigLoc' + i)
+              api.locations.move_location_with_request_from_scan_page('bigLoc-edited' + i, '268_parentLoc', office1, orgAdmin)
 
         }
 
@@ -242,13 +252,13 @@ describe('Services', function () {
            }*/
 
 
-        for (let i = 0; i < numberOfRequests; i++) {
+      /*  for (let i = 0; i < numberOfRequests; i++) {
             // ************ Editing Location Name ************
             api.locations.get_and_save_any_location_data_to_local_storage('268_parentLoc')
             api.locations.get_and_save_any_location_data_to_local_storage('bigLoc' + i, null, '268_parentLoc')
             api.locations.get_and_save_any_location_data_to_local_storage('bigLoc' + i)
             api.locations.update_location('bigLoc' + i, 'Name', 'bigLoc-edited' + i)
-        }
+        }*/
 
         // checkStatusOfJobs(10)
     });

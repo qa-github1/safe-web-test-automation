@@ -156,6 +156,31 @@ exports.move_location = function (locationName, newParentlocationName, locationN
     })
 };
 
+exports.move_location_with_request_from_scan_page = function (locationName, newParentlocationName, destinationOffice, movedBy) {
+    let log
+    exports.get_storage_locations();
+    cy.getLocalStorage(newParentlocationName).then(newParentLoc => {
+        cy.getLocalStorage(locationName).then(loc => {
+            let locationToMove = JSON.parse(loc)
+            let destinationLoc = JSON.parse(newParentLoc)
+            log = `Moving location (${locationToMove.name}) via API (request from SCAN PAGE) to the new parent location (${JSON.parse(newParentLoc).name})`
+            generic_request.POST(
+                '/api/locations/move',
+                {
+                    "sourceLocationIds": [locationToMove.id],
+                    "destinationLocationId": destinationLoc.id,
+                    "destinationOfficeId": destinationOffice.id,
+                    "applyCoC": true,
+                    "isLocationNameEdited": false,
+                    "movedByName": movedBy.name,
+                    "movedById": movedBy.id
+                },
+                log
+            )
+        })
+    })
+};
+
 exports.move_location_to_root_level = function (locationName) {
     exports.get_storage_locations();
     cy.getLocalStorage(locationName).then(loc => {
