@@ -43,6 +43,7 @@ let
     groupInTypeaheadList = e => cy.get('[ng-repeat="userGroup in $select.items"]'),
     userGroups = e => cy.get('[ng-model="selectedUserGroups.userGroups"]').last(),
     userGroupsOnReassignModal = e => cy.get('[ng-model="updateModel.newUserGroups""]').find('input'),
+    keepDeactivatedUserCheckBox = e => cy.get('tp-modal-field[control-name="\'keepUser\'"]').find('input[type="checkbox"]'),
     reassign_active_tasks_and_cases_toggle_ON = e => cy.get('[ng-model="updateModel.reassign"]'),
     reassign_active_tasks_and_cases_toggle_OFF = e => cy.get('[class="btn active btn-default btn-sm toggle-off"]')
 
@@ -57,6 +58,8 @@ export default class UserAdminPage extends BasePage {
     enter_values_on_reassign_modal(usersOrGroups, keepDeactivated = true) {
         this.pause(0.5)
         this.enter_values_on_single_multi_select_typeahead_field(['New Users/Groups to be added', usersOrGroups, "users/groups" ])
+        if (!keepDeactivated) {
+            keepDeactivatedUserCheckBox().click({ force: true });}
         return this;
     };
 
