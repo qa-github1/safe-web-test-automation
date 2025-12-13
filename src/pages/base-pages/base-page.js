@@ -246,7 +246,9 @@ let
     checkoutReason = e => cy.get('[ng-options="r.id as r.name for r in data.checkoutReasons"]'),
     typeaheadSelectorMatchInMatches = '[ng-repeat="match in matches track by $index"]',
     typeaheadSelectorItemInGroupItems = '[ng-repeat="item in $group.items"]',
-    typeaheadSelectorChoicesRow = '.ui-select-choices-row'
+    typeaheadSelectorChoicesRow = '.ui-select-choices-row',
+    activeInactiveRadiobuttons = e => cy.get('[class="form-group"]').eq(0)
+
 
 let dashboardGetRequests = [
     '/api/users/currentuser?groups=true',
@@ -4040,5 +4042,15 @@ let basePage = class BasePage {
     }
 
 
+    select_radiobutton(labelText) {
+        activeInactiveRadiobuttons().should('exist').within(() => {
+            cy.contains('label span', new RegExp(`^\\s*${labelText}\\s*$`, 'i'))
+                .closest('label')
+                .find('input[type="radio"]')
+                .wait(300)
+                .check({force: true});
+        });
+        return this;
+    }
 };
 export default basePage

@@ -24,7 +24,7 @@ describe('Add User', function () {
     });
 
     context('1.1 Org Admin', function () {
-        it('1.1.1. add user with all fields -- log in with newly created account', function () {
+        it.only('1.1.1. add user with all fields -- log in with newly created account', function () {
             ui.app.log_title(this);
             D.generateNewDataSet();
             D.newUser.permissionGroups = [S.selectedEnvironment.admin_permissionGroup.name]
@@ -57,6 +57,16 @@ describe('Add User', function () {
 
             api.auth.get_tokens(orgAdmin);
             api.users.deactivate_previously_created_user();
+            ui.menu.click_Settings__User_Admin()
+            ui.app.select_radiobutton(C.filters.inactive)
+            ui.userAdmin.search_for_user(D.newUser.email)
+                .select_checkbox_on_first_table_row()
+                .click_Actions()
+                .click_option_on_expanded_menu('Activate Users')
+                .verify_toast_message_('Saved!')
+            ui.app.select_radiobutton(C.filters.active)
+            ui.userAdmin.search_for_user(D.newUser.email)
+                .verify_content_of_specific_cell_in_first_table_row('Email')
         });
 
         it('1.1.2. add user with required fields only', function () {
@@ -139,68 +149,68 @@ describe('Add User', function () {
 
 // ToDo: Fix data reference for org2Admin
         if (S.orgNum !== 3) {
-        it.only('A.U_3. Verify that External User can be: ' +
-                            '-- added ' +
-                            '-- removed ', function () {
+            it.only('A.U_3. Verify that External User can be: ' +
+                '-- added ' +
+                '-- removed ', function () {
 
-            ui.app.log_title(this);
-            let org2Admin = S.getUserData(S.userAccounts.org2Admin);
-            let externalOffice_id = org2Admin.officeId;
+                ui.app.log_title(this);
+                let org2Admin = S.getUserData(S.userAccounts.org2Admin);
+                let externalOffice_id = org2Admin.officeId;
 
-            // Precondition - add user account to OrgB
-            D.getNewUserData(externalOffice_id);
-            D.newUser.divisionId = null
-            D.newUser.unitId = null
-            D.newUser.titleRankId = null
+                // Precondition - add user account to OrgB
+                D.getNewUserData(externalOffice_id);
+                D.newUser.divisionId = null
+                D.newUser.unitId = null
+                D.newUser.titleRankId = null
 
-            api.auth.get_tokens(org2Admin);
-            api.users.add_new_user('user1');
-            api.permissions.assign_Org_Admin_permissions_to_user('user1')
-            let user = D.newUser;
-            // keeping userId so it does not get cleared out from local storage
-            cy.getLocalStorage('user1').then((data) => {
-                let userId = JSON.parse(data).id;
+                api.auth.get_tokens(org2Admin);
+                api.users.add_new_user('user1');
+                api.permissions.assign_Org_Admin_permissions_to_user('user1')
+                let user = D.newUser;
+                // keeping userId so it does not get cleared out from local storage
+                cy.getLocalStorage('user1').then((data) => {
+                    let userId = JSON.parse(data).id;
 
 
-            ui.app.clear_gmail_inbox(S.gmailAccount);
+                    ui.app.clear_gmail_inbox(S.gmailAccount);
 
-            // log in as Org Admin in OrgA and add external user
-            api.auth.get_tokens(orgAdmin)
-            ui.menu.click_Settings__User_Admin()
-                .click_button(C.buttons.actions)
-                .click_option_on_expanded_menu(C.dropdowns.userActions.addExternalUsers)
-            ui.userAdmin.enter_emails_for_external_user([user.email])
-                .click_button(C.buttons.addExternal)
-                .select_permission_group_per_office(S.selectedEnvironment.admin_permissionGroup.name, D.newUser.office)
-                .click_button(C.buttons.save)
-                .verify_toast_message(C.toastMsgs.saved)
+                    // log in as Org Admin in OrgA and add external user
+                    api.auth.get_tokens(orgAdmin)
+                    ui.menu.click_Settings__User_Admin()
+                        .click_button(C.buttons.actions)
+                        .click_option_on_expanded_menu(C.dropdowns.userActions.addExternalUsers)
+                    ui.userAdmin.enter_emails_for_external_user([user.email])
+                        .click_button(C.buttons.addExternal)
+                        .select_permission_group_per_office(S.selectedEnvironment.admin_permissionGroup.name, D.newUser.office)
+                        .click_button(C.buttons.save)
+                        .verify_toast_message(C.toastMsgs.saved)
 
-            // Log in with external user (from OrgB) and check that OrgA and OrgB are accessible
-            ui.userAdmin.verify_email_content_(D.newUser.email, C.users.emailTemplates.welcomeToSafe, user)
-                .open_verification_link_from_email()
-                .set_password(D.newUser.password)
-                .scroll_and_click(C.buttons.setPassword)
-                .verify_confirmation_message_for_setting_Password(C.users.setPassword.confirmationMsg)
-                .click_button(C.buttons.login)
-            api.auth.get_tokens(user, ['user1'])
-            ui.menu.select_office(S.selectedEnvironment.office_1.orgAndOfficeName)
-                .verify_text_is_present_on_main_container(C.labels.dashboard.title)
-                .select_office(S.selectedEnvironment.org2.orgAndOfficeName)
-                .verify_text_is_present_on_main_container(C.labels.dashboard.title)
+                    // Log in with external user (from OrgB) and check that OrgA and OrgB are accessible
+                    ui.userAdmin.verify_email_content_(D.newUser.email, C.users.emailTemplates.welcomeToSafe, user)
+                        .open_verification_link_from_email()
+                        .set_password(D.newUser.password)
+                        .scroll_and_click(C.buttons.setPassword)
+                        .verify_confirmation_message_for_setting_Password(C.users.setPassword.confirmationMsg)
+                        .click_button(C.buttons.login)
+                    api.auth.get_tokens(user, ['user1'])
+                    ui.menu.select_office(S.selectedEnvironment.office_1.orgAndOfficeName)
+                        .verify_text_is_present_on_main_container(C.labels.dashboard.title)
+                        .select_office(S.selectedEnvironment.org2.orgAndOfficeName)
+                        .verify_text_is_present_on_main_container(C.labels.dashboard.title)
 
-            //remove external user
-            api.auth.get_tokens(orgAdmin)
-            ui.menu.click_Settings__User_Admin()
-            ui.userAdmin.search_for_user(user.email)
-                .remove_external_user()
-                .verify_toast_message(C.toastMsgs.saved)
+                    //remove external user
+                    api.auth.get_tokens(orgAdmin)
+                    ui.menu.click_Settings__User_Admin()
+                    ui.userAdmin.search_for_user(user.email)
+                        .remove_external_user()
+                        .verify_toast_message(C.toastMsgs.saved)
 
-              //Post-condition - deactivate previously created user
-                api.auth.get_tokens(org2Admin)  
-                api.users.deactivate_users(userId)
-            })
-        });
-          }
+                    //Post-condition - deactivate previously created user
+                    api.auth.get_tokens(org2Admin)
+                    api.users.deactivate_users(userId)
+                })
+            });
+        }
     });
 
     context('1.2 Power User -- all permissions in Office', function () {
@@ -260,8 +270,8 @@ describe('Add User', function () {
             //ui.userAdmin.verify_user_data_on_grid(D.newUser, S.customForms.userFormWithRequiredFields_2, true, 13)
             ui.userAdmin.verify_user_data_on_grid(D.newUser, customFormName, true, 13)
 
-             ui.userAdmin.verify_email_content_(D.newUser.email, C.users.emailTemplates.welcomeToSafe, D.newUser)
-             api.users.deactivate_previously_created_user();
+            ui.userAdmin.verify_email_content_(D.newUser.email, C.users.emailTemplates.welcomeToSafe, D.newUser)
+            api.users.deactivate_previously_created_user();
         });
 
         it('1.3.2 --- with required Custom Form but not filled out, all optional fields on Form', function () {

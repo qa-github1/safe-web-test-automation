@@ -45,7 +45,6 @@ let
     userGroupsOnReassignModal = e => cy.get('[ng-model="updateModel.newUserGroups""]').find('input'),
     reassign_active_tasks_and_cases_toggle_ON = e => cy.get('[ng-model="updateModel.reassign"]'),
     reassign_active_tasks_and_cases_toggle_OFF = e => cy.get('[class="btn active btn-default btn-sm toggle-off"]')
-
 export default class UserAdminPage extends BasePage {
 
     constructor() {
@@ -352,5 +351,7 @@ reassign_active_tasks_and_cases_toggle_ON().click()
         this.click_Ok()
         return this;
     }
+
+
 
 }
