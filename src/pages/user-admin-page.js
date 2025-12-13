@@ -62,8 +62,17 @@ export default class UserAdminPage extends BasePage {
     search_for_user(email) {
         this.define_API_request_to_be_awaited('POST', '/api/users/search', 'searchUsers')
         this.enterValue(searchInput, email)
+
+        // TODO: Amina: I added this part because we have issues with many admin users in some Orgs
+        // and because of that searching for specific user is slower and tests fail randomly
+        cy.get('table tbody', { timeout: 80000 })
+            .find('tr', { timeout: 80000 })
+            .should('have.length', 1)
+            .first()
+            .should('contain.text', email);
+
         this.wait_response_from_API_call('searchUsers')
-        this.pause(0.7)
+        this.pause(0.9)
         this.wait_until_spinner_disappears();
         return this;
     };

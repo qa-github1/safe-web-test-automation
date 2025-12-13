@@ -11,20 +11,29 @@ let systemAdmin = S.getUserData(S.userAccounts.systemAdmin);
 let powerUser = S.getUserData(S.userAccounts.powerUser);
 let office_1 = S.selectedEnvironment.office_1;
 let permissionGroup_officeAdmin = S.selectedEnvironment.admin_permissionGroup;
+let startTime;
 
 describe('Add User', function () {
 
     before(function () {
         api.auth.get_tokens(orgAdmin)
         api.org_settings.set_required_User_forms([])
+        startTime = Date.now();
+
     });
 
     beforeEach(function () {
         ui.app.clear_gmail_inbox(S.gmailAccount);
     });
 
+    after(() => {
+        const endTime = Date.now();
+        const totalSeconds = ((endTime - startTime) / 1000).toFixed(2);
+        cy.log(`⏱ Total time for suite: ${totalSeconds} seconds`);
+    });
+
     context('1.1 Org Admin', function () {
-        it.only('1.1.1. add user with all fields -- log in with newly created account', function () {
+        it.only('1.1.1. add user with all fields -- log in with newly created account and activate deactivated User', function () {
             ui.app.log_title(this);
             D.generateNewDataSet();
             D.newUser.permissionGroups = [S.selectedEnvironment.admin_permissionGroup.name]
@@ -55,6 +64,7 @@ describe('Add User', function () {
                 .verify_text_is_present_on_main_container(C.labels.dashboard.title)
             ui.userAdmin.save_current_user_profile_to_local_storage()
 
+            cy.log(" 🟢🟢🟢 Activate Deactivated User 🟢🟢🟢 ")
             api.auth.get_tokens(orgAdmin);
             api.users.deactivate_previously_created_user();
             ui.menu.click_Settings__User_Admin()
@@ -64,9 +74,9 @@ describe('Add User', function () {
                 .click_Actions()
                 .click_option_on_expanded_menu('Activate Users')
                 .verify_toast_message_('Saved!')
-            ui.app.select_radiobutton(C.filters.active)
+            .pause(1)
             ui.userAdmin.search_for_user(D.newUser.email)
-                .verify_content_of_specific_cell_in_first_table_row('Email')
+                .verify_content_of_specific_cell_in_first_table_row('Email', D.newUser.email)
         });
 
         it('1.1.2. add user with required fields only', function () {
