@@ -247,7 +247,9 @@ let
     typeaheadSelectorMatchInMatches = '[ng-repeat="match in matches track by $index"]',
     typeaheadSelectorItemInGroupItems = '[ng-repeat="item in $group.items"]',
     typeaheadSelectorChoicesRow = '.ui-select-choices-row',
-    activeInactiveRadiobuttons = e => cy.get('[class="form-group"]').eq(0)
+    activeInactiveRadiobuttons = e => cy.get('[class="form-group"]').eq(0),
+    massUpdateDivisionField = e => cy.get('[division-name="updateModel.divisionName"]'),
+    massUpdateUnitField = e => cy.get('[unit-name="updateModel.unitName"]')
 
 
 let dashboardGetRequests = [
@@ -3576,6 +3578,26 @@ let basePage = class BasePage {
             }
         }
 
+        return this;
+    }
+
+    turn_on_and_enter_values_to_mass_update_division_unit_modal(data) {
+        this.turnOnAllTogglesOnModal()
+
+        massUpdateDivisionField().select(data.division)
+        massUpdateUnitField().select(data.unit)
+        // for (let i = 0; i < labelsArray.length; i++) {
+        //     const label = labelsArray[i];
+        //     const value = valuesArray[i];
+        //
+        //     if (['Division', 'Unit'].some(v => label === v)) {
+        //         cy.get('.modal-content')
+        //             .contains('.form-control ng-isolate-scope ng-empty ng-valid', new RegExp(`^\\s*${label}\\s*$`))
+        //             .closest('.fg-field-inner')
+        //             .find('select').first()
+        //             .select(value)
+        //     }
+        // }
         return this;
     }
 

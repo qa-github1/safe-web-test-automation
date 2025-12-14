@@ -34,9 +34,15 @@ describe('Add User', function () {
 
     context('1.1 Org Admin', function () {
         it.only('1.1.1. add user with all fields -- log in with newly created account and activate deactivated User', function () {
+
             ui.app.log_title(this);
             D.generateNewDataSet();
             D.newUser.permissionGroups = [S.selectedEnvironment.admin_permissionGroup.name]
+            D.getEditedUserData();
+            // let DivUnitValues = [
+            //     D.editedUser.division,
+            //     D.editedUser.unit
+            // ]
 
             api.auth.get_tokens(orgAdmin);
             api.org_settings.update_org_settings_by_specifying_property_and_value('addUserSupervisor', true)
@@ -74,9 +80,23 @@ describe('Add User', function () {
                 .click_Actions()
                 .click_option_on_expanded_menu('Activate Users')
                 .verify_toast_message_('Saved!')
-            .pause(1)
+                .pause(1)
             ui.userAdmin.search_for_user(D.newUser.email)
                 .verify_content_of_specific_cell_in_first_table_row('Email', D.newUser.email)
+
+            cy.log(" 🟢🟢🟢 Mass Update Div & Unit 🟢🟢🟢 ")
+            ui.userAdmin.select_checkbox_on_first_table_row()
+                .click_Actions()
+                .click_option_on_expanded_menu('Mass Update User Division and Unit')
+                .turn_on_and_enter_values_to_mass_update_division_unit_modal(D.editedUser)
+                .click_Ok()
+                ui.app.verify_toast_message('Saved!')
+            ui.app.verify_content_of_specific_cell_in_first_table_row('Division', D.editedUser.division)
+                .verify_content_of_specific_cell_in_first_table_row('Unit', D.editedUser.unit)
+                .click_button('Edit')
+                .verify_text_is_present_on_main_container(D.editedUser.division)
+                .verify_text_is_present_on_main_container(D.editedUser.unit)
+
         });
 
         it('1.1.2. add user with required fields only', function () {

@@ -58,6 +58,10 @@ C = {
         'Custom Person',
         'Custom Date'
     ],
+    userFieldsLabelsForDivAndUnit: [
+      'Division',
+      'Unit'
+    ],
     itemFields: {
         allFieldsOnHistory: [
             'Update Made By',
