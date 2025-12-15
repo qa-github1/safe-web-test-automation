@@ -624,6 +624,9 @@ D.getEditedUserData = function () {
         titleRankId: S.selectedEnvironment.titleRank2.id,
         createdDate: helper.setDate(C.currentDateTimeFormat.dateOnly),
         supervisors: [S.userAccounts.basicUser.name],
+        supervisor: S.userAccounts.basicUser.name,
+        supervisorGroup: S.selectedEnvironment.readOnly_userGroup.name,
+        supervisorGroups: [S.selectedEnvironment.readOnly_userGroup.name],
         supervisorsIds: ['user-' + S.userAccounts.basicUser.id],
         userSupervisorsForApi: [{
             SupervisorUserId: S.userAccounts.basicUser.id

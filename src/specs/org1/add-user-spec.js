@@ -33,16 +33,20 @@ describe('Add User', function () {
     });
 
     context('1.1 Org Admin', function () {
-        it.only('1.1.1. add user with all fields -- log in with newly created account and activate deactivated User', function () {
+        it.only('1.1.1. add user with all fields -- log in with newly created account / activate deactivated User / mass update div & unit / mass update supervisor', function () {
 
             ui.app.log_title(this);
             D.generateNewDataSet();
             D.newUser.permissionGroups = [S.selectedEnvironment.admin_permissionGroup.name]
             D.getEditedUserData();
-            // let DivUnitValues = [
-            //     D.editedUser.division,
-            //     D.editedUser.unit
-            // ]
+
+            let fieldsLabel =
+                C.userSupervisorFieldLabel
+            
+            let allValues = [
+                D.editedUser.supervisors,
+                D.editedUser.supervisorGroups
+            ]
 
             api.auth.get_tokens(orgAdmin);
             api.org_settings.update_org_settings_by_specifying_property_and_value('addUserSupervisor', true)
@@ -86,17 +90,31 @@ describe('Add User', function () {
 
             cy.log(" 🟢🟢🟢 Mass Update Div & Unit 🟢🟢🟢 ")
             ui.userAdmin.select_checkbox_on_first_table_row()
-                .click_Actions()
+            ui.app.click_Actions()
                 .click_option_on_expanded_menu('Mass Update User Division and Unit')
-                .turn_on_and_enter_values_to_mass_update_division_unit_modal(D.editedUser)
+            ui.userAdmin.turn_on_and_enter_values_to_mass_update_division_unit_modal(D.editedUser)
                 .click_Ok()
-                ui.app.verify_toast_message('Saved!')
-            ui.app.verify_content_of_specific_cell_in_first_table_row('Division', D.editedUser.division)
+            ui.app.verify_toast_message('Saved!')
+                .verify_content_of_specific_cell_in_first_table_row('Division', D.editedUser.division)
                 .verify_content_of_specific_cell_in_first_table_row('Unit', D.editedUser.unit)
                 .click_button('Edit')
                 .verify_text_is_present_on_main_container(D.editedUser.division)
                 .verify_text_is_present_on_main_container(D.editedUser.unit)
+                .click_button('Cancel')
 
+            cy.log(" 🟢🟢🟢 Mass Update Supervisor for Internal User 🟢🟢🟢 ")
+            ui.app.click_Actions()
+                .verify_content_of_specific_cell_in_first_table_row('Supervisor', D.newUser.supervisors)
+                .click_option_on_expanded_menu('Set Supervisors')
+            ui.userAdmin.set_supervisors_modal(fieldsLabel, allValues)
+            ui.app.click_Ok()
+                .verify_messages_on_sweet_alert([C.warning_msgs.overwriteSupervisor])
+                .click_button_on_sweet_alert('OK')
+            ui.app.verify_toast_message('Saved!')
+                .verify_content_of_specific_cell_in_first_table_row('Supervisor', D.editedUser.supervisors)
+                .verify_content_of_specific_cell_in_first_table_row('Supervisor', D.editedUser.supervisorGroup)
+                .verify_text_is_present_on_main_container(D.editedUser.supervisors)
+                .verify_text_is_present_on_main_container(D.editedUser.supervisorGroup)
         });
 
         it('1.1.2. add user with required fields only', function () {

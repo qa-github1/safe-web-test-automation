@@ -44,7 +44,11 @@ let
     userGroups = e => cy.get('[ng-model="selectedUserGroups.userGroups"]').last(),
     userGroupsOnReassignModal = e => cy.get('[ng-model="updateModel.newUserGroups""]').find('input'),
     reassign_active_tasks_and_cases_toggle_ON = e => cy.get('[ng-model="updateModel.reassign"]'),
-    reassign_active_tasks_and_cases_toggle_OFF = e => cy.get('[class="btn active btn-default btn-sm toggle-off"]')
+    reassign_active_tasks_and_cases_toggle_OFF = e => cy.get('[class="btn active btn-default btn-sm toggle-off"]'),
+    massUpdateDivisionField = e => cy.get('[division-name="updateModel.divisionName"]'),
+    massUpdateUnitField = e => cy.get('[unit-name="updateModel.unitName"]'),
+    dropdownTypeaheadOption = e => cy.get('[ng-repeat="item in $group.items"]').first(),
+    supervisorField = e => cy.get('[id="supervisors"]')
 export default class UserAdminPage extends BasePage {
 
     constructor() {
@@ -55,7 +59,7 @@ export default class UserAdminPage extends BasePage {
 
     enter_values_on_reassign_modal(usersOrGroups, keepDeactivated = true) {
         this.pause(0.5)
-        this.enter_values_on_single_multi_select_typeahead_field(['New Users/Groups to be added', usersOrGroups, "users/groups" ])
+        this.enter_values_on_single_multi_select_typeahead_field(['New Users/Groups to be added', usersOrGroups, "users/groups"])
         return this;
     };
 
@@ -65,8 +69,8 @@ export default class UserAdminPage extends BasePage {
 
         // TODO: Amina: I added this part because we have issues with many admin users in some Orgs
         // and because of that searching for specific user is slower and tests fail randomly
-        cy.get('table tbody', { timeout: 80000 })
-            .find('tr', { timeout: 80000 })
+        cy.get('table tbody', {timeout: 80000})
+            .find('tr', {timeout: 80000})
             .should('have.length', 1)
             .first()
             .should('contain.text', email);
@@ -163,6 +167,14 @@ export default class UserAdminPage extends BasePage {
         return this;
     };
 
+    turn_on_and_enter_values_to_mass_update_division_unit_modal(data) {
+        this.turnOnAllTogglesOnModal()
+
+        massUpdateDivisionField().select(data.division)
+        massUpdateUnitField().select(data.unit)
+        return this;
+    }
+
     select_permission_group_per_office(permissionGroup, officeName) {
         this.wait_until_label_appears('Permissions Matrix')
         this.click_table_matrix_cell_based_on_column_name_and_unique_value_in_the_row(permissionGroup, officeName, 1)
@@ -220,7 +232,7 @@ export default class UserAdminPage extends BasePage {
         login.enter_credentials(D.newUser.email, D.newUser.password)
             .click_Login_button()
 
-        if (S.isOrg2() || S.isOrg3() || S.isOrg4() ) {
+        if (S.isOrg2() || S.isOrg3() || S.isOrg4()) {
             cy.contains('END OF TERMS AND CONDITIONS').scrollIntoView()
             cy.get('[title="Accept"]').click()
         }
@@ -330,10 +342,10 @@ export default class UserAdminPage extends BasePage {
     }
 
     remove_external_user() {
-            this.select_checkbox_on_first_table_row()
-                .click_button(C.buttons.actions)
-                .click_option_on_expanded_menu(C.dropdowns.userActions.removeExternalUsers)
-                .click_button_on_sweet_alert('OK')
+        this.select_checkbox_on_first_table_row()
+            .click_button(C.buttons.actions)
+            .click_option_on_expanded_menu(C.dropdowns.userActions.removeExternalUsers)
+            .click_button_on_sweet_alert('OK')
         return this;
     }
 
@@ -355,12 +367,57 @@ export default class UserAdminPage extends BasePage {
         return this;
     }
 
-    turn_off_reassign_tasks_and_cases_modal(){
-reassign_active_tasks_and_cases_toggle_ON().click()
+    turn_off_reassign_tasks_and_cases_modal() {
+        reassign_active_tasks_and_cases_toggle_ON().click()
         this.click_Ok()
         return this;
     }
 
+    set_supervisors_modal(label, valuesArray) {
+        const values = (Array.isArray(valuesArray) ? valuesArray : [valuesArray])
+            .flat(Infinity)
+            .filter(v => v !== undefined && v !== null && String(v).trim() !== '');
 
+        if (label === 'Supervisor') {
+            cy.get('.modal-content')
+                .find('.ui-select-container')
+                .first()
+                .as('userSelect');
 
+            values.forEach(v => {
+                const q = encodeURIComponent(String(v));
+
+                this.define_API_request_to_be_awaited(
+                    'GET',
+                    `/api/users/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=${q}`,
+                    "getUserInTypeahead"
+                );
+
+                this.define_API_request_to_be_awaited(
+                    'GET',
+                    `/api/userGroups/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=${q}`,
+                    "getUserGroupInTypeahead"
+                );
+
+                cy.get('@userSelect')
+                    .click()
+                    .find('input.ui-select-search')
+                    .clear()
+                    .type(String(v));
+
+                this.pause(0.5);
+
+                this.wait_response_from_API_call("getUserInTypeahead", 200, null, 1500);
+                this.wait_response_from_API_call("getUserGroupInTypeahead", 200, null, 1500);
+
+                cy.get('body')
+                    .find('.ui-select-choices-row-inner')
+                    .contains(String(v))
+                    .click();
+            });
+        }
+
+        return this;
+    }
 }
+

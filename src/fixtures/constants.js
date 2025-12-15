@@ -62,6 +62,8 @@ C = {
       'Division',
       'Unit'
     ],
+    userSupervisorFieldLabel: 'Supervisor'
+    ,
     itemFields: {
         allFieldsOnHistory: [
             'Update Made By',
@@ -442,6 +444,9 @@ C = {
         wrongPassword_1st_attempt: 'You typed the password incorrectly 1 time.  You have 4 tries until you will be locked out.',
         wrongPassword_4th_attempt: 'You typed the password incorrectly 4 times.  You have 1 try until you will be locked out.',
         wrongPassword_5th_attempt: 'The user has had too many failed login attempts and has been locked out for a duration of 1 minute.',
+    },
+    warning_msgs: {
+        overwriteSupervisor: 'Saving will overwrite existing superviors with selected User(s)/User Group(s)'
     },
     checkoutReasons: {
         lab: 'Lab',
