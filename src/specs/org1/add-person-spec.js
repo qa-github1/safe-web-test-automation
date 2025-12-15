@@ -48,14 +48,18 @@ describe('Add Person', function () {
                     .verify_toast_message(C.toastMsgs.saved);
                 ui.personView.verify_Person_View_page_is_open()
                 ui.addPerson.verify_added_address(D.newPersonAddress)
-                    .click_button(C.buttons.edit)
+
+                cy.log('🟢🟢 Edit Address 🟢🟢')
+                    ui.app.click_button(C.buttons.edit)
                 ui.personView.verify_values_on_Edit_form(D.newPerson)
                     .click_button(C.buttons.edit)
                 ui.addPerson.edit_person_address(D.editedPersonAddress)
                     .click_button(C.buttons.updateAddress)
                     .verify_toast_message_('Saved!')
                 ui.addPerson.verify_added_address(D.editedPersonAddress)
-                    .click_button(C.buttons.delete)
+
+                cy.log('🟢🟢 Delete Address 🟢🟢')
+                    ui.app.click_button(C.buttons.delete)
                     .click_button(C.buttons.ok)
                     .verify_text_is_visible('Deleted!')
                     .verify_text_is_visible('(No addresses)')
@@ -127,6 +131,8 @@ describe('Add Person', function () {
                     .select_checkbox_on_first_table_row_on_active_tab()
                     .click_Actions()
                     .click_option_on_expanded_menu(C.buttons.changePersonTypeOrCaseNote)
+
+                cy.log('🟢🟢 Change Person Type or Case Note 🟢🟢')
                 ui.personView.change_person_type_or_case_note(D.editedPerson)
                     .click_button(C.buttons.ok)
                     .verify_toast_message("Saved!")
@@ -134,7 +140,9 @@ describe('Add Person', function () {
                     .verify_content_of_specific_table_row_by_provided_column_title_and_value(0, "Person Type", D.editedPerson.personType)
                     .verify_content_of_specific_table_row_by_provided_column_title_and_value(0, "Case Note", D.editedPerson.caseNote)
                     .click_Actions()
-                    .click_option_on_expanded_menu(C.buttons.removeSelectedPerson)
+
+                cy.log('🟢🟢 Remove Selected Person 🟢🟢')
+                    ui.app.click_option_on_expanded_menu(C.buttons.removeSelectedPerson)
                     .verify_text_is_visible('Are you sure you want to remove these people from the case?')
                     .verify_text_is_visible(D.newPerson.firstName)
                     .click_button(C.buttons.removeFromCase)
