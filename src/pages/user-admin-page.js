@@ -48,7 +48,7 @@ let
     massUpdateDivisionField = e => cy.get('[division-name="updateModel.divisionName"]'),
     massUpdateUnitField = e => cy.get('[unit-name="updateModel.unitName"]'),
     dropdownTypeaheadOption = e => cy.get('[ng-repeat="item in $group.items"]').first(),
-    supervisorField = e => cy.get('[id="supervisors"]')
+    userGroupField = e => cy.get('[ng-model="selectedUserGroups.userGroups"]')
 export default class UserAdminPage extends BasePage {
 
     constructor() {
@@ -417,6 +417,11 @@ export default class UserAdminPage extends BasePage {
             });
         }
 
+        return this;
+    }
+
+    populate_add_to_group_modal(data){
+        userGroupField().type(data.userGroups).type('{enter}')
         return this;
     }
 }

@@ -33,7 +33,7 @@ describe('Add User', function () {
     });
 
     context('1.1 Org Admin', function () {
-        it.only('1.1.1. add user with all fields -- log in with newly created account / activate deactivated User / mass update div & unit / mass update supervisor', function () {
+        it('1.1.1. add user with all fields -- log in with newly created account / activate deactivated User / mass update div & unit / mass update supervisor', function () {
 
             ui.app.log_title(this);
             D.generateNewDataSet();
@@ -42,7 +42,7 @@ describe('Add User', function () {
 
             let fieldsLabel =
                 C.userSupervisorFieldLabel
-            
+
             let allValues = [
                 D.editedUser.supervisors,
                 D.editedUser.supervisorGroups
@@ -119,7 +119,6 @@ describe('Add User', function () {
 
         it('1.1.2. add user with required fields only', function () {
             ui.app.log_title(this);
-
             api.auth.get_tokens(orgAdmin);
             api.org_settings.update_org_settings_by_specifying_property_and_value('addUserSupervisor', false)
             api.org_settings.update_org_settings_by_specifying_property_and_value('isDivisionsAndUnitsEnabled', false)
@@ -128,6 +127,7 @@ describe('Add User', function () {
             D.newUser.unit = null
             D.newUser.supervisors = null
             C.pages.userAdmin.numberOfStandardColumns = 21
+            D.getEditedUserData()
 
             ui.menu.click_Settings__User_Admin()
                 .click_button(C.buttons.add)
@@ -137,9 +137,21 @@ describe('Add User', function () {
                 .select_permission_group_per_office(S.selectedEnvironment.admin_permissionGroup.name, D.newUser.office)
                 .click_button(C.buttons.save)
                 .verify_toast_message(C.toastMsgs.saved)
+                .pause(0.5)
                 .search_for_user(D.newUser.email)
                 .verify_user_data_on_grid(D.newUser)
             ui.userAdmin.verify_email_content_(D.newUser.email, C.users.emailTemplates.welcomeToSafe, D.newUser)
+
+            cy.log(" 🟢🟢🟢 Add Internal User to the User Group 🟢🟢🟢 ")
+            ui.app.select_checkbox_on_first_table_row()
+                .click_Actions()
+                .click_option_on_expanded_menu('Add to Group')
+            D.editedUser.userGroups = 'Cypress User Group'
+            ui.userAdmin.populate_add_to_group_modal(D.editedUser)
+                .click_Ok()
+                .verify_content_of_specific_cell_in_first_table_row('User Groups', D.editedUser.userGroups)
+                .click_button('Edit')
+                .verify_text_is_present_on_main_container(D.editedUser.userGroups)
 
             api.auth.get_tokens(orgAdmin);
             api.users.deactivate_previously_created_user();
