@@ -40,6 +40,7 @@ C = {
         recalculateCasesToDispose: 'Recalculate Cases to Dispose',
         updateCases: `Update Cases`,
         closeCases: `Close Cases`,
+        expungeFromCase: 'Expunge From Case',
         closeXCases: X => `Close ${X} Cases`,
         viewXCases: X => `View ${X} Cases`,
     },
@@ -438,6 +439,8 @@ C = {
         wrongPassword_1st_attempt: 'You typed the password incorrectly 1 time.  You have 4 tries until you will be locked out.',
         wrongPassword_4th_attempt: 'You typed the password incorrectly 4 times.  You have 1 try until you will be locked out.',
         wrongPassword_5th_attempt: 'The user has had too many failed login attempts and has been locked out for a duration of 1 minute.',
+        expungePersonFromCase: (firstName, lastName) => `The Person associated with ${firstName} ${lastName} will be removed from this Case, an expunged record will be created`,
+        expungePersonSweetAlert: 'You are about to Expunge records which will overwrite certain data fields and all history records on that data. This action is not reversible.'
     },
     checkoutReasons: {
         lab: 'Lab',
