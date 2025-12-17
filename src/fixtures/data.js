@@ -539,7 +539,8 @@ D.getEditedPersonData = function () {
         otherPhone: '',
         email: 'expunged@​expunged.​invalid',
         deceased: false,
-        juvenile: false
+        juvenile: false,
+        address: 'n/a'
     };
     D.expungedPersonHistory = {
         courtOrder: 'order test',
