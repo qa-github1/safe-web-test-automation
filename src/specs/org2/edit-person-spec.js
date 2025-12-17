@@ -7,7 +7,7 @@ const ui = require('../../pages/ui-spec');
 let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
 let startTime;
 
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 1; i++) {
 
     describe('Edit Person', function () {
 
@@ -212,7 +212,7 @@ for (let i = 0; i < 10; i++) {
                 .verify_values_on_expunge_person_modal(D.expungePerson)
         })
 
-        it.only('6. Expunge Person from the System', function () {
+        it('6. Expunge Person from the System', function () {
             api.auth.get_tokens(orgAdmin);
             D.generateNewDataSet(true)
             D.getNewPersonData()
