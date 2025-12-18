@@ -229,7 +229,7 @@ D.getNewItemData = function (specificCaseObject, locationObject, newPerson) {
         itemBelongsToGuid: [person.guid],
         //itemBelongsToEmail: [person.email],
         barcodes: [{id: 0, value: randomNo}],
-        //additionalBarcodes: [randomNo],
+        additionalBarcodes: [randomNo],
         actualDisposedDate: '',
         disposedDate: '',
         disposalMethod: '',
