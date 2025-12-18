@@ -5,7 +5,6 @@ const api = require('../../api-utils/api-spec');
 const ui = require('../../pages/ui-spec');
 let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
 let powerUser = S.getUserData(S.userAccounts.powerUser);
-let person = S.getUserData(S.selectedEnvironment.person);
 let startTime;
 
 for (let i = 0; i < 1; i++) {
