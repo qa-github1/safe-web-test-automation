@@ -213,6 +213,8 @@ for (let i = 0; i < 1; i++) {
         })
 
         it('6. Expunge Person from the System', function () {
+            //TODO: Add later expunge from the system using person view page
+            //TODO: Edit values on expunged modal
             api.auth.get_tokens(orgAdmin);
             D.generateNewDataSet(true)
             D.getNewPersonData()
