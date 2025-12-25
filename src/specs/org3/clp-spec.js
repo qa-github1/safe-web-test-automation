@@ -225,7 +225,7 @@ xdescribe('1. Case Level Permissions', function () {
 //
 //                 // direct link
 //                 ui.app.open_newly_created_case_via_direct_link()
-//                     .verify_text_is_present_on_main_container(C.validation_msgs.forbidden);
+//                     .verify_text_is_present_on_main_container(C.validation_information_or_warning_msgs.forbidden);
 //
 //                 // Case Number typeahead field on Add Item page
 //                 ui.menu.click_Add__Item()
@@ -237,7 +237,7 @@ xdescribe('1. Case Level Permissions', function () {
 //                     .select_checkbox_on_first_table_row();
 //                 ui.caseView.click_element_on_active_tab(C.buttons.actions)
 //                     .click_option_on_expanded_menu(C.dropdowns.itemActions.addToCase)
-//                     .trigger_and_verify_Case_Number_validation_message(caseNumber, C.validation_msgs.caseNumberDoesNotExist)
+//                     .trigger_and_verify_Case_Number_validation_message(caseNumber, C.validation_information_or_warning_msgs.caseNumberDoesNotExist)
 //             });
 //
 //             it('TC_3.1.2 --> restricted access to Case from People View page / Cases Involved', function () {
@@ -260,7 +260,7 @@ xdescribe('1. Case Level Permissions', function () {
 //                 ui.searchItem.run_search_by_Item_Description(D.newItem.description)
 //                      .verify_content_of_first_row_in_results_table(C.CLP.cannot_display_item_due_to_CLP);
 //                 ui.app.open_newly_created_item_via_direct_link(true)
-//                     .verify_text_is_present_on_main_container(C.validation_msgs.forbidden)
+//                     .verify_text_is_present_on_main_container(C.validation_information_or_warning_msgs.forbidden)
 //             });
 //
 //             it('TC_3.1.4 --> restricted access to item from People View page / Items Recovered By, Belonging To, Custodian', function () {
@@ -529,7 +529,7 @@ xdescribe('1. Case Level Permissions', function () {
 //
 //                 // direct link
 //                 ui.app.open_newly_created_case_via_direct_link()
-//                     .verify_text_is_present_on_main_container(C.validation_msgs.forbidden);
+//                     .verify_text_is_present_on_main_container(C.validation_information_or_warning_msgs.forbidden);
 //
 //                 // Case Number typeahead field on Add Item page
 //                 ui.menu.click_Add__Item()
@@ -541,7 +541,7 @@ xdescribe('1. Case Level Permissions', function () {
 //                     .select_checkbox_on_first_table_row();
 //                 ui.caseView.click_element_on_active_tab(C.buttons.actions)
 //                     .click_option_on_expanded_menu(C.dropdowns.itemActions.addToCase)
-//                     .trigger_and_verify_Case_Number_validation_message(caseNumber, C.validation_msgs.caseNumberDoesNotExist)
+//                     .trigger_and_verify_Case_Number_validation_message(caseNumber, C.validation_information_or_warning_msgs.caseNumberDoesNotExist)
 //             });
 //
 //             it('TC_3.2.2 --> restricted access to Case from People View page / Cases Involved', function () {
@@ -565,7 +565,7 @@ xdescribe('1. Case Level Permissions', function () {
 //                     .verify_content_of_first_row_in_results_table(C.CLP.cannot_display_item_due_to_CLP);
 //
 //                 ui.app.open_newly_created_item_via_direct_link(true)
-//                     .verify_text_is_present_on_main_container(C.validation_msgs.forbidden)
+//                     .verify_text_is_present_on_main_container(C.validation_information_or_warning_msgs.forbidden)
 //             });
 //
 //             it('TC_3.2.4 --> restricted access to item from People View page / Items Recovered By, Belonging To, Custodian', function () {
@@ -762,7 +762,7 @@ xdescribe('1. Case Level Permissions', function () {
 //
 //                 // direct link
 //                 ui.app.open_newly_created_case_via_direct_link()
-//                     .verify_text_is_present_on_main_container(C.validation_msgs.forbidden);
+//                     .verify_text_is_present_on_main_container(C.validation_information_or_warning_msgs.forbidden);
 //
 //                 // Case Number typeahead field on Add Item page
 //                 ui.menu.click_Add__Item()
@@ -774,7 +774,7 @@ xdescribe('1. Case Level Permissions', function () {
 //                     .select_checkbox_on_first_table_row();
 //                 ui.caseView.click_element_on_active_tab(C.buttons.actions)
 //                     .click_option_on_expanded_menu(C.dropdowns.itemActions.addToCase)
-//                     .trigger_and_verify_Case_Number_validation_message(caseNumber, C.validation_msgs.caseNumberDoesNotExist)
+//                     .trigger_and_verify_Case_Number_validation_message(caseNumber, C.validation_information_or_warning_msgs.caseNumberDoesNotExist)
 //             });
 //
 //             it('TC_3.3.2 --> restricted access to Case from People View page / Cases Involved', function () {
@@ -798,7 +798,7 @@ xdescribe('1. Case Level Permissions', function () {
 //                      .verify_content_of_first_row_in_results_table(C.CLP.cannot_display_item_due_to_CLP);
 //
 //                 ui.app.open_newly_created_item_via_direct_link(true)
-//                     .verify_text_is_present_on_main_container(C.validation_msgs.forbidden)
+//                     .verify_text_is_present_on_main_container(C.validation_information_or_warning_msgs.forbidden)
 //             });
 //
 //             it('TC_3.3.4 --> restricted access to item from People View page / Items Recovered By, Belonging To, Custodian', function () {
@@ -1013,7 +1013,7 @@ xdescribe('1. Case Level Permissions', function () {
 //                     .select_checkbox_on_first_table_row();
 //                 ui.caseView.click_element_on_active_tab(C.buttons.actions)
 //                     .click_option_on_expanded_menu(C.dropdowns.itemActions.addToCase)
-//                     .trigger_and_verify_Case_Number_validation_message(caseNumber, C.validation_msgs.caseNumberDoesNotExist)
+//                     .trigger_and_verify_Case_Number_validation_message(caseNumber, C.validation_information_or_warning_msgs.caseNumberDoesNotExist)
 //             });
 //
 //             // bug reported - #9176
@@ -1262,7 +1262,7 @@ xdescribe('1. Case Level Permissions', function () {
 //                     .select_checkbox_on_first_table_row();
 //                 ui.caseView.click_element_on_active_tab(C.buttons.actions)
 //                     .click_option_on_expanded_menu(C.dropdowns.itemActions.addToCase)
-//                     .trigger_and_verify_Case_Number_validation_message(caseNumber, C.validation_msgs.caseNumberDoesNotExist)
+//                     .trigger_and_verify_Case_Number_validation_message(caseNumber, C.validation_information_or_warning_msgs.caseNumberDoesNotExist)
 //             });
 //
 //             // bug reported - #9176
@@ -1509,7 +1509,7 @@ xdescribe('1. Case Level Permissions', function () {
 //                     .select_checkbox_on_first_table_row();
 //                 ui.caseView.click_element_on_active_tab(C.buttons.actions)
 //                     .click_option_on_expanded_menu(C.dropdowns.itemActions.addToCase)
-//                     .trigger_and_verify_Case_Number_validation_message(caseNumber, C.validation_msgs.caseNumberDoesNotExist)
+//                     .trigger_and_verify_Case_Number_validation_message(caseNumber, C.validation_information_or_warning_msgs.caseNumberDoesNotExist)
 //             });
 //
 //             // bug reported - #9176
@@ -1764,7 +1764,7 @@ xdescribe('1. Case Level Permissions', function () {
 //
 //                   // direct link
 //                   ui.app.open_newly_created_case_via_direct_link()
-//                       .verify_text_is_present_on_main_container(C.validation_msgs.forbidden);
+//                       .verify_text_is_present_on_main_container(C.validation_information_or_warning_msgs.forbidden);
 //
 //                   // Case Number typeahead field on Add Item page
 //                   ui.menu.click_Add__Item()
@@ -1776,7 +1776,7 @@ xdescribe('1. Case Level Permissions', function () {
 //                       .select_checkbox_on_first_table_row();
 //                   ui.caseView.click_element_on_active_tab(C.buttons.actions)
 //                       .click_option_on_expanded_menu(C.dropdowns.itemActions.addToCase)
-//                       .trigger_and_verify_Case_Number_validation_message(caseNumber, C.validation_msgs.caseNumberDoesNotExist)
+//                       .trigger_and_verify_Case_Number_validation_message(caseNumber, C.validation_information_or_warning_msgs.caseNumberDoesNotExist)
 //               });
 //
 //               it('TC_4.1.2 --> restricted access to Case from People View page / Cases Involved', function () {
@@ -1801,7 +1801,7 @@ xdescribe('1. Case Level Permissions', function () {
 //                        .verify_content_of_first_row_in_results_table(C.CLP.cannot_display_item_due_to_CLP);
 //
 //                   ui.app.open_newly_created_item_via_direct_link(true)
-//                       .verify_text_is_present_on_main_container(C.validation_msgs.forbidden)
+//                       .verify_text_is_present_on_main_container(C.validation_information_or_warning_msgs.forbidden)
 //               });
 //
 //               // TODO Uncomment when bug #10152 gets fixed
@@ -2074,7 +2074,7 @@ xdescribe('1. Case Level Permissions', function () {
 //
 //                   // direct link
 //                   ui.app.open_newly_created_case_via_direct_link()
-//                       .verify_text_is_present_on_main_container(C.validation_msgs.forbidden);
+//                       .verify_text_is_present_on_main_container(C.validation_information_or_warning_msgs.forbidden);
 //
 //                   // Case Number typeahead field on Add Item page
 //                   ui.menu.click_Add__Item()
@@ -2086,7 +2086,7 @@ xdescribe('1. Case Level Permissions', function () {
 //                       .select_checkbox_on_first_table_row();
 //                   ui.caseView.click_element_on_active_tab(C.buttons.actions)
 //                       .click_option_on_expanded_menu(C.dropdowns.itemActions.addToCase)
-//                       .trigger_and_verify_Case_Number_validation_message(caseNumber, C.validation_msgs.caseNumberDoesNotExist)
+//                       .trigger_and_verify_Case_Number_validation_message(caseNumber, C.validation_information_or_warning_msgs.caseNumberDoesNotExist)
 //               });
 //
 //               it('TC_4.2.2 --> restricted access to Case from People View page / Cases Involved', function () {
@@ -2112,7 +2112,7 @@ xdescribe('1. Case Level Permissions', function () {
 //                       .verify_content_of_last_row_in_results_table(C.CLP.cannot_display_item_due_to_CLP);
 //
 //                   ui.app.open_newly_created_item_via_direct_link(true)
-//                       .verify_text_is_present_on_main_container(C.validation_msgs.forbidden)
+//                       .verify_text_is_present_on_main_container(C.validation_information_or_warning_msgs.forbidden)
 //               });
 //
 //               // TODO Uncomment when bug #10152 gets fixed
@@ -2312,7 +2312,7 @@ xdescribe('1. Case Level Permissions', function () {
 //
 //                   // direct link
 //                   ui.app.open_newly_created_case_via_direct_link()
-//                       .verify_text_is_present_on_main_container(C.validation_msgs.forbidden);
+//                       .verify_text_is_present_on_main_container(C.validation_information_or_warning_msgs.forbidden);
 //
 //                   // Case Number typeahead field on Add Item page
 //                   ui.menu.click_Add__Item()
@@ -2324,7 +2324,7 @@ xdescribe('1. Case Level Permissions', function () {
 //                       .select_checkbox_on_first_table_row();
 //                   ui.caseView.click_element_on_active_tab(C.buttons.actions)
 //                       .click_option_on_expanded_menu(C.dropdowns.itemActions.addToCase)
-//                       .trigger_and_verify_Case_Number_validation_message(caseNumber, C.validation_msgs.caseNumberDoesNotExist)
+//                       .trigger_and_verify_Case_Number_validation_message(caseNumber, C.validation_information_or_warning_msgs.caseNumberDoesNotExist)
 //               });
 //
 //               it('TC_4.3.2 --> restricted access to Case from People View page / Cases Involved', function () {
@@ -2350,7 +2350,7 @@ xdescribe('1. Case Level Permissions', function () {
 //                       .verify_content_of_last_row_in_results_table(C.CLP.cannot_display_item_due_to_CLP);
 //
 //                   ui.app.open_newly_created_item_via_direct_link(true)
-//                       .verify_text_is_present_on_main_container(C.validation_msgs.forbidden)
+//                       .verify_text_is_present_on_main_container(C.validation_information_or_warning_msgs.forbidden)
 //               });
 //
 //               // TODO Uncomment when bug #10152 gets fixed

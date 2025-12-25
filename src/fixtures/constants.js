@@ -430,7 +430,7 @@ C = {
             notEquals: 'not equals',
         }
     },
-    validation_msgs: {
+    validation_information_or_warning_msgs: {
         forbidden: 'Forbidden',
         caseNumberDoesNotExist: 'Case with such number doesn\'t exist',
         authenticationError: 'Authentication error',

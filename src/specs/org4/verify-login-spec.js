@@ -17,27 +17,27 @@ describe('Login page', function () {
         ui.login.enter_credentials('test@test.com.', 'test');
         ui.app.click(C.buttons.login)
           //  .verify_toast_title('test')
-            .verify_toast_title(C.validation_msgs.authenticationError)
-            .verify_toast_message(C.validation_msgs.incorrectCredentials);
+            .verify_toast_title(C.validation_information_or_warning_msgs.authenticationError)
+            .verify_toast_message(C.validation_information_or_warning_msgs.incorrectCredentials);
         ui.login.verify_Username_field_has_red_border()
 
         // wrong password - 1st attempt
         ui.login.enter_credentials(S.selectedEnvironment.users.blockedUser.email, 'wrongPass');
         ui.app.click(C.buttons.login)
-            .verify_toast_title(C.validation_msgs.authenticationError);
-        ui.login.verify_inline_validation_message(C.validation_msgs.wrongPassword_1st_attempt);
+            .verify_toast_title(C.validation_information_or_warning_msgs.authenticationError);
+        ui.login.verify_inline_validation_message(C.validation_information_or_warning_msgs.wrongPassword_1st_attempt);
 
         // wrong password - 4th attempt
         for (let i = 0; i < 3; i++) {
             ui.app.click(C.buttons.login);
-            ui.app.verify_toast_title(C.validation_msgs.authenticationError);
+            ui.app.verify_toast_title(C.validation_information_or_warning_msgs.authenticationError);
         }
-        ui.login.verify_inline_validation_message(C.validation_msgs.wrongPassword_4th_attempt);
+        ui.login.verify_inline_validation_message(C.validation_information_or_warning_msgs.wrongPassword_4th_attempt);
 
         // wrong password - 5th attempt
         ui.app.click(C.buttons.login);
-        ui.app.verify_toast_title(C.validation_msgs.authenticationError);
-        ui.login.verify_inline_validation_message(C.validation_msgs.wrongPassword_5th_attempt);
+        ui.app.verify_toast_title(C.validation_information_or_warning_msgs.authenticationError);
+        ui.login.verify_inline_validation_message(C.validation_information_or_warning_msgs.wrongPassword_5th_attempt);
     });
 
     context('2. Warning that user is logged in on other browser or device', function () {
@@ -55,13 +55,13 @@ describe('Login page', function () {
             ui.login.enter_credentials(S.userAccounts.orgAdmin.email, S.userAccounts.orgAdmin.password);
             ui.app.click(C.buttons.login)
                 .verify_messages_on_sweet_alert([
-                    C.validation_msgs.areYouSure,
-                    C.validation_msgs.userLoggedInOnOtherMachine])
+                    C.validation_information_or_warning_msgs.areYouSure,
+                    C.validation_information_or_warning_msgs.userLoggedInOnOtherMachine])
                 .click_button(C.buttons.cancel)
                 .click(C.buttons.login)
                 .verify_messages_on_sweet_alert([
-                    C.validation_msgs.areYouSure,
-                    C.validation_msgs.userLoggedInOnOtherMachine])
+                    C.validation_information_or_warning_msgs.areYouSure,
+                    C.validation_information_or_warning_msgs.userLoggedInOnOtherMachine])
         });
 
         it('2.2 Confirmation on warning modal completes login and logs out user on other machine', function () {
@@ -72,8 +72,8 @@ describe('Login page', function () {
             ui.login.enter_credentials(S.userAccounts.orgAdmin.email, S.userAccounts.orgAdmin.password)
                 .click_button(C.buttons.login)
                 .verify_messages_on_sweet_alert([
-                    C.validation_msgs.areYouSure,
-                    C.validation_msgs.userLoggedInOnOtherMachine])
+                    C.validation_information_or_warning_msgs.areYouSure,
+                    C.validation_information_or_warning_msgs.userLoggedInOnOtherMachine])
                 .pause(1)
                 .click_button(C.buttons.yes)
                 .verify_text_is_present_on_main_container(C.labels.dashboard.title);

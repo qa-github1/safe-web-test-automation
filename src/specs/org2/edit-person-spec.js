@@ -7,15 +7,13 @@ const ui = require('../../pages/ui-spec');
 let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
 let startTime;
 
-for (let i = 0; i < 1; i++) {
+for (let i = 0; i < 10; i++) {
 
     describe('Edit Person', function () {
 
-        let user = S.getUserData(S.userAccounts.orgAdmin);
-
         before(function () {
-            api.auth.get_tokens(user);
-            api.users.update_current_user_settings(user.id)
+            api.auth.get_tokens(orgAdmin);
+            api.users.update_current_user_settings(orgAdmin.id)
             startTime = Date.now();
         });
 
@@ -27,7 +25,7 @@ for (let i = 0; i < 1; i++) {
 
         it('1. Edit and verify all values on Person View page', function () {
             ui.app.log_title(this);
-            api.auth.get_tokens(user);
+            api.auth.get_tokens(orgAdmin);
             D.generateNewDataSet();
             api.org_settings.enable_all_Person_fields();
             api.people.add_new_person(D.getRandomNo());
@@ -61,7 +59,7 @@ for (let i = 0; i < 1; i++) {
                 'First Name',
                 'Last Name']
 
-            api.auth.get_tokens(user);
+            api.auth.get_tokens(orgAdmin);
             D.generateNewDataSet(true);
             api.org_settings.disable_Person_fields();
             api.people.add_new_person(D.getRandomNo());
@@ -92,14 +90,14 @@ for (let i = 0; i < 1; i++) {
                 'Update Date',
                 'Business Name']
 
-            api.auth.get_tokens(user);
+            api.auth.get_tokens(orgAdmin);
             D.generateNewDataSet(true);
             D.newPerson.firstName = D.newPerson.lastName = ''
             D.editedPerson.firstName = D.editedPerson.lastName = null
             D.newPerson.businessName = D.getRandomNo()
             D.editedPerson.businessName = D.getRandomNo() + '_ed'
 
-            api.auth.get_tokens(user);
+            api.auth.get_tokens(orgAdmin);
             api.org_settings.disable_Person_fields(['Business Name']);
             api.people.add_new_person();
 
@@ -120,7 +118,7 @@ for (let i = 0; i < 1; i++) {
         it('4. Add a Person with disabled fields & check if those are shown up on Person Edit page after enabling all of the rest of the fields and editing Business Name / First Name / Last Name', function () {
             ui.app.log_title(this);
 
-            api.auth.get_tokens(user);
+            api.auth.get_tokens(orgAdmin);
             D.generateNewDataSet(true);
             api.org_settings.disable_Person_fields();
             api.people.add_new_person(D.getRandomNo());
@@ -169,94 +167,92 @@ for (let i = 0; i < 1; i++) {
                 ]);
         });
 
+        const expungedValues = {
+            Address: 'n/a',
+            'Business Name': 'Expunged',
+            Email: 'expunged@​expunged.​invalid',
+            Race: 'Unknown',
+            Gender: 'Unknown',
+            'First Name': 'Expunged',
+            'Last Name': 'Expunged',
+            'Middle Name': 'Expunged',
+            'Case Notes': 'Expunged',
+            Deceased: 'No',
+            Juvenile: 'No',
+        };
+
         it('5. Expunge Person from the Case', function () {
             api.auth.get_tokens(orgAdmin);
             D.generateNewDataSet(true)
-            api.org_settings.disable_Case_fields();
-            api.org_settings.enable_all_Person_fields()
+            api.org_settings.disable_Case_fields()
+                .enable_all_Person_fields()
             api.cases.add_new_case(D.newCase.caseNumber)
             api.people.add_new_person(true, D.newCase);
-            ui.app.open_newly_created_case_via_direct_link()
+            ui.personView.open_newly_created_case_via_direct_link()
                 .select_tab(C.tabs.people)
                 .enable_all_standard_columns_on_the_grid(C.pages.peopleSearch)
                 .select_checkbox_on_first_table_row()
                 .click_Actions()
                 .click_option_on_expanded_menu(C.buttons.expungeFromCase)
                 .verify_modal_content(D.newCase.caseNumber)
-                .verify_modal_content(C.validation_msgs.expungePersonFromCase(D.newPerson.firstName, D.newPerson.lastName))
-            ui.personView.populate_expunge_person_modal(D.expungePerson)
+                .verify_modal_content(C.validation_information_or_warning_msgs.expungePersonFromCase(D.newPerson.firstName, D.newPerson.lastName))
+                .populate_expunge_person_modal(D.expungePerson)
                 .click_Ok()
-                .verify_text_is_visible(C.validation_msgs.expungePersonSweetAlert)
-                .click_button('OK')
-            ui.app.verify_toast_message('Saved!')
-            .verify_content_of_specific_cell_in_first_table_row("Address", "n/a")
-            .verify_content_of_specific_cell_in_first_table_row("Business Name", "Expunged")
-            .verify_content_of_specific_cell_in_first_table_row("Email", "expunged@​expunged.​invalid")
-            .verify_content_of_specific_cell_in_first_table_row("Race", "Unknown")
-            .verify_content_of_specific_cell_in_first_table_row("Gender", "Unknown")
-            .verify_content_of_specific_cell_in_first_table_row("First Name", "Expunged")
-            .verify_content_of_specific_cell_in_first_table_row("Last Name", "Expunged")
-            .verify_content_of_specific_cell_in_first_table_row("Middle Name", "Expunged")
-            .verify_content_of_specific_cell_in_first_table_row("Case Notes", "Expunged")
-                .verify_content_of_specific_cell_in_first_table_row("Deceased", "No")
-                .verify_content_of_specific_cell_in_first_table_row("Juvenile", "No")
-            //  .verify_content_of_specific_cell_in_first_table_row("Person Type", "Expunged") bug - person type is visible
-            ui.app.click_button('View')
-            ui.personView.verify_edited_and_not_edited_values_on_Person_View_form(C.personFields.allEditableFieldsArray, D.expungePerson, D.newPerson)
-                .verify_values_on_expunge_person_modal(D.expungePerson)
+                .verify_sweet_alert_header(C.validation_information_or_warning_msgs.expungePersonSweetAlert)
+                .click_Ok(true)
+                .verify_toast_message('Saved!')
+                .verify_content_of_first_table_row_by_provided_column_titles_and_values_in_Object(expungedValues)
+                .click_button('View')
+                .verify_edited_and_not_edited_values_on_Person_View_form(C.personFields.allEditableFieldsArray, D.expungePerson, D.newPerson)
+                .verify_values_on_expunge_person_section(D.expungePerson)
                 .click_Edit()
-            ui.personView.verify_edited_and_not_edited_values_on_Person_Edit_form(C.personFields.allEditableFieldsArray, D.expungePerson, D.newPerson)
-                .verify_values_on_expunge_person_modal(D.expungePerson)
+                .verify_edited_and_not_edited_values_on_Person_Edit_form(C.personFields.allEditableFieldsArray, D.expungePerson, D.newPerson)
+                .verify_values_on_expunge_person_section(D.expungePerson)
                 .open_last_history_record(0)
-            ui.personView.verify_all_values_on_history(D.expungedPersonHistory)
-                .verify_values_on_expunge_person_modal(D.expungePerson)
+                .verify_all_values_on_history(D.expungedPersonHistory)
+                .verify_values_on_expunge_person_section(D.expungePerson)
         })
 
-        it('6. Expunge Person from the System', function () {
+        it.only('6. Expunge Person from the System', function () {
             //TODO: Add later expunge from the system using person view page
             //TODO: Edit values on expunged modal
+
+            expungedValues.Race = expungedValues.Gender = "Expunged"
+            delete expungedValues["Case Notes"]
+
             api.auth.get_tokens(orgAdmin);
             D.generateNewDataSet(true)
             D.getNewPersonData()
-            api.org_settings.disable_Case_fields();
-            api.org_settings.enable_all_Person_fields()
+            api.org_settings.disable_Case_fields()
+                .enable_all_Person_fields()
             api.cases.add_new_case(D.newCase.caseNumber)
             api.people.add_new_person(true, D.newCase);
-             ui.menu.click_Search__People()
-                 .enable_all_standard_columns_on_the_grid(C.pages.peopleSearch)
-            ui.searchPeople.enter_Business_Name(D.newPerson.businessName)
-                 .click_Search()
+            ui.menu.click_Search__People()
+            ui.searchPeople
+                .enter_Business_Name(D.newPerson.businessName)
+                .click_Search()
+                .enable_all_standard_columns_on_the_grid(C.pages.peopleSearch)
                 .select_checkbox_on_first_table_row()
                 .click_Actions()
                 .click_option_on_expanded_menu(C.buttons.expunge)
-                .verify_modal_content(C.validation_msgs.expungePersonFromSystem)
-             ui.personView.populate_expunge_person_modal(D.expungePerson)
+                .verify_modal_content(C.validation_information_or_warning_msgs.expungePersonFromSystem)
+                .populate_expunge_person_modal(D.expungePerson)
                 .click_Ok()
-                 .verify_text_is_visible(C.validation_msgs.expungePersonSweetAlert)
-                 .click_button('OK')
-             ui.app.verify_toast_message('Saved!')
-            .verify_content_of_specific_cell_in_first_table_row("Address", "n/a")
-            .verify_content_of_specific_cell_in_first_table_row("Business Name", "Expunged")
-            .verify_content_of_specific_cell_in_first_table_row("Email", "expunged@​expunged.​invalid")
-            .verify_content_of_specific_cell_in_first_table_row("Race", "Expunged")
-            .verify_content_of_specific_cell_in_first_table_row("Gender", "Expunged")
-            .verify_content_of_specific_cell_in_first_table_row("First Name", "Expunged")
-            .verify_content_of_specific_cell_in_first_table_row("Last Name", "Expunged")
-            .verify_content_of_specific_cell_in_first_table_row("Middle Name", "Expunged")
-            .verify_content_of_specific_cell_in_first_table_row("Deceased", "No")
-            .verify_content_of_specific_cell_in_first_table_row("Juvenile", "No")
-            //  .verify_content_of_specific_cell_in_first_table_row("Person Type", "Expunged") bug - person type is visible
-            ui.app.click_button('View')
+                .verify_sweet_alert_header(C.validation_information_or_warning_msgs.expungePersonSweetAlert)
+                .click_Ok(true)
+                .verify_toast_message('Saved!')
+                .verify_content_of_first_table_row_by_provided_column_titles_and_values_in_Object(expungedValues)
+                .click_button('View')
             ui.personView.verify_edited_and_not_edited_values_on_Person_View_form(C.personFields.allEditableFieldsArray, D.expungePerson, D.newPerson)
-                .verify_values_on_expunge_person_modal(D.expungePerson)
+                .verify_values_on_expunge_person_section(D.expungePerson)
                 .click_Edit()
-            ui.personView.verify_edited_and_not_edited_values_on_Person_Edit_form(C.personFields.allEditableFieldsArray, D.expungePerson, D.newPerson)
-                .verify_values_on_expunge_person_modal(D.expungePerson)
+                .verify_edited_and_not_edited_values_on_Person_Edit_form(C.personFields.allEditableFieldsArray, D.expungePerson, D.newPerson)
+                .verify_values_on_expunge_person_section(D.expungePerson)
                 .open_last_history_record(0)
-            ui.personView.verify_all_values_on_history(D.expungedPersonHistory, D.expungedPersonHistory)
-                .verify_values_on_expunge_person_modal(D.expungePerson)
+                .verify_all_values_on_history(D.expungedPersonHistory, D.expungedPersonHistory)
+                .verify_values_on_expunge_person_section(D.expungePerson)
         })
     });
 }
-;
+
 
