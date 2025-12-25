@@ -2,6 +2,7 @@ import authApi, {log_out} from "../../api-utils/endpoints/auth";
 import orgSettingsApi from "../../api-utils/endpoints/org-settings/collection";
 import '../../support/commands';
 import {selectedEnvironment} from "../../fixtures/settings";
+import ui from "../ui-spec";
 
 let S = require('../../fixtures/settings');
 let D = require('../../fixtures/data');
@@ -16,6 +17,7 @@ let
     pencilIcon = e => cy.get('.fa-pencil').first(),
     descriptionOnGrid = e => cy.get('[class="bs-grid-text-input ng-scope"]').find('input'),
     okButton = e => cy.findAllByText('Ok').last(),
+    okButton_capital_letters = e => cy.findAllByText('OK').last(),
     // saveButton = e => cy.get('[button-text="\'GENERAL.BUTTON_SAVE\'"]').contains('Save'),
     saveButton = e => cy.get('[button-text="\'GENERAL.BUTTON_SAVE\'"]').contains('Save'),
     // saveButton = e => cy.get('.btn-group').contains('Save'),
@@ -48,6 +50,7 @@ let
     modalBodySectionAboveFooter = e => cy.get('.modal-body').children('div').last(),
     itemCategoryOnMassUpdate = e => cy.get('[ng-model="item.categoryId"]'),
     sweetAlert = e => cy.get('[data-animation="pop"]'),
+    sweetAlertHeader = e => cy.get('[data-animation="pop"]').find('h2'),
     lastCoCMediaButton = e => cy.get('[class="btn btn-default btn-xs btn-block ng-binding"]').eq(1),
     typeaheadList = e => cy.get('.ui-select-choices'),
     firstTypeaheadOption = e => cy.get('.ui-select-choices-row').first(),
@@ -246,7 +249,10 @@ let
     checkoutReason = e => cy.get('[ng-options="r.id as r.name for r in data.checkoutReasons"]'),
     typeaheadSelectorMatchInMatches = '[ng-repeat="match in matches track by $index"]',
     typeaheadSelectorItemInGroupItems = '[ng-repeat="item in $group.items"]',
-    typeaheadSelectorChoicesRow = '.ui-select-choices-row'
+    typeaheadSelectorChoicesRow = '.ui-select-choices-row',
+    courtOrderNumber = e => cy.get('[ng-model="vm.courtOrderNumber"]'),
+    courtDate = e => cy.get('[translate="PEOPLE.COURT.DATE"]').parents('tp-modal-field').find('[ng-readonly="isDatePickerOnly"]'),
+    judge = e => cy.get('[ng-model="vm.courtJudge"]')
 
 let dashboardGetRequests = [
     '/api/users/currentuser?groups=true',
@@ -378,7 +384,6 @@ let basePage = class BasePage {
             .click({force: true});
         return this;
     }
-
 
     search_history(value) {
         searchBar_history().clear().type(value).type('{enter}');
@@ -1517,10 +1522,17 @@ let basePage = class BasePage {
         return this;
     };
 
-    click_Ok() {
-        okButton().scrollIntoView()
-        okButton().should('be.enabled');
-        okButton().click();
+    click_Ok(withBothCapitalLetters = false) {
+        if (withBothCapitalLetters){
+            okButton_capital_letters().scrollIntoView()
+            okButton_capital_letters().should('be.enabled');
+            okButton_capital_letters().click();
+        }
+        else{
+            okButton().scrollIntoView()
+            okButton().should('be.enabled');
+            okButton().click();
+        }
         return this;
     };
 
@@ -2357,6 +2369,13 @@ let basePage = class BasePage {
         return this;
     };
 
+    verify_sweet_alert_header(text) {
+        sweetAlertHeader().should('be.visible');
+        this.pause(0.5)
+        this.verify_text(sweetAlertHeader, text)
+        return this;
+    };
+
     isObject(variable) {
         return Object.prototype.toString.call(variable) === '[object Object]'
     }
@@ -2555,6 +2574,13 @@ let basePage = class BasePage {
             });
 
         return this;
+    }
+
+    verify_content_of_first_table_row_by_provided_column_titles_and_values_in_Object(object) {
+         Object.entries(object).forEach(([column, value]) => {
+             this.verify_content_of_first_table_row_by_provided_column_title_and_value(column, value);
+         });
+            return this;
     }
 
     verify_content_of_first_table_row_by_provided_column_title_and_value(columnTitle, cellContent, headerCellTag = 'th', isCoCTable = false) {
@@ -3003,7 +3029,6 @@ let basePage = class BasePage {
         return this;
     }
 
-
     check_asterisk_is_shown_for_specific_field_on_modal(fieldLabel, parentElementTag = 'div') {
         parentContainerFoundByInnerLabelOnModal(fieldLabel, parentElementTag)
             .find('[ng-message="required"]').should('be.visible');
@@ -3065,7 +3090,6 @@ let basePage = class BasePage {
         return this;
     }
 
-
     turnOnAllTogglesOnModal(skip) {
         cy.get('.modal-content .toggle-off')
             .filter(':contains("Off")').then($toggles => {
@@ -3096,7 +3120,6 @@ let basePage = class BasePage {
         });
         return this;
     }
-
 
     turnOnToggleAndReturnParentElementOnCustomForm(label) {
         return cy.get('.modal-content')
@@ -3132,7 +3155,6 @@ let basePage = class BasePage {
             .invoke('val', value).trigger('input')
         cy.get('@cfInput').type('{enter}');
     }
-
 
     turnOnToggleAndSelectDropdownOption(label, value) {
         this.turnOnToggleAndReturnParentElement(label)
@@ -4037,6 +4059,13 @@ let basePage = class BasePage {
             .wait_until_spinner_disappears()
         D.editedItem.status = 'Disposed'
         D.editedItem.location = ''
+        return this;
+    }
+
+    populate_expunge_person_modal(data){
+        courtOrderNumber().type(data.courtOrder);
+        courtDate().type(data.courtDate);
+        judge().type(data.judge);
         return this;
     }
 

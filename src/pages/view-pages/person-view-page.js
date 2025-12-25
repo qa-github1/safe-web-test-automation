@@ -25,7 +25,11 @@ let
     deceasedCheckbox = e => cy.contains('Deceased').parents('.checkbox').find('.icheckbox_square-blue'),
     deceasedCheckboxClickable = e => cy.contains('Deceased').parents('.checkbox').find('.icheckbox_square-blue').find('.iCheck-helper'),
     juvenileCheckbox = e => cy.contains('Juvenile').parents('.checkbox').find('.icheckbox_square-blue'),
-    juvenileCheckboxClickable = e => cy.contains('Juvenile').parents('.checkbox').find('.icheckbox_square-blue').find('.iCheck-helper')
+    juvenileCheckboxClickable = e => cy.contains('Juvenile').parents('.checkbox').find('.icheckbox_square-blue').find('.iCheck-helper'),
+    personCourtOrderNumber = e => cy.get('[ng-model="person.courtOrderNumber"]'),
+    personCourtDate = e => cy.get('[ng-model="person.courtOrderDate"]'),
+    personJudge = e => cy.get('[ng-model="person.judge"]'),
+    expungedModal = e => cy.get('[ng-if="person.courtOrderNumber"]')
 
 export default class PersonViewPage extends BaseViewPage {
 
@@ -266,4 +270,14 @@ export default class PersonViewPage extends BaseViewPage {
 
         return this;
     };
+
+    verify_values_on_expunge_person_section(data) {
+        this.verify_values_on_multiple_elements(
+            [
+                [personCourtOrderNumber, data.courtOrder],
+                [personJudge, data.judge]
+            ]);
+        personCourtDate().contains(data.courtDate)
+        return this;
+    }
 }
