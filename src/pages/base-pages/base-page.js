@@ -141,6 +141,7 @@ let
     visibleTable = e => cy.get('.table').not('.ng-hide'),
     checkboxOnFirstRowOnVisibleTable = e => visibleTable().find('tbody').children('tr').first(),
     checkboxOnLastRowOnVisibleTable = e => visibleTable().find('tbody').children('tr').last().find('.bg-grid-checkbox'),
+    specificRowInResultsTableOnActiveTab = rowNumber => active_tab().find('tbody').children('tr').eq(rowNumber-1),
     firstRowInResultsTableOnActiveTab = e => active_tab().find('tbody').children('tr').first(),
     lastRowInResultsTableOnActiveTab = e => active_tab().find('tbody').children('tr').last(),
     checkboxOnFirstRowInResultsTableOnActiveTab = (tableIndex = 0) => active_tab().find('tbody').eq(tableIndex)
@@ -2594,13 +2595,22 @@ let basePage = class BasePage {
         return this;
     }
 
-
     verify_content_of_first_row_in_results_table_on_active_tab(content) {
         if (Array.isArray(content)) {
             content.forEach(value =>
                 firstRowInResultsTableOnActiveTab().should('contain', value))
         } else {
             firstRowInResultsTableOnActiveTab().should('contain', content);
+        }
+        return this;
+    };
+
+    verify_content_of_specific_row_in_results_table_on_active_tab(rowNumber, content) {
+        if (Array.isArray(content)) {
+            content.forEach(value =>
+                specificRowInResultsTableOnActiveTab(rowNumber).should('contain', value))
+        } else {
+            specificRowInResultsTableOnActiveTab(rowNumber).should('contain', content);
         }
         return this;
     };

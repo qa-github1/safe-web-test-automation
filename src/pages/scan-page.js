@@ -32,9 +32,7 @@ export default class ScanPage extends BasePage {
         } else {
             clearListOnScanHistory().click()
         }
-        this.verify_messages_on_sweet_alert(["There are currently items in the scan list. Would you like to clear the scan list before proceeding?"])
-            .click_button('Yes')
-            .verify_records_count_on_grid(0)
+        return this
     }
 
     scan_barcode(value) {

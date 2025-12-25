@@ -23,7 +23,7 @@ D.getCurrentDateAndRandomNumber = function (randomNumberLenght) {
     return helper.mediumDate + '_' + helper.getRandomNo(randomNumberLenght);
 }
 
-D.getStorageLocationData = function (locationName, parentId = 0, canStore = true, isActive = true) {
+D.getStorageLocationData = function (locationName, parentId = 0, canStore = true, isActive = true, isOontainer = false) {
     D[locationName] = {
         "name": D.currentDateAndRandomNumber + '_' + locationName,
         "active": isActive,
@@ -200,7 +200,7 @@ D.getNewItemData = function (specificCaseObject, locationObject, newPerson) {
     let person = (newPerson && newPerson.id !== '') ? newPerson : S.selectedEnvironment.person;
     locationObject = locationObject || S.selectedEnvironment.locations[0];
     specificCaseObject = specificCaseObject || S.selectedEnvironment.oldActiveCase;
-    let randomNo = D.setNewRandomNo();
+    let randomNo = this.setNewRandomNo();
 
     D.newItem = Object.assign({}, D.newCustomFormData, {
         primaryCaseId: specificCaseObject.id,
@@ -250,7 +250,7 @@ D.getNewItemData = function (specificCaseObject, locationObject, newPerson) {
         people: [person],
         make: 'make_' + randomNo,
         model: 'model_' + randomNo,
-        serialNumber: 'serialNo_' + randomNo,
+        serialNumber: 'serialNo_' + + randomNo,
         custodyReasonId: S.selectedEnvironment.custodyReason.id,
         custodyReason: S.selectedEnvironment.custodyReason.name,
         peopleIds: [person.id],
@@ -282,9 +282,7 @@ D.getNewItemData = function (specificCaseObject, locationObject, newPerson) {
         subsetTypeNumber: 'Number',
         percentageOrNumberOfItems: '1'
     });
-
     return D.newItem;
-
 };
 
 D.getDisposedItemData = function (newOrEditedItem = 'editedItem') {
