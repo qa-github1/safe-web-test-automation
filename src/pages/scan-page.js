@@ -32,6 +32,7 @@ export default class ScanPage extends BasePage {
         } else {
             clearListOnScanHistory().click()
         }
+        this.pause(1)
         return this
     }
 
