@@ -1025,6 +1025,12 @@ C.pages = {
         numberOfAllColumnsWithDispoStatusEnabled: 65,
         numberOfStandardColumnsReduced: 26,
     },
+    scanPage: {
+        url: 'items/scan/',
+        numberOfStandardColumns: null,
+        numberOfAllColumnsWithDispoStatusEnabled: 68,
+        numberOfStandardColumnsReduced: null,
+    },
     peopleSearch: {
         numberOfStandardColumns: 19,
         numberOfStandardColumnsReduced: 6,

@@ -106,11 +106,11 @@ let
     dataGrid = (tableIndex = 0) => cy.get('.table-striped[tp-fixed-table-header-scrollable="scrollable-area"]').eq(tableIndex).find('tbody'),
     resultsEntriesCount = e => cy.get('[translate="BSGRID.DISPLAY_STATS"]'),
     //menuCustomization = e => cy.contains('Menu Customization'),
-    menuCustomization = e => cy.get('[translate="BSGRID.BUTTON_MENU_CUSTOMIZATION"]'),
+    menuCustomization = e => cy.get('[translate="BSGRID.BUTTON_MENU_CUSTOMIZATION"]').first(),
     menuCustomizationFromRoot = e => cy.root().parents('html').contains('Menu Customization'),
     customFormsSectionOnMenuCustomization = e => cy.get('[is-open="customFieldsToggle.isOpen"]'),
     searchCustomFormsOnMenuCustomization = e => cy.get('[ng-model="options.customFormSearchField"]'),
-    optionsOnMenuCustomization = e => cy.get('[is-open="optionsToggle.isOpen"]'),
+    optionsOnMenuCustomization = e => cy.get('[is-open="optionsToggle.isOpen"]').first(),
     standardColumnsOnMenuCustomization = e => cy.get('[ng-repeat="col in getStandardFields() | orderBy:\'name | translate\'"]'),
     columnsOnMenuCustomization = e => cy.get('[ng-class="col.visible ? \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\': \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]'),
 

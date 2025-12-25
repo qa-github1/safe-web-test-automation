@@ -33,6 +33,38 @@ D.getStorageLocationData = function (locationName, parentId = 0, canStore = true
     return D[locationName]
 }
 
+//TODO : this and function above (D.getStorageLocationData) look redundant so we need to clean it up later
+D.getStorageLocation = function () {
+    let randomNo = helper.setNewRandomString();
+
+    D.newStorageLocation = {
+        name: '0-New-L' + ' ' + randomNo,
+        items: 0,
+        isActive: true,
+        legacyBarcode: '',
+        parentLocationBarcode: '',
+        isContainer: false,
+        isStorage: true,
+        groups: '',
+    }
+
+    D.editedStorageLocation = {
+        name: '0-edited' + ' ' + randomNo,
+        items: 0,
+        isActive: false,
+        legacyBarcode: 'new barcode' + ' ' + randomNo,
+        parentLocationBarcode: '',
+        isContainer: true,
+        isStorage: false,
+        groups: 'Power User',
+        parentMoveLocation: '0 - automation - do not touch',
+        parentStorageLocation: '0 - P - don\'t touch',
+        newContainerName: 'New C' + ' ' + randomNo,
+        moveNote: "note" + ' ' + randomNo
+    }
+    return newStorageLocation;
+};
+
 D.getNewCaseData = function (caseNumber, autoDispoOff = false) {
     // api.cases.get_most_recent_case();
     caseNumber = caseNumber || this.setNewRandomNo();
@@ -637,37 +669,6 @@ D.getUserData = function (officeId) {
     D.getEditedUserData()
 }
 
-D.getStorageLocation = function () {
-    let randomNo = helper.setNewRandomString();
-
-    D.newStorageLocation = {
-        name: '0-New-L' + ' ' + randomNo,
-        items: 0,
-        isActive: true,
-        legacyBarcode: '',
-        parentLocationBarcode: '',
-        isContainer: false,
-        isStorage: true,
-        groups: '',
-    },
-
-        D.editedStorageLocation = {
-            name: '0-edited' + ' ' + randomNo,
-            items: 0,
-            isActive: false,
-            legacyBarcode: 'new barcode' + ' ' + randomNo,
-            parentLocationBarcode: '',
-            isContainer: true,
-            isStorage: false,
-            groups: 'Power User',
-            parentMoveLocation: '0 - automation - do not touch',
-            parentStorageLocation: '0 - P - don\'t touch',
-            newContainerName: 'New C' + ' ' + randomNo,
-            moveNote: "note" + ' ' + randomNo
-        }
-    return newStorageLocation;
-};
-
 D.getTagsData = function (type) {
     D.getNewTagsData(type)
     D.getEditedTagsData(type)
@@ -689,10 +690,10 @@ D.getNewTaskTemplateData = function () {
 };
 
 D.getNewTagsData = function (type = 'Org') {
-    let randomNo = helper.setNewRandomString(3,  'mmdd');
+    let randomNo = helper.setNewRandomString(3, 'mmdd');
     D.newTag = {
         type: type,
-        name : `Auto_ ${type}_` + randomNo,
+        name: `Auto_ ${type}_` + randomNo,
         color: "#4b9",
     }
 
@@ -710,10 +711,10 @@ D.getNewTagsData = function (type = 'Org') {
 };
 
 D.getEditedTagsData = function (type = 'Org') {
-    let randomNo = helper.setNewRandomString(3,  'mmdd');
+    let randomNo = helper.setNewRandomString(3, 'mmdd');
     D.editedTag = {
         type: type,
-        name : `AutoEdit_ ${type}_` + randomNo,
+        name: `AutoEdit_ ${type}_` + randomNo,
         color: "#1069bd"
     }
 
@@ -1116,7 +1117,6 @@ D.getDataForMultipleCases = function (numberOfCases, startingIndex = 1) {
 }
 
 D.currentDateAndRandomNumber = helper.mediumDate + '_' + helper.getRandomNo(3);
-
 
 
 module.exports = D;
