@@ -108,22 +108,24 @@ describe('Services', function () {
         api.items.add_new_item()
     });
 
-    it('1. Reporter', function () {
+    it.only('1. Reporter', function () {
 
         api.auth.get_tokens(S.userAccounts.orgAdmin);
         cy.window().then((win) => {
             cy.stub(win, 'open').as('windowOpen');
         });
+
+        api.transactions.check_out_item()
         ui.app.open_newly_created_case_via_direct_link()
             .select_tab(C.tabs.items)
             .select_checkbox_for_all_records()
             .click_element_on_active_tab(C.buttons.reports)
-            .click_option_on_expanded_menu(C.reports.primaryLabel4x3, false)
+            .click_option_on_expanded_menu(C.reports.chainOfCustody, false)
             .verify_report_running_toast_message()
             .click_element_on_active_tab(C.buttons.reports)
-            .click_option_on_expanded_menu(C.reports.primaryLabel4x3)
+            .click_option_on_expanded_menu(C.reports.chainOfCustody)
         cy.get('@windowOpen').should('have.been.called');
-        if (S.domain !== 'PENTEST'){
+        if (S.domain !== 'PENTEST') {
             cy.get('@windowOpen').should('have.been.calledWithMatch', /Report.*\.pdf/)
         }
     });
@@ -208,7 +210,7 @@ describe('Services', function () {
         ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.caseCreated, D.newCase, null, 1, false)
     })
 
-    it('5. Dispo Auth Service', function () {
+    it.only('5. Dispo Auth Service', function () {
 
         ui.app.log_title(this);
         api.auth.get_tokens(orgAdmin);

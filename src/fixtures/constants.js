@@ -699,6 +699,7 @@ C = {
         printCaseAndPeopleOnly: 'Print Case and People only',
         selectPeople: 'Select People',
         primaryLabel4x3: '4x3 Primary Label',
+        chainOfCustody: 'Chain of Custody Report',
         evidenceList: 'Evidence List _ Report by Case - Landscape',
         propertyReleaseForm: 'Property Release Form',
     },
