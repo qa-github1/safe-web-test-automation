@@ -1,13 +1,13 @@
 const S = require('../../../fixtures/settings.js');
 const D = require('../../../fixtures/data.js');
 
-exports.generate_POST_request_payload_for_creating_new_case = function (caseNumber, caseObject) {
+exports.generate_POST_request_payload_for_creating_new_case = function (caseNumber, caseObject, isCaseNumberAutoAssigned = false) {
 
     let caseData = caseObject ? Object.assign({}, caseObject) : Object.assign({}, D.newCase);
     caseNumber = caseNumber || caseData.caseNumber;
 
     let body = {
-        caseNumber: caseNumber,
+       // caseNumber: caseNumber,
         createdDate: caseData.createdDateIsoFormat,
         reviewDate: caseData.reviewDateIsoFormat,
         active: caseData.active,
@@ -19,6 +19,10 @@ exports.generate_POST_request_payload_for_creating_new_case = function (caseNumb
         caseOfficerGroupIds: caseData.caseOfficerGroupIds,
         tags: caseData.tagsForApi,
     };
+
+    if (!isCaseNumberAutoAssigned) {
+        body.caseNumber =  caseNumber
+    }
 
     body.offenseDate = caseData.offenseDateIsoFormat || undefined
     body.closedDate = caseData.closedDateIsoFormat || undefined

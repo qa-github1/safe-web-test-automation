@@ -23,7 +23,7 @@ exports.generate_POST_request_payload_for_creating_new_item = function (itemObje
         locationId: locationId,
         recoveryDate: itemData.recoveryDateInIsoFormat,
         createdDate: itemData.createdDate,
-        barcodes: [{id:0 , value: randomNo}],
+        barcodes: itemData.barcodes,
         formData: itemData.formData,
         cases: itemData.cases,
         people: [person],
@@ -33,7 +33,8 @@ exports.generate_POST_request_payload_for_creating_new_item = function (itemObje
         primaryCaseId: primaryCaseId,
         custodyReasonId: itemData.custodyReasonId ?? 0,
         peopleIds: [person.id],
-        tags: itemData.tagsForApi
+        tags: itemData.tagsForApi,
+        containerModel: itemData.containerModel,
     };
 
     if (itemData.tags && itemData.tags[0].name) body.tags = itemData.tags

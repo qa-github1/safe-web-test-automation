@@ -3,6 +3,7 @@ const body = require('./payload');
 const helper = require('../../../support/e2e-helper');
 const D = require('../../../fixtures/data');
 const S = require('../../../fixtures/settings');
+const api = require("../../api-spec");
 
 exports.get_locations_by_name = function (fullLocationName) {
     generic_request.GET(
@@ -18,11 +19,11 @@ exports.get_locations_by_name = function (fullLocationName) {
     })
 };
 
-exports.get_storage_locations = function (parentLocationId = 0) {
+exports.get_storage_locations = function (parentLocationId = 0, propertyToStoreInLocalStorage = 'locations') {
     generic_request.GET(
         '/api/locations/childrenOrRoots?parentLocationId=' + parentLocationId,
         'Fetching storage locations via API ',
-        'locations',
+        propertyToStoreInLocalStorage,
         'locations',
     )
 };
@@ -98,12 +99,14 @@ exports.delete_empty_storage_locations = function () {
 
 exports.update_location = function (locationName, propertyName, propertyValue) {
     let log;
+
     exports.get_locations_by_name(locationName);
     cy.getLocalStorage(locationName).then(specificLocation => {
         let loc = {
             "id": JSON.parse(specificLocation).id,
             "name": JSON.parse(specificLocation).name,
             "active": JSON.parse(specificLocation).active,
+            "legacyBarcode": JSON.parse(specificLocation).legacyBarcode,
             //   "parentId": JSON.parse(specificLocation).parentId,
             //   "parentLocationId": JSON.parse(specificLocation).parentId,
             "canStoreHere": JSON.parse(specificLocation).canStore ? JSON.parse(specificLocation).canStore : true
@@ -117,6 +120,14 @@ exports.update_location = function (locationName, propertyName, propertyValue) {
             log
         )
     })
+};
+
+exports.update_location_by_full_loc_object = function (locObject, propertyName, propertyValue) {
+    locObject[propertyName] = propertyValue
+    generic_request.PUT(
+        '/api/locations/' + locObject.id,
+        locObject
+    )
 };
 
 exports.move_location = function (locationName, newParentlocationName, locationNameInLocalStorage = false) {
@@ -165,9 +176,8 @@ exports.move_location_with_request_from_scan_page = function (locationName, newP
             let destinationLocId
 
             if (newParentLoc) {
-                destinationLocId= JSON.parse(newParentLoc).id
-            }
-            else {
+                destinationLocId = JSON.parse(newParentLoc).id
+            } else {
                 destinationLocId = newParentlocationNameOrId
             }
             let destinationLoc = JSON.parse(newParentLoc)
@@ -241,3 +251,15 @@ exports.get_and_save_any_location_data_to_local_storage = function (fullOrPartia
         })
     })
 };
+
+exports.fetch_location_IDs = function (currentLocName, currentParentLocName, newParentLocNameOrId) {
+    if (currentParentLocName) {
+        exports.get_and_save_any_location_data_to_local_storage(currentParentLocName)
+        exports.get_and_save_any_location_data_to_local_storage(currentLocName, null, currentParentLocName)
+    } else {
+        exports.get_and_save_any_location_data_to_local_storage(currentLocName)
+    }
+
+    exports.get_and_save_any_location_data_to_local_storage(newParentLocNameOrId)
+}
+

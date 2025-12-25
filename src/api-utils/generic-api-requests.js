@@ -51,19 +51,19 @@ function request_with_JSON_data(httpMethod, urlSuffix, requestBody, log = '', pr
                     }
 
 
-                    // cy.log( '*********************************************    ' + log + propertyName + ' ' + response + '     *********************************************', 'blue');
-                    // console.log( '*********************************************    ' + log + propertyName + ' ' + JSON.stringify(response)+ '     *********************************************');
-                    //
+                    cy.log( '*********************************************    ' + log + propertyName + ' ' + response + '     *********************************************', 'blue');
+                    console.log( '*********************************************    ' + log + propertyName + ' ' + JSON.stringify(response)+ '     *********************************************');
 
-                    // // log message and/or ID from the response object if available
-                    // if (response.body) {
-                    //    cy.log( '*********************************************    ' + log + propertyName + ' ' + propertyValue + '     *********************************************', 'blue');
-                    //    console.log( '*********************************************    ' + log + propertyName + ' ' + propertyValue+ '     *********************************************');
-                    //
-                    // } else{
-                    //    cy.log('*********************************************    ' + log + propertyName + '     *********************************************');
-                    //    console.log('*********************************************    ' + log + propertyName + '     *********************************************');
-                    // }
+
+                    // log message and/or ID from the response object if available
+                    if (response.body) {
+                       cy.log( '*********************************************    ' + log + propertyName + ' ' + propertyValue + '     *********************************************', 'blue');
+                       console.log( '*********************************************    ' + log + propertyName + ' ' + propertyValue+ '     *********************************************');
+
+                    } else{
+                       cy.log('*********************************************    ' + log + propertyName + '     *********************************************');
+                       console.log('*********************************************    ' + log + propertyName + '     *********************************************');
+                    }
                 });
         }
     )
