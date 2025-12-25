@@ -522,6 +522,46 @@ D.getEditedPersonData = function () {
         personTypeId: S.selectedEnvironment.personType2.id
     });
 
+    D.expungePerson = {
+        courtOrder: 'order test',
+        courtDate: helper.setDate(C.currentDateTimeFormat.dateOnly),
+        judge: 'judge test',
+        businessName: 'Expunged',
+        firstName: 'Expunged',
+        middleName: 'Expunged',
+        lastName: 'Expunged',
+        alias: 'Expunged',
+        driverLicense: 'Expunged',
+        race: 'Unknown',
+        gender: 'Unknown',
+        dateOfBirth: '',
+        mobilePhone: '',
+        otherPhone: '',
+        email: 'expunged@​expunged.​invalid',
+        deceased: false,
+        juvenile: false,
+        address: 'n/a'
+    };
+    D.expungedPersonHistory = {
+        courtOrder: 'order test',
+        courtDate: helper.setDate(C.currentDateTimeFormat.dateOnly),
+        judge: 'judge test',
+        businessName: 'Expunged',
+        firstName: 'Expunged',
+        middleName: 'Expunged',
+        lastName: 'Expunged',
+        alias: 'Expunged',
+        driverLicense: 'Expunged',
+        race: 'Unknown',
+        gender: 'Unknown',
+        dateOfBirth: '',
+        mobilePhone: 'Expu-nged',
+        otherPhone: 'Expu-nged',
+        email: 'Expunged',
+        deceased: false,
+        juvenile: false
+    };
+
     D.editedPersonAddress = {
         id: 0,
         date: '2020-04-11T05:19:49.040Z',
