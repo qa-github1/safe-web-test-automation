@@ -51,7 +51,7 @@ describe('Services', function () {
         });
     });
 
-    it.only('Concurrent Container Creation from Item Entries with AutoAssigned OrgLevel Container Numbers', function () {
+    it('Concurrent Container Creation from Item Entries with AutoAssigned OrgLevel Container Numbers', function () {
         api.auth.get_tokens_without_page_load(powerUser);
 
         let currentLocName, currentParentLocName, newParentLocNameOrId

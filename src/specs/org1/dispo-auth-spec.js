@@ -121,7 +121,7 @@ describe('Dispo Auth', function () {
             .verify_text_is_present_on_main_container('Closed')
     });
 
-    it.only('Add Dispo Task with 100 items and assign to Power User, ' +
+    it('Add Dispo Task with 100 items and assign to Power User, ' +
         '--initiate and complete 2nd and 3rd tier approval' +
         '--use Approve and Reject buttons from grid and Actions menu' +
         '--with and without Dispo Auth Service' +

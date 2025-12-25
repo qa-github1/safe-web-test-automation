@@ -108,7 +108,7 @@ describe('Services', function () {
         api.items.add_new_item()
     });
 
-    it.only('1. Reporter', function () {
+    it('1. Reporter', function () {
 
         api.auth.get_tokens(S.userAccounts.orgAdmin);
         cy.window().then((win) => {
@@ -210,7 +210,7 @@ describe('Services', function () {
         ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.caseCreated, D.newCase, null, 1, false)
     })
 
-    it.only('5. Dispo Auth Service', function () {
+    it('5. Dispo Auth Service', function () {
 
         ui.app.log_title(this);
         api.auth.get_tokens(orgAdmin);

@@ -1,16 +1,10 @@
 const S = require('../fixtures/settings');
 const api = require('../api-utils/api-spec');
 let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
-//
-// orgAdmin = {
-//     email: `qa+org4admin@trackerproducts.com`,
-//     password: 'Qwerty123!',
-//     id: null
-// }
 
 describe('Location Name Batch Updates', function () {
 
-    it.only('LOCATIONS MOVE Service', function () {
+    it('LOCATIONS MOVE Service', function () {
 
         api.auth.get_tokens(orgAdmin);
 
@@ -466,18 +460,5 @@ async function apiFetch(path, options = {}) {
 
     console.log('✅ ROLLBACK COMPLETED (latest server version used)');
 })();
-
-
-//Amina's Org - Office 14624
-
-//
-// (async () => {
-//     for (const path of fullLocationPaths) {
-//         console.log(`🚀 Processing parent path: ${path}`);
-//         const parentId = await getLocationIdByFullPath(path);
-//         await updateSublocations(parentId);
-//     }
-//     console.log('✅ All updates completed');
-// })();
 
 

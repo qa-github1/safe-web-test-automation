@@ -19,7 +19,7 @@ describe('Import Cases', function () {
         D.generateNewDataSet();
     });
 
-    it.only('I.C_1 Case with all regular and custom fields -- user and user group in Case Officer(s) field', function () {
+    it('I.C_1 Case with all regular and custom fields -- user and user group in Case Officer(s) field', function () {
         ui.app.log_title(this);
         let fileName = 'CaseImport_allFields_' + S.domain;
         api.auth.get_tokens(user);
@@ -125,5 +125,5 @@ describe('Import Cases', function () {
                 .click_button(C.buttons.search)
                 .verify_toast_title_and_message(C.toastMsgs.resultsLimitExceededTitle, C.toastMsgs.resultsLimitExceeded('5,000').toString())
         });
-   }
+    }
 });

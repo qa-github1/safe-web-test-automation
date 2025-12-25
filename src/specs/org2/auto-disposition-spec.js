@@ -58,7 +58,7 @@ describe('Auto-Disposition', function () {
             api.users.update_current_user_settings(user.id, DF.dateTimeFormats.long)
         });
 
-        it.only('2.1 Verify "Re-DistributeCase Case Review Dates" functionalities', function () {
+        it('2.1 Verify "Re-DistributeCase Case Review Dates" functionalities', function () {
             api.auth.get_tokens(user);
             let daysToFollowUp = 33
             api.org_settings.update_dispo_config_for_offense_types(true, true, daysToFollowUp)
