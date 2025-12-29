@@ -17,7 +17,7 @@ before(function () {
     api.users.update_current_user_settings(orgAdmin.id, DF.dateTimeFormats.short, DF.dateFormats.shortDate)
 });
 
-describe.only('Case', function () {
+describe('Case', function () {
 
     it(
         '*** Add/Edit/Search/MassUpdate Case ' +
