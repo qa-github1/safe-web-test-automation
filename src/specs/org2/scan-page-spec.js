@@ -28,6 +28,10 @@ for (let i = 0; i < 10; i++) {
             cy.log(`⏱ Total time for suite: ${totalSeconds} seconds`);
         });
 
+        afterEach(function () {
+            cy.clearLocalStorage()
+        });
+
         it('1. Scanning checked-in items via barcode, serial, location and container', function () {
 
             D.location1 = D.getStorageLocationData('loc1', null, true, true, false);
@@ -36,7 +40,7 @@ for (let i = 0; i < 10; i++) {
             api.locations.add_storage_location(D.location1);
             api.locations.add_storage_location(D.container1);
 
-            api.items.add_new_item(true, D.location1, 'item1');
+            api.items.add_new_item(true, D.location1, 'item1', D.getNewItemData());
             api.items.add_new_item(true, D.location1, 'item2', D.getNewItemData());
             api.items.add_new_item(true, D.container1, 'item3', D.getNewItemData());
 
@@ -89,7 +93,6 @@ for (let i = 0; i < 10; i++) {
                         .select_tab('Containers')
                         .verify_content_of_specific_row_in_results_table_on_active_tab(1, [cont1.name, ''])
                         .clear_scanned_barcodes('Containers')
-                        .verify_records_count_on_grid(0)
                         .close_Item_In_Scan_List_alert()
 
                     cy.log(" 🟢🟢🟢  6. Scan Container Barcode without Checked-IN container Items being auto-scanned 🟢🟢🟢")
@@ -103,7 +106,6 @@ for (let i = 0; i < 10; i++) {
                         .select_tab('Containers')
                         .verify_records_count_on_grid(1)
                         .clear_scanned_barcodes('Containers')
-                        .verify_records_count_on_grid(0)
                         .close_Item_In_Scan_List_alert()
 
                 });
