@@ -70,7 +70,7 @@ export default class SearchCasePage extends BaseSearchPage {
 
     enter_Case_Number(searchCriteria, caseNo) {
         caseNumberSearchCriteria().select(searchCriteria);
-        caseNumberInput().clear().type(caseNo);
+        this.clearAndEnterValue(caseNumberInput, caseNo)
         caseNumberInput().should('have.value', caseNo);
         return this;
     };

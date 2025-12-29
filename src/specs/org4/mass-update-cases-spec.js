@@ -27,8 +27,7 @@ describe('Mass Update Cases', function () {
     ]
 
     context('1. all fields enabled in Org Settings', function () {
-        //TODO: Sumejja needs to check further
-        xit('1.1 all fields turned on and edited, "overwrite existing values" turned OFF', function () {
+        it('1.1 all fields turned on and edited, "overwrite existing values" turned OFF', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(user);
             D.generateNewDataSet();
@@ -103,8 +102,7 @@ describe('Mass Update Cases', function () {
                 .verify_edited_and_not_edited_values_on_Case_Edit_form(multiSelectFieldsLabels, D.editedCase, D.newCase, true)
         });
 
-        //TODO: Sumejja needs to check further
-        xit('1.3 all fields turned on but value is edited on required fields only', function () {
+        it('1.3 all fields turned on but value is edited on required fields only', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(user);
             D.generateNewDataSet();
@@ -127,7 +125,7 @@ describe('Mass Update Cases', function () {
                 .click_button(C.buttons.actions)
                 .click_option_on_expanded_menu(C.dropdowns.caseActions.massUpdate)
                 .verify_Ok_button_is_disabled()
-                .turn_on_all_toggles_on_modal(allFieldsLabels)
+                .turn_off_all_toggles_on_Case_Mass_Updates_modal()
                 .verify_asterisk_is_shown_for_fields_on_modal(requiredFieldsLabels)
                 .enter_values_to_all_fields_on_Mass_Update_modal(requiredFieldsLabels, requiredValues)
                 .click_Ok()

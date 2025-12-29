@@ -3053,10 +3053,6 @@ let basePage = class BasePage {
             .parents('.form-group').first()
     }
 
-    // turnOnAllTogglesOnModal() {
-    //     cy.get('.modal-content').find('.toggle-off').click({multiple: true})
-    //     return this
-    // }
 
     turnOnOnlySpecificTogglesOnModal(toggleNumbers) {
         cy.get('.modal-content .toggle-off')
@@ -3091,33 +3087,44 @@ let basePage = class BasePage {
     }
 
     turnOnAllTogglesOnModal(skip) {
-        cy.get('.modal-content .toggle-off')
-            .filter(':contains("Off")').then($toggles => {
-            let togglesToClick;
+        const clicked = new Set();
 
-            if (skip === 'first') {
-                togglesToClick = $toggles.slice(1);
+        const shouldSkip = (el, index, lastIndex) => {
+            if (clicked.has(el)) return true;          // already clicked
+            if (skip === 'first' && index === 0) return true;
+            if (skip === 'last' && index === lastIndex) return true;
+            if (Number.isInteger(skip) && index === skip - 1) return true;
+            if (Array.isArray(skip) && skip.map(n => n - 1).includes(index)) return true;
+            return false;
+        };
 
-            } else if (skip === 'last') {
-                togglesToClick = $toggles.slice(0, -1);
+        const clickNext = () => {
+            cy.get('.modal-content .toggle-off')
+                .filter(':contains("Off")')
+                .filter(':visible')
+                .then($toggles => {
+                    if (!$toggles.length) return;
 
-            } else if (Number.isInteger(skip)) {
-                // single number → 1-based -> 0-based
-                const zeroIndex = skip - 1;
-                togglesToClick = $toggles.filter((i) => i !== zeroIndex);
+                    const lastIndex = $toggles.length - 1;
 
-            } else if (Array.isArray(skip)) {
-                // array of numbers → map 1-based -> 0-based
-                const zeroIndexes = skip.map(n => n - 1);
-                togglesToClick = $toggles.filter((i) => !zeroIndexes.includes(i));
+                    // find first toggle that should be clicked
+                    let found = false;
+                    for (let i = 0; i < $toggles.length; i++) {
+                        const el = $toggles[i];
+                        if (!shouldSkip(el, i, lastIndex)) {
+                            clicked.add(el);
+                            cy.wrap(el)
+                                .click()
+                                .then(clickNext); // recurse
+                            found = true;
+                            break;
+                        }
+                    }
 
-            } else {
-                // no skipping
-                togglesToClick = $toggles;
-            }
-
-            cy.wrap(togglesToClick).click({multiple: true});
-        });
+                    if (!found) return; // nothing left to click
+                });
+        };
+        clickNext();
         return this;
     }
 
@@ -3307,7 +3314,7 @@ let basePage = class BasePage {
     }
 
     turn_on_all_toggles_on_modal(labelsArray) {
-        this.pause(1)
+        this.pause(0.5)
         for (let i = 0; i < labelsArray.length; i++) {
             const label = labelsArray[i];
             this.turnOnToggle(label);
@@ -3320,17 +3327,9 @@ let basePage = class BasePage {
         return this;
     }
 
-    turn_off_all_toggles_on_modal(labelsArray) {
-        this.pause(1)
-        for (let i = 0; i < labelsArray.length; i++) {
-            const label = labelsArray[i];
-            this.turnOnToggle(label);
-
-            if (label === 'Category' && S.isDispoStatusEnabled()) {
-                this.click('Confirm');
-            }
-        }
-
+    turn_off_all_toggles_on_Case_Mass_Updates_modal() {
+        this.pause(0.5)
+       this.turnOnAllTogglesOnModal()
         return this;
     }
 
@@ -3364,7 +3363,7 @@ let basePage = class BasePage {
 
             } else if (['Status'].some(v => label === v)) {
                 if (value === 'Closed') {
-                    parentContainerFoundByInnerLabelOnModal(label, 'tp-modal-field').find('[title="Toggle Open/Closed"]').click();
+                    cy.get('[title="Toggle Open/Closed"]').click();
                 }
             } else if (['Review Date Notes'].some(v => label === v)) {
                 parentContainerFoundByInnerLabelOnModal(label, 'tp-modal-field')
@@ -3432,8 +3431,7 @@ let basePage = class BasePage {
     }
 
     turn_on_and_enter_values_to_all_fields_on_Mass_Update_Cases_modal(labelsArray, valuesArray) {
-        this.turnOnAllTogglesOnModal(
-            7) // Open/Closed toggles and Status toggle
+         this.turnOnAllTogglesOnModal()
       this.enter_values_to_all_fields_on_Mass_Update_modal(labelsArray, valuesArray)
         return this
     }
@@ -3445,7 +3443,7 @@ let basePage = class BasePage {
         }
         else{
             this.turnOnAllTogglesOnModal(
-                7) // Open/Closed toggles and Status toggle
+                [3, 8]) // Open/Closed toggles and Status toggle
         }
         this.enter_values_to_all_fields_on_Mass_Update_modal(labelsArray, valuesArray)
         return this

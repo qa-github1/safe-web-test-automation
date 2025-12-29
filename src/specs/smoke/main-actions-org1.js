@@ -17,7 +17,7 @@ before(function () {
     api.users.update_current_user_settings(orgAdmin.id, DF.dateTimeFormats.short, DF.dateFormats.shortDate)
 });
 
-describe('Case', function () {
+describe.only('Case', function () {
 
     it(
         '*** Add/Edit/Search/MassUpdate Case ' +
@@ -113,7 +113,7 @@ describe('Case', function () {
                 .select_checkbox_on_specific_table_row(2)
                 .click_button(C.buttons.actions)
                 .click_option_on_expanded_menu(C.dropdowns.caseActions.massUpdate)
-                .turn_on_and_enter_values_to_all_fields_on_modal(C.caseFields.massUpdateModal, allValues)
+                .turn_on_and_enter_values_to_all_fields_on_Mass_Update_Cases_modal(C.caseFields.massUpdateModal, allValues)
                 //.verify_text_above_modal_footer('\n        Mass updating\n         2 \n        \n        cases\n    ')
                 .click_Ok()
                 .verify_toast_message(C.toastMsgs.saved)
