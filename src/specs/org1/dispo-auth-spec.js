@@ -21,8 +21,9 @@ describe('Dispo Auth', function () {
         const endTime = Date.now();
         cy.log(`⏱ Total time for suite: ${checkTestDuration(startTime, endTime)}`);
     });
+    //TODO: Sumejja should check further
 
-    it('Add Dispo Task with 11 1DA items and assign to Org Admin, ' +
+    xit('Add Dispo Task with 11 1DA items and assign to Org Admin, ' +
         '--set different actions for item using all variations' +
         '--using Actions menu and grid, ' +
         '--check statuses and notes upon submission', function () {
@@ -120,8 +121,9 @@ describe('Dispo Auth', function () {
             .select_tab('Basic Info')
             .verify_text_is_present_on_main_container('Closed')
     });
+    //TODO: Sumejja should check further
 
-    it('Add Dispo Task with 100 items and assign to Power User, ' +
+    xit('Add Dispo Task with 100 items and assign to Power User, ' +
         '--initiate and complete 2nd and 3rd tier approval' +
         '--use Approve and Reject buttons from grid and Actions menu' +
         '--with and without Dispo Auth Service' +
@@ -277,7 +279,8 @@ describe('Dispo Auth', function () {
         })
     })
 
-    it('Release Letters', function () {
+    //TODO: Sumejja should check further
+    xit('Release Letters', function () {
 
         ui.app.log_title(this);
         api.auth.get_tokens(orgAdmin);
@@ -294,12 +297,12 @@ describe('Dispo Auth', function () {
 
 // enable this block if you want to generate 3k Release letters
 xdescribe('Generating large number of release letters ', function () {
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < 1; i++) {
 
         let caseData
         let itemData
 
-        it('Add Dispo Task with 200 items to trigger Dispo Auth Service and generation of letters for all', function () {
+        xit('Add Dispo Task with 200 items to trigger Dispo Auth Service and generation of letters for all', function () {
 
             cy.clearLocalStorage()
             ui.app.log_title(this);

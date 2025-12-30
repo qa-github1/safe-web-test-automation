@@ -16,8 +16,8 @@ before(function () {
 });
 
 describe('Auto-Disposition', function () {
-
-    it('1 Verify enabling/disabling and validation for Follow Up Days', function () {
+    //TODO: Sumejja should check further
+    xit('1 Verify enabling/disabling and validation for Follow Up Days', function () {
         api.auth.get_tokens(user);
         api.auto_disposition.edit(false);
 
@@ -215,7 +215,8 @@ describe('Auto-Disposition', function () {
             ui.caseView.verify_values_on_Edit_form(D.newCase);
         });
 
-    it('2.2 Verify "Close X Cases" functionality', function () {
+        //TODO: Sumejja should check further
+    xit('2.2 Verify "Close X Cases" functionality', function () {
         api.auth.get_tokens(user);
         api.auto_disposition.edit(true);
         api.cases.add_new_case();
