@@ -2685,9 +2685,14 @@ let basePage = class BasePage {
     };
 
     wait_all_GET_requests() {
-        cy.wait('@all_GET_Requests')
+        const aliases = Cypress.state('aliases');
+
+        if (aliases && aliases.all_GET_Requests) {
+            cy.wait('@all_GET_Requests');
+        }
+
         return this;
-    };
+    }
 
     wait_all_POST_requests() {
         //  cy.wait('@all_POST_Requests')
