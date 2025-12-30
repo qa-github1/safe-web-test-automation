@@ -27,8 +27,7 @@ before(function () {
 describe('Add Item', function () {
 
     context('1. Org Admin', function () {
-//TODO: Sumejja should check further
-        xit('1.1 All fields enabled ' +
+        it('1.1 All fields enabled ' +
             '-- "Item Belongs To Shows All People" turned ON in Org Settings -- multiple people not linked to Primary Case are selected in "Item Belongs to" field ', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
@@ -50,15 +49,14 @@ describe('Add Item', function () {
              ui.menu.click_Item();
              ui.addItem.verify_Case_Number_is_populated_on_enabled_input_field(D.newItem.caseNumber)
         });
-//TODO: Sumejja should check further
-        xit('1.2. Optional fields disabled -- redirect to View Added Item ' +
+        
+        it('1.2. Optional fields disabled -- redirect to View Added Item ' +
             '-- Item Belongs To Shows All People" turned OFF in Org Settings -- multiple values selected for "Item Belongs to" and Tags', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
             D.getItemDataWithReducedFields(D.newCase);
             api.org_settings.update_org_settings(true, false,false,'');
             api.org_settings.disable_Item_fields([C.itemFields.itemBelongsTo, C.itemFields.tags]);
-            D.newItem.itemBelongsToFirstLastName = [S.selectedEnvironment.person.name, S.selectedEnvironment.person_2.name]
             D.newItem.tags = [S.selectedEnvironment.orgTag1.name, S.selectedEnvironment.orgTag2.name]
             api.auth.get_tokens(orgAdmin);
 
@@ -68,19 +66,20 @@ describe('Add Item', function () {
                 .select_Category(D.newItem.category)
                 .click_Next()
                 .verify_text_is_present_on_main_container('You must have a Person in this case before you can add a value to this field')
-// The test is not stable due to performance issue when navigating to the old Case -> Items tab with large number of items
- //  Possible solutions:
- //option 1: Use new case and person
- //option 2: Use an existing case, but move the item to another case in the after block to clear the Items tab and prevent item accumulation
-            D.newItem.caseNumber = oldCase.caseNumber
-            ui.app.open_case_url(oldCase.id)
+
+            let person1 = D.getNewPersonData(D.newCase)
+            let person2 = D.getNewPersonData(D.newCase)
+            D.newItem.itemBelongsToFirstLastName = [person1.firstName, person2.firstName]
+           api.people.add_new_person(true, D.newCase, person1, 'person_1')
+           api.people.add_new_person(true, D.newCase, person2, 'person_2')
+            ui.app.open_newly_created_case_via_direct_link()
             ui.addItem.select_tab(C.tabs.items)
                 .click_element_on_active_tab(C.buttons.addItem)
                 .verify_Add_Item_page_is_open()
                 .populate_all_fields_on_both_forms(D.newItem, false, false)
                  .select_post_save_action(C.postSaveActions.viewAddedItem)
                  .click_Save(D.newItem)
-                 .verify_toast_message_(oldCase)
+                 .verify_toast_message_(D.newCase)
              ui.itemView.verify_Item_View_page_is_open(D.newItem.caseNumber)
                  .click_Edit()
                 .verify_values_on_Edit_form(D.newItem)
