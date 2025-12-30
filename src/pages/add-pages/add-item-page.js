@@ -30,6 +30,9 @@ let
     arrowDownForStorageLocations = e => cy.get('[title="View next location level."]'),
     tagsInput = e => cy.findAllByPlaceholderText(C.placeholders.addCase.addTags).eq(1),
     addItemHeader = e => cy.get('[translate="ITEMS.ADD.MODAL_HEADING"]'),
+    containerNameField = e => cy.get('[id="tpLocationContainerTypeaheadId"]'),
+    storageLocationField = e => cy.get('[placeholder="type ‘/‘ or start typing a location name"]'),
+    moveNotes = e => cy.get('[ng-model="move.notes"]'),
     locationOnTypeahead = locName => cy.contains(locName).first()
 
 //************************************ ELEMENTS ***************************************//
@@ -259,6 +262,16 @@ export default class AddItemPage extends BaseAddPage {
     verify_RecoveredBy_dropdown_is_NOT_visible() {
         recoveredByResults().children().should('have.length', 0);
         return this;
+    }
+
+    populate_add_item_to_container_modal(data){
+        containerNameField().type(data.newContainerName)
+        storageLocationField().type(data.parentStorageLocation)
+        this.pause(2)
+        storageLocationField().type('{enter}')
+        moveNotes().type(data.moveNote)
+        this.upload_file_and_verify_toast_msg('image.png', null)
+return this;
     }
 }
 

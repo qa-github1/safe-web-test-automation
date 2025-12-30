@@ -347,7 +347,8 @@ C = {
             changePrimaryCase: "Change Primary Case",
             manageCases: "Manage Cases",
             massUpdate: "Mass Update",
-            massUpdateCustomData: "Mass Update Custom Data"
+            massUpdateCustomData: "Mass Update Custom Data",
+            addToContainer: "Add To Container"
         },
         itemActionsOnSearchResults: {
             checkItemIn: "Check Items In",
@@ -445,6 +446,15 @@ C = {
         expungePersonFromSystem: 'This will completely expunge the Person from the system'
 
     },
+    editStorageLocationFields: {
+        name: 'Name',
+        groups: 'Groups',
+        legacyBarcode: 'Legacy Barcode',
+        canStoreHere: ' Can Store Here',
+        active: 'Active',
+        container: 'Container',
+        moveStorageLocationTo: 'Move storage location to:'
+    },
     checkoutReasons: {
         lab: 'Lab',
         court: 'Court',
@@ -531,6 +541,10 @@ C = {
         daysCanOnlyBePositiveNumber: 'Days can only be Positive Number',
         locationChanged: 'Location Changed',
         emailsSent: numberOfEmails => `${numberOfEmails} emails sent`
+    },
+    modalMsgs: {
+        moveLocation: 'Moving a storage location will change the listed hierarchy for any use of this storage location (ever). Please make sure you understand the impact of this before you complete the move.',
+        deleteStorageLocation: 'Are you sure you want to delete selected storage location including all it\'s sublocations?'
     },
     importTypes: {
         cases: 'Cases',
@@ -1017,6 +1031,12 @@ C.pages = {
         numberOfStandardColumns: 39,
         numberOfAllColumnsWithDispoStatusEnabled: 65,
         numberOfStandardColumnsReduced: 26,
+    },
+    scanPage: {
+        url: 'items/scan/',
+        numberOfStandardColumns: null,
+        numberOfAllColumnsWithDispoStatusEnabled: 68,
+        numberOfStandardColumnsReduced: null,
     },
     peopleSearch: {
         numberOfStandardColumns: 19,

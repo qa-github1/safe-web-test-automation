@@ -30,6 +30,7 @@ exports.generate_POST_request_payload_for_creating_new_item = function (itemObje
         make: itemData.make,
         model: itemData.model,
         serialNumber: itemData.serialNumber,
+        additionalBarcodes: [randomNo],
         primaryCaseId: primaryCaseId,
         custodyReasonId: itemData.custodyReasonId ?? 0,
         peopleIds: [person.id],

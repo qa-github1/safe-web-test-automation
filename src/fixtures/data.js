@@ -4,8 +4,7 @@ const S = require('../fixtures/settings.js');
 const C = require('../fixtures/constants.js');
 const helper = require('../support/e2e-helper.js');
 const {randomNo, getRandomNo} = require("../support/e2e-helper");
-const {testRandomNo} = require("./data");
-const {random} = require("lodash/number");
+const {testRandomNo, newStorageLocation} = require("./data");
 
 D.setNewRandomNo = function () {
     return helper.setNewRandomNo();
@@ -24,15 +23,50 @@ D.getCurrentDateAndRandomNumber = function (randomNumberLenght) {
     return helper.mediumDate + '_' + helper.getRandomNo(randomNumberLenght);
 }
 
-D.getStorageLocationData = function (locationName, parentId = 0, canStore = true, isActive = true) {
+D.getStorageLocationData = function (locationName, parentId = 0, canStore = true, isActive = true, isContainer = false) {
+    let randomNo =  helper.mediumDate + '_' + helper.getRandomNo(3);
+
     D[locationName] = {
-        "name": D.currentDateAndRandomNumber + '_' + locationName,
+        "name": randomNo + '_' + locationName,
         "active": isActive,
         "parentId": parentId,
-        "canStoreHere": canStore
+        "canStoreHere": canStore,
+        "isContainer": isContainer
     }
     return D[locationName]
 }
+
+//TODO : this and function above (D.getStorageLocationData) look redundant so we need to clean it up later
+D.getStorageLocation = function () {
+    let randomNo = helper.setNewRandomString();
+
+    D.newStorageLocation = {
+        name: '0-New-L' + ' ' + randomNo,
+        items: 0,
+        isActive: true,
+        legacyBarcode: '',
+        parentLocationBarcode: '',
+        isContainer: false,
+        isStorage: true,
+        groups: '',
+    }
+
+    D.editedStorageLocation = {
+        name: '0-edited' + ' ' + randomNo,
+        items: 0,
+        isActive: false,
+        legacyBarcode: 'new barcode' + ' ' + randomNo,
+        parentLocationBarcode: '',
+        isContainer: true,
+        isStorage: false,
+        groups: 'Power User',
+        parentMoveLocation: '0 - automation - do not touch',
+        parentStorageLocation: '0 - P - don\'t touch',
+        newContainerName: 'New C' + ' ' + randomNo,
+        moveNote: "note" + ' ' + randomNo
+    }
+    return newStorageLocation;
+};
 
 D.getNewCaseData = function (caseNumber, autoDispoOff = false) {
     // api.cases.get_most_recent_case();
@@ -169,7 +203,7 @@ D.getNewItemData = function (specificCaseObject, locationObject, newPerson) {
     let person = (newPerson && newPerson.id !== '') ? newPerson : S.selectedEnvironment.person;
     locationObject = locationObject || S.selectedEnvironment.locations[0];
     specificCaseObject = specificCaseObject || S.selectedEnvironment.oldActiveCase;
-    let randomNo = D.setNewRandomNo();
+    let randomNo = this.setNewRandomNo();
 
     D.newItem = Object.assign({}, D.newCustomFormData, {
         primaryCaseId: specificCaseObject.id,
@@ -219,7 +253,7 @@ D.getNewItemData = function (specificCaseObject, locationObject, newPerson) {
         people: [person],
         make: 'make_' + randomNo,
         model: 'model_' + randomNo,
-        serialNumber: 'serialNo_' + randomNo,
+        serialNumber: 'serialNo_' + + randomNo,
         custodyReasonId: S.selectedEnvironment.custodyReason.id,
         custodyReason: S.selectedEnvironment.custodyReason.name,
         peopleIds: [person.id],
@@ -230,7 +264,7 @@ D.getNewItemData = function (specificCaseObject, locationObject, newPerson) {
         itemBelongsToGuid: [person.guid],
         //itemBelongsToEmail: [person.email],
         barcodes: [{id: 0, value: randomNo}],
-        //additionalBarcodes: [randomNo],
+        additionalBarcodes: [randomNo],
         actualDisposedDate: '',
         disposedDate: '',
         disposalMethod: '',
@@ -251,9 +285,7 @@ D.getNewItemData = function (specificCaseObject, locationObject, newPerson) {
         subsetTypeNumber: 'Number',
         percentageOrNumberOfItems: '1'
     });
-
     return D.newItem;
-
 };
 
 D.getDisposedItemData = function (newOrEditedItem = 'editedItem') {
@@ -607,7 +639,7 @@ D.getNewUserData = function (officeId, organizationId) {
         permissionGroups: [],
         userGroups: [],
         division: 'Patrol',
-        //      divisionId: S.selectedEnvironment.divisions.div1.id ,
+        divisionId: S.selectedEnvironment.divisions.div1.id,
         unit: 'UnitA',
 //        unitId: S.selectedEnvironment.units.div1_unit1.id,
         external: 'Internal',
@@ -699,10 +731,10 @@ D.getNewTaskTemplateData = function () {
 };
 
 D.getNewTagsData = function (type = 'Org') {
-    let randomNo = helper.setNewRandomString(3,  'mmdd');
+    let randomNo = helper.setNewRandomString(3, 'mmdd');
     D.newTag = {
         type: type,
-        name : `Auto_ ${type}_` + randomNo,
+        name: `Auto_ ${type}_` + randomNo,
         color: "#4b9",
     }
 
@@ -720,10 +752,10 @@ D.getNewTagsData = function (type = 'Org') {
 };
 
 D.getEditedTagsData = function (type = 'Org') {
-    let randomNo = helper.setNewRandomString(3,  'mmdd');
+    let randomNo = helper.setNewRandomString(3, 'mmdd');
     D.editedTag = {
         type: type,
-        name : `AutoEdit_ ${type}_` + randomNo,
+        name: `AutoEdit_ ${type}_` + randomNo,
         color: "#1069bd"
     }
 
@@ -1126,7 +1158,6 @@ D.getDataForMultipleCases = function (numberOfCases, startingIndex = 1) {
 }
 
 D.currentDateAndRandomNumber = helper.mediumDate + '_' + helper.getRandomNo(3);
-
 
 
 module.exports = D;

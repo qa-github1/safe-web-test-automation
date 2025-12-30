@@ -97,6 +97,28 @@ exports.delete_empty_storage_locations = function () {
     })
 };
 
+exports.delete_storage_location_by_name = function (locationName) {
+
+    exports.get_storage_locations();
+
+    cy.getLocalStorage('locations').then(locationsArray => {
+        const locations = JSON.parse(locationsArray);
+
+        const matchedLocation = locations.find(loc => loc.name.trim() === locationName.trim());
+
+        if (!matchedLocation) {
+            throw new Error(`Location with name "${locationName}" not found.`);
+        }
+
+        generic_request.DELETE(
+            `/api/locations/${matchedLocation.id}`,
+            { id: matchedLocation.id },
+            `Deleting storage location "${locationName}" via API`
+        );
+    });
+};
+
+
 exports.update_location = function (locationName, propertyName, propertyValue) {
     let log;
 
