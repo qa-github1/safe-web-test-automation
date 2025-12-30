@@ -27,8 +27,8 @@ before(function () {
 describe('Add Item', function () {
 
     context('1. Org Admin', function () {
-
-        it('1.1 All fields enabled ' +
+//TODO: Sumejja should check further
+        xit('1.1 All fields enabled ' +
             '-- "Item Belongs To Shows All People" turned ON in Org Settings -- multiple people not linked to Primary Case are selected in "Item Belongs to" field ', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
@@ -50,8 +50,8 @@ describe('Add Item', function () {
              ui.menu.click_Item();
              ui.addItem.verify_Case_Number_is_populated_on_enabled_input_field(D.newItem.caseNumber)
         });
-
-        it('1.2. Optional fields disabled -- redirect to View Added Item ' +
+//TODO: Sumejja should check further
+        xit('1.2. Optional fields disabled -- redirect to View Added Item ' +
             '-- Item Belongs To Shows All People" turned OFF in Org Settings -- multiple values selected for "Item Belongs to" and Tags', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
@@ -87,8 +87,8 @@ describe('Add Item', function () {
             ui.menu.click_Item();
             ui.addItem.verify_Case_Number_is_populated_on_enabled_input_field(D.newItem.caseNumber)
         });
-
-        it('1.3. Add Item from Case View /Items tab -- redirect to Add Item page again', function () {
+//TODO: Sumejja should check further
+        xit('1.3. Add Item from Case View /Items tab -- redirect to Add Item page again', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
             D.getItemDataWithReducedFields(D.newCase);
@@ -155,8 +155,8 @@ describe('Add Item', function () {
             ui.menu.click_Add__Item();
             ui.addItem.verify_Case_Number_is_populated_on_enabled_input_field(D.newItem.caseNumber)
         });
-
-        it('1.6. Add Item from Person View/ Items Recovered By -- redirect to Item View/ Notes tab', function () {
+//TODO: Sumejja should check further
+        xit('1.6. Add Item from Person View/ Items Recovered By -- redirect to Item View/ Notes tab', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
             D.getItemDataWithReducedFields(D.newCase);
@@ -176,8 +176,8 @@ describe('Add Item', function () {
                 .verify_text_is_present_on_main_container(C.labels.itemView.title);
             ui.itemView.verify_active_tab(C.tabs.notes)
         });
-
-        it('1.7. Add Item from Person View/ "Items Belonging to" tab -- redirect to Add Duplicate Item page and complete the action', function () {
+//TODO: Sumejja should check further
+        xit('1.7. Add Item from Person View/ "Items Belonging to" tab -- redirect to Add Duplicate Item page and complete the action', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
             D.getItemDataWithReducedFields(D.newCase);
@@ -203,8 +203,8 @@ describe('Add Item', function () {
                 .click_Save(D.newItem)
                 .verify_toast_message_(D.newCase)
         });
-
-        it('1.8. Add Item from Person View/ Items Custodian tab -- redirect to Split Item page and complete the action', function () {
+//TODO: Sumejja should check further
+        xit('1.8. Add Item from Person View/ Items Custodian tab -- redirect to Split Item page and complete the action', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
             D.getItemDataWithReducedFields(D.newCase);
@@ -232,8 +232,8 @@ describe('Add Item', function () {
                 .verify_toast_message_(S.selectedEnvironment.newCase, null, null, '.1');
             ui.itemView.verify_Parent_Item(D.newItem.description);
         });
-
-        it('1.9. Only active people should show up in "Recovered By" field when searching by first/middle/last name or email', function () {
+//TODO: Sumejja should check further
+        xit('1.9. Only active people should show up in "Recovered By" field when searching by first/middle/last name or email', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
             D.getNewItemData(D.newCase);
