@@ -22,7 +22,7 @@ before(function () {
     api.users.update_current_user_settings(orgAdmin.id, C.currentDateTimeFormat)
     api.auth.get_tokens(powerUser);
     api.users.update_current_user_settings(powerUser.id, C.currentDateTimeFormat)
- });
+});
 
 describe('Add Item', function () {
 
@@ -32,7 +32,7 @@ describe('Add Item', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
             D.getNewItemData(D.newCase);
-             api.org_settings.update_org_settings(true, true);
+            api.org_settings.update_org_settings(true, true);
             api.org_settings.enable_all_Item_fields();
             D.newItem.itemBelongsTo = [S.selectedEnvironment.person.email, S.selectedEnvironment.person_2.email]
 
@@ -46,16 +46,16 @@ describe('Add Item', function () {
             ui.itemView.verify_Item_View_page_is_open(D.newItem.caseNumber)
                 .click_Edit()
                 .verify_values_on_Edit_form(D.newItem)
-             ui.menu.click_Item();
-             ui.addItem.verify_Case_Number_is_populated_on_enabled_input_field(D.newItem.caseNumber)
+            ui.menu.click_Item();
+            ui.addItem.verify_Case_Number_is_populated_on_enabled_input_field(D.newItem.caseNumber)
         });
-        
+
         it('1.2. Optional fields disabled -- redirect to View Added Item ' +
             '-- Item Belongs To Shows All People" turned OFF in Org Settings -- multiple values selected for "Item Belongs to" and Tags', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
             D.getItemDataWithReducedFields(D.newCase);
-            api.org_settings.update_org_settings(true, false,false,'');
+            api.org_settings.update_org_settings(true, false, false, '');
             api.org_settings.disable_Item_fields([C.itemFields.itemBelongsTo, C.itemFields.tags]);
             D.newItem.tags = [S.selectedEnvironment.orgTag1.name, S.selectedEnvironment.orgTag2.name]
             api.auth.get_tokens(orgAdmin);
@@ -70,24 +70,24 @@ describe('Add Item', function () {
             let person1 = D.getNewPersonData(D.newCase)
             let person2 = D.getNewPersonData(D.newCase)
             D.newItem.itemBelongsToFirstLastName = [person1.firstName, person2.firstName]
-           api.people.add_new_person(true, D.newCase, person1, 'person_1')
-           api.people.add_new_person(true, D.newCase, person2, 'person_2')
+            api.people.add_new_person(true, D.newCase, person1, 'person_1')
+            api.people.add_new_person(true, D.newCase, person2, 'person_2')
             ui.app.open_newly_created_case_via_direct_link()
             ui.addItem.select_tab(C.tabs.items)
                 .click_element_on_active_tab(C.buttons.addItem)
                 .verify_Add_Item_page_is_open()
                 .populate_all_fields_on_both_forms(D.newItem, false, false)
-                 .select_post_save_action(C.postSaveActions.viewAddedItem)
-                 .click_Save(D.newItem)
-                 .verify_toast_message_(D.newCase)
-             ui.itemView.verify_Item_View_page_is_open(D.newItem.caseNumber)
-                 .click_Edit()
+                .select_post_save_action(C.postSaveActions.viewAddedItem)
+                .click_Save(D.newItem)
+                .verify_toast_message_(D.newCase)
+            ui.itemView.verify_Item_View_page_is_open(D.newItem.caseNumber)
+                .click_Edit()
                 .verify_values_on_Edit_form(D.newItem)
             ui.menu.click_Item();
             ui.addItem.verify_Case_Number_is_populated_on_enabled_input_field(D.newItem.caseNumber)
         });
-//TODO: Sumejja should check further
-        xit('1.3. Add Item from Case View /Items tab -- redirect to Add Item page again', function () {
+
+        it('1.3. Add Item from Case View /Items tab -- redirect to Add Item page again', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
             D.getItemDataWithReducedFields(D.newCase);
@@ -154,8 +154,8 @@ describe('Add Item', function () {
             ui.menu.click_Add__Item();
             ui.addItem.verify_Case_Number_is_populated_on_enabled_input_field(D.newItem.caseNumber)
         });
-//TODO: Sumejja should check further
-        xit('1.6. Add Item from Person View/ Items Recovered By -- redirect to Item View/ Notes tab', function () {
+
+        it('1.6. Add Item from Person View/ Items Recovered By -- redirect to Item View/ Notes tab', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
             D.getItemDataWithReducedFields(D.newCase);
@@ -175,8 +175,8 @@ describe('Add Item', function () {
                 .verify_text_is_present_on_main_container(C.labels.itemView.title);
             ui.itemView.verify_active_tab(C.tabs.notes)
         });
-//TODO: Sumejja should check further
-        xit('1.7. Add Item from Person View/ "Items Belonging to" tab -- redirect to Add Duplicate Item page and complete the action', function () {
+
+        it('1.7. Add Item from Person View/ "Items Belonging to" tab -- redirect to Add Duplicate Item page and complete the action', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
             D.getItemDataWithReducedFields(D.newCase);
@@ -202,8 +202,8 @@ describe('Add Item', function () {
                 .click_Save(D.newItem)
                 .verify_toast_message_(D.newCase)
         });
-//TODO: Sumejja should check further
-        xit('1.8. Add Item from Person View/ Items Custodian tab -- redirect to Split Item page and complete the action', function () {
+
+        it('1.8. Add Item from Person View/ Items Custodian tab -- redirect to Split Item page and complete the action', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
             D.getItemDataWithReducedFields(D.newCase);
@@ -231,8 +231,8 @@ describe('Add Item', function () {
                 .verify_toast_message_(S.selectedEnvironment.newCase, null, null, '.1');
             ui.itemView.verify_Parent_Item(D.newItem.description);
         });
-//TODO: Sumejja should check further
-        xit('1.9. Only active people should show up in "Recovered By" field when searching by first/middle/last name or email', function () {
+
+        it('1.9. Only active people should show up in "Recovered By" field when searching by first/middle/last name or email', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
             D.getNewItemData(D.newCase);
@@ -313,33 +313,30 @@ describe('Add Item', function () {
 
     context('3 Add Item with Custom Form', function () {
 
-        //setting this test just for Org#1 until the issue with shared form gets fixed ----> #14625 ⁃ 'Dropdown Typeahead' on the Shared custom form has options available only in the originating Org
-        //if (Cypress.env('orgNum') === 1) {
-            it('3.1 --- with required Custom Form filled out, all required fields on Form', function () {
-                ui.app.log_title(this);
-                api.auth.get_tokens(orgAdmin);
-                D.getItemDataWithReducedFields(D.newCase);
-                api.org_settings.update_org_settings(true, true);
-                api.org_settings.disable_Item_fields();
+        it('3.1 --- with required Custom Form filled out, all required fields on Form', function () {
+            ui.app.log_title(this);
+            api.auth.get_tokens(orgAdmin);
+            D.getItemDataWithReducedFields(D.newCase);
+            api.org_settings.update_org_settings(true, true);
+            api.org_settings.disable_Item_fields();
 
-                D.newItem.category = D.newItem.categoryLinkedToRequiredForm1
-                D.newCase.categoryId = D.newItem.categoryIdLinkedToRequiredForm1
-                ui.menu.click_Add__Item()
-                ui.addItem.populate_all_fields_on_both_forms(D.newItem)
-                    .verify_number_of_required_fields_marked_with_asterisk(12)
-                    .verify_Save_button_is_disabled()
-                    .populate_all_fields_on_Custom_Form(D.newCustomFormData)
-                    .select_post_save_action(C.postSaveActions.addItem)
-                    .click_Save(D.newItem)
-                    .verify_toast_message_(D.newCase)
-                    .verify_text_is_present_on_main_container(C.labels.addItem.title)
-                    .verify_Case_Number_is_populated_on_enabled_input_field(D.newItem.caseNumber);
-                ui.itemView.open_newly_created_item_via_direct_link()
-                    .verify_textual_values_on_the_form([D.newItem.recoveryDate])
-                    .click_Edit()
-                    .verify_values_on_Edit_form(D.newItem, true)
-            });
-      //  }
+            D.newItem.category = D.newItem.categoryLinkedToRequiredForm1
+            D.newCase.categoryId = D.newItem.categoryIdLinkedToRequiredForm1
+            ui.menu.click_Add__Item()
+            ui.addItem.populate_all_fields_on_both_forms(D.newItem)
+                .verify_number_of_required_fields_marked_with_asterisk(12)
+                .verify_Save_button_is_disabled()
+                .populate_all_fields_on_Custom_Form(D.newCustomFormData)
+                .select_post_save_action(C.postSaveActions.addItem)
+                .click_Save(D.newItem)
+                .verify_toast_message_(D.newCase)
+                .verify_text_is_present_on_main_container(C.labels.addItem.title)
+                .verify_Case_Number_is_populated_on_enabled_input_field(D.newItem.caseNumber);
+            ui.itemView.open_newly_created_item_via_direct_link()
+                .verify_textual_values_on_the_form([D.newItem.recoveryDate])
+                .click_Edit()
+                .verify_values_on_Edit_form(D.newItem, true)
+        });
 
         it('3.2 --- with required Custom Form but not filled out, all optional fields on Form', function () {
             ui.app.log_title(this);
