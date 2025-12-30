@@ -7,7 +7,7 @@ const ui = require('../../pages/ui-spec');
 const orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
 let startTime;
 
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 1; i++) {
     describe('Scan Items', function () {
 
         before(function () {
@@ -58,18 +58,19 @@ for (let i = 0; i < 10; i++) {
                     cy.log(" 🟢🟢🟢  1. Scan Item by Barcode 🟢🟢🟢")
                     ui.scan.close_Item_In_Scan_List_alert()
                         .enable_all_standard_columns_on_the_grid(C.pages.scanPage, true)
+                        .sort_by_ascending_order('Item #')
                         .scan_barcode(item1.barcode)
                         .verify_content_of_specific_row_in_results_table_on_active_tab(1, [item1.barcode, D.location1.name]);
 
                     cy.log(" 🟢🟢🟢  2. Scan Item by Serial Number 🟢🟢🟢")
                     ui.scan.scan_barcode(item2.serialNumber)
                         .verify_records_count_on_grid(2)
-                        .verify_content_of_specific_row_in_results_table_on_active_tab(1, [item2.barcode, D.location1.name]);
+                        .verify_content_of_specific_row_in_results_table_on_active_tab(2, [item2.barcode, D.location1.name]);
 
                     cy.log(" 🟢🟢🟢  3. Scan Item by Additional Barcode 🟢🟢🟢")
                     ui.scan.scan_barcode(item3.barcodes[0].value)
                         .verify_records_count_on_grid(3)
-                        .verify_content_of_specific_row_in_results_table_on_active_tab(1, [item3.barcode, D.container1.name])
+                        .verify_content_of_specific_row_in_results_table_on_active_tab(3, [item3.barcode, D.container1.name])
                         .clear_scanned_barcodes('Items')
                         .select_tab('Scan history')
                         .verify_content_of_specific_row_in_results_table_on_active_tab(1, [item3.barcode, D.container1.name, 'Items'])

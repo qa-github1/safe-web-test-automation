@@ -10,15 +10,11 @@ let helper = require('../../support/e2e-helper');
 let casesApi = require('../../api-utils/endpoints/cases/collection')
 
 //************************************ ELEMENTS ***************************************//
-let
-    bodyContainer = e => cy.get('body'),
-    tableBody = e => cy.get('.table-striped').find('tbody'),
+let bodyContainer = e => cy.get('body'), tableBody = e => cy.get('.table-striped').find('tbody'),
     pencilIcon = e => cy.get('.fa-pencil').first(),
     descriptionOnGrid = e => cy.get('[class="bs-grid-text-input ng-scope"]').find('input'),
-    okButton = e => cy.findAllByText('Ok').last(),
-    // saveButton = e => cy.get('[button-text="\'GENERAL.BUTTON_SAVE\'"]').contains('Save'),
-    saveButton = e => cy.get('[button-text="\'GENERAL.BUTTON_SAVE\'"]').contains('Save'),
-    // saveButton = e => cy.get('.btn-group').contains('Save'),
+    okButton = e => cy.findAllByText('Ok').last(), // saveButton = e => cy.get('[button-text="\'GENERAL.BUTTON_SAVE\'"]').contains('Save'),
+    saveButton = e => cy.get('[button-text="\'GENERAL.BUTTON_SAVE\'"]').contains('Save'), // saveButton = e => cy.get('.btn-group').contains('Save'),
     saveAutoDispoButton = e => cy.get('[id="saveAutoDispo"]').contains('Save'),
     editButton = e => cy.get('[translate="GENERAL.EDIT"]').contains('Edit'),
     deleteButton = e => cy.get('[translate="GENERAL.DELETE"]').parent('li'),
@@ -37,8 +33,7 @@ let
     tableColumn_header_sortingArrow = columnTitle => cy.get('thead').contains(columnTitle).parent().find('.order'),
     sortingArrow = columnTitle => cy.get('.order').first(),
     quickSearchCaseTypeahead = e => cy.get('[ng-repeat="match in matches track by $index"]'),
-    quickSearchCaseTypeahead_FirstOption = e => cy.get('[ng-repeat="match in matches track by $index"]').eq(0),
-    //quickSearchCaseTypeahead = e => cy.get('[ng-repeat="match in matches track by $index"]'),
+    quickSearchCaseTypeahead_FirstOption = e => cy.get('[ng-repeat="match in matches track by $index"]').eq(0), //quickSearchCaseTypeahead = e => cy.get('[ng-repeat="match in matches track by $index"]'),
     //quickSearchCaseTypeahead = e => cy.get('[ng-if="!match.model.last && match.model.text && !match.model.first"]'),
     active_tab_title = e => cy.get('[class="ng-scope ng-isolate-scope active"]'),
     gridOptionsDropdown = e => cy.get('[ng-if="optionsToggle.isOpen"]'),
@@ -50,8 +45,7 @@ let
     sweetAlert = e => cy.get('[data-animation="pop"]'),
     lastCoCMediaButton = e => cy.get('[class="btn btn-default btn-xs btn-block ng-binding"]').eq(1),
     typeaheadList = e => cy.get('.ui-select-choices'),
-    firstTypeaheadOption = e => cy.get('.ui-select-choices-row').first(),
-    //highlightedOptionOnTypeahead = e => cy.get('.ui-select-choices-row-inner').last(),
+    firstTypeaheadOption = e => cy.get('.ui-select-choices-row').first(), //highlightedOptionOnTypeahead = e => cy.get('.ui-select-choices-row-inner').last(),
     highlightedOptionOnTypeahead = e => cy.get('.ui-select-highlight').last(),
     firstPersonOnItemBelongsToTypeahead = e => cy.get('[ng-repeat="person in $select.items"]').first(),
     specificPersonOnItemBelongsToTypeahead = person => cy.get('[ng-repeat="person in $select.items"]').contains(person),
@@ -80,8 +74,7 @@ let
     elementOnGridContainer = elementTitle => cy.get('.bs-grid').contains(elementTitle),
     parentContainerFoundByInnerLabel = (innerLabel, parentElementTag = 'div') => cy.contains(innerLabel).parent(parentElementTag),
     parentContainerFoundByInnerLabelOnModal = (innerLabel, parentElementTag = 'div') => modal().contains(innerLabel).parents(parentElementTag),
-    navTabs = e => cy.get('.nav-tabs'),
-    specificTab = tabTitle => navTabs().children().contains(tabTitle).parent('li'),
+    navTabs = e => cy.get('.nav-tabs'), specificTab = tabTitle => navTabs().children().contains(tabTitle).parent('li'),
     historyTab = e => cy.get('[translate="GENERAL.HISTORY"]').parent('tab-heading').parent('a').parent('li'),
     expandedMenu = e => cy.get('button[aria-expanded="true"]'),
     optionOnExpandedMenu = option => expandedMenu().next().contains(option).parent('li'),
@@ -90,8 +83,7 @@ let
     tableOnModal = e => modal().find('tbody'),
     asterisks = e => cy.get('[ng-if="form.state[field.name].$error.required"]'),
     optionOnTypeahead = option => cy.get('.dropdown-menu[aria-hidden="false"]').contains(option),
-    mainContainer = e => cy.get('.ui-view-main'),
-    recoveryDate = e => cy.get('[ng-model="item.recoveryDate"]').last(),
+    mainContainer = e => cy.get('.ui-view-main'), recoveryDate = e => cy.get('[ng-model="item.recoveryDate"]').last(),
     itemBelongsTo = e => cy.get('[placeholder="Persons for search"]').last(),
     textOnMainContainer = text => cy.get('.ui-view-main').contains(text),
     toastMessage = (timeout = 50000) => cy.get('.toast', {timeout: timeout}),
@@ -104,8 +96,7 @@ let
     tableStriped = (tableIndex = 0) => cy.get('.table-striped').eq(tableIndex),
     cocTableStriped = (tableIndex = 0) => cy.get('.cocTable'),
     dataGrid = (tableIndex = 0) => cy.get('.table-striped[tp-fixed-table-header-scrollable="scrollable-area"]').eq(tableIndex).find('tbody'),
-    resultsEntriesCount = e => cy.get('[translate="BSGRID.DISPLAY_STATS"]'),
-    //menuCustomization = e => cy.contains('Menu Customization'),
+    resultsEntriesCount = e => cy.get('[translate="BSGRID.DISPLAY_STATS"]'), //menuCustomization = e => cy.contains('Menu Customization'),
     menuCustomization = e => cy.get('[translate="BSGRID.BUTTON_MENU_CUSTOMIZATION"]').first(),
     menuCustomizationFromRoot = e => cy.root().parents('html').contains('Menu Customization'),
     customFormsSectionOnMenuCustomization = e => cy.get('[is-open="customFieldsToggle.isOpen"]'),
@@ -123,12 +114,9 @@ let
     disabledColumnsOsOnMenuCustomization = e => cy.get('i.glyphicon.glyphicon-remove.glyphicon-image-md.glyphicon-gray'),
     disabledColumnsOsOnMenuCustomization_PENTEST = e => cy.get('[ng-class="col.visible ? \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\': \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
 
-    disabledColumnsOsOnMenuCustomization_DEV = e => cy.get('[ng-class="col.visible ?\n' +
-        '                                                            \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\':\n' +
-        '                                                            \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
+    disabledColumnsOsOnMenuCustomization_DEV = e => cy.get('[ng-class="col.visible ?\n' + '                                                            \'glyphicon glyphicon-ok glyphicon-image-md glyphicon-gray\':\n' + '                                                            \'glyphicon glyphicon-remove glyphicon-image-md glyphicon-gray\'"]').not('.glyphicon-ok'),
     enabledColumnsOnMenuCustomization = e => cy.get('.glyphicon-ok'),
-    pageSizeAndColumnsContianer = e => cy.get('.grid-menu-header').eq(1),
-    //  resultsTableHeader = (tableIndex = 0) => cy.get('.table-striped').eq(tableIndex).find('thead'),
+    pageSizeAndColumnsContianer = e => cy.get('.grid-menu-header').eq(1), //  resultsTableHeader = (tableIndex = 0) => cy.get('.table-striped').eq(tableIndex).find('thead'),
     resultsTableHeader = (tableIndex = 0) => cy.get('thead'),
     cocTableHeader = (tableIndex = 0) => cy.get('.cocTable').find('thead'),
     resultsTableHeaderFromRoot = (tableIndex = 0) => cy.root().parents('html').find('.table-striped').eq(tableIndex).find('thead'),
@@ -141,7 +129,7 @@ let
     visibleTable = e => cy.get('.table').not('.ng-hide'),
     checkboxOnFirstRowOnVisibleTable = e => visibleTable().find('tbody').children('tr').first(),
     checkboxOnLastRowOnVisibleTable = e => visibleTable().find('tbody').children('tr').last().find('.bg-grid-checkbox'),
-    specificRowInResultsTableOnActiveTab = rowNumber => active_tab().find('tbody').children('tr').eq(rowNumber-1),
+    specificRowInResultsTableOnActiveTab = rowNumber => active_tab().find('tbody').children('tr').eq(rowNumber - 1),
     firstRowInResultsTableOnActiveTab = e => active_tab().find('tbody').children('tr').first(),
     lastRowInResultsTableOnActiveTab = e => active_tab().find('tbody').children('tr').last(),
     checkboxOnFirstRowInResultsTableOnActiveTab = (tableIndex = 0) => active_tab().find('tbody').eq(tableIndex)
@@ -149,10 +137,8 @@ let
     checkboxOnFirstTableRow = e => resultsTable().find('.bg-grid-checkbox').first(),
     checkboxToSelectAll = e => cy.get('[ng-model="options.selectAllToggle"]').first(),
     statisticsBlock = e => cy.get('.statistic-block').first(),
-    selectedItems = e => cy.get('[ng-if="options.selectedItems.length != 0"]').first(),
-    // locationPin = name => cy.contains(name).parent('div'),
-    locationPin = e => cy.get('.pac-matched'),
-    firstCheckboxOnTableBody = e => cy.get('.bg-grid-checkbox').first(),
+    selectedItems = e => cy.get('[ng-if="options.selectedItems.length != 0"]').first(), // locationPin = name => cy.contains(name).parent('div'),
+    locationPin = e => cy.get('.pac-matched'), firstCheckboxOnTableBody = e => cy.get('.bg-grid-checkbox').first(),
     checkboxOnSpecificTableRow = rowNumber => resultsTable().find('.bg-grid-checkbox', {timeout: 0}).eq(rowNumber - 1),
     bsGridCheckboxes = rowNumber => cy.get('.bg-grid-checkbox', {timeout: 0}).eq(rowNumber - 1),
     checkboxOnTableRowOnModal = rowNumber => tableOnModal().find('.bg-grid-checkbox').eq(rowNumber - 1),
@@ -223,12 +209,10 @@ let
     systemService = e => cy.get('[ng-repeat="systemService in systemServices"]'),
     systemServiceName = e => cy.get('[ng-repeat="systemService in systemServices"] .ng-binding'),
     systemServiceStatus = e => cy.get('[ng-repeat="systemService in systemServices"] span'),
-    searchBar_history = e => cy.get('[ng-model="options.searchFilter"]'),
-    searchButton = e => cy.get('#search-button'),
+    searchBar_history = e => cy.get('[ng-model="options.searchFilter"]'), searchButton = e => cy.get('#search-button'),
     typeaheadInputField = fieldLabel => cy.contains(fieldLabel).parent().find('input').first(),
     dropdownField = fieldLabel => cy.findByLabelText(fieldLabel).parent().find('select').eq(0),
-    inputField = fieldLabel => cy.findByLabelText(fieldLabel).parent().find('input').eq(0),
-    // textareaField = fieldLabel => cy.contains('span', fieldLabel).parents('labels').parent('div').find('textarea').eq(0),
+    inputField = fieldLabel => cy.findByLabelText(fieldLabel).parent().find('input').eq(0), // textareaField = fieldLabel => cy.contains('span', fieldLabel).parents('labels').parent('div').find('textarea').eq(0),
     textareaField = fieldLabel => cy.contains('label', fieldLabel).parent().find('textarea').eq(0),
     typeaheadOption = fieldLabel => cy.contains(fieldLabel).parent().find('ul').find('li').eq(0),
     storageLocationInput = fieldLabel => cy.get('[placeholder="type ‘/‘ or start typing a location name"]').last(),
@@ -249,14 +233,7 @@ let
     typeaheadSelectorItemInGroupItems = '[ng-repeat="item in $group.items"]',
     typeaheadSelectorChoicesRow = '.ui-select-choices-row'
 
-let dashboardGetRequests = [
-    '/api/users/currentuser?groups=true',
-    '/api/users/currentuser?groups=false',
-    '/api/dashboards',
-    '/api/templatewidgets',
-    '/api/charts/GetMyDataWidgets',
-    '/api/access/offices'
-]
+let dashboardGetRequests = ['/api/users/currentuser?groups=true', '/api/users/currentuser?groups=false', '/api/dashboards', '/api/templatewidgets', '/api/charts/GetMyDataWidgets', '/api/access/offices']
 
 let basePage = class BasePage {
 
@@ -409,10 +386,7 @@ let basePage = class BasePage {
 
     verify_text_is_present_on_main_container(text) {
         this.toastMessage().should('not.exist');
-        cy.verifyTextAndRetry(() =>
-                mainContainer().invoke('text'),
-            text
-        );
+        cy.verifyTextAndRetry(() => mainContainer().invoke('text'), text);
         return this;
     };
 
@@ -536,9 +510,7 @@ let basePage = class BasePage {
 
                 toastMessage().should('not.exist');
                 if (text instanceof Array) {
-                    text.forEach(element =>
-                        expect(toastMsg).to.contain(element)
-                    );
+                    text.forEach(element => expect(toastMsg).to.contain(element));
                 } else {
                     expect(toastMsg).to.contain(text);
                 }
@@ -859,16 +831,10 @@ let basePage = class BasePage {
                 const searchValue = LabelValueArray[1][i] == null ? '' : String(LabelValueArray[1][i]).trim();
                 if (searchValue === '') continue;
                 if (["users/groups", "usersCF"].includes(LabelValueArray[2])) {
-                    this.define_API_request_to_be_awaited('GET',
-                        'api/users/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + searchValue.replace(/\s+/g, '%20'),
-                        "getUserInTypeahead")
-                    this.define_API_request_to_be_awaited('GET',
-                        '/api/userGroups/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + searchValue.replace(/\s+/g, '%20'),
-                        "getUserGroupInTypeahead")
+                    this.define_API_request_to_be_awaited('GET', 'api/users/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + searchValue.replace(/\s+/g, '%20'), "getUserInTypeahead")
+                    this.define_API_request_to_be_awaited('GET', '/api/userGroups/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + searchValue.replace(/\s+/g, '%20'), "getUserGroupInTypeahead")
                 } else if (["people", "peopleCF"].includes(LabelValueArray[2])) {
-                    this.define_API_request_to_be_awaited('GET',
-                        '/api/people/typeahead',
-                        "getPeopleInTypeahead")
+                    this.define_API_request_to_be_awaited('GET', '/api/people/typeahead', "getPeopleInTypeahead")
                 }
 
                 if (typeof LabelValueArray[0] === 'string' || LabelValueArray[0] instanceof String) {
@@ -1273,7 +1239,7 @@ let basePage = class BasePage {
     //     }
     // }
 
-    check_value(element, value, timeoutInSeconds = 70) {
+    check_value(element, value, timeoutInSeconds = 70, specificIndex) {
 
         if (value) {
             let getTextFn = () => {
@@ -1486,13 +1452,9 @@ let basePage = class BasePage {
     };
 
     click_button_and_wait_text(buttonCssSelector, text) {
-        cy.clickAndRetryUntilText(
-            buttonCssSelector,
-            [text],
-            {
-                maxAttempts: 20,
-                retryInterval: 1000
-            })
+        cy.clickAndRetryUntilText(buttonCssSelector, [text], {
+            maxAttempts: 20, retryInterval: 1000
+        })
         return this;
     };
 
@@ -1501,9 +1463,7 @@ let basePage = class BasePage {
         let elmIndex = elementSequentialId - 1;
 
         if (container) {
-            container.then(parentElm =>
-                cy.findAllByText(text, {container: parentElm}).eq(elmIndex).click()
-            )
+            container.then(parentElm => cy.findAllByText(text, {container: parentElm}).eq(elmIndex).click())
         } else {
             cy.findAllByText(text).eq(elmIndex).should('be.visible');
             cy.findAllByText(text).eq(elmIndex).click();
@@ -1717,11 +1677,7 @@ let basePage = class BasePage {
         if (!alias) {
             alias = partOfRequestUrl;
         }
-        cy.intercept(
-            methodType,
-            new RegExp(`${partOfRequestUrl}(\\?.*)?$`),
-            req => req.continue()
-        ).as(alias);
+        cy.intercept(methodType, new RegExp(`${partOfRequestUrl}(\\?.*)?$`), req => req.continue()).as(alias);
         return this;
     }
 
@@ -1740,13 +1696,11 @@ let basePage = class BasePage {
             alias = partOfRequestUrl;
         }
         const urlRegex = new RegExp(`${partOfRequestUrl}/\\d+`);
-        cy.intercept(
-            {
-                method: methodType,
-                url: urlRegex
-            }, (req) => {
-                req.continue();
-            }).as(alias);
+        cy.intercept({
+            method: methodType, url: urlRegex
+        }, (req) => {
+            req.continue();
+        }).as(alias);
         return this;
     }
 
@@ -1758,15 +1712,11 @@ let basePage = class BasePage {
         // Matches partOfRequestUrl/<text> optionally followed by ?query=params
         const urlRegex = new RegExp(`${partOfRequestUrl}/[A-Za-z0-9_-]+(?:\\?.*)?$`);
 
-        cy.intercept(
-            {
-                method: methodType,
-                url: urlRegex
-            },
-            (req) => {
-                req.continue();
-            }
-        ).as(alias);
+        cy.intercept({
+            method: methodType, url: urlRegex
+        }, (req) => {
+            req.continue();
+        }).as(alias);
 
         return this;
     }
@@ -1774,13 +1724,9 @@ let basePage = class BasePage {
     define_API_request_to_be_mocked(methodType, partOfRequestUrl, alias, response) {
         alias = alias || partOfRequestUrl;
 
-        cy.intercept(
-            {
-                method: methodType,
-                url: '/api/' + partOfRequestUrl
-            },
-            response
-        ).as(alias);
+        cy.intercept({
+            method: methodType, url: '/api/' + partOfRequestUrl
+        }, response).as(alias);
         return this;
     };
 
@@ -1800,12 +1746,7 @@ let basePage = class BasePage {
         return this;
     };
 
-    wait_response_from_API_call_extended(
-        alias,
-        status = 200,
-        propertyToSaveToLocalStorage,
-        timeout = 1000
-    ) {
+    wait_response_from_API_call_extended(alias, status = 200, propertyToSaveToLocalStorage, timeout = 1000) {
         let requestOccurred = false;
 
         // Wrap in a Cypress command chain, no Promises
@@ -1820,21 +1761,16 @@ let basePage = class BasePage {
                         requestOccurred = true;
                         const interception = intercepted[0];
 
-                        const responseStatus =
-                            interception.status || interception.response?.statusCode;
+                        const responseStatus = interception.status || interception.response?.statusCode;
 
                         expect(responseStatus).to.equal(status);
 
                         if (propertyToSaveToLocalStorage) {
-                            cy.setLocalStorage(
-                                propertyToSaveToLocalStorage,
-                                JSON.stringify(interception.response.body)
-                            );
+                            cy.setLocalStorage(propertyToSaveToLocalStorage, JSON.stringify(interception.response.body));
 
                             if (S.selectedEnvironment[propertyToSaveToLocalStorage]) {
                                 S.selectedEnvironment[propertyToSaveToLocalStorage] = {
-                                    ...S.selectedEnvironment[propertyToSaveToLocalStorage],
-                                    ...interception.response.body,
+                                    ...S.selectedEnvironment[propertyToSaveToLocalStorage], ...interception.response.body,
                                 };
                             }
                         }
@@ -1930,9 +1866,7 @@ let basePage = class BasePage {
         let emailAccount = S.gmailAccount
 
         cy.task('fetchGmailUnseenMails', {
-            username: emailAccount.email,
-            password: emailAccount.password,
-            markSeen: true
+            username: emailAccount.email, password: emailAccount.password, markSeen: true
         }).then(mails => {
 
             var last_unread_email = mails[0];
@@ -2003,18 +1937,14 @@ let basePage = class BasePage {
         D.unreadEmailsForSpecificRecipient = ''
 
         cy.task('fetchGmailUnseenMails', {
-            username: S.gmailAccount.email,
-            password: S.gmailAccount.password,
-            markSeen: true
+            username: S.gmailAccount.email, password: S.gmailAccount.password, markSeen: true
         });
         return this;
     };
 
     fetch_emails(markSeen) {
         return cy.task('fetchGmailUnseenMails', {
-            username: S.gmailAccount.email,
-            password: S.gmailAccount.password,
-            markSeen: markSeen
+            username: S.gmailAccount.email, password: S.gmailAccount.password, markSeen: markSeen
         })
     };
 
@@ -2329,8 +2259,7 @@ let basePage = class BasePage {
         modal().should('be.visible');
 
         if (Array.isArray(textToBePresent)) {
-            textToBePresent.forEach(label =>
-                this.verify_text(modal, label))
+            textToBePresent.forEach(label => this.verify_text(modal, label))
         } else {
             this.verify_text(modal, textToBePresent)
         }
@@ -2342,8 +2271,7 @@ let basePage = class BasePage {
         modalBodySectionAboveFooter().should('be.visible');
 
         if (Array.isArray(textToBePresent)) {
-            textToBePresent.forEach(label =>
-                this.verify_text_regardless_of_the_DOM_structure(modalBodySectionAboveFooter, label))
+            textToBePresent.forEach(label => this.verify_text_regardless_of_the_DOM_structure(modalBodySectionAboveFooter, label))
         } else {
             this.verify_text_regardless_of_the_DOM_structure(modalBodySectionAboveFooter, textToBePresent)
         }
@@ -2387,11 +2315,7 @@ let basePage = class BasePage {
 
     verify_content_of_first_row_in_results_table(content, clickReloadIconBetweenAttempts = false) {
         this.wait_until_spinner_disappears()
-        cy.verifyTextAndRetry(() =>
-                firstRowInResultsTable().invoke('text'),
-            content,
-            {clickReloadIconBetweenAttempts: clickReloadIconBetweenAttempts}
-        );
+        cy.verifyTextAndRetry(() => firstRowInResultsTable().invoke('text'), content, {clickReloadIconBetweenAttempts: clickReloadIconBetweenAttempts});
         this.wait_until_spinner_disappears()
         return this;
     }
@@ -2409,10 +2333,7 @@ let basePage = class BasePage {
     };
 
     add_Tags(tagsArray) {
-        this.enter_values_on_several_multi_select_typeahead_fields(
-            [
-                [tagsInputWithinActiveForm, tagsArray, this.lastTagOnTypeahead],
-            ]);
+        this.enter_values_on_several_multi_select_typeahead_fields([[tagsInputWithinActiveForm, tagsArray, this.lastTagOnTypeahead],]);
         return this
     }
 
@@ -2503,19 +2424,11 @@ let basePage = class BasePage {
     //        return this;
     //    };
 
-    verify_content_of_specific_table_row_by_provided_column_title_and_value(
-        rowIndex,
-        columnTitle,
-        cellContent,
-        headerCellTag = 'th',
-        isCoCTable = false
-    ) {
+    verify_content_of_specific_table_row_by_provided_column_title_and_value(rowIndex, columnTitle, cellContent, headerCellTag = 'th', isCoCTable = false) {
         const self = this;
 
         // Decide which header to use (normal or CoC)
-        const headerFn = isCoCTable
-            ? () => cy.get('.cocTable').find('thead')
-            : resultsTableHeader;
+        const headerFn = isCoCTable ? () => cy.get('.cocTable').find('thead') : resultsTableHeader;
 
         headerFn()
             .contains(headerCellTag, columnTitle)
@@ -2596,29 +2509,45 @@ let basePage = class BasePage {
     }
 
     verify_content_of_first_row_in_results_table_on_active_tab(content) {
-        if (Array.isArray(content)) {
-            content.forEach(value =>
-                firstRowInResultsTableOnActiveTab().should('contain', value))
-        } else {
-            firstRowInResultsTableOnActiveTab().should('contain', content);
-        }
+        this.verify_content_of_specific_row_in_results_table_on_active_tab(1, content)
         return this;
     };
 
     verify_content_of_specific_row_in_results_table_on_active_tab(rowNumber, content) {
-        if (Array.isArray(content)) {
-            content.forEach(value =>
-                specificRowInResultsTableOnActiveTab(rowNumber).should('contain', value))
-        } else {
-            specificRowInResultsTableOnActiveTab(rowNumber).should('contain', content);
+
+        function checkValue(value) {
+            if (value) {
+                let getTextFn = () => {
+                    return specificRowInResultsTableOnActiveTab(rowNumber).invoke('val');
+                };
+
+                const retryInterval = 500
+                let timeout = 40000
+                let maxAttempts = timeout / retryInterval
+                cy.verifyTextAndRetry(getTextFn, value, {maxAttempts: maxAttempts, retryInterval: retryInterval});
+            }
         }
+
+        const getRow = () => specificRowInResultsTableOnActiveTab(rowNumber)
+
+        // Always work with an array for consistency
+        const values = Array.isArray(content) ? content : [content];
+
+        values.forEach((value) => {
+            this.verify_text(getRow, value);
+        });
+
+        // if (Array.isArray(content)) {
+        //     content.forEach(value => checkValue(value))
+        // } else {
+        //     checkValue(content)
+        // }
         return this;
     };
 
     verify_content_of_last_row_in_results_table_on_active_tab(content) {
         if (Array.isArray(content)) {
-            content.forEach(value =>
-                lastRowInResultsTableOnActiveTab().should('contain', value))
+            content.forEach(value => lastRowInResultsTableOnActiveTab().should('contain', value))
         } else {
             lastRowInResultsTableOnActiveTab().should('contain', content);
         }
@@ -3054,20 +2983,16 @@ let basePage = class BasePage {
 
             } else {
                 // Ensure values are in array form
-                const numbersArray = Array.isArray(toggleNumbers)
-                    ? toggleNumbers
-                    : [toggleNumbers];
+                const numbersArray = Array.isArray(toggleNumbers) ? toggleNumbers : [toggleNumbers];
 
                 // Convert 1-based → 0-based
                 const targetIndexes = numbersArray.map(n => n - 1);
 
                 // Keep only elements whose index *is* in the list
-                togglesToClick = $toggles.filter((i) =>
-                    targetIndexes.includes(i)
-                );
+                togglesToClick = $toggles.filter((i) => targetIndexes.includes(i));
             }
 
-            cy.wrap(togglesToClick).click({ multiple: true });
+            cy.wrap(togglesToClick).click({multiple: true});
         });
 
         return this;
@@ -3365,12 +3290,8 @@ let basePage = class BasePage {
                     .as('userSelect');
 
                 values.forEach(v => {
-                    this.define_API_request_to_be_awaited('GET',
-                        'api/users/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + v.replace(/\s+/g, '%20'),
-                        "getUserInTypeahead")
-                    this.define_API_request_to_be_awaited('GET',
-                        '/api/userGroups/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + v.replace(/\s+/g, '%20'),
-                        "getUserGroupInTypeahead")
+                    this.define_API_request_to_be_awaited('GET', 'api/users/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + v.replace(/\s+/g, '%20'), "getUserInTypeahead")
+                    this.define_API_request_to_be_awaited('GET', '/api/userGroups/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + v.replace(/\s+/g, '%20'), "getUserGroupInTypeahead")
 
                     cy.get('@userSelect').click().find('input.ui-select-search')
                         .invoke('val', v).trigger('input')
@@ -3418,20 +3339,17 @@ let basePage = class BasePage {
     }
 
     turn_on_and_enter_values_to_all_fields_on_Mass_Update_Cases_modal(labelsArray, valuesArray) {
-        this.turnOnAllTogglesOnModal(
-            7) // Open/Closed toggles and Status toggle
-      this.enter_values_to_all_fields_on_Mass_Update_modal(labelsArray, valuesArray)
+        this.turnOnAllTogglesOnModal(7) // Open/Closed toggles and Status toggle
+        this.enter_values_to_all_fields_on_Mass_Update_modal(labelsArray, valuesArray)
         return this
     }
 
     turn_on_and_enter_values_to_all_fields_on_modal(labelsArray, valuesArray, itemsOrCases = 'items') {
 
-        if (itemsOrCases === 'items'){
+        if (itemsOrCases === 'items') {
             this.turnOnAllTogglesOnModal(5)
-        }
-        else{
-            this.turnOnAllTogglesOnModal(
-                7) // Open/Closed toggles and Status toggle
+        } else {
+            this.turnOnAllTogglesOnModal(7) // Open/Closed toggles and Status toggle
         }
         this.enter_values_to_all_fields_on_Mass_Update_modal(labelsArray, valuesArray)
         return this
@@ -3470,19 +3388,17 @@ let basePage = class BasePage {
                     .find('input[type="checkbox"]:visible')
                     .first()
                     .then($cb => {
-                        if (value) cy.wrap($cb).check();
-                        else cy.wrap($cb).uncheck();
+                        if (value) cy.wrap($cb).check(); else cy.wrap($cb).uncheck();
                     });
 
             } else if (label === 'Checkbox List') {
                 const values = Array.isArray(value) ? value : [value];
-                values.forEach(v =>
-                    cy.get('.modal-content')
-                        .contains('.fg-field-inner label, .fg-field-inner .control-label', new RegExp(`^\\s*${label}\\s*$`))
-                        .closest('.fg-field-inner')
-                        .contains('.checkbox, .checkbox-inline, label', new RegExp(`^\\s*${v}\\s*$`))
-                        .find('input[type="checkbox"]')
-                        .check());
+                values.forEach(v => cy.get('.modal-content')
+                    .contains('.fg-field-inner label, .fg-field-inner .control-label', new RegExp(`^\\s*${label}\\s*$`))
+                    .closest('.fg-field-inner')
+                    .contains('.checkbox, .checkbox-inline, label', new RegExp(`^\\s*${v}\\s*$`))
+                    .find('input[type="checkbox"]')
+                    .check());
             } else if (label === 'Radiobutton List') {
                 cy.get('.modal-content')
                     .contains('.fg-field-inner label, .fg-field-inner .control-label', new RegExp(`^\\s*${label}\\s*$`))
@@ -3525,12 +3441,8 @@ let basePage = class BasePage {
                     .as('userSelect');
 
                 values.forEach(v => {
-                    this.define_API_request_to_be_awaited('GET',
-                        'api/users/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + v.replace(/\s+/g, '%20'),
-                        "getUserInTypeahead")
-                    this.define_API_request_to_be_awaited('GET',
-                        '/api/userGroups/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + v.replace(/\s+/g, '%20'),
-                        "getUserGroupInTypeahead")
+                    this.define_API_request_to_be_awaited('GET', 'api/users/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + v.replace(/\s+/g, '%20'), "getUserInTypeahead")
+                    this.define_API_request_to_be_awaited('GET', '/api/userGroups/multiselecttypeahead?showEmail=true&searchAccessibleOnly=false&search=' + v.replace(/\s+/g, '%20'), "getUserGroupInTypeahead")
 
                     cy.get('@userSelect').click().find('input.ui-select-search')
                         .invoke('val', v).trigger('input')
@@ -3591,7 +3503,6 @@ let basePage = class BasePage {
 
         return this;
     }
-
 
 
     enter_values_to_all_fields_on_modal(labelsArray, valuesArray) {
@@ -3740,22 +3651,19 @@ let basePage = class BasePage {
     }
 
     populate_all_fields_on_Custom_Form(dataObject) {
-        this.type_if_values_provided(
-            [
-                [textboxOnCustomForm, dataObject.custom_textbox],
-                [emailOnCustomForm, dataObject.custom_email],
-                [numberOnCustomForm, dataObject.custom_number],
-                [passwordOnCustomForm, dataObject.custom_password],
-                [textareaOnCustomForm, dataObject.custom_textarea],
-                [dropdownTypeaheadOnCustomForm, dataObject.custom_dropdownTypeaheadOption, dropdownTypeaheadOption],
-                [personOnCustomForm, dataObject.custom_personEmail, dropdownTypeaheadOption],
-                [dateOnCustomForm, dataObject.custom_date],
-            ]);
+        this.type_if_values_provided([
+            [textboxOnCustomForm, dataObject.custom_textbox],
+            [emailOnCustomForm, dataObject.custom_email],
+            [numberOnCustomForm, dataObject.custom_number],
+            [passwordOnCustomForm, dataObject.custom_password],
+            [textareaOnCustomForm, dataObject.custom_textarea],
+            [dropdownTypeaheadOnCustomForm, dataObject.custom_dropdownTypeaheadOption, dropdownTypeaheadOption],
+            [personOnCustomForm, dataObject.custom_personEmail, dropdownTypeaheadOption],
+            [dateOnCustomForm, dataObject.custom_date]
+        ]);
 
-        this.enter_values_on_several_multi_select_typeahead_fields([
-            // [user_userGroup_OnCustomForm, dataObject.custom_user_or_group_names, userAndUserGroupTypeaheadOption]
-            [user_userGroup_OnCustomForm, dataObject.custom_user_or_group_names, "usersCF"]
-        ])
+        this.enter_values_on_several_multi_select_typeahead_fields([// [user_userGroup_OnCustomForm, dataObject.custom_user_or_group_names, userAndUserGroupTypeaheadOption]
+            [user_userGroup_OnCustomForm, dataObject.custom_user_or_group_names, "usersCF"]])
 
         if (dataObject.custom_selectListOption) {
             selectListOnCustomForm().select(dataObject.custom_selectListOption);
@@ -3807,9 +3715,7 @@ let basePage = class BasePage {
         cy.get('[ng-if="customFieldsToggle.isOpen"]').then(($body) => {
             if ($body.find('.glyphicon-remove').length > 0) {
                 cy.get('body').then(($page) => {
-                    let selectorToUse = $page.find(disabledColumnsOsOnMenuCustomization().selector).length > 0
-                        ? disabledColumnsOsOnMenuCustomization_PENTEST
-                        : disabledColumnsOsOnMenuCustomization;
+                    let selectorToUse = $page.find(disabledColumnsOsOnMenuCustomization().selector).length > 0 ? disabledColumnsOsOnMenuCustomization_PENTEST : disabledColumnsOsOnMenuCustomization;
 
                     selectorToUse().then(($elements) => {
                         let clickCount = Math.min(count, $elements.length);
@@ -3920,13 +3826,9 @@ let basePage = class BasePage {
         let label;
 
         if (isActionOnSearchResults) {
-            label = multipleItems
-                ? C.dropdowns.itemActionsOnSearchResults.checkItemsIn
-                : C.dropdowns.itemActionsOnSearchResults.checkItemIn;
+            label = multipleItems ? C.dropdowns.itemActionsOnSearchResults.checkItemsIn : C.dropdowns.itemActionsOnSearchResults.checkItemIn;
         } else {
-            label = multipleItems
-                ? C.dropdowns.itemActions.checkItemsIn
-                : C.dropdowns.itemActions.checkItemIn;
+            label = multipleItems ? C.dropdowns.itemActions.checkItemsIn : C.dropdowns.itemActions.checkItemIn;
         }
         this.click_option_on_expanded_menu(label)
             .populate_CheckIn_form(returnedBy_userObject, usePreviousLocation, fullLocationPath, note)
