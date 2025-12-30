@@ -18,8 +18,8 @@ exports.check_out_item = function (itemId) {
     });
 };
 
-exports.dispose_item = function () {
-    cy.getLocalStorage("newItem").then(newItem => {
+exports.dispose_item = function (itemFromLocalStorage = "newItem") {
+    cy.getLocalStorage(itemFromLocalStorage).then(newItem => {
         newItem = JSON.parse(newItem);
 
         generic_request.POST(

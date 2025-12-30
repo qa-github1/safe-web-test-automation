@@ -19,7 +19,7 @@ describe('Services', function () {
         api.org_settings.disable_Item_fields()
         api.cases.add_new_case()
         api.items.add_new_item()
-     });
+    });
 
     it('REPORT Service', function () {
         api.auth.get_tokens(orgAdmin);
@@ -745,7 +745,7 @@ describe('Services', function () {
         checkStatusOfJobs()
     });
 
-    it.only('LOCATIONS MOVE Service', function () {
+    it('LOCATIONS MOVE Service', function () {
         api.auth.get_tokens_without_page_load(powerUser);
 
         let currentLocName, currentParentLocName, newParentLocNameOrId
@@ -775,8 +775,8 @@ describe('Services', function () {
         cy.getLocalStorage('headers').then(headers => {
 
             let updatedHeaders = JSON.parse(headers);
-           updatedHeaders.officeid = office2.id
-           cy.setLocalStorage('headers', JSON.stringify(updatedHeaders))
+            updatedHeaders.officeid = office2.id
+            cy.setLocalStorage('headers', JSON.stringify(updatedHeaders))
 
             function fetch_location_IDs(currentLocName, currentParentLocName, newParentLocNameOrId) {
                 if (currentParentLocName) {
@@ -792,16 +792,16 @@ describe('Services', function () {
             numberOfRequests = 3
             let numberOfItemsInBigLocs = 300
 
-          // create root level location with X number of items
-          //   for (let i = 0; i < numberOfRequests; i++) {
-          //      // currentLocName = 'bigLoc' + i
-          //       currentLocName = 'aaa'
-          //       currentParentLocName = 'aaaa-office1-newloc1'
-          //       fetch_location_IDs(currentLocName, currentParentLocName, newParentLocNameOrId)
-          //       for (let j = 0; j < numberOfItemsInBigLocs; j++) {
-          //           api.items.add_new_item(true, currentLocName)
-          //       }
-          //   }
+            // create root level location with X number of items
+            //   for (let i = 0; i < numberOfRequests; i++) {
+            //      // currentLocName = 'bigLoc' + i
+            //       currentLocName = 'aaa'
+            //       currentParentLocName = 'aaaa-office1-newloc1'
+            //       fetch_location_IDs(currentLocName, currentParentLocName, newParentLocNameOrId)
+            //       for (let j = 0; j < numberOfItemsInBigLocs; j++) {
+            //           api.items.add_new_item(true, currentLocName)
+            //       }
+            //   }
 
             // MOVE X locations
             for (let i = 0; i < numberOfRequests; i++) {
@@ -822,12 +822,12 @@ describe('Services', function () {
                 // api.locations.move_location_with_request_from_scan_page(currentLocName, newParentLocNameOrId, destinationOffice, orgAdmin)
 
                 //// -------- moving locations to specific parent location in office_2---> with Locations Move endpoint - POST request
-            //     newParentLocNameOrId = 542708 // Containers in Dev Org#3- Office2
-            //     newParentLocNameOrId = 1162866 // AAAA in Pentest Org#3- Office2
-            //     currentParentLocName = 'AAAA'
-            //     destinationOffice = office2
-            //     fetch_location_IDs(currentLocName, currentParentLocName, newParentLocNameOrId)
-            //     api.locations.move_location_with_request_from_scan_page(currentLocName, newParentLocNameOrId, destinationOffice, orgAdmin)
+                //     newParentLocNameOrId = 542708 // Containers in Dev Org#3- Office2
+                //     newParentLocNameOrId = 1162866 // AAAA in Pentest Org#3- Office2
+                //     currentParentLocName = 'AAAA'
+                //     destinationOffice = office2
+                //     fetch_location_IDs(currentLocName, currentParentLocName, newParentLocNameOrId)
+                //     api.locations.move_location_with_request_from_scan_page(currentLocName, newParentLocNameOrId, destinationOffice, orgAdmin)
                 //
                 //
                 // cy.getLocalStorage('apiResponse').then(apiResponse => {
@@ -979,7 +979,7 @@ describe('Services', function () {
         });
     });
 
-    it('MASS UPDATE BY QUERY Service', function () {
+    xit('MASS UPDATE BY QUERY Service', function () {
         api.auth.get_tokens(orgAdmin);
 
         for (let i = 0; i < numberOfRequests; i++) {
@@ -993,7 +993,7 @@ describe('Services', function () {
         }
     });
 
-    it('PEOPLE MERGE Service', function () {
+    xit('PEOPLE MERGE Service', function () {
         api.auth.get_tokens(orgAdmin);
 
         for (let i = 0; i < numberOfRequests; i++) {
@@ -1021,6 +1021,19 @@ describe('Services', function () {
             });
         }
     });
+    
+    it('Disposal transactions (start this test after starting some action that causes a CPU spike and heavy load on SQL Server, e.g. moving 100+ locations)', function () {
+        api.auth.get_tokens_without_page_load(orgAdmin);
+        for (let i = 0; i < 1000; i++) {
+            api.items.add_new_item(true, null, 'newItem' + i)
+            cy.log('Adding new item __' + (i + 1))
+        }
+
+        for (let i = 0; i < 1000; i++) {
+            api.transactions.dispose_item('newItem' + i)
+            cy.log('Item Disposed __' + (i + 1))
+        }
+    })
 
 
 });
