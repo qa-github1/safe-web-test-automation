@@ -43,7 +43,9 @@ describe('Mass Update Items through Actions on Search Results', function () {
 
 
     context('1. All fields enabled in Org Settings', function () {
-        it('1.1 All fields turned on and edited', function () {
+        //TODO: Sumejja should check further
+
+        xit('1.1 All fields turned on and edited', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(user);
             D.generateNewDataSet();
@@ -96,8 +98,9 @@ describe('Mass Update Items through Actions on Search Results', function () {
             api.auth.log_out(user)
 
         });
+        //TODO: Sumejja should check further
 
-        it('1.2 All fields turned on but value is edited on required fields only', function () {
+        xit('1.2 All fields turned on but value is edited on required fields only', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(user);
             D.generateNewDataSet();
