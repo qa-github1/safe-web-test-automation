@@ -35,8 +35,7 @@ describe('Add Case', function () {
             api.users.update_current_user_settings(powerUser.id, C.currentDateTimeFormat)
         });
 
-        //TODO: Sumejja should check further
-        xit('1.1 Org Admin-- All fields enabled -- redirect to View Added Case', function () {
+        it('1.1 Org Admin-- All fields enabled -- redirect to View Added Case', function () {
             ui.app.log_title(this);
 
             api.auth.get_tokens(orgAdmin);
@@ -60,8 +59,8 @@ describe('Add Case', function () {
                 .click_Edit()
                 .verify_values_on_Edit_form(D.newCase);
         });
-//TODO: Sumejja should check further
-        xit('1.2 Org Admin-- minimum case fields -- redirect to Add Case page again', function () {
+
+        it('1.2 Org Admin-- minimum case fields -- redirect to Add Case page again', function () {
             set_preconditions_for_adding_Case_with_reduced_number_of_fields(this);
 
             ui.open_base_url();
@@ -73,8 +72,8 @@ describe('Add Case', function () {
                 .verify_Add_Case_page_is_open()
                 .verify_Case_Number_is_NOT_populated_on_enabled_input_field();
         });
-//TODO: Sumejja should check further
-        xit('1.3 Org Admin-- minimum case fields -- redirect to Add Item page', function () {
+
+        it('1.3 Org Admin-- minimum case fields -- redirect to Add Item page', function () {
             set_preconditions_for_adding_Case_with_reduced_number_of_fields(this);
 
             ui.open_base_url();
@@ -90,8 +89,8 @@ describe('Add Case', function () {
                 .click_Edit()
                 .verify_values_on_Edit_form(D.newCase)
         });
-//TODO: Sumejja should check further
-        xit('1.4 Org Admin-- minimum case fields -- redirect to Add Person page', function () {
+
+        it('1.4 Org Admin-- minimum case fields -- redirect to Add Person page', function () {
             set_preconditions_for_adding_Case_with_reduced_number_of_fields(this);
 
             ui.open_base_url();
@@ -103,8 +102,8 @@ describe('Add Case', function () {
                 .verify_text_is_present_on_main_container(C.labels.addPerson.title);
             ui.addPerson.verify_Case_Number_is_populated_on_enabled_input_field(D.newCase.caseNumber);
         });
-//TODO: Sumejja should check further
-        xit('1.5 Org Admin-- minimum case fields -- redirect to Media tab on Case View page', function () {
+
+        it('1.5 Org Admin-- minimum case fields -- redirect to Media tab on Case View page', function () {
             set_preconditions_for_adding_Case_with_reduced_number_of_fields(this);
 
             ui.open_base_url();
@@ -116,8 +115,8 @@ describe('Add Case', function () {
             ui.caseView.verify_active_tab(C.tabs.media)
                 .verify_text_is_present_on_main_container(C.labels.caseView.title);
         });
-//TODO: Sumejja should check further
-        xit('1.6 Org Admin-- minimum case fields -- redirect to Notes tab on Case View page', function () {
+
+        it('1.6 Org Admin-- minimum case fields -- redirect to Notes tab on Case View page', function () {
             set_preconditions_for_adding_Case_with_reduced_number_of_fields(this);
 
             ui.open_base_url();
@@ -129,8 +128,8 @@ describe('Add Case', function () {
                 .verify_text_is_present_on_main_container(C.labels.caseView.title);
             ui.caseView.verify_active_tab(C.tabs.notes);
         });
-//TODO: Sumejja should check further
-        xit('1.7 Power User can add case and view/enter/update Review Date/Notes when having AutoDispo permissions', function () {
+
+        it('1.7 Power User can add case and view/enter/update Review Date/Notes when having AutoDispo permissions', function () {
             ui.app.log_title(this);
 
             api.auth.get_tokens(orgAdmin);
@@ -425,8 +424,8 @@ describe('Add Case', function () {
                 D.generateNewDataSet(true, true);
                 api.org_settings.set_Org_Level_Case_Number_formatting(false, false, false)
             });
-//TODO: Sumejja should check further
-            xit('7.1 verify all values are properly saved to the custom form -single user in custom User/User Group field', function () {
+
+            it('7.1 verify all values are properly saved to the custom form -single user in custom User/User Group field', function () {
                 ui.app.log_title(this);
 
                 api.auth.get_tokens(orgAdmin);
@@ -456,8 +455,8 @@ describe('Add Case', function () {
             D.generateNewDataSet(true, true);
             api.org_settings.set_Org_Level_Case_Number_formatting(false, false, false)
         });
-//TODO: Sumejja should check further
-        xit('8.1 verify that required custom form is attached to the case with blank fields', function () {
+
+        it('8.1 verify that required custom form is attached to the case with blank fields', function () {
             ui.app.log_title(this);
 
             D.newCase = Object.assign(D.newCase, D.defaultCustomFormData)
@@ -489,8 +488,8 @@ describe('Add Case', function () {
             api.org_settings.disable_Case_fields();
             api.auto_disposition.edit(false)
         });
-//TODO: Sumejja should check further
-        xit('9.1 verify multiple Users and Groups can be saved in Case Officers field and Custom User/User Group', function () {
+
+        it('9.1 verify multiple Users and Groups can be saved in Case Officers field and Custom User/User Group', function () {
             ui.app.log_title(this);
             D.newCustomFormData = {
                 custom_user_or_group_names: [S.userAccounts.basicUser.name, S.selectedEnvironment.blocked_userGroup.name]

@@ -194,31 +194,31 @@ exports.set_CRUD_permissions_for_specific_entity_on_existing_Permission_group = 
     let updateAllPermissionId = getPermissionId(group, entity, C.permissionMatrixAccessType.updateAll)
     let updateIfOwnerPermissionId = getPermissionId(group, entity, C.permissionMatrixAccessType.updateIfOwner)
 
-    if (viewAll) {
+    if (viewAll !== null) {
         generic_request.PUT(
             '/api/security/organizations/' + viewAllPermissionId,
             body.generate_PUT_request_payload_for_setting_specific_permission(group, viewAllPermissionId, entity, C.permissionMatrixAccessType.viewAll, viewAll),
             "Permissions updated via API")
     }
-    if (viewIfOwner) {
+    if (viewIfOwner !== null) {
         generic_request.PUT(
             '/api/security/organizations/' + viewIfOwnerPermissionId,
             body.generate_PUT_request_payload_for_setting_specific_permission(group, viewIfOwnerPermissionId, entity, C.permissionMatrixAccessType.viewIfOwner, viewIfOwner),
             "Permissions updated via API")
     }
-    if (create) {
+    if (create !== null) {
         generic_request.PUT(
             '/api/security/organizations/' + createPermissionId,
             body.generate_PUT_request_payload_for_setting_specific_permission(group, createPermissionId, entity, C.permissionMatrixAccessType.create, create),
             "Permissions updated via API")
     }
-    if (updateAll) {
+    if (updateAll !== null) {
         generic_request.PUT(
             '/api/security/organizations/' + updateAllPermissionId,
             body.generate_PUT_request_payload_for_setting_specific_permission(group, updateAllPermissionId, entity, C.permissionMatrixAccessType.updateAll, updateAll),
             "Permissions updated via API")
     }
-    if (updateIfOwner) {
+    if (updateIfOwner !== null) {
         generic_request.PUT(
             '/api/security/organizations/' + updateIfOwnerPermissionId,
             body.generate_PUT_request_payload_for_setting_specific_permission(group, updateIfOwnerPermissionId, entity, C.permissionMatrixAccessType.updateIfOwner, updateIfOwner),
