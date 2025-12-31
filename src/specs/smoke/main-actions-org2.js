@@ -103,7 +103,7 @@ describe('User', function () {
 
         api.auth.get_tokens(orgAdmin);
         D.generateNewDataSet();
-        D.newUser.permissionGroups = [S.selectedEnvironment.admin_permissionGroup.name]
+        D.newUser.permissionGroups = [S.selectedEnvironment.regularUser_permissionGroup.name]
         api.org_settings.set_required_User_forms([])
         ui.app.clear_gmail_inbox(S.gmailAccount);
 
@@ -114,7 +114,7 @@ describe('User', function () {
         ui.userAdmin.enter_all_values(D.newUser)
             .scroll_and_click(C.buttons.ok)
             .verify_toast_message(C.toastMsgs.saved)
-            .select_permission_group_per_office(S.selectedEnvironment.admin_permissionGroup.name, D.newUser.office)
+            .select_permission_group_per_office(S.selectedEnvironment.regularUser_permissionGroup.name, D.newUser.office)
             .click_button(C.buttons.save)
             .verify_toast_message(C.toastMsgs.saved)
             .search_for_user(D.newUser.email)

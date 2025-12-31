@@ -5,7 +5,7 @@ const api = require('../../api-utils/api-spec');
 const ui = require('../../pages/ui-spec');
 
 let office_1 = S.selectedEnvironment.office_1;
-let admin_permissionGroup = S.selectedEnvironment.admin_permissionGroup;
+let regularUser_permissionGroup = S.selectedEnvironment.regularUser_permissionGroup;
 let regularUser_permissionGroup = S.selectedEnvironment.regularUser_permissionGroup;
 let admin = S.getUserData(S.userAccounts.orgAdmin);
 let regularUser = S.getUserData(S.userAccounts.powerUser);
@@ -32,7 +32,7 @@ for (let i = 0; i < 1; i++) {
             api.org_settings.disable_Case_fields(C.caseFields.tags)
             api.cases.add_new_case()
             api.items.add_new_item()
-            api.permissions.enable_all_permissions(admin_permissionGroup)
+            api.permissions.enable_all_permissions(regularUser_permissionGroup)
             api.permissions.enable_just_Case_and_Item_permissions(regularUser_permissionGroup)
             api.permissions.assign_office_based_permissions_to_user(
                 regularUser.id,

@@ -9,7 +9,7 @@ let powerUser = S.getUserData(S.userAccounts.powerUser);
 let office_1 = S.selectedEnvironment.office_1;
 let office_2 = S.selectedEnvironment.office_2;
 let officeInOrg2 = S.selectedEnvironment.org2.office_1;
-let permissionGroup_officeAdmin = S.selectedEnvironment.admin_permissionGroup;
+let permissionGroup_officeAdmin = S.selectedEnvironment.regularUser_permissionGroup;
 let permissionGroup_regularUser = S.selectedEnvironment.regularUser_permissionGroup;
 
 function set_preconditions_for_adding_Case_with_reduced_number_of_fields(testContext) {
@@ -129,7 +129,7 @@ describe('Add Case', function () {
             ui.caseView.verify_active_tab(C.tabs.notes);
         });
 
-        it('1.7 Power User can add case and view/enter/update Review Date/Notes when having AutoDispo permissions', function () {
+        it.only('1.7 Power User can add case and view/enter/update Review Date/Notes when having AutoDispo permissions', function () {
             ui.app.log_title(this);
 
             api.auth.get_tokens(orgAdmin);

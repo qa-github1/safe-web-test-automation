@@ -65,7 +65,7 @@ exports.turn_off_Case_Level_Permissions = function (caseId) {
 
         generic_request.POST(
             '/api/cases/' + caseId + '/permissions',
-            body.generate_POST_request_payload_for_CLP(S.selectedEnvironment.admin_permissionGroup, null, null, null, false),
+            body.generate_POST_request_payload_for_CLP(S.selectedEnvironment.regularUser_permissionGroup, null, null, null, false),
             'Turning OFF CLP via API')
     });
 };

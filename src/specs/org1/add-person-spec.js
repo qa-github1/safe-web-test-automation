@@ -7,7 +7,7 @@ const ui = require('../../pages/ui-spec');
 let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
 let powerUser = S.getUserData(S.userAccounts.powerUser);
 let office_1 = S.selectedEnvironment.office_1;
-let permissionGroup_officeAdmin = S.selectedEnvironment.admin_permissionGroup;
+let permissionGroup_officeAdmin = S.selectedEnvironment.regularUser_permissionGroup;
 
 function set_preconditions_for_adding_Person_with_all_fields(testContext) {
     ui.app.log_title(testContext);

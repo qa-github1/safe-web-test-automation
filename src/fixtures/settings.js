@@ -425,20 +425,6 @@ S.DEV_1 = {
     get recoveredById() {
         return S.DEV_1.person.id
     },
-    admin_permissionGroup: {
-        name: 'Cypress - ADMIN',
-        id: 2159,
-        startingIndexForViewPermissions: 64846,
-        get startingIndexForCreatePermissions() {
-            return S.DEV_1.admin_permissionGroup.startingIndexForViewPermissions + 22
-        },
-        get startingIndexForUpdatePermissions() {
-            return S.DEV_1.admin_permissionGroup.startingIndexForViewPermissions + 45
-        },
-        get startingIndexForDeletePermissions() {
-            return S.DEV_1.admin_permissionGroup.startingIndexForViewPermissions + 67
-        }
-    },
     regularUser_permissionGroup: {
         name: 'Cypress - Regular User',
         id: 2162,
@@ -452,24 +438,6 @@ S.DEV_1 = {
         get startingIndexForDeletePermissions() {
             return S.DEV_1.regularUser_permissionGroup.startingIndexForViewPermissions + 67
         }
-    },
-    // readOnly_permissionGroup: {
-    //     name: 'Cypress - ReadOnly',
-    //     id: 2053,
-    //     startingIndexForViewPermissions: 59816,
-    //     get startingIndexForCreatePermissions() {
-    //         return S.DEV_1.readOnly_permissionGroup.startingIndexForViewPermissions + 22
-    //     },
-    //     get startingIndexForUpdatePermissions() {
-    //         return S.DEV_1.readOnly_permissionGroup.startingIndexForViewPermissions + 45
-    //     },
-    //     get startingIndexForDeletePermissions() {
-    //         return S.DEV_1.readOnly_permissionGroup.startingIndexForViewPermissions + 67
-    //     }
-    // },
-    permissionGroup_noAutoDispo: {
-        name: 'All permissions except AutoDispo',
-        id: 4247
     },
     admin_userGroup: {
         name: 'Cypress Admin Group',
@@ -763,34 +731,6 @@ S.DEV_2 = {
             return S.DEV_2.clp_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
-    admin_permissionGroup: {
-        name: 'Cypress - ADMIN',
-        id: 2164,
-        startingIndexForViewPermissions: 65283,
-        get startingIndexForCreatePermissions() {
-            return S.DEV_2.admin_permissionGroup.startingIndexForViewPermissions + 22
-        },
-        get startingIndexForUpdatePermissions() {
-            return S.DEV_2.admin_permissionGroup.startingIndexForViewPermissions + 45
-        },
-        get startingIndexForDeletePermissions() {
-            return S.DEV_2.admin_permissionGroup.startingIndexForViewPermissions + 67
-        }
-    },
-    blocked_permissionGroup: {
-        name: 'Cypress - Blocked',
-        id: 2166,
-        startingIndexForViewPermissions: 65425,
-        get startingIndexForCreatePermissions() {
-            return S.DEV_2.blocked_permissionGroup.startingIndexForViewPermissions + 22
-        },
-        get startingIndexForUpdatePermissions() {
-            return S.DEV_2.blocked_permissionGroup.startingIndexForViewPermissions + 45
-        },
-        get startingIndexForDeletePermissions() {
-            return S.DEV_2.blocked_permissionGroup.startingIndexForViewPermissions + 67
-        }
-    },
     regularUser_permissionGroup: {
         name: 'Cypress - Regular User',
         id: 2142,
@@ -804,24 +744,6 @@ S.DEV_2 = {
         get startingIndexForDeletePermissions() {
             return S.DEV_2.regularUser_permissionGroup.startingIndexForViewPermissions + 67
         }
-    },
-    readOnly_permissionGroup: {
-        name: 'Cypress - ReadOnly',
-        id: 2167,
-        startingIndexForViewPermissions: 65447,
-        get startingIndexForCreatePermissions() {
-            return S.DEV_2.readOnly_permissionGroup.startingIndexForViewPermissions + 22
-        },
-        get startingIndexForUpdatePermissions() {
-            return S.DEV_2.readOnly_permissionGroup.startingIndexForViewPermissions + 45
-        },
-        get startingIndexForDeletePermissions() {
-            return S.DEV_2.readOnly_permissionGroup.startingIndexForViewPermissions + 67
-        }
-    },
-    permissionGroup_noAutoDispo: {
-        name: 'All permissions except AutoDispo',
-        id: 4422
     },
     admin_userGroup: {
         name: 'Cypress Admin Group',
@@ -1050,34 +972,6 @@ S.DEV_3 = {
     get recoveredById() {
         return S.DEV_3.person.id
     },
-    admin_permissionGroup: {
-        name: 'Cypress - ADMIN',
-        id: 4449,
-        startingIndexForViewPermissions: 65919,
-        get startingIndexForCreatePermissions() {
-            return S.DEV_3.admin_permissionGroup.startingIndexForViewPermissions + 22
-        },
-        get startingIndexForUpdatePermissions() {
-            return S.DEV_3.admin_permissionGroup.startingIndexForViewPermissions + 45
-        },
-        get startingIndexForDeletePermissions() {
-            return S.DEV_3.admin_permissionGroup.startingIndexForViewPermissions + 67
-        }
-    },
-    blocked_permissionGroup: {
-        name: 'Cypress - Blocked',
-        id: 4450,
-        startingIndexForViewPermissions: 65992,
-        get startingIndexForCreatePermissions() {
-            return S.DEV_3.blocked_permissionGroup.startingIndexForViewPermissions + 22
-        },
-        get startingIndexForUpdatePermissions() {
-            return S.DEV_3.blocked_permissionGroup.startingIndexForViewPermissions + 45
-        },
-        get startingIndexForDeletePermissions() {
-            return S.DEV_3.blocked_permissionGroup.startingIndexForViewPermissions + 67
-        }
-    },
     regularUser_permissionGroup: {
         name: 'Cypress - Regular User',
         id: 4451,
@@ -1092,24 +986,6 @@ S.DEV_3 = {
             return S.DEV_3.regularUser_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
-    // readOnly_permissionGroup: {
-    //     name: 'Cypress - ReadOnly',
-    //     id: 4421,
-    //     startingIndexForViewPermissions: 64293,
-    //     get startingIndexForCreatePermissions() {
-    //         return S.DEV_3.readOnly_permissionGroup.startingIndexForViewPermissions + 22
-    //     },
-    //     get startingIndexForUpdatePermissions() {
-    //         return S.DEV_3.readOnly_permissionGroup.startingIndexForViewPermissions + 45
-    //     },
-    //     get startingIndexForDeletePermissions() {
-    //         return S.DEV_3.readOnly_permissionGroup.startingIndexForViewPermissions + 67
-    //     }
-    // },
-    // permissionGroup_noAutoDispo: {
-    //     name: 'All permissions except AutoDispo',
-    //     id: 4422
-    // },
     admin_userGroup: {
         name: 'Cypress Admin Group',
         id: 10603
@@ -1345,34 +1221,6 @@ S.DEV_4 = {
     get recoveredById() {
         return S.DEV_4.person.id
     },
-    admin_permissionGroup: {
-        name: 'Cypress - ADMIN',
-        id: 4476,
-        startingIndexForViewPermissions: 66572,
-        get startingIndexForCreatePermissions() {
-            return S.DEV_4.admin_permissionGroup.startingIndexForViewPermissions + 22
-        },
-        get startingIndexForUpdatePermissions() {
-            return S.DEV_4.admin_permissionGroup.startingIndexForViewPermissions + 45
-        },
-        get startingIndexForDeletePermissions() {
-            return S.DEV_4.admin_permissionGroup.startingIndexForViewPermissions + 67
-        }
-    },
-    // blocked_permissionGroup: {
-    //     name: 'Cypress - Blocked',
-    //     id: 4450,
-    //     startingIndexForViewPermissions: 65992,
-    //     get startingIndexForCreatePermissions() {
-    //         return S.DEV_4.blocked_permissionGroup.startingIndexForViewPermissions + 22
-    //     },
-    //     get startingIndexForUpdatePermissions() {
-    //         return S.DEV_4.blocked_permissionGroup.startingIndexForViewPermissions + 45
-    //     },
-    //     get startingIndexForDeletePermissions() {
-    //         return S.DEV_4.blocked_permissionGroup.startingIndexForViewPermissions + 67
-    //     }
-    // },
     regularUser_permissionGroup: {
         name: 'Cypress - Regular User',
         id: 4477,
@@ -1387,24 +1235,6 @@ S.DEV_4 = {
             return S.DEV_4.regularUser_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
-    readOnly_permissionGroup: {
-        name: 'Cypress - ReadOnly',
-        id: 4478,
-        startingIndexForViewPermissions: 66718,
-        get startingIndexForCreatePermissions() {
-            return S.DEV_4.readOnly_permissionGroup.startingIndexForViewPermissions + 22
-        },
-        get startingIndexForUpdatePermissions() {
-            return S.DEV_4.readOnly_permissionGroup.startingIndexForViewPermissions + 45
-        },
-        get startingIndexForDeletePermissions() {
-            return S.DEV_4.readOnly_permissionGroup.startingIndexForViewPermissions + 67
-        }
-    },
-    // // permissionGroup_noAutoDispo: {
-    // //     name: 'All permissions except AutoDispo',
-    // //     id: 4422
-    // // },
     admin_userGroup: {
         name: 'Cypress Admin Group',
         id: 2912
@@ -1652,46 +1482,18 @@ S.QA_1 = {
         user: "field3297",
         person: "field3299",
     },
-    admin_permissionGroup: {
-        name: 'Cypress - ADMIN',
-        id: 22,
-        startingIndexForViewPermissions: 528,
-        get startingIndexForCreatePermissions() {
-            return S.QA_1.admin_permissionGroup.startingIndexForViewPermissions + 22
-        },
-        get startingIndexForUpdatePermissions() {
-            return S.QA_1.admin_permissionGroup.startingIndexForViewPermissions + 45
-        },
-        get startingIndexForDeletePermissions() {
-            return S.QA_1.admin_permissionGroup.startingIndexForViewPermissions + 67
-        }
-    },
-    blocked_permissionGroup: {
-        name: 'Cypress - Blocked',
-        id: 23,
-        startingIndexForViewPermissions: 573,
-        get startingIndexForCreatePermissions() {
-            return S.QA_1.blocked_permissionGroup.startingIndexForViewPermissions + 22
-        },
-        get startingIndexForUpdatePermissions() {
-            return S.QA_1.blocked_permissionGroup.startingIndexForViewPermissions + 45
-        },
-        get startingIndexForDeletePermissions() {
-            return S.QA_1.blocked_permissionGroup.startingIndexForViewPermissions + 67
-        }
-    },
-    readOnly_permissionGroup: {
-        name: 'Cypress - ReadOnly',
+    regularUser_permissionGroup: {
+        name: 'Cypress - Regular Use',
         id: 24,
         startingIndexForViewPermissions: 618,
         get startingIndexForCreatePermissions() {
-            return S.QA_1.readOnly_permissionGroup.startingIndexForViewPermissions + 22
+            return S.QA_1.regularUser_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.QA_1.readOnly_permissionGroup.startingIndexForViewPermissions + 45
+            return S.QA_1.regularUser_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.QA_1.readOnly_permissionGroup.startingIndexForViewPermissions + 67
+            return S.QA_1.regularUser_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     admin_userGroup: {
@@ -1869,46 +1671,18 @@ S.QA_2 = {
         email: 'qa+person_2@trackerproducts.com'
     },
     recoveredById: () => S.QA_2.person.id,
-    admin_permissionGroup: {
-        name: 'Cypress - ADMIN',
+    regularUser_permissionGroup: {
+        name: 'Cypress - Regular User',
         id: 25,
         startingIndexForViewPermissions: 663,
         get startingIndexForCreatePermissions() {
-            return S.QA_2.admin_permissionGroup.startingIndexForViewPermissions + 22
+            return S.QA_2.regularUser_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.QA_2.admin_permissionGroup.startingIndexForViewPermissions + 45
+            return S.QA_2.regularUser_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.QA_2.admin_permissionGroup.startingIndexForViewPermissions + 67
-        }
-    },
-    blocked_permissionGroup: {
-        name: 'Cypress - Blocked',
-        id: 26,
-        startingIndexForViewPermissions: 708,
-        get startingIndexForCreatePermissions() {
-            return S.QA_2.blocked_permissionGroup.startingIndexForViewPermissions + 22
-        },
-        get startingIndexForUpdatePermissions() {
-            return S.QA_2.blocked_permissionGroup.startingIndexForViewPermissions + 45
-        },
-        get startingIndexForDeletePermissions() {
-            return S.QA_2.blocked_permissionGroup.startingIndexForViewPermissions + 67
-        }
-    },
-    readOnly_permissionGroup: {
-        name: 'Cypress - ReadOnly',
-        id: 27,
-        startingIndexForViewPermissions: 753,
-        get startingIndexForCreatePermissions() {
-            return S.QA_2.readOnly_permissionGroup.startingIndexForViewPermissions + 22
-        },
-        get startingIndexForUpdatePermissions() {
-            return S.QA_2.readOnly_permissionGroup.startingIndexForViewPermissions + 45
-        },
-        get startingIndexForDeletePermissions() {
-            return S.QA_2.readOnly_permissionGroup.startingIndexForViewPermissions + 67
+            return S.QA_2.regularUser_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     admin_userGroup: {
@@ -2010,46 +1784,18 @@ S.QA_3 = {
         email: 'qa+person_2@trackerproducts.com'
     },
     recoveredById: () => S.QA_3.person.id,
-    admin_permissionGroup: {
-        name: 'Cypress - ADMIN',
+    regularUser_permissionGroup: {
+        name: 'Cypress - Regular User',
         id: 28,
         startingIndexForViewPermissions: 798,
         get startingIndexForCreatePermissions() {
-            return S.QA_3.admin_permissionGroup.startingIndexForViewPermissions + 22
+            return S.QA_3.regularUser_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.QA_3.admin_permissionGroup.startingIndexForViewPermissions + 45
+            return S.QA_3.regularUser_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.QA_3.admin_permissionGroup.startingIndexForViewPermissions + 67
-        }
-    },
-    blocked_permissionGroup: {
-        name: 'Cypress - Blocked',
-        id: 29,
-        startingIndexForViewPermissions: 843,
-        get startingIndexForCreatePermissions() {
-            return S.QA_3.blocked_permissionGroup.startingIndexForViewPermissions + 22
-        },
-        get startingIndexForUpdatePermissions() {
-            return S.QA_3.blocked_permissionGroup.startingIndexForViewPermissions + 45
-        },
-        get startingIndexForDeletePermissions() {
-            return S.QA_3.blocked_permissionGroup.startingIndexForViewPermissions + 67
-        }
-    },
-    readOnly_permissionGroup: {
-        name: 'Cypress - ReadOnly',
-        id: 30,
-        startingIndexForViewPermissions: 888,
-        get startingIndexForCreatePermissions() {
-            return S.QA_3.readOnly_permissionGroup.startingIndexForViewPermissions + 22
-        },
-        get startingIndexForUpdatePermissions() {
-            return S.QA_3.readOnly_permissionGroup.startingIndexForViewPermissions + 45
-        },
-        get startingIndexForDeletePermissions() {
-            return S.QA_3.readOnly_permissionGroup.startingIndexForViewPermissions + 67
+            return S.QA_3.regularUser_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     admin_userGroup: {
@@ -2155,46 +1901,18 @@ S.QA_4 = {
         email: 'qa+person_2@trackerproducts.com'
     },
     recoveredById: () => S.QA_3.person.id,
-    admin_permissionGroup: {
-        name: 'Cypress - ADMIN',
+    regularUser_permissionGroup: {
+        name: 'Cypress - Regular User',
         id: 31,
         startingIndexForViewPermissions: 933,
         get startingIndexForCreatePermissions() {
-            return S.QA_4.admin_permissionGroup.startingIndexForViewPermissions + 22
+            return S.QA_4.regularUser_permissionGroup.startingIndexForViewPermissions + 22
         },
         get startingIndexForUpdatePermissions() {
-            return S.QA_4.admin_permissionGroup.startingIndexForViewPermissions + 45
+            return S.QA_4.regularUser_permissionGroup.startingIndexForViewPermissions + 45
         },
         get startingIndexForDeletePermissions() {
-            return S.QA_4.admin_permissionGroup.startingIndexForViewPermissions + 67
-        }
-    },
-    blocked_permissionGroup: {
-        name: 'Cypress - Blocked',
-        id: 32,
-        startingIndexForViewPermissions: 978,
-        get startingIndexForCreatePermissions() {
-            return S.QA_4.blocked_permissionGroup.startingIndexForViewPermissions + 22
-        },
-        get startingIndexForUpdatePermissions() {
-            return S.QA_4.blocked_permissionGroup.startingIndexForViewPermissions + 45
-        },
-        get startingIndexForDeletePermissions() {
-            return S.QA_4.blocked_permissionGroup.startingIndexForViewPermissions + 67
-        }
-    },
-    readOnly_permissionGroup: {
-        name: 'Cypress - ReadOnly',
-        id: 33,
-        startingIndexForViewPermissions: 1023,
-        get startingIndexForCreatePermissions() {
-            return S.QA_4.readOnly_permissionGroup.startingIndexForViewPermissions + 22
-        },
-        get startingIndexForUpdatePermissions() {
-            return S.QA_4.readOnly_permissionGroup.startingIndexForViewPermissions + 45
-        },
-        get startingIndexForDeletePermissions() {
-            return S.QA_4.readOnly_permissionGroup.startingIndexForViewPermissions + 67
+            return S.QA_4.regularUser_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
     admin_userGroup: {
@@ -2412,24 +2130,10 @@ S.PENTEST_1 = {
     get recoveredById() {
         return S.PENTEST_1.person.id
     },
-    admin_permissionGroup: {
-        name: 'Cypress - ADMIN',
-        id: 4429,
-        startingIndexForViewPermissions: 64539,
-        get startingIndexForCreatePermissions() {
-            return S.PENTEST_1.admin_permissionGroup.startingIndexForViewPermissions + 22
-        },
-        get startingIndexForUpdatePermissions() {
-            return S.PENTEST_1.admin_permissionGroup.startingIndexForViewPermissions + 45
-        },
-        get startingIndexForDeletePermissions() {
-            return S.PENTEST_1.admin_permissionGroup.startingIndexForViewPermissions + 67
-        }
-    },
     regularUser_permissionGroup: {
         name: 'Cypress - Regular User',
-        id: 4437,
-        startingIndexForViewPermissions: 65073,
+        id: 4634,
+        startingIndexForViewPermissions: 94709,
         get startingIndexForCreatePermissions() {
             return S.PENTEST_1.regularUser_permissionGroup.startingIndexForViewPermissions + 22
         },
@@ -2439,24 +2143,6 @@ S.PENTEST_1 = {
         get startingIndexForDeletePermissions() {
             return S.PENTEST_1.regularUser_permissionGroup.startingIndexForViewPermissions + 67
         }
-    },
-    // readOnly_permissionGroup: {
-    //     name: 'Cypress - ReadOnly',
-    //     id: 2053,
-    //     startingIndexForViewPermissions: 59816,
-    //     get startingIndexForCreatePermissions() {
-    //         return S.PENTEST_1.readOnly_permissionGroup.startingIndexForViewPermissions + 22
-    //     },
-    //     get startingIndexForUpdatePermissions() {
-    //         return S.PENTEST_1.readOnly_permissionGroup.startingIndexForViewPermissions + 45
-    //     },
-    //     get startingIndexForDeletePermissions() {
-    //         return S.PENTEST_1.readOnly_permissionGroup.startingIndexForViewPermissions + 67
-    //     }
-    // },
-    permissionGroup_noAutoDispo: {
-        name: 'All permissions except AutoDispo',
-        id: 4247
     },
     admin_userGroup: {
         name: 'Cypress Admin Group',
@@ -2706,38 +2392,10 @@ S.PENTEST_2 = {
     get recoveredById() {
         return S.PENTEST_2.person.id
     },
-    admin_permissionGroup: {
-        name: 'Cypress - ADMIN',
-        id: 4584,
-        startingIndexForViewPermissions: 81778,
-        get startingIndexForCreatePermissions() {
-            return S.PENTEST_2.admin_permissionGroup.startingIndexForViewPermissions + 22
-        },
-        get startingIndexForUpdatePermissions() {
-            return S.PENTEST_2.admin_permissionGroup.startingIndexForViewPermissions + 45
-        },
-        get startingIndexForDeletePermissions() {
-            return S.PENTEST_2.admin_permissionGroup.startingIndexForViewPermissions + 67
-        }
-    },
-    blocked_permissionGroup: {
-        name: 'Cypress - Blocked',
-        id: 4420,
-        startingIndexForViewPermissions: 64220,
-        get startingIndexForCreatePermissions() {
-            return S.PENTEST_2.blocked_permissionGroup.startingIndexForViewPermissions + 22
-        },
-        get startingIndexForUpdatePermissions() {
-            return S.PENTEST_2.blocked_permissionGroup.startingIndexForViewPermissions + 45
-        },
-        get startingIndexForDeletePermissions() {
-            return S.PENTEST_2.blocked_permissionGroup.startingIndexForViewPermissions + 67
-        }
-    },
     regularUser_permissionGroup: {
         name: 'Cypress - Regular User',
-        id: 4583,
-        startingIndexForViewPermissions: 81703,
+        id: 4633,
+        startingIndexForViewPermissions: 94631,
         get startingIndexForCreatePermissions() {
             return S.PENTEST_2.regularUser_permissionGroup.startingIndexForViewPermissions + 22
         },
@@ -2747,24 +2405,6 @@ S.PENTEST_2 = {
         get startingIndexForDeletePermissions() {
             return S.PENTEST_2.regularUser_permissionGroup.startingIndexForViewPermissions + 67
         }
-    },
-    readOnly_permissionGroup: {
-        name: 'Cypress - ReadOnly',
-        id: 4421,
-        startingIndexForViewPermissions: 64293,
-        get startingIndexForCreatePermissions() {
-            return S.PENTEST_2.readOnly_permissionGroup.startingIndexForViewPermissions + 22
-        },
-        get startingIndexForUpdatePermissions() {
-            return S.PENTEST_2.readOnly_permissionGroup.startingIndexForViewPermissions + 45
-        },
-        get startingIndexForDeletePermissions() {
-            return S.PENTEST_2.readOnly_permissionGroup.startingIndexForViewPermissions + 67
-        }
-    },
-    permissionGroup_noAutoDispo: {
-        name: 'All permissions except AutoDispo',
-        id: 4422
     },
     admin_userGroup: {
         name: 'Cypress Admin Group',
@@ -3028,38 +2668,10 @@ S.PENTEST_3 = {
     get recoveredById() {
         return S.PENTEST_3.person.id
     },
-    admin_permissionGroup: {
-        name: 'Cypress - ADMIN',
-        id: 4587,
-        startingIndexForViewPermissions: 81974,
-        get startingIndexForCreatePermissions() {
-            return S.PENTEST_3.admin_permissionGroup.startingIndexForViewPermissions + 22
-        },
-        get startingIndexForUpdatePermissions() {
-            return S.PENTEST_3.admin_permissionGroup.startingIndexForViewPermissions + 45
-        },
-        get startingIndexForDeletePermissions() {
-            return S.PENTEST_3.admin_permissionGroup.startingIndexForViewPermissions + 67
-        }
-    },
-    blocked_permissionGroup: {
-        name: 'Cypress - Blocked',
-        id: 4588,
-        startingIndexForViewPermissions: 82049,
-        get startingIndexForCreatePermissions() {
-            return S.PENTEST_3.blocked_permissionGroup.startingIndexForViewPermissions + 22
-        },
-        get startingIndexForUpdatePermissions() {
-            return S.PENTEST_3.blocked_permissionGroup.startingIndexForViewPermissions + 45
-        },
-        get startingIndexForDeletePermissions() {
-            return S.PENTEST_3.blocked_permissionGroup.startingIndexForViewPermissions + 67
-        }
-    },
     regularUser_permissionGroup: {
         name: 'Cypress - Regular User',
-        id: 4619,
-        startingIndexForViewPermissions: 93678,
+        id: 4632,
+        startingIndexForViewPermissions: 94553,
         get startingIndexForCreatePermissions() {
             return S.PENTEST_3.regularUser_permissionGroup.startingIndexForViewPermissions + 22
         },
@@ -3070,24 +2682,6 @@ S.PENTEST_3 = {
             return S.PENTEST_3.regularUser_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
-    // readOnly_permissionGroup: {
-    //     name: 'Cypress - ReadOnly',
-    //     id: 4421,
-    //     startingIndexForViewPermissions: 64293,
-    //     get startingIndexForCreatePermissions() {
-    //         return S.PENTEST_3.readOnly_permissionGroup.startingIndexForViewPermissions + 22
-    //     },
-    //     get startingIndexForUpdatePermissions() {
-    //         return S.PENTEST_3.readOnly_permissionGroup.startingIndexForViewPermissions + 45
-    //     },
-    //     get startingIndexForDeletePermissions() {
-    //         return S.PENTEST_3.readOnly_permissionGroup.startingIndexForViewPermissions + 67
-    //     }
-    // },
-    // permissionGroup_noAutoDispo: {
-    //     name: 'All permissions except AutoDispo',
-    //     id: 4422
-    // },
     admin_userGroup: {
         name: 'Cypress Admin Group',
         id: 3138
@@ -3349,38 +2943,10 @@ S.PENTEST_4 = {
     get recoveredById() {
         return S.PENTEST_4.person.id
     },
-    admin_permissionGroup: {
-        name: 'Cypress - ADMIN',
-        id: 4597,
-        startingIndexForViewPermissions: 92404,
-        get startingIndexForCreatePermissions() {
-            return S.PENTEST_4.admin_permissionGroup.startingIndexForViewPermissions + 22
-        },
-        get startingIndexForUpdatePermissions() {
-            return S.PENTEST_4.admin_permissionGroup.startingIndexForViewPermissions + 45
-        },
-        get startingIndexForDeletePermissions() {
-            return S.PENTEST_4.admin_permissionGroup.startingIndexForViewPermissions + 67
-        }
-    },
-    // blocked_permissionGroup: {
-    //     name: 'Cypress - Blocked',
-    //     id: 4450,
-    //     startingIndexForViewPermissions: 65992,
-    //     get startingIndexForCreatePermissions() {
-    //         return S.PENTEST_4.blocked_permissionGroup.startingIndexForViewPermissions + 22
-    //     },
-    //     get startingIndexForUpdatePermissions() {
-    //         return S.PENTEST_4.blocked_permissionGroup.startingIndexForViewPermissions + 45
-    //     },
-    //     get startingIndexForDeletePermissions() {
-    //         return S.PENTEST_4.blocked_permissionGroup.startingIndexForViewPermissions + 67
-    //     }
-    // },
     regularUser_permissionGroup: {
         name: 'Cypress - Regular User',
-        id: 4596,
-        startingIndexForViewPermissions: 92329,
+        id: 4631,
+        startingIndexForViewPermissions: 94475,
         get startingIndexForCreatePermissions() {
             return S.PENTEST_4.regularUser_permissionGroup.startingIndexForViewPermissions + 22
         },
@@ -3391,25 +2957,6 @@ S.PENTEST_4 = {
             return S.PENTEST_4.regularUser_permissionGroup.startingIndexForViewPermissions + 67
         }
     },
-
-    readOnly_permissionGroup: {
-        name: 'Cypress - ReadOnly',
-        id: 4478,
-        startingIndexForViewPermissions: 66718,
-        get startingIndexForCreatePermissions() {
-            return S.PENTEST_4.readOnly_permissionGroup.startingIndexForViewPermissions + 22
-        },
-        get startingIndexForUpdatePermissions() {
-            return S.PENTEST_4.readOnly_permissionGroup.startingIndexForViewPermissions + 45
-        },
-        get startingIndexForDeletePermissions() {
-            return S.PENTEST_4.readOnly_permissionGroup.startingIndexForViewPermissions + 67
-        }
-    },
-    // // permissionGroup_noAutoDispo: {
-    // //     name: 'All permissions except AutoDispo',
-    // //     id: 4422
-    // // },
     admin_userGroup: {
         name: 'Cypress Admin Group',
         id: 2912
@@ -3674,20 +3221,6 @@ S.SECURE_1 = {
     get recoveredById() {
         return S.SECURE_1.person.id
     },
-    admin_permissionGroup: {
-        name: 'Cypress - ADMIN',
-        id: 4387,
-        startingIndexForViewPermissions: 115963,
-        get startingIndexForCreatePermissions() {
-            return S.SECURE_1.admin_permissionGroup.startingIndexForViewPermissions + 22
-        },
-        get startingIndexForUpdatePermissions() {
-            return S.SECURE_1.admin_permissionGroup.startingIndexForViewPermissions + 45
-        },
-        get startingIndexForDeletePermissions() {
-            return S.SECURE_1.admin_permissionGroup.startingIndexForViewPermissions + 67
-        }
-    },
     regularUser_permissionGroup: {
         name: 'Cypress - Regular User',
         id: 4388,
@@ -3701,24 +3234,6 @@ S.SECURE_1 = {
         get startingIndexForDeletePermissions() {
             return S.SECURE_1.regularUser_permissionGroup.startingIndexForViewPermissions + 67
         }
-    },
-    readOnly_permissionGroup: {
-        name: 'Cypress - ReadOnly',
-        id: 4389,
-        startingIndexForViewPermissions: 116113,
-        get startingIndexForCreatePermissions() {
-            return S.SECURE_1.readOnly_permissionGroup.startingIndexForViewPermissions + 22
-        },
-        get startingIndexForUpdatePermissions() {
-            return S.SECURE_1.readOnly_permissionGroup.startingIndexForViewPermissions + 45
-        },
-        get startingIndexForDeletePermissions() {
-            return S.SECURE_1.readOnly_permissionGroup.startingIndexForViewPermissions + 67
-        }
-    },
-    permissionGroup_noAutoDispo: {
-        name: 'All permissions except AutoDispo',
-        id: 4390
     },
     admin_userGroup: {
         name: 'Cypress Admin Group',
@@ -3941,34 +3456,6 @@ S.SECURE_2 = {
     get recoveredById() {
         return S.SECURE_2.person.id
     },
-    admin_permissionGroup: {
-        name: 'Cypress - ADMIN',
-        id: 4392,
-        startingIndexForViewPermissions: 116190,
-        get startingIndexForCreatePermissions() {
-            return S.SECURE_2.admin_permissionGroup.startingIndexForViewPermissions + 22
-        },
-        get startingIndexForUpdatePermissions() {
-            return S.SECURE_2.admin_permissionGroup.startingIndexForViewPermissions + 45
-        },
-        get startingIndexForDeletePermissions() {
-            return S.SECURE_2.admin_permissionGroup.startingIndexForViewPermissions + 67
-        }
-    },
-    blocked_permissionGroup: {
-        name: 'Cypress - Blocked',
-        id: 4393,
-        startingIndexForViewPermissions: 116265,
-        get startingIndexForCreatePermissions() {
-            return S.SECURE_2.blocked_permissionGroup.startingIndexForViewPermissions + 22
-        },
-        get startingIndexForUpdatePermissions() {
-            return S.SECURE_2.blocked_permissionGroup.startingIndexForViewPermissions + 45
-        },
-        get startingIndexForDeletePermissions() {
-            return S.SECURE_2.blocked_permissionGroup.startingIndexForViewPermissions + 67
-        }
-    },
     regularUser_permissionGroup: {
         name: 'Cypress - Regular User',
         id: 4394,
@@ -3982,24 +3469,6 @@ S.SECURE_2 = {
         get startingIndexForDeletePermissions() {
             return S.SECURE_2.regularUser_permissionGroup.startingIndexForViewPermissions + 67
         }
-    },
-    readOnly_permissionGroup: {
-        name: 'Cypress - ReadOnly',
-        id: 4395,
-        startingIndexForViewPermissions: 116415,
-        get startingIndexForCreatePermissions() {
-            return S.SECURE_2.readOnly_permissionGroup.startingIndexForViewPermissions + 22
-        },
-        get startingIndexForUpdatePermissions() {
-            return S.SECURE_2.readOnly_permissionGroup.startingIndexForViewPermissions + 45
-        },
-        get startingIndexForDeletePermissions() {
-            return S.SECURE_2.readOnly_permissionGroup.startingIndexForViewPermissions + 67
-        }
-    },
-    permissionGroup_noAutoDispo: {
-        name: 'All permissions except AutoDispo',
-        id: 4396
     },
     admin_userGroup: {
         name: 'Cypress Admin Group',
@@ -4226,34 +3695,6 @@ S.SECURE_3 = {
     get recoveredById() {
         return S.SECURE_3.person.id
     },
-    admin_permissionGroup: {
-        name: 'Cypress - ADMIN',
-        id: 4397,
-        startingIndexForViewPermissions: 116490,
-        get startingIndexForCreatePermissions() {
-            return S.SECURE_3.admin_permissionGroup.startingIndexForViewPermissions + 22
-        },
-        get startingIndexForUpdatePermissions() {
-            return S.SECURE_3.admin_permissionGroup.startingIndexForViewPermissions + 45
-        },
-        get startingIndexForDeletePermissions() {
-            return S.SECURE_3.admin_permissionGroup.startingIndexForViewPermissions + 67
-        }
-    },
-    blocked_permissionGroup: {
-        name: 'Cypress - Blocked',
-        id: 4398,
-        startingIndexForViewPermissions: 116565,
-        get startingIndexForCreatePermissions() {
-            return S.SECURE_3.blocked_permissionGroup.startingIndexForViewPermissions + 22
-        },
-        get startingIndexForUpdatePermissions() {
-            return S.SECURE_3.blocked_permissionGroup.startingIndexForViewPermissions + 45
-        },
-        get startingIndexForDeletePermissions() {
-            return S.SECURE_3.blocked_permissionGroup.startingIndexForViewPermissions + 67
-        }
-    },
     regularUser_permissionGroup: {
         name: 'Cypress - Regular User',
         id: 4399,
@@ -4267,24 +3708,6 @@ S.SECURE_3 = {
         get startingIndexForDeletePermissions() {
             return S.SECURE_3.regularUser_permissionGroup.startingIndexForViewPermissions + 67
         }
-    },
-    readOnly_permissionGroup: {
-        name: 'Cypress - ReadOnly',
-        id: 4400,
-        startingIndexForViewPermissions: 116715,
-        get startingIndexForCreatePermissions() {
-            return S.SECURE_3.readOnly_permissionGroup.startingIndexForViewPermissions + 22
-        },
-        get startingIndexForUpdatePermissions() {
-            return S.SECURE_3.readOnly_permissionGroup.startingIndexForViewPermissions + 45
-        },
-        get startingIndexForDeletePermissions() {
-            return S.SECURE_3.readOnly_permissionGroup.startingIndexForViewPermissions + 67
-        }
-    },
-    permissionGroup_noAutoDispo: {
-        name: 'All permissions except AutoDispo',
-        id: 4401
     },
     admin_userGroup: {
         name: 'Cypress Admin Group',
@@ -4526,34 +3949,6 @@ S.SECURE_4 = {
     get recoveredById() {
         return S.SECURE_4.person.id
     },
-    admin_permissionGroup: {
-        name: 'Cypress - ADMIN',
-        id: 4402,
-        startingIndexForViewPermissions: 116790,
-        get startingIndexForCreatePermissions() {
-            return S.SECURE_4.admin_permissionGroup.startingIndexForViewPermissions + 22
-        },
-        get startingIndexForUpdatePermissions() {
-            return S.SECURE_4.admin_permissionGroup.startingIndexForViewPermissions + 45
-        },
-        get startingIndexForDeletePermissions() {
-            return S.SECURE_4.admin_permissionGroup.startingIndexForViewPermissions + 67
-        }
-    },
-    blocked_permissionGroup: {
-        name: 'Cypress - Blocked',
-        id: 4403,
-        startingIndexForViewPermissions: 116865,
-        get startingIndexForCreatePermissions() {
-            return S.SECURE_4.blocked_permissionGroup.startingIndexForViewPermissions + 22
-        },
-        get startingIndexForUpdatePermissions() {
-            return S.SECURE_4.blocked_permissionGroup.startingIndexForViewPermissions + 45
-        },
-        get startingIndexForDeletePermissions() {
-            return S.SECURE_4.blocked_permissionGroup.startingIndexForViewPermissions + 67
-        }
-    },
     regularUser_permissionGroup: {
         name: 'Cypress - Regular User',
         id: 4404,
@@ -4567,25 +3962,6 @@ S.SECURE_4 = {
         get startingIndexForDeletePermissions() {
             return S.SECURE_4.regularUser_permissionGroup.startingIndexForViewPermissions + 67
         }
-    },
-
-    readOnly_permissionGroup: {
-        name: 'Cypress - ReadOnly',
-        id: 4405,
-        startingIndexForViewPermissions: 117015,
-        get startingIndexForCreatePermissions() {
-            return S.SECURE_4.readOnly_permissionGroup.startingIndexForViewPermissions + 22
-        },
-        get startingIndexForUpdatePermissions() {
-            return S.SECURE_4.readOnly_permissionGroup.startingIndexForViewPermissions + 45
-        },
-        get startingIndexForDeletePermissions() {
-            return S.SECURE_4.readOnly_permissionGroup.startingIndexForViewPermissions + 67
-        }
-    },
-    permissionGroup_noAutoDispo: {
-        name: 'All permissions except AutoDispo',
-        id: 4406
     },
     admin_userGroup: {
         name: 'Cypress Admin Group',

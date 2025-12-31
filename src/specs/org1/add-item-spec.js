@@ -11,7 +11,7 @@ let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
 let powerUser = S.getUserData(S.userAccounts.powerUser);
 let oldCase = S.selectedEnvironment.oldActiveCase;
 let office_1 = S.selectedEnvironment.office_1;
-let permissionGroup_officeAdmin = S.selectedEnvironment.admin_permissionGroup;
+let permissionGroup_officeAdmin = S.selectedEnvironment.regularUser_permissionGroup;
 
 before(function () {
     api.auth.get_tokens(orgAdmin);

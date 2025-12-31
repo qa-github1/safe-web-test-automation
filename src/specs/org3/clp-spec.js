@@ -4,9 +4,9 @@ const S = require('../../fixtures/settings.js');
 const api = require('../../api-utils/api-spec');
 const ui = require('../../pages/ui-spec');
 
-let admin_permissionGroup = S.selectedEnvironment.admin_permissionGroup;
-let blocked_permissionGroup = S.selectedEnvironment.blocked_permissionGroup;
-let readOnly_permissionGroup = S.selectedEnvironment.readOnly_permissionGroup;
+let regularUser_permissionGroup = S.selectedEnvironment.regularUser_permissionGroup;
+let regularUser_permissionGroup = S.selectedEnvironment.regularUser_permissionGroup;
+let regularUser_permissionGroup = S.selectedEnvironment.regularUser_permissionGroup;
 let admin_userGroup = S.selectedEnvironment.admin_userGroup;
 let blocked_userGroup = S.selectedEnvironment.blocked_userGroup;
 let readOnly_userGroup = S.selectedEnvironment.readOnly_userGroup;
@@ -29,7 +29,7 @@ xdescribe('1. Case Level Permissions', function () {
             cy.log('Setting CLP for Case ' + i);
             let caseNumber = 'Henderson CLP_' + i  +''
             api.cases.add_new_case(caseNumber)
-                .assign_Case_Level_Permissions(readOnly_permissionGroup, null, readOnly_userGroup, admin_permissionGroup);
+                .assign_Case_Level_Permissions(regularUser_permissionGroup, null, readOnly_userGroup, regularUser_permissionGroup);
         }
     });
 });
@@ -48,13 +48,13 @@ xdescribe('1. Case Level Permissions', function () {
 
         // api.permissions
         //     .update_ALL_permissions_for_an_existing_Permission_group
-        //     (admin_permissionGroup, true, true, true, true)
+        //     (regularUser_permissionGroup, true, true, true, true)
         //
         //     .update_ALL_permissions_for_an_existing_Permission_group
-        //     (blocked_permissionGroup, false, false, false, false)
+        //     (regularUser_permissionGroup, false, false, false, false)
         //
         //     .update_ALL_permissions_for_an_existing_Permission_group
-        //     (readOnly_permissionGroup, false, true, false, false)
+        //     (regularUser_permissionGroup, false, true, false, false)
     });
 
     context('1. System Admin', function () {
@@ -88,7 +88,7 @@ xdescribe('1. Case Level Permissions', function () {
 //
 //             api.cases.add_new_case(caseNumber);
 //             ui.app.open_newly_created_case_via_direct_link();
-//             ui.caseView.turn_on_Permissions_on_case(blocked_permissionGroup, systemAdmin);
+//             ui.caseView.turn_on_Permissions_on_case(regularUser_permissionGroup, systemAdmin);
 //
 //             // Case with CLP remains available for System Admin
 //             api.auth.get_tokens(systemAdmin);
@@ -125,7 +125,7 @@ xdescribe('1. Case Level Permissions', function () {
             api.permissions.assign_office_based_permissions_to_user(
                 clpUser.id,
                 office_1.id,
-                readOnly_permissionGroup.id
+                regularUser_permissionGroup.id
             );
         });
 
@@ -156,7 +156,7 @@ xdescribe('1. Case Level Permissions', function () {
 //             api.auth.get_tokens(orgAdmin);
 //             api.cases.add_new_case(caseNumber);
 //             ui.app.open_newly_created_case_via_direct_link();
-//             ui.caseView.turn_on_Permissions_on_case(blocked_permissionGroup, orgAdmin);
+//             ui.caseView.turn_on_Permissions_on_case(regularUser_permissionGroup, orgAdmin);
 //
 //             // Case with CLP remains available for OrgAdmin
 //             api.auth.get_tokens(orgAdmin);
@@ -192,7 +192,7 @@ xdescribe('1. Case Level Permissions', function () {
 //             api.auth.get_tokens(orgAdmin);
 //             api.permissions.assign_office_based_permissions_to_user(
 //                 clpUser.id,
-//                 office_1.id, admin_permissionGroup.id);
+//                 office_1.id, regularUser_permissionGroup.id);
 //             cy.saveLocalStorage();
 //         });
 //
@@ -202,7 +202,7 @@ xdescribe('1. Case Level Permissions', function () {
 //                 api.auth.get_tokens(orgAdmin);
 //                 D.generateNewDataSet();
 //                 api.cases.add_new_case(caseNumber)
-//                     .assign_Case_Level_Permissions(blocked_permissionGroup, clpUser);
+//                     .assign_Case_Level_Permissions(regularUser_permissionGroup, clpUser);
 //
 //                 if (addPerson) api.people.add_new_person(D.getRandomNo(), D.newCase);
 //                 if (addItem) api.items.add_new_item(true);
@@ -506,7 +506,7 @@ xdescribe('1. Case Level Permissions', function () {
 //                 api.auth.get_tokens(orgAdmin);
 //                 D.generateNewDataSet();
 //                 api.cases.add_new_case(caseNumber)
-//                     .assign_Case_Level_Permissions(blocked_permissionGroup, null, admin_userGroup);
+//                     .assign_Case_Level_Permissions(regularUser_permissionGroup, null, admin_userGroup);
 //
 //                 if (addPerson) api.people.add_new_person(D.getRandomNo(), D.newCase);
 //                 if (addItem) api.items.add_new_item(true);
@@ -739,7 +739,7 @@ xdescribe('1. Case Level Permissions', function () {
 //                 api.auth.get_tokens(orgAdmin);
 //                 D.generateNewDataSet();
 //                 api.cases.add_new_case(caseNumber)
-//                     .assign_Case_Level_Permissions(blocked_permissionGroup, null, null, admin_permissionGroup);
+//                     .assign_Case_Level_Permissions(regularUser_permissionGroup, null, null, regularUser_permissionGroup);
 //
 //                 if (addPerson) api.people.add_new_person(D.getRandomNo(), D.newCase);
 //                 if (addItem) api.items.add_new_item(true);
@@ -977,7 +977,7 @@ xdescribe('1. Case Level Permissions', function () {
 //                 api.auth.get_tokens(orgAdmin);
 //                 D.generateNewDataSet();
 //                 api.cases.add_new_case(caseNumber)
-//                     .assign_Case_Level_Permissions(readOnly_permissionGroup, clpUser);
+//                     .assign_Case_Level_Permissions(regularUser_permissionGroup, clpUser);
 //                 if (addPerson) api.people.add_new_person(D.getRandomNo(), D.newCase);
 //                 if (addItem) api.items.add_new_item(true);
 //             }
@@ -1226,7 +1226,7 @@ xdescribe('1. Case Level Permissions', function () {
 //                 D.generateNewDataSet();
 //                 D.newCase.caseNumber = caseNumber
 //                 api.cases.add_new_case(caseNumber)
-//                     .assign_Case_Level_Permissions(readOnly_permissionGroup, null, admin_userGroup);
+//                     .assign_Case_Level_Permissions(regularUser_permissionGroup, null, admin_userGroup);
 //                 if (addPerson) api.people.add_new_person(D.getRandomNo(), D.newCase);
 //                 if (addItem) api.items.add_new_item(true);
 //             }
@@ -1473,7 +1473,7 @@ xdescribe('1. Case Level Permissions', function () {
 //                 api.auth.get_tokens(orgAdmin);
 //                 D.generateNewDataSet();
 //                 api.cases.add_new_case(caseNumber)
-//                     .assign_Case_Level_Permissions(readOnly_permissionGroup, null, admin_userGroup);
+//                     .assign_Case_Level_Permissions(regularUser_permissionGroup, null, admin_userGroup);
 //                 if (addPerson) api.people.add_new_person(D.getRandomNo(), D.newCase);
 //                 if (addItem) api.items.add_new_item(true);
 //             }
@@ -1723,7 +1723,7 @@ xdescribe('1. Case Level Permissions', function () {
 //             api.auth.get_tokens(orgAdmin);
 //             api.permissions.assign_office_based_permissions_to_user(
 //                 clpUser.id,
-//                 office_1.id, readOnly_permissionGroup.id);
+//                 office_1.id, regularUser_permissionGroup.id);
 //             api.auth.get_tokens(clpUser);
 //             api.locations.get_all_accessible_storage_locations();
 //             cy.saveLocalStorage();
@@ -1741,7 +1741,7 @@ xdescribe('1. Case Level Permissions', function () {
 //                   api.auth.get_tokens(orgAdmin);
 //                   D.generateNewDataSet();
 //                   api.cases.add_new_case(caseNumber)
-//                       .assign_Case_Level_Permissions(blocked_permissionGroup, clpUser);
+//                       .assign_Case_Level_Permissions(regularUser_permissionGroup, clpUser);
 //
 //                   if (addPerson) api.people.add_new_person(D.getRandomNo(), D.newCase);
 //                   if (addItem) api.items.add_new_item(true);
@@ -2051,7 +2051,7 @@ xdescribe('1. Case Level Permissions', function () {
 //                   api.auth.get_tokens(orgAdmin);
 //                   D.generateNewDataSet();
 //                   api.cases.add_new_case(caseNumber)
-//                       .assign_Case_Level_Permissions(blocked_permissionGroup, null, readOnly_userGroup);
+//                       .assign_Case_Level_Permissions(regularUser_permissionGroup, null, readOnly_userGroup);
 //
 //                   if (addPerson) api.people.add_new_person(D.getRandomNo(), D.newCase);
 //                   if (addItem) api.items.add_new_item(true);
@@ -2289,7 +2289,7 @@ xdescribe('1. Case Level Permissions', function () {
 //                   api.auth.get_tokens(orgAdmin);
 //                   D.generateNewDataSet();
 //                   api.cases.add_new_case(caseNumber)
-//                       .assign_Case_Level_Permissions(blocked_permissionGroup, null, null, readOnly_permissionGroup);
+//                       .assign_Case_Level_Permissions(regularUser_permissionGroup, null, null, regularUser_permissionGroup);
 //
 //                   if (addPerson) api.people.add_new_person(D.getRandomNo(), D.newCase);
 //                   if (addItem) api.items.add_new_item(true);
@@ -2530,7 +2530,7 @@ xdescribe('1. Case Level Permissions', function () {
 //                 api.auth.get_tokens(orgAdmin);
 //                 D.generateNewDataSet();
 //                 api.cases.add_new_case(caseNumber)
-//                     .assign_Case_Level_Permissions(admin_permissionGroup, clpUser);
+//                     .assign_Case_Level_Permissions(regularUser_permissionGroup, clpUser);
 //                 if (addPerson) api.people.add_new_person(D.getRandomNo(), D.newCase);
 //                 if (addItem) api.items.add_new_item(true);
 //             }

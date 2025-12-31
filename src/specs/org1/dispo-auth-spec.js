@@ -133,7 +133,7 @@ describe('Dispo Auth', function () {
         let supervisor = S.userAccounts.powerUser
         let thirdTierApproverGroup = S.selectedEnvironment.admin_userGroup
         let thirdTierApprover = S.userAccounts.orgAdmin
-        let permissionGroup_officeAdmin = S.selectedEnvironment.admin_permissionGroup;
+        let permissionGroup_officeAdmin = S.selectedEnvironment.regularUser_permissionGroup;
         let office_1 = S.selectedEnvironment.office_1;
 
         ui.app.log_title(this);

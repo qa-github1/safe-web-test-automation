@@ -10,7 +10,7 @@ let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
 let systemAdmin = S.getUserData(S.userAccounts.systemAdmin);
 let powerUser = S.getUserData(S.userAccounts.powerUser);
 let office_1 = S.selectedEnvironment.office_1;
-let permissionGroup_officeAdmin = S.selectedEnvironment.admin_permissionGroup;
+let permissionGroup_officeAdmin = S.selectedEnvironment.regularUser_permissionGroup;
 
 describe('Add User', function () {
 
@@ -27,7 +27,7 @@ describe('Add User', function () {
         it('1.1.1. add user with all fields -- log in with newly created account', function () {
             ui.app.log_title(this);
             D.generateNewDataSet();
-            D.newUser.permissionGroups = [S.selectedEnvironment.admin_permissionGroup.name]
+            D.newUser.permissionGroups = [S.selectedEnvironment.regularUser_permissionGroup.name]
 
             api.auth.get_tokens(orgAdmin);
             api.org_settings.update_org_settings_by_specifying_property_and_value('addUserSupervisor', true)
@@ -37,7 +37,7 @@ describe('Add User', function () {
             ui.userAdmin.enter_all_values(D.newUser)
                 .scroll_and_click(C.buttons.ok)
                 .verify_toast_message(C.toastMsgs.saved)
-                .select_permission_group_per_office(S.selectedEnvironment.admin_permissionGroup.name, D.newUser.office)
+                .select_permission_group_per_office(S.selectedEnvironment.regularUser_permissionGroup.name, D.newUser.office)
                 .click_button(C.buttons.save)
                 .verify_toast_message(C.toastMsgs.saved)
                 .search_for_user(D.newUser.email)
@@ -77,7 +77,7 @@ describe('Add User', function () {
             ui.userAdmin.enter_all_values(D.newUser)
                 .scroll_and_click(C.buttons.ok)
                 .verify_toast_message_(C.toastMsgs.saved)
-                .select_permission_group_per_office(S.selectedEnvironment.admin_permissionGroup.name, D.newUser.office)
+                .select_permission_group_per_office(S.selectedEnvironment.regularUser_permissionGroup.name, D.newUser.office)
                 .click_button(C.buttons.save)
                 .verify_toast_message(C.toastMsgs.saved)
                 .search_for_user(D.newUser.email)
@@ -119,7 +119,7 @@ describe('Add User', function () {
             ui.userAdmin.enter_all_values(D.newUser)
                 .scroll_and_click(C.buttons.ok)
                 .verify_toast_message_(C.toastMsgs.saved)
-                .select_permission_group_per_office(S.selectedEnvironment.admin_permissionGroup.name, D.newUser.office)
+                .select_permission_group_per_office(S.selectedEnvironment.regularUser_permissionGroup.name, D.newUser.office)
                 .click_button(C.buttons.save)
                 .verify_toast_message(C.toastMsgs.saved)
             ui.menu.click_Log_Out()
@@ -173,7 +173,7 @@ describe('Add User', function () {
                         .click_option_on_expanded_menu(C.dropdowns.userActions.addExternalUsers)
                     ui.userAdmin.enter_emails_for_external_user([user.email])
                         .click_button(C.buttons.addExternal)
-                        .select_permission_group_per_office(S.selectedEnvironment.admin_permissionGroup.name, D.newUser.office)
+                        .select_permission_group_per_office(S.selectedEnvironment.regularUser_permissionGroup.name, D.newUser.office)
                         .click_button(C.buttons.save)
                         .verify_toast_message(C.toastMsgs.saved)
 
@@ -226,7 +226,7 @@ describe('Add User', function () {
             ui.userAdmin.enter_all_values(D.newUser)
                 .scroll_and_click(C.buttons.ok)
                 .verify_toast_message_(C.toastMsgs.saved)
-                .select_permission_group_per_office(S.selectedEnvironment.admin_permissionGroup.name, D.newUser.office)
+                .select_permission_group_per_office(S.selectedEnvironment.regularUser_permissionGroup.name, D.newUser.office)
                 .click_button(C.buttons.save)
                 .verify_toast_message(C.toastMsgs.saved)
                 .search_for_user(D.newUser.email)
@@ -255,7 +255,7 @@ describe('Add User', function () {
                 .populate_all_fields_on_Custom_Form(D.newCustomFormData)
                 .scroll_and_click(C.buttons.ok)
                 .verify_toast_message_(C.toastMsgs.saved)
-                .select_permission_group_per_office(S.selectedEnvironment.admin_permissionGroup.name, D.newUser.office)
+                .select_permission_group_per_office(S.selectedEnvironment.regularUser_permissionGroup.name, D.newUser.office)
                 .click_button(C.buttons.save)
                 .verify_toast_message(C.toastMsgs.saved)
                 .search_for_user(D.newUser.email)
@@ -278,7 +278,7 @@ describe('Add User', function () {
             ui.userAdmin.enter_all_values(D.newUser)
                 .scroll_and_click(C.buttons.ok)
                 .verify_toast_message_(C.toastMsgs.saved)
-                .select_permission_group_per_office(S.selectedEnvironment.admin_permissionGroup.name, D.newUser.office)
+                .select_permission_group_per_office(S.selectedEnvironment.regularUser_permissionGroup.name, D.newUser.office)
                 .click_button(C.buttons.save)
                 .verify_toast_message(C.toastMsgs.saved)
                 .search_for_user(D.newUser.email)
