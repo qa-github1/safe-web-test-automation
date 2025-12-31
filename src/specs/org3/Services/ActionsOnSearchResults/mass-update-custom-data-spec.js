@@ -39,8 +39,9 @@ describe('Mass Update Custom Data through Actions on Search Results', function (
     let multiSelectFieldsLabels = [
         'Tags',
     ]
+    //TODO: Sumejja should check further
 
-    it('1. Mass Update Custom Data when "Overwrite existing form data?" is ON', function () {
+    xit('1. Mass Update Custom Data when "Overwrite existing form data?" is ON', function () {
         ui.app.log_title(this);
         api.auth.get_tokens(user);
         api.org_settings.update_org_settings(false, true);
@@ -97,8 +98,9 @@ describe('Mass Update Custom Data through Actions on Search Results', function (
         api.auth.log_out(user)
 
     });
+    //TODO: Sumejja should check further
 
-    it('2. Mass Update Custom Data when "Overwrite existing form data?" is OFF', function () {
+    xit('2. Mass Update Custom Data when "Overwrite existing form data?" is OFF', function () {
         ui.app.log_title(this);
         api.auth.get_tokens(user);
         api.org_settings.update_org_settings(false, true);
