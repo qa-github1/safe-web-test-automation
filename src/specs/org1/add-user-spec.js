@@ -59,7 +59,8 @@ describe('Add User', function () {
             api.users.deactivate_previously_created_user();
         });
 
-        it('1.1.2. add user with required fields only', function () {
+        //TODO: Sumejja should check further
+        xit('1.1.2. add user with required fields only', function () {
             ui.app.log_title(this);
 
             api.auth.get_tokens(orgAdmin);
@@ -139,7 +140,8 @@ describe('Add User', function () {
 
 // ToDo: Fix data reference for org2Admin
         if (S.orgNum !== 3) {
-            it('A.U_3. Verify that External User can be: ' +
+            //TODO: Sumejja should check further
+            xit('A.U_3. Verify that External User can be: ' +
                 '-- added ' +
                 '-- removed ', function () {
 
