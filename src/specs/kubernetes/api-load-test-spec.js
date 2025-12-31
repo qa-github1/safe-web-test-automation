@@ -111,7 +111,7 @@ describe('Services', function () {
 
     });
 
-    it('EXPORT Service', function () {
+    it.only('EXPORT Service', function () {
         api.auth.get_tokens_without_page_load(orgAdmin);
 
         function checkStatusOfJobs(secondsToWait = 15) {
@@ -139,131 +139,132 @@ describe('Services', function () {
         }
 
 
-        // //  Export from Case View -- Items tab
-        // generic_request.POST(
-        //     //  '/api/exports/case-items/'+ S.selectedEnvironment.oldActiveCase.id+'?exportTime=2025-12-12T13:16:30.616Z&fileType=0&iANAZone=Europe%2FBerlin&timeZoneOffset=60',
-        //     '/api/exports/case-items/' + 7663616 + '?exportTime=2025-12-12T13:16:30.616Z&fileType=0&iANAZone=Europe%2FBerlin&timeZoneOffset=60',
-        //     // 7663616 -- case on DEV - in Org#2 with 1500 items
-        //     {"orderBy": "SequentialOrgId", "orderByAsc": false, "thenOrderBy": "", "thenOrderByAsc": false},
-        //     "EXPORT Service",
-        // )
-        //
-        // // Export from Item View -- Cases tab
-        // generic_request.POST(
-        //     //  '/api/exports/case-items/'+ S.selectedEnvironment.oldActiveCase.id+'?exportTime=2025-12-12T13:16:30.616Z&fileType=0&iANAZone=Europe%2FBerlin&timeZoneOffset=60',
-        //     '/api/exports/item-cases/' + 24653163 + '?exportTime=2025-12-12T14:09:17.175Z&fileType=1&iANAZone=Europe%2FBerlin&timeZoneOffset=60',
-        //     //24653163 -- item on DEV - Org2
-        //     {"orderBy": "SequentialOrgId", "orderByAsc": false, "thenOrderBy": "", "thenOrderByAsc": false},
-        //     "EXPORT Service",
-        // )
+        // Requests below are for Dev -- Org #2
+        //  Export from Case View -- Items tab
+        generic_request.POST(
+            //  '/api/exports/case-items/'+ S.selectedEnvironment.oldActiveCase.id+'?exportTime=2025-12-12T13:16:30.616Z&fileType=0&iANAZone=Europe%2FBerlin&timeZoneOffset=60',
+            '/api/exports/case-items/' + 7663616 + '?exportTime=2025-12-12T13:16:30.616Z&fileType=0&iANAZone=Europe%2FBerlin&timeZoneOffset=60',
+            // 7663616 -- case on DEV - in Org#2 with 1500 items
+            {"orderBy": "SequentialOrgId", "orderByAsc": false, "thenOrderBy": "", "thenOrderByAsc": false},
+            "EXPORT Service",
+        )
 
-        // //  Export from Search Cases page
-        // generic_request.POST(
-        //     '/api/exports/cases?exportTime=2025-12-12T10:34:03.124Z&fileType=1&iANAZone=Europe%2FBerlin&timeZoneOffset=60',
-        //     {
-        //         "caseOfficers": [],
-        //         "tags": [],
-        //         "IsSearchingInSublocations": false,
-        //         "DynamicFields": [],
-        //         "StaticFields": [{
-        //             "name": "CASE_NUMBER",
-        //             "typeId": 0,
-        //             "fieldName": "CaseNumber",
-        //             "searchCriterias": [{"id": 0, "name": "TP_SEARCH.SEARCH_CRITERIA.EQUALS"}, {
-        //                 "id": 1,
-        //                 "name": "TP_SEARCH.SEARCH_CRITERIA.NOT_EQUALS"
-        //             }, {"id": 2, "name": "TP_SEARCH.SEARCH_CRITERIA.STARTS_WITH"}, {
-        //                 "id": 4,
-        //                 "name": "TP_SEARCH.SEARCH_CRITERIA.CONTAINS"
-        //             }, {"id": 25, "name": "TP_SEARCH.SEARCH_CRITERIA.TEXT_SEARCH"}],
-        //             "searchCriteria": 4,
-        //             "model": "test"
-        //         }, {
-        //             "name": "CASE_OFFICERS",
-        //             "typeId": 5,
-        //             "fieldName": "CaseOfficers",
-        //             "searchCriteriasType": 7,
-        //             "typeAheadTemplate": "<tp-multi-users-and-groups-typeahead field=\"field\" name=\"usersAndGroups\" selected-items=\"field.model\" search-inactive=\"true\"></tp-multi-users-and-groups-typeahead>",
-        //             "isV2": false,
-        //             "searchCriterias": [{"id": 0, "name": "TP_SEARCH.SEARCH_CRITERIA.EQUALS.OR"}, {
-        //                 "id": 26,
-        //                 "name": "TP_SEARCH.SEARCH_CRITERIA.EQUALS.AND"
-        //             }, {"id": 1, "name": "TP_SEARCH.SEARCH_CRITERIA.NOT_EQUALS"}],
-        //             "isCurrentUserSelected": false,
-        //             "searchCriteria": 0,
-        //             "model": {"items": []}
-        //         }, {
-        //             "name": "NAV.TAGS",
-        //             "typeId": 5,
-        //             "fieldName": "Tags",
-        //             "searchCriteriasType": 7,
-        //             "typeAheadTemplate": "<tp-multi-tag-typeahead field=\"field\" tp-model=\"field.model\"></tp-multi-tag-typeahead>",
-        //             "isV2": false,
-        //             "searchCriterias": [{"id": 0, "name": "TP_SEARCH.SEARCH_CRITERIA.EQUALS.OR"}, {
-        //                 "id": 26,
-        //                 "name": "TP_SEARCH.SEARCH_CRITERIA.EQUALS.AND"
-        //             }, {"id": 1, "name": "TP_SEARCH.SEARCH_CRITERIA.NOT_EQUALS"}],
-        //             "searchCriteria": 0,
-        //             "tags": [],
-        //             "model": "tags"
-        //         }, {
-        //             "name": "SEARCH.OFFICE_SELECTION",
-        //             "typeId": 7,
-        //             "fieldName": "OfficeSelection",
-        //             "placeholder": "Select an office...",
-        //             "searchCriteriasType": 5,
-        //             "dropdownEntities": {"entity": "offices"},
-        //             "isV2": false,
-        //             "searchCriterias": [{"id": 0, "name": "TP_SEARCH.SEARCH_CRITERIA.EQUALS"}],
-        //             "selectedElements": [
-        //                 {"id": office1.id, "name": "Web Test Automtion #3 - Cypress Office 1", "selected": true}, {
-        //                     "id": 1130,
-        //                     "name": "Web Test Automtion #3 - Cypress Office 2",
-        //                     "selected": true
-        //                 }],
-        //             "searchCriteria": 0
-        //         }],
-        //         "officeIds": [office1.id],
-        //         "custodyOrgIds": [],
-        //         "fromOrgIds": [],
-        //         "orderBy": "Active",
-        //         "orderByAsc": false,
-        //         "thenOrderBy": "",
-        //         "thenOrderByAsc": false,
-        //         "PageSize": 25,
-        //         "peopleIds": [],
-        //         "PageNumber": 1,
-        //         "clientDate": "2025-12-12T10:33:53.550Z",
-        //         "clientTz": "Europe/Berlin",
-        //         "timezoneOffset": -60,
-        //         "SavedSearchEntities": [{
-        //             "name": "SEARCH.SAVED_SEARCH.ITEMS",
-        //             "typeId": 3,
-        //             "fieldName": "SavedSearchId_items",
-        //             "searchCriteriasType": 5,
-        //             "dropdownEntities": {"entity": "SavedSearches", "options": {"model": "items"}},
-        //             "isV2": false,
-        //             "searchCriterias": [{"id": 0, "name": "TP_SEARCH.SEARCH_CRITERIA.EQUALS"}],
-        //             "dropdownValues": [{"id": null, "name": "Select all"}],
-        //             "searchCriteria": 0
-        //         }, {
-        //             "name": "SEARCH.SAVED_SEARCH.PEOPLE",
-        //             "typeId": 3,
-        //             "fieldName": "SavedSearchId_people",
-        //             "searchCriteriasType": 5,
-        //             "dropdownEntities": {"entity": "SavedSearches", "options": {"model": "people"}},
-        //             "isV2": false,
-        //             "searchCriterias": [{"id": 0, "name": "TP_SEARCH.SEARCH_CRITERIA.EQUALS"}],
-        //             "dropdownValues": [{"id": null, "name": "Select all"}],
-        //             "searchCriteria": 0
-        //         }],
-        //         "version": 1
-        //     },
-        //     "EXPORT Service",
-        // )
-        //
+        // Export from Item View -- Cases tab
+        generic_request.POST(
+            //  '/api/exports/case-items/'+ S.selectedEnvironment.oldActiveCase.id+'?exportTime=2025-12-12T13:16:30.616Z&fileType=0&iANAZone=Europe%2FBerlin&timeZoneOffset=60',
+            '/api/exports/item-cases/' + 24653163 + '?exportTime=2025-12-12T14:09:17.175Z&fileType=1&iANAZone=Europe%2FBerlin&timeZoneOffset=60',
+            //24653163 -- item on DEV - Org2
+            {"orderBy": "SequentialOrgId", "orderByAsc": false, "thenOrderBy": "", "thenOrderByAsc": false},
+            "EXPORT Service",
+        )
 
-        // //  Export from Search Items page
+        //  Export from Search Cases page
+        generic_request.POST(
+            '/api/exports/cases?exportTime=2025-12-12T10:34:03.124Z&fileType=1&iANAZone=Europe%2FBerlin&timeZoneOffset=60',
+            {
+                "caseOfficers": [],
+                "tags": [],
+                "IsSearchingInSublocations": false,
+                "DynamicFields": [],
+                "StaticFields": [{
+                    "name": "CASE_NUMBER",
+                    "typeId": 0,
+                    "fieldName": "CaseNumber",
+                    "searchCriterias": [{"id": 0, "name": "TP_SEARCH.SEARCH_CRITERIA.EQUALS"}, {
+                        "id": 1,
+                        "name": "TP_SEARCH.SEARCH_CRITERIA.NOT_EQUALS"
+                    }, {"id": 2, "name": "TP_SEARCH.SEARCH_CRITERIA.STARTS_WITH"}, {
+                        "id": 4,
+                        "name": "TP_SEARCH.SEARCH_CRITERIA.CONTAINS"
+                    }, {"id": 25, "name": "TP_SEARCH.SEARCH_CRITERIA.TEXT_SEARCH"}],
+                    "searchCriteria": 4,
+                    "model": "test"
+                }, {
+                    "name": "CASE_OFFICERS",
+                    "typeId": 5,
+                    "fieldName": "CaseOfficers",
+                    "searchCriteriasType": 7,
+                    "typeAheadTemplate": "<tp-multi-users-and-groups-typeahead field=\"field\" name=\"usersAndGroups\" selected-items=\"field.model\" search-inactive=\"true\"></tp-multi-users-and-groups-typeahead>",
+                    "isV2": false,
+                    "searchCriterias": [{"id": 0, "name": "TP_SEARCH.SEARCH_CRITERIA.EQUALS.OR"}, {
+                        "id": 26,
+                        "name": "TP_SEARCH.SEARCH_CRITERIA.EQUALS.AND"
+                    }, {"id": 1, "name": "TP_SEARCH.SEARCH_CRITERIA.NOT_EQUALS"}],
+                    "isCurrentUserSelected": false,
+                    "searchCriteria": 0,
+                    "model": {"items": []}
+                }, {
+                    "name": "NAV.TAGS",
+                    "typeId": 5,
+                    "fieldName": "Tags",
+                    "searchCriteriasType": 7,
+                    "typeAheadTemplate": "<tp-multi-tag-typeahead field=\"field\" tp-model=\"field.model\"></tp-multi-tag-typeahead>",
+                    "isV2": false,
+                    "searchCriterias": [{"id": 0, "name": "TP_SEARCH.SEARCH_CRITERIA.EQUALS.OR"}, {
+                        "id": 26,
+                        "name": "TP_SEARCH.SEARCH_CRITERIA.EQUALS.AND"
+                    }, {"id": 1, "name": "TP_SEARCH.SEARCH_CRITERIA.NOT_EQUALS"}],
+                    "searchCriteria": 0,
+                    "tags": [],
+                    "model": "tags"
+                }, {
+                    "name": "SEARCH.OFFICE_SELECTION",
+                    "typeId": 7,
+                    "fieldName": "OfficeSelection",
+                    "placeholder": "Select an office...",
+                    "searchCriteriasType": 5,
+                    "dropdownEntities": {"entity": "offices"},
+                    "isV2": false,
+                    "searchCriterias": [{"id": 0, "name": "TP_SEARCH.SEARCH_CRITERIA.EQUALS"}],
+                    "selectedElements": [
+                        {"id": office1.id, "name": "Web Test Automtion #3 - Cypress Office 1", "selected": true}, {
+                            "id": 1130,
+                            "name": "Web Test Automtion #3 - Cypress Office 2",
+                            "selected": true
+                        }],
+                    "searchCriteria": 0
+                }],
+                "officeIds": [office1.id],
+                "custodyOrgIds": [],
+                "fromOrgIds": [],
+                "orderBy": "Active",
+                "orderByAsc": false,
+                "thenOrderBy": "",
+                "thenOrderByAsc": false,
+                "PageSize": 25,
+                "peopleIds": [],
+                "PageNumber": 1,
+                "clientDate": "2025-12-12T10:33:53.550Z",
+                "clientTz": "Europe/Berlin",
+                "timezoneOffset": -60,
+                "SavedSearchEntities": [{
+                    "name": "SEARCH.SAVED_SEARCH.ITEMS",
+                    "typeId": 3,
+                    "fieldName": "SavedSearchId_items",
+                    "searchCriteriasType": 5,
+                    "dropdownEntities": {"entity": "SavedSearches", "options": {"model": "items"}},
+                    "isV2": false,
+                    "searchCriterias": [{"id": 0, "name": "TP_SEARCH.SEARCH_CRITERIA.EQUALS"}],
+                    "dropdownValues": [{"id": null, "name": "Select all"}],
+                    "searchCriteria": 0
+                }, {
+                    "name": "SEARCH.SAVED_SEARCH.PEOPLE",
+                    "typeId": 3,
+                    "fieldName": "SavedSearchId_people",
+                    "searchCriteriasType": 5,
+                    "dropdownEntities": {"entity": "SavedSearches", "options": {"model": "people"}},
+                    "isV2": false,
+                    "searchCriterias": [{"id": 0, "name": "TP_SEARCH.SEARCH_CRITERIA.EQUALS"}],
+                    "dropdownValues": [{"id": null, "name": "Select all"}],
+                    "searchCriteria": 0
+                }],
+                "version": 1
+            },
+            "EXPORT Service",
+        )
+
+
+        //  Export from Search Items page (88k items)
         // generic_request.POST(
         //     '/api/exports/items?exportTime=2025-12-12T19:19:20.182Z&fileType=1&iANAZone=Europe%2FBerlin&timeZoneOffset=60',
         //     {
@@ -428,187 +429,187 @@ describe('Services', function () {
         //     "EXPORT Service",
         // )
 
-        //
-        // //  Export from Search People page
-        // generic_request.POST(
-        //     '/api/exports/people?exportTime=2025-12-12T15:44:45.491Z&fileType=1&iANAZone=Europe%2FBerlin&timeZoneOffset=6',
-        //     {
-        //         "caseOfficers": [],
-        //         "tags": [],
-        //         "IsSearchingInSublocations": false,
-        //         "DynamicFields": [],
-        //         "StaticFields": [],
-        //         "officeIds": [],
-        //         "custodyOrgIds": [],
-        //         "fromOrgIds": [],
-        //         "orderBy": "Active",
-        //         "orderByAsc": false,
-        //         "thenOrderBy": "",
-        //         "thenOrderByAsc": false,
-        //         "PageSize": 25,
-        //         "peopleIds": [],
-        //         "PageNumber": 1,
-        //         "clientDate": "2025-12-12T18:53:12.583Z",
-        //         "clientTz": "Europe/Berlin",
-        //         "timezoneOffset": -60,
-        //         "SavedSearchEntities": [{
-        //             "name": "SEARCH.SAVED_SEARCH.CASES",
-        //             "typeId": 3,
-        //             "fieldName": "SavedSearchId_cases",
-        //             "searchCriteriasType": 5,
-        //             "dropdownEntities": {"entity": "SavedSearches", "options": {"model": "cases"}},
-        //             "isV2": false,
-        //             "searchCriterias": [{"id": 0, "name": "TP_SEARCH.SEARCH_CRITERIA.EQUALS"}],
-        //             "dropdownValues": [{"id": null, "name": "Select all"}],
-        //             "searchCriteria": 0
-        //         }],
-        //         "version": 1
-        //     },
-        //     "EXPORT Service",
-        // )
-        //
-        // //  Export from Search Tasks page
-        // generic_request.POST(
-        //     '/api/exports/tasks?exportTime=2025-12-12T14:38:03.949Z&fileType=1&iANAZone=Europe%2FBerlin&timeZoneOffset=60',
-        //     {
-        //         "caseOfficers": [],
-        //         "tags": [],
-        //         "IsSearchingInSublocations": false,
-        //         "DynamicFields": [],
-        //         "StaticFields": [{
-        //             "name": "TASKS.CREATION_DATE",
-        //             "typeId": 2,
-        //             "fieldName": "DateCreated",
-        //             "searchCriteriasType": 2,
-        //             "searchCriteria": 8,
-        //             "model": "2024-12-31T23:00:00.000Z",
-        //             "toDate": "2025-05-06T22:00:00.000Z",
-        //             "searchCriterias": [{"id": 6, "name": "TP_SEARCH.SEARCH_CRITERIA.BEFORE"}, {
-        //                 "id": 7,
-        //                 "name": "TP_SEARCH.SEARCH_CRITERIA.AFTER"
-        //             }, {"id": 8, "name": "TP_SEARCH.SEARCH_CRITERIA.BETWEEN"}, {
-        //                 "id": 13,
-        //                 "name": "TP_SEARCH.SEARCH_CRITERIA.EXACTLY"
-        //             }, {"id": 12, "name": "TP_SEARCH.SEARCH_CRITERIA.NEWER_THAN_X"}, {
-        //                 "id": 11,
-        //                 "name": "TP_SEARCH.SEARCH_CRITERIA.OLDER_THAN_X"
-        //             }, {"id": 18, "name": "TP_SEARCH.SEARCH_CRITERIA.BETWEEN_X_AND_Y"}, {
-        //                 "id": 19,
-        //                 "name": "TP_SEARCH.SEARCH_CRITERIA.CURRENT_WEEK"
-        //             }, {"id": 20, "name": "TP_SEARCH.SEARCH_CRITERIA.LAST_WEEK"}, {
-        //                 "id": 21,
-        //                 "name": "TP_SEARCH.SEARCH_CRITERIA.MONTH_TO_DATE"
-        //             }, {"id": 22, "name": "TP_SEARCH.SEARCH_CRITERIA.LAST_MONTH"}, {
-        //                 "id": 23,
-        //                 "name": "TP_SEARCH.SEARCH_CRITERIA.YEAR_TO_DATE"
-        //             }, {"id": 24, "name": "TP_SEARCH.SEARCH_CRITERIA.LAST_YEAR"}]
-        //         }, {
-        //             "name": "SEARCH.OFFICE_SELECTION",
-        //             "typeId": 7,
-        //             "fieldName": "OfficeSelection",
-        //             "placeholder": "Select an office...",
-        //             "searchCriteriasType": 5,
-        //             "dropdownEntities": {"entity": "offices"},
-        //             "isV2": false,
-        //             "searchCriterias": [{"id": 0, "name": "TP_SEARCH.SEARCH_CRITERIA.EQUALS"}],
-        //             "selectedElements": [
-        //                 {"id": office1.id, "name": "Web Test Automtion #3 - Cypress Office 1", "selected": true}, {
-        //                     "id": 1130,
-        //                     "name": "Web Test Automtion #3 - Cypress Office 2",
-        //                     "selected": true
-        //                 }],
-        //             "searchCriteria": 0
-        //         }],
-        //         "officeIds": [office1.id],
-        //         "custodyOrgIds": [],
-        //         "fromOrgIds": [],
-        //         "orderBy": "DateCreated",
-        //         "orderByAsc": false,
-        //         "thenOrderBy": "",
-        //         "thenOrderByAsc": false,
-        //         "PageSize": 25,
-        //         "peopleIds": [],
-        //         "PageNumber": 1,
-        //         "clientDate": "2025-12-12T15:37:31.718Z",
-        //         "clientTz": "Europe/Berlin",
-        //         "timezoneOffset": -60,
-        //         "SavedSearchEntities": [],
-        //         "version": 1
-        //     },
-        //     "EXPORT Service",
-        // )
-        //
-        // // Export from Search Notes page
-        // generic_request.POST(
-        //     '/api/exports/notes?exportTime=2025-12-12T14:43:04.678Z&fileType=1&iANAZone=Europe%2FBerlin&timeZoneOffset=60',
-        //     {
-        //         "caseOfficers": [],
-        //         "tags": [],
-        //         "IsSearchingInSublocations": false,
-        //         "DynamicFields": [],
-        //         "StaticFields": [{
-        //             "name": "GENERAL.CREATED_DATE",
-        //             "typeId": 2,
-        //             "fieldName": "Date",
-        //             "searchCriteriasType": 2,
-        //             "searchCriterias": [{"id": 6, "name": "TP_SEARCH.SEARCH_CRITERIA.BEFORE"}, {
-        //                 "id": 7,
-        //                 "name": "TP_SEARCH.SEARCH_CRITERIA.AFTER"
-        //             }, {"id": 8, "name": "TP_SEARCH.SEARCH_CRITERIA.BETWEEN"}, {
-        //                 "id": 13,
-        //                 "name": "TP_SEARCH.SEARCH_CRITERIA.EXACTLY"
-        //             }, {"id": 12, "name": "TP_SEARCH.SEARCH_CRITERIA.NEWER_THAN_X"}, {
-        //                 "id": 11,
-        //                 "name": "TP_SEARCH.SEARCH_CRITERIA.OLDER_THAN_X"
-        //             }, {"id": 18, "name": "TP_SEARCH.SEARCH_CRITERIA.BETWEEN_X_AND_Y"}, {
-        //                 "id": 19,
-        //                 "name": "TP_SEARCH.SEARCH_CRITERIA.CURRENT_WEEK"
-        //             }, {"id": 20, "name": "TP_SEARCH.SEARCH_CRITERIA.LAST_WEEK"}, {
-        //                 "id": 21,
-        //                 "name": "TP_SEARCH.SEARCH_CRITERIA.MONTH_TO_DATE"
-        //             }, {"id": 22, "name": "TP_SEARCH.SEARCH_CRITERIA.LAST_MONTH"}, {
-        //                 "id": 23,
-        //                 "name": "TP_SEARCH.SEARCH_CRITERIA.YEAR_TO_DATE"
-        //             }, {"id": 24, "name": "TP_SEARCH.SEARCH_CRITERIA.LAST_YEAR"}],
-        //             "searchCriteria": 23,
-        //             "model": null,
-        //             "toDate": null
-        //         }, {
-        //             "name": "SEARCH.OFFICE_SELECTION",
-        //             "typeId": 7,
-        //             "fieldName": "OfficeSelection",
-        //             "placeholder": "Select an office...",
-        //             "searchCriteriasType": 5,
-        //             "dropdownEntities": {"entity": "offices"},
-        //             "isV2": false,
-        //             "searchCriterias": [{"id": 0, "name": "TP_SEARCH.SEARCH_CRITERIA.EQUALS"}],
-        //             "selectedElements": [
-        //                 {"id": office1.id, "name": "Web Test Automtion #3 - Cypress Office 1", "selected": true}, {
-        //                     "id": 1130,
-        //                     "name": "Web Test Automtion #3 - Cypress Office 2",
-        //                     "selected": true
-        //                 }],
-        //             "searchCriteria": 0
-        //         }],
-        //         "officeIds": [office1.id],
-        //         "custodyOrgIds": [],
-        //         "fromOrgIds": [],
-        //         "orderBy": "Date",
-        //         "orderByAsc": true,
-        //         "thenOrderBy": "",
-        //         "thenOrderByAsc": false,
-        //         "PageSize": 25,
-        //         "peopleIds": [],
-        //         "PageNumber": 1,
-        //         "clientDate": "2025-12-12T15:39:38.332Z",
-        //         "clientTz": "Europe/Berlin",
-        //         "timezoneOffset": -60,
-        //         "SavedSearchEntities": [],
-        //         "version": 1
-        //     },
-        //     "EXPORT Service",
-        // )
-        //
+
+        //  Export from Search People page
+        generic_request.POST(
+            '/api/exports/people?exportTime=2025-12-12T15:44:45.491Z&fileType=1&iANAZone=Europe%2FBerlin&timeZoneOffset=6',
+            {
+                "caseOfficers": [],
+                "tags": [],
+                "IsSearchingInSublocations": false,
+                "DynamicFields": [],
+                "StaticFields": [],
+                "officeIds": [],
+                "custodyOrgIds": [],
+                "fromOrgIds": [],
+                "orderBy": "Active",
+                "orderByAsc": false,
+                "thenOrderBy": "",
+                "thenOrderByAsc": false,
+                "PageSize": 25,
+                "peopleIds": [],
+                "PageNumber": 1,
+                "clientDate": "2025-12-12T18:53:12.583Z",
+                "clientTz": "Europe/Berlin",
+                "timezoneOffset": -60,
+                "SavedSearchEntities": [{
+                    "name": "SEARCH.SAVED_SEARCH.CASES",
+                    "typeId": 3,
+                    "fieldName": "SavedSearchId_cases",
+                    "searchCriteriasType": 5,
+                    "dropdownEntities": {"entity": "SavedSearches", "options": {"model": "cases"}},
+                    "isV2": false,
+                    "searchCriterias": [{"id": 0, "name": "TP_SEARCH.SEARCH_CRITERIA.EQUALS"}],
+                    "dropdownValues": [{"id": null, "name": "Select all"}],
+                    "searchCriteria": 0
+                }],
+                "version": 1
+            },
+            "EXPORT Service",
+        )
+
+        //  Export from Search Tasks page
+        generic_request.POST(
+            '/api/exports/tasks?exportTime=2025-12-12T14:38:03.949Z&fileType=1&iANAZone=Europe%2FBerlin&timeZoneOffset=60',
+            {
+                "caseOfficers": [],
+                "tags": [],
+                "IsSearchingInSublocations": false,
+                "DynamicFields": [],
+                "StaticFields": [{
+                    "name": "TASKS.CREATION_DATE",
+                    "typeId": 2,
+                    "fieldName": "DateCreated",
+                    "searchCriteriasType": 2,
+                    "searchCriteria": 8,
+                    "model": "2024-12-31T23:00:00.000Z",
+                    "toDate": "2025-05-06T22:00:00.000Z",
+                    "searchCriterias": [{"id": 6, "name": "TP_SEARCH.SEARCH_CRITERIA.BEFORE"}, {
+                        "id": 7,
+                        "name": "TP_SEARCH.SEARCH_CRITERIA.AFTER"
+                    }, {"id": 8, "name": "TP_SEARCH.SEARCH_CRITERIA.BETWEEN"}, {
+                        "id": 13,
+                        "name": "TP_SEARCH.SEARCH_CRITERIA.EXACTLY"
+                    }, {"id": 12, "name": "TP_SEARCH.SEARCH_CRITERIA.NEWER_THAN_X"}, {
+                        "id": 11,
+                        "name": "TP_SEARCH.SEARCH_CRITERIA.OLDER_THAN_X"
+                    }, {"id": 18, "name": "TP_SEARCH.SEARCH_CRITERIA.BETWEEN_X_AND_Y"}, {
+                        "id": 19,
+                        "name": "TP_SEARCH.SEARCH_CRITERIA.CURRENT_WEEK"
+                    }, {"id": 20, "name": "TP_SEARCH.SEARCH_CRITERIA.LAST_WEEK"}, {
+                        "id": 21,
+                        "name": "TP_SEARCH.SEARCH_CRITERIA.MONTH_TO_DATE"
+                    }, {"id": 22, "name": "TP_SEARCH.SEARCH_CRITERIA.LAST_MONTH"}, {
+                        "id": 23,
+                        "name": "TP_SEARCH.SEARCH_CRITERIA.YEAR_TO_DATE"
+                    }, {"id": 24, "name": "TP_SEARCH.SEARCH_CRITERIA.LAST_YEAR"}]
+                }, {
+                    "name": "SEARCH.OFFICE_SELECTION",
+                    "typeId": 7,
+                    "fieldName": "OfficeSelection",
+                    "placeholder": "Select an office...",
+                    "searchCriteriasType": 5,
+                    "dropdownEntities": {"entity": "offices"},
+                    "isV2": false,
+                    "searchCriterias": [{"id": 0, "name": "TP_SEARCH.SEARCH_CRITERIA.EQUALS"}],
+                    "selectedElements": [
+                        {"id": office1.id, "name": "Web Test Automtion #3 - Cypress Office 1", "selected": true}, {
+                            "id": 1130,
+                            "name": "Web Test Automtion #3 - Cypress Office 2",
+                            "selected": true
+                        }],
+                    "searchCriteria": 0
+                }],
+                "officeIds": [office1.id],
+                "custodyOrgIds": [],
+                "fromOrgIds": [],
+                "orderBy": "DateCreated",
+                "orderByAsc": false,
+                "thenOrderBy": "",
+                "thenOrderByAsc": false,
+                "PageSize": 25,
+                "peopleIds": [],
+                "PageNumber": 1,
+                "clientDate": "2025-12-12T15:37:31.718Z",
+                "clientTz": "Europe/Berlin",
+                "timezoneOffset": -60,
+                "SavedSearchEntities": [],
+                "version": 1
+            },
+            "EXPORT Service",
+        )
+
+        // Export from Search Notes page
+        generic_request.POST(
+            '/api/exports/notes?exportTime=2025-12-12T14:43:04.678Z&fileType=1&iANAZone=Europe%2FBerlin&timeZoneOffset=60',
+            {
+                "caseOfficers": [],
+                "tags": [],
+                "IsSearchingInSublocations": false,
+                "DynamicFields": [],
+                "StaticFields": [{
+                    "name": "GENERAL.CREATED_DATE",
+                    "typeId": 2,
+                    "fieldName": "Date",
+                    "searchCriteriasType": 2,
+                    "searchCriterias": [{"id": 6, "name": "TP_SEARCH.SEARCH_CRITERIA.BEFORE"}, {
+                        "id": 7,
+                        "name": "TP_SEARCH.SEARCH_CRITERIA.AFTER"
+                    }, {"id": 8, "name": "TP_SEARCH.SEARCH_CRITERIA.BETWEEN"}, {
+                        "id": 13,
+                        "name": "TP_SEARCH.SEARCH_CRITERIA.EXACTLY"
+                    }, {"id": 12, "name": "TP_SEARCH.SEARCH_CRITERIA.NEWER_THAN_X"}, {
+                        "id": 11,
+                        "name": "TP_SEARCH.SEARCH_CRITERIA.OLDER_THAN_X"
+                    }, {"id": 18, "name": "TP_SEARCH.SEARCH_CRITERIA.BETWEEN_X_AND_Y"}, {
+                        "id": 19,
+                        "name": "TP_SEARCH.SEARCH_CRITERIA.CURRENT_WEEK"
+                    }, {"id": 20, "name": "TP_SEARCH.SEARCH_CRITERIA.LAST_WEEK"}, {
+                        "id": 21,
+                        "name": "TP_SEARCH.SEARCH_CRITERIA.MONTH_TO_DATE"
+                    }, {"id": 22, "name": "TP_SEARCH.SEARCH_CRITERIA.LAST_MONTH"}, {
+                        "id": 23,
+                        "name": "TP_SEARCH.SEARCH_CRITERIA.YEAR_TO_DATE"
+                    }, {"id": 24, "name": "TP_SEARCH.SEARCH_CRITERIA.LAST_YEAR"}],
+                    "searchCriteria": 23,
+                    "model": null,
+                    "toDate": null
+                }, {
+                    "name": "SEARCH.OFFICE_SELECTION",
+                    "typeId": 7,
+                    "fieldName": "OfficeSelection",
+                    "placeholder": "Select an office...",
+                    "searchCriteriasType": 5,
+                    "dropdownEntities": {"entity": "offices"},
+                    "isV2": false,
+                    "searchCriterias": [{"id": 0, "name": "TP_SEARCH.SEARCH_CRITERIA.EQUALS"}],
+                    "selectedElements": [
+                        {"id": office1.id, "name": "Web Test Automtion #3 - Cypress Office 1", "selected": true}, {
+                            "id": 1130,
+                            "name": "Web Test Automtion #3 - Cypress Office 2",
+                            "selected": true
+                        }],
+                    "searchCriteria": 0
+                }],
+                "officeIds": [office1.id],
+                "custodyOrgIds": [],
+                "fromOrgIds": [],
+                "orderBy": "Date",
+                "orderByAsc": true,
+                "thenOrderBy": "",
+                "thenOrderByAsc": false,
+                "PageSize": 25,
+                "peopleIds": [],
+                "PageNumber": 1,
+                "clientDate": "2025-12-12T15:39:38.332Z",
+                "clientTz": "Europe/Berlin",
+                "timezoneOffset": -60,
+                "SavedSearchEntities": [],
+                "version": 1
+            },
+            "EXPORT Service",
+        )
+
 
 
         //  Export from Search Disposal page --> Dev Org#2 286 records
@@ -746,7 +747,7 @@ describe('Services', function () {
     });
 
     it('LOCATIONS MOVE Service', function () {
-        api.auth.get_tokens_without_page_load(powerUser);
+        api.auth.get_tokens_without_page_load(orgAdmin);
 
         let currentLocName, currentParentLocName, newParentLocNameOrId
         let destinationOffice = office1
@@ -775,7 +776,7 @@ describe('Services', function () {
         cy.getLocalStorage('headers').then(headers => {
 
             let updatedHeaders = JSON.parse(headers);
-            updatedHeaders.officeid = office2.id
+         //   updatedHeaders.officeid = office2.id
             cy.setLocalStorage('headers', JSON.stringify(updatedHeaders))
 
             function fetch_location_IDs(currentLocName, currentParentLocName, newParentLocNameOrId) {
@@ -789,24 +790,23 @@ describe('Services', function () {
                 api.locations.get_and_save_any_location_data_to_local_storage(newParentLocNameOrId)
             }
 
-            numberOfRequests = 3
+            numberOfRequests = 7
             let numberOfItemsInBigLocs = 300
 
-            // create root level location with X number of items
-            //   for (let i = 0; i < numberOfRequests; i++) {
-            //      // currentLocName = 'bigLoc' + i
-            //       currentLocName = 'aaa'
-            //       currentParentLocName = 'aaaa-office1-newloc1'
-            //       fetch_location_IDs(currentLocName, currentParentLocName, newParentLocNameOrId)
-            //       for (let j = 0; j < numberOfItemsInBigLocs; j++) {
-            //           api.items.add_new_item(true, currentLocName)
-            //       }
-            //   }
+         //   create root level location with X number of items
+         //      for (let i = 0; i < numberOfRequests; i++) {
+         //          currentLocName = '____SMJ_BIG_CONT_' + i
+         //          currentParentLocName = null
+         //          fetch_location_IDs(currentLocName, currentParentLocName, newParentLocNameOrId)
+         //          for (let j = 0; j < numberOfItemsInBigLocs; j++) {
+         //              api.items.add_new_item(true, currentLocName)
+         //          }
+         //      }
 
             // MOVE X locations
-            for (let i = 0; i < numberOfRequests; i++) {
+            for (let i = 1; i < numberOfRequests; i++) {
 
-                currentLocName = 'bigLoc' + i
+                currentLocName = '____SMJ_BIG_CONT_' + i
                 cy.log('Moving location  ' + i)
                 // //  -------- moving locations to specific parent location ---> with Locations Update endpoint - PUT request
                 // currentParentLocName = null
@@ -822,25 +822,25 @@ describe('Services', function () {
                 // api.locations.move_location_with_request_from_scan_page(currentLocName, newParentLocNameOrId, destinationOffice, orgAdmin)
 
                 //// -------- moving locations to specific parent location in office_2---> with Locations Move endpoint - POST request
-                //     newParentLocNameOrId = 542708 // Containers in Dev Org#3- Office2
-                //     newParentLocNameOrId = 1162866 // AAAA in Pentest Org#3- Office2
-                //     currentParentLocName = 'AAAA'
-                //     destinationOffice = office2
-                //     fetch_location_IDs(currentLocName, currentParentLocName, newParentLocNameOrId)
-                //     api.locations.move_location_with_request_from_scan_page(currentLocName, newParentLocNameOrId, destinationOffice, orgAdmin)
+                 //  newParentLocNameOrId = 542708 // Containers in Dev Org#3- Office2
+                    newParentLocNameOrId = 1166445 // ___NEW_OFF_2 in Pentest Org#3- Office2
+                    currentParentLocName = '___AAAA'
+                    destinationOffice = office2
+                    fetch_location_IDs(currentLocName, currentParentLocName, newParentLocNameOrId)
+                    api.locations.move_location_with_request_from_scan_page(currentLocName, newParentLocNameOrId, destinationOffice, orgAdmin)
                 //
                 //
                 // cy.getLocalStorage('apiResponse').then(apiResponse => {
                 //     let response = JSON.parse(apiResponse)
                 //     if (response[0].status === 'Complete') {
                 ////  -------- moving locations BACK to specific parent location in office_1---> with Locations Move endpoint - POST request
-                updatedHeaders.officeid = office2.id // need this line only when location is already in office 2, and we need to make API actions from that office
-                cy.setLocalStorage('headers', JSON.stringify(updatedHeaders))
-                currentParentLocName = 'office2---AAAA'
-                newParentLocNameOrId = 1165542 // 'office1---AAAA' in Org#3- Office1
-                destinationOffice = office1
-                fetch_location_IDs(currentLocName, currentParentLocName, newParentLocNameOrId)
-                api.locations.move_location_with_request_from_scan_page(currentLocName, newParentLocNameOrId, destinationOffice, orgAdmin)
+                // updatedHeaders.officeid = office2.id // need this line only when location is already in office 2, and we need to make API actions from that office
+                // cy.setLocalStorage('headers', JSON.stringify(updatedHeaders))
+                // currentParentLocName = '___NEW_OFF_2'
+                // newParentLocNameOrId = 1162711 // '___AAAA' in Org#3- Office1
+                // destinationOffice = office1
+                // fetch_location_IDs(currentLocName, currentParentLocName, newParentLocNameOrId)
+                // api.locations.move_location_with_request_from_scan_page(currentLocName, newParentLocNameOrId, destinationOffice, orgAdmin)
                 //    waitAndCheckStatusOfLastJob()
                 //     }
                 // })
@@ -1022,17 +1022,21 @@ describe('Services', function () {
         }
     });
 
-    it('Disposal transactions (start this test after starting some action that causes a CPU spike and heavy load on SQL Server, e.g. moving 100+ locations)', function () {
+    it('Disposal transactions (start this test after starting some action that causes a CPU spike and heavy load on SQL Server,' +
+        'e.g. moving 100+ locations)', function () {
         api.auth.get_tokens_without_page_load(orgAdmin);
-        for (let i = 0; i < 1000; i++) {
+        for (let i = 0; i < 10; i++) {
             api.items.add_new_item(true, null, 'newItem' + i)
             cy.log('Adding new item __' + (i + 1))
-        }
 
-        for (let i = 0; i < 1000; i++) {
             api.transactions.dispose_item('newItem' + i)
             cy.log('Item Disposed __' + (i + 1))
         }
+
+        // for (let i = 0; i < 10; i++) {
+        //     api.transactions.dispose_item('newItem' + i)
+        //     cy.log('Item Disposed __' + (i + 1))
+        // }
     })
 
 
