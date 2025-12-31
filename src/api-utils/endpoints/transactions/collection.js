@@ -17,13 +17,25 @@ exports.check_out_item = function (itemId) {
         });
     });
 };
+//
+// exports.dispose_item = function (itemFromLocalStorage = "newItem") {
+//     cy.getLocalStorage(itemFromLocalStorage).then(newItem => {
+//         newItem = JSON.parse(newItem);
+//
+//         generic_request.POST(
+//             '/api/disposals/V2',
+//             body.generate_POST_request_payload_for_Disposal(newItem),
+//             'Disposing item via API '
+//         )
+//     });
+// };
 
 exports.dispose_item = function (itemFromLocalStorage = "newItem") {
     cy.getLocalStorage(itemFromLocalStorage).then(newItem => {
         newItem = JSON.parse(newItem);
 
         generic_request.POST(
-            '/api/disposals',
+            '/api/disposals/v2',
             body.generate_POST_request_payload_for_Disposal(newItem),
             'Disposing item via API '
         )

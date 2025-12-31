@@ -2962,8 +2962,8 @@ S.PENTEST_3 = {
     },
     locations: [
         {
-            id: 487927,
-            guid: '2047e0e8-e536-4b4b-acbd-03300c734617',
+            id: 1166437,
+            guid: '2467d71c-39f9-4573-8326-1761793e4341',
             name: "CypressLocation1"
         },
         {
