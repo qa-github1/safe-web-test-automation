@@ -163,6 +163,7 @@ describe('Add Item', function () {
             api.org_settings.disable_Item_fields();
             ui.app.open_newly_created_case_via_direct_link()
 
+            D.getNewPersonData()
             api.people.add_new_person();
             ui.app.open_newly_created_person_via_direct_link()
                 .select_tab(C.tabs.itemsRecoveredBy)
