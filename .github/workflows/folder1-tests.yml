@@ -68,9 +68,10 @@ jobs:
           --record
           --key a6df584b-4d1e-485f-a673-2c371d167e62
           --group "org-${{ matrix.spec_group }}"
+          --tag "spec:${{ matrix.spec_group }},env:${{ github.event.inputs.environment }},org:${{ github.event.inputs.org_number }}"
           --ci-build-id "${{ github.run_id }}-${{ matrix.spec_group }}"
           --spec "src/specs/org1/${{ matrix.spec_group }}.js"
-          --env environment=${{ github.event.inputs.environment }},orgNum=${{ github.event.inputs.org_number }},apiTimeout=${{ github.event.inputs.api_timeout }},defaultCommandTimeout=${{ github.event.inputs.command_timeout }}
+          --env environment=${{ github.event.inputs.environment }},orgNum=${{ github.event.inputs.org_number }},apiTimeout=${{ github.event.inputs.api_timeout }}
 
         env:
           CI: true

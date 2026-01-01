@@ -8,7 +8,7 @@ const usersApi = require('../endpoints/users/collection')
 
 function token_request(selectedUser) {
 
-    cy.clearLocalStorage();
+   // cy.clearLocalStorage();
 
    //cy.log('-------------------------------- Getting token via API - LOGIN with ' + selectedUser.title + ' --------------------------------');
 

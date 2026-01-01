@@ -1,4 +1,5 @@
 {
+  "experimentalSessionAndOrigin": true,
   "fixturesFolder": "src/fixtures",
   "integrationFolder": "src/specs",
   "pluginsFile": "src/plugins/index.js",

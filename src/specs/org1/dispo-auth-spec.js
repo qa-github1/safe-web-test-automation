@@ -30,7 +30,7 @@ describe('Dispo Auth', function () {
         let user = S.getUserData(S.userAccounts.orgAdmin);
 
         ui.app.log_title(this);
-        api.auth.get_tokens(user);
+        api.auth.get_tokens_without_page_load(user);
         api.org_settings.disable_Item_fields([C.itemFields.description, C.itemFields.dispositionStatus, C.itemFields.releasedTo])
         api.org_settings.enable_all_Person_fields()
 
@@ -77,7 +77,7 @@ describe('Dispo Auth', function () {
         let address5 = Object.assign({}, D.getNewPersonAddressData())
 
         for (let i = 0; i < 13; i++) {
-          //  api.items.add_new_item(true, null, 'item' + i)
+            //  api.items.add_new_item(true, null, 'item' + i)
 
             D['newitem_' + i] = Object.assign({}, D.newItem)
             D['newitem_' + i].description = i + '__ ' + D.newItem.description
@@ -122,7 +122,7 @@ describe('Dispo Auth', function () {
     });
 
 
-    it.only('Add Dispo Task with 100 items and assign to Power User, ' +
+    xit('Add Dispo Task with 100 items and assign to Power User, ' +
         '--initiate and complete 2nd and 3rd tier approval' +
         '--use Approve and Reject buttons from grid and Actions menu' +
         '--with and without Dispo Auth Service' +
@@ -136,7 +136,7 @@ describe('Dispo Auth', function () {
         let office_1 = S.selectedEnvironment.office_1;
 
         ui.app.log_title(this);
-        api.auth.get_tokens(orgAdmin);
+        api.auth.get_tokens_without_page_load(orgAdmin);
         api.org_settings.disable_Item_fields([C.itemFields.description, C.itemFields.dispositionStatus, C.itemFields.releasedTo])
         api.org_settings.enable_all_Person_fields();
         api.org_settings.update_dispo_config_for_item_catagories(thirdTierApproverGroup)
@@ -150,7 +150,7 @@ describe('Dispo Auth', function () {
             officer.id,
             office_1.id, permissionGroup_officeAdmin.id);
 
-        api.auth.get_tokens(officer);
+        api.auth.get_tokens_without_page_load(officer);
         let selectedTemplate = S.selectedEnvironment.taskTemplates.dispoAuth;
         D.getNewTaskData();
         D.getNewCaseData();
@@ -180,7 +180,7 @@ describe('Dispo Auth', function () {
             taskId = newTaskId
 
             // Create a person and an address to use for all 100 items
-            let person =Object.assign({}, D.getNewPersonData());
+            let person = Object.assign({}, D.getNewPersonData());
             person.firstName = 'Disp_Person';
             api.people.add_new_person(false, null, person);
             let address = Object.assign({}, D.getNewPersonAddressData());
@@ -209,7 +209,7 @@ describe('Dispo Auth', function () {
                 .verify_text_is_present_on_main_container('Supervisor(s) added to the task: ' + supervisor.name);
 
             //  let taskId = 727431
-            api.auth.get_tokens(supervisor)
+            api.auth.get_tokens_without_page_load(supervisor)
             ui.taskView
                 .open_task_url(taskId)
                 .select_tab('Items')
@@ -235,7 +235,7 @@ describe('Dispo Auth', function () {
                 .select_tab('Basic Info')
                 .verify_text_is_present_on_main_container('Third-tier Approver(s) added to the task: ' + thirdTierApproverGroup.name);
 
-            api.auth.get_tokens(thirdTierApprover)
+            api.auth.get_tokens_without_page_load(thirdTierApprover)
             ui.taskView
                 .open_task_url(taskId)
                 .select_tab('Items')
@@ -247,7 +247,7 @@ describe('Dispo Auth', function () {
 
 
             // let taskId = 727801
-            api.auth.get_tokens(officer)
+            api.auth.get_tokens_without_page_load(officer)
             ui.taskView
                 .open_task_url(taskId)
                 .select_tab('Items')
@@ -257,7 +257,7 @@ describe('Dispo Auth', function () {
                 .set_Action___Approve_for_Disposal([68, 100])
                 .click_Submit_for_Disposition()
 
-            api.auth.get_tokens(supervisor)
+            api.auth.get_tokens_without_page_load(supervisor)
             ui.taskView
                 .open_task_url(taskId)
                 .select_tab('Items')
@@ -266,7 +266,7 @@ describe('Dispo Auth', function () {
                 .set___Approve__from_Actions_menu([60])
                 .set___Approve__from_Actions_menu([68, 100])
 
-            api.auth.get_tokens(thirdTierApprover)
+            api.auth.get_tokens_without_page_load(thirdTierApprover)
             ui.taskView
                 .open_task_url(taskId)
                 .select_tab('Items')
@@ -278,11 +278,12 @@ describe('Dispo Auth', function () {
         })
     })
 
+
     //TODO: Sumejja should check further
     xit('Release Letters', function () {
 
         ui.app.log_title(this);
-        api.auth.get_tokens(orgAdmin);
+        api.auth.get_tokens_without_page_load(orgAdmin);
 
         ui.menu.click_Tools__Auto_Reports()
         ui.app.set_visibility_of_table_column('Public Facing Description', true)
@@ -290,9 +291,6 @@ describe('Dispo Auth', function () {
             .verify_text_is_present_and_check_X_more_times_after_waiting_for_Y_seconds(approvedForReleaseItem3.description, 10, 30, true)
     });
 });
-
-
-
 
 // enable this block if you want to generate 3k Release letters
 xdescribe('Generating large number of release letters ', function () {
@@ -305,7 +303,7 @@ xdescribe('Generating large number of release letters ', function () {
 
             cy.clearLocalStorage()
             ui.app.log_title(this);
-            api.auth.get_tokens(orgAdmin);
+            api.auth.get_tokens_without_page_load(orgAdmin);
             caseData = D.getNewCaseData()
             itemData = D.getNewItemData(caseData)
             var numberOfRecords = 200;
@@ -352,4 +350,215 @@ xdescribe('Generating large number of release letters ', function () {
             //     .verify_text_is_present_on_main_container('Closed');
         });
     }
+});
+
+
+describe.only('Dispo Auth -- preserving session across specs', function () {
+
+    let persisted = {}
+
+    before(() => {
+        cy.session('app-session', () => {
+            api.auth.get_tokens_without_page_load(orgAdmin);
+            D.generateNewDataSet()
+        })
+    })
+
+    beforeEach(() => {
+        Object.keys(persisted).forEach(k => {
+            localStorage.setItem(k, persisted[k])
+        })
+    })
+
+    afterEach(() => {
+        Object.keys(localStorage).forEach(k => {
+            persisted[k] = localStorage.getItem(k)
+        })
+    })
+    let officer, person, supervisor, thirdTierApproverGroup, thirdTierApprover, permissionGroup_officeAdmin, office_1
+
+    it('1.', function () {
+        ui.app.log_title(this);
+
+        officer = S.getUserData(S.userAccounts.basicUser);
+        supervisor = S.userAccounts.powerUser
+        thirdTierApproverGroup = S.selectedEnvironment.admin_userGroup
+        thirdTierApprover = S.userAccounts.orgAdmin
+        permissionGroup_officeAdmin = S.selectedEnvironment.regularUser_permissionGroup;
+        office_1 = S.selectedEnvironment.office_1;
+
+        ui.app.log_title(this);
+        api.auth.get_tokens_without_page_load(orgAdmin);
+        api.org_settings.disable_Item_fields([C.itemFields.description, C.itemFields.dispositionStatus, C.itemFields.releasedTo])
+            .enable_all_Person_fields()
+            .update_dispo_config_for_item_catagories(thirdTierApproverGroup)
+            .update_org_settings(false, true)
+            .update_org_settings_by_specifying_property_and_value('addUserSupervisor', true)
+        api.users.set_user_supervisors([officer.id], [supervisor.id])
+        api.permissions.assign_user_to_User_Group(thirdTierApprover, thirdTierApproverGroup)
+        api.permissions
+            .update_ALL_permissions_for_an_existing_Permission_group
+            (permissionGroup_officeAdmin, true, true, true, true)
+        api.permissions.assign_office_based_permissions_to_user(
+            officer.id,
+            office_1.id, permissionGroup_officeAdmin.id);
+
+        api.auth.get_tokens_without_page_load(officer);
+        let selectedTemplate = S.selectedEnvironment.taskTemplates.dispoAuth;
+        D.getNewTaskData();
+        D.getNewCaseData();
+        D.getNewItemData(D.newCase)
+        D.newItem.category = 'Cellular Phone' // 2DA item
+        D.newTask = Object.assign(D.newTask, selectedTemplate);
+        D.newTask.creatorId = officer.id;
+        D.newTask.assignedUserIds = [officer.id];
+
+        api.cases.add_new_case();
+    })
+
+    it('2.', function () {
+        E.generateDataFor_ITEMS_Importer([D.newItem], null, null, 100);
+        for (let i = 49; i <= 100; i++) {
+            if (E.itemImportDataWithAllFields[i]) {
+                E.itemImportDataWithAllFields[i][5] = 'Drugs'; // set 3DA category for 50 items
+            }
+        }
+        cy.generate_excel_file('100_items_import_forDispoAuth', E.itemImportDataWithAllFields);
+        ui.importer.import_data('100_items_import_forDispoAuth', C.importTypes.items, false, 1.5)
+
+        api.items.get_items_from_specific_case(D.newCase.caseNumber, 1, true)
+        api.tasks.add_new_task(D.newTask, 100)
+
+        let taskId
+        cy.getLocalStorage("newTaskId").then(newTaskId => {
+            let url = `${S.base_url}/#/view-task/` + newTaskId;
+            taskId = newTaskId
+
+            // Create a person and an address to use for all 100 items
+            person = Object.assign({}, D.getNewPersonData());
+            person.firstName = 'Disp_Person';
+            api.people.add_new_person(false, null, person);
+            let address = Object.assign({}, D.getNewPersonAddressData());
+
+
+        });
+    });
+
+
+    it('3.', function () {
+        ui.taskView
+            .open_newly_created_task_via_direct_link()
+            .select_tab('Items')
+            .set_page_size(100)
+            .verify_text_is_present_on_main_container('Showing 1 to 100 of 100 items ')
+            .wait_certain_number_of_rows_to_be_visible_on_grid(100)
+            .set_Action___Approve_for_Disposal([1, 52])
+            .verify_Dispo_Auth_Job_Status('Complete')
+    });
+
+
+    it('4.', function () {
+        ui.taskView
+            .open_newly_created_task_via_direct_link()
+            .select_tab('Items')
+            .set_Action___Hold([53, 62], 'Case Active', false, 10)
+            .set_Action___Timed_Disposal([63, 72], '3y')
+            .set_Action___Approve_for_Disposal([73, 82])
+            .set_Action___Delayed_Release([83, 100], person, {}, true, false, false, true)
+            .click_Submit_for_Disposition()
+            .wait_until_spinner_disappears()
+    });
+
+    it('5.', function () {
+        ui.taskView
+            .open_newly_created_task_via_direct_link()
+            .select_tab('Items')
+            .verify_Disposition_Statuses_on_the_grid([
+                [[1, 100], 'Under Review']])
+            .select_tab('Basic Info')
+            .verify_text_is_present_on_main_container('Supervisor(s) added to the task: ' + supervisor.name);
+    });
+
+    it('6.', function () {
+        api.auth.get_tokens_without_page_load(supervisor)
+        ui.taskView
+            .open_newly_created_task_via_direct_link()
+            .select_tab('Items')
+            .set_page_size(100)
+            .verify_text_is_present_on_main_container('Showing 1 to 100 of 100 items ')
+            //approve/reject 2DA items from grid
+            .click__Approve__from_grid_for_specific_item(1)
+            .click__Reject__from_grid_for_specific_item(2, 'Rejected By Supervisor')
+            //approve/reject 3DA items from grid
+            .click__Approve__from_grid_for_specific_item(59)
+            .click__Reject__from_grid_for_specific_item(60, 'Rejected By Supervisor')
+            .verify_toast_message('Saved!')
+            //approve 2DA items from Actions menu -- no job triggered
+            .set___Approve__from_Actions_menu([3, 29])
+            //reject 2DA & 3DA items from Actions menu -- no job triggered
+            .set___Reject__from_Actions_menu([30, 58], 'test mass rejection')
+            //approve 3DA items from Actions menu -- no job triggered
+            .set___Approve__from_Actions_menu([61, 100])
+            .reload_page()
+            .select_tab('Items')
+            .verify_Disposition_Statuses_on_the_grid(
+                [[[1], 'Approved for Disposal'], [[2, 52, 30, 60], 'Not Approved for Disposition'],
+                    [[59, 100], 'Under Review']])
+            .select_tab('Basic Info')
+            .verify_text_is_present_on_main_container('Third-tier Approver(s) added to the task: ' + thirdTierApproverGroup.name);
+
+    });
+
+
+    it('7.', function () {
+
+        api.auth.get_tokens_without_page_load(thirdTierApprover)
+        ui.taskView
+            .open_newly_created_task_via_direct_link()
+            .select_tab('Items')
+            .set_page_size(100)
+            .click__Approve__from_grid_for_specific_item(59)
+            .set___Approve__from_Actions_menu([61, 67])
+            .click__Reject__from_grid_for_specific_item(68, 'Rejected By ThirdTierApprover')
+            .set___Reject__from_Actions_menu([69, 100], 'Rejected By ThirdTierApprover')
+
+    });
+
+    it('8.', function () {
+
+        api.auth.get_tokens_without_page_load(officer)
+        ui.taskView
+            .open_newly_created_task_via_direct_link()
+            .select_tab('Items')
+            .set_Action___Hold([2], 'Case Active', false, 10)
+            .set_Action___Hold([30, 58], 'Case Active', false, 10)
+            .set_Action___Approve_for_Disposal([60])
+            .set_Action___Approve_for_Disposal([68, 100])
+            .click_Submit_for_Disposition()
+
+    });
+
+    it('9.', function () {
+        api.auth.get_tokens_without_page_load(supervisor)
+        ui.taskView
+            .open_newly_created_task_via_direct_link()
+            .select_tab('Items')
+            .set___Approve__from_Actions_menu([2])
+            .set___Approve__from_Actions_menu([30, 58])
+            .set___Approve__from_Actions_menu([60])
+            .set___Approve__from_Actions_menu([68, 100])
+    });
+
+    it('10.', function () {
+
+        api.auth.get_tokens_without_page_load(thirdTierApprover)
+        ui.taskView
+            .open_task_url(taskId)
+            .select_tab('Items')
+            .set___Approve__from_Actions_menu([49, 58])
+            .set___Approve__from_Actions_menu([60])
+            .set___Approve__from_Actions_menu([68, 100])
+            .select_tab('Basic Info')
+            .verify_text_is_present_on_main_container('Task was closed')
+    });
 });
