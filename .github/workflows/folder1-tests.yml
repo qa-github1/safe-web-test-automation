@@ -38,14 +38,14 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - spec_group: src/specs/org1/add-case-spec.js
-          - spec_group: src/specs/org1/add-items-spec.js
-          - spec_group: src/specs/org1/add-media-spec.js
-          - spec_group: src/specs/org1/add-notes-spec.js
-          - spec_group: src/specs/org1/add-person-spec.js
-          - spec_group: src/specs/org1/add-task-spec.js
-          - spec_group: src/specs/org1/add-user-spec.js
-          - spec_group: src/specs/org1/dispo-auth-spec.js
+          - spec_group: add-case-spec
+          - spec_group: add-items-spec
+          - spec_group: add-media-spec
+          - spec_group: add-notes-spec
+          - spec_group: add-person-spec
+          - spec_group: add-task-spec
+          - spec_group: add-user-spec
+          - spec_group: dispo-auth-spec
     steps:
       - uses: actions/checkout@v2
 
@@ -58,7 +58,7 @@ jobs:
           --key a6df584b-4d1e-485f-a673-2c371d167e62
           --group "org-${{ matrix.org_number }}"
           --ci-build-id "${{ github.run_id }}"
-          --spec ${{ matrix.spec_group }}
+          --spec "src/specs/org1/${{ matrix.spec_group }}.js"
           --env environment=${{ github.event.inputs.environment }},orgNum=${{ github.event.inputs.org_number }},apiTimeout=${{ github.event.inputs.api_timeout }},defaultCommandTimeout=${{ github.event.inputs.command_timeout }}
 
         env:
