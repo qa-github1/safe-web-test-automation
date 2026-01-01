@@ -21,9 +21,8 @@ describe('Dispo Auth', function () {
         const endTime = Date.now();
         cy.log(`⏱ Total time for suite: ${checkTestDuration(startTime, endTime)}`);
     });
-    //TODO: Sumejja should check further
 
-    xit('Add Dispo Task with 11 1DA items and assign to Org Admin, ' +
+    it('Add Dispo Task with 11 1DA items and assign to Org Admin, ' +
         '--set different actions for item using all variations' +
         '--using Actions menu and grid, ' +
         '--check statuses and notes upon submission', function () {
@@ -32,7 +31,7 @@ describe('Dispo Auth', function () {
 
         ui.app.log_title(this);
         api.auth.get_tokens(user);
-        api.org_settings.enable_all_Item_fields()
+        api.org_settings.disable_Item_fields([C.itemFields.description, C.itemFields.dispositionStatus, C.itemFields.releasedTo])
         api.org_settings.enable_all_Person_fields()
 
         let selectedTemplate = S.selectedEnvironment.taskTemplates.dispoAuth
@@ -121,9 +120,9 @@ describe('Dispo Auth', function () {
             .select_tab('Basic Info')
             .verify_text_is_present_on_main_container('Closed')
     });
-    //TODO: Sumejja should check further
 
-    xit('Add Dispo Task with 100 items and assign to Power User, ' +
+
+    it.only('Add Dispo Task with 100 items and assign to Power User, ' +
         '--initiate and complete 2nd and 3rd tier approval' +
         '--use Approve and Reject buttons from grid and Actions menu' +
         '--with and without Dispo Auth Service' +
@@ -138,7 +137,7 @@ describe('Dispo Auth', function () {
 
         ui.app.log_title(this);
         api.auth.get_tokens(orgAdmin);
-        api.org_settings.enable_all_Item_fields();
+        api.org_settings.disable_Item_fields([C.itemFields.description, C.itemFields.dispositionStatus, C.itemFields.releasedTo])
         api.org_settings.enable_all_Person_fields();
         api.org_settings.update_dispo_config_for_item_catagories(thirdTierApproverGroup)
         api.org_settings.update_org_settings(false, true)
@@ -170,7 +169,7 @@ describe('Dispo Auth', function () {
             }
         }
         cy.generate_excel_file('100_items_import_forDispoAuth', E.itemImportDataWithAllFields);
-        ui.importer.import_data('100_items_import_forDispoAuth', C.importTypes.items)
+        ui.importer.import_data('100_items_import_forDispoAuth', C.importTypes.items, false, 1.5)
 
         api.items.get_items_from_specific_case(D.newCase.caseNumber, 1, true)
         api.tasks.add_new_task(D.newTask, 100)
@@ -181,7 +180,7 @@ describe('Dispo Auth', function () {
             taskId = newTaskId
 
             // Create a person and an address to use for all 100 items
-            let person = Object.assign({}, D.getNewPersonData());
+            let person =Object.assign({}, D.getNewPersonData());
             person.firstName = 'Disp_Person';
             api.people.add_new_person(false, null, person);
             let address = Object.assign({}, D.getNewPersonAddressData());
@@ -190,6 +189,7 @@ describe('Dispo Auth', function () {
                 .open_newly_created_task_via_direct_link()
                 .select_tab('Items')
                 .set_page_size(100)
+                .verify_text_is_present_on_main_container('Showing 1 to 100 of 100 items ')
                 .wait_certain_number_of_rows_to_be_visible_on_grid(100)
                 .set_Action___Approve_for_Disposal([1, 52])
                 .verify_Dispo_Auth_Job_Status('Complete')
@@ -250,7 +250,6 @@ describe('Dispo Auth', function () {
             api.auth.get_tokens(officer)
             ui.taskView
                 .open_task_url(taskId)
-                //.open_url_and_wait_all_GET_requests_to_finish('https://dev.trackerproducts.com/#/view-task/727405')
                 .select_tab('Items')
                 .set_Action___Hold([2], 'Case Active', false, 10)
                 .set_Action___Hold([30, 58], 'Case Active', false, 10)
