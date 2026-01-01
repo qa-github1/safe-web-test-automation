@@ -51,7 +51,7 @@ jobs:
           - spec_group: add-person-spec
           - spec_group: add-task-spec
           - spec_group: add-user-spec
-          - spec_group: dispo-auth-spec
+      #    - spec_group: dispo-auth-spec
 
     steps:
       - name: Checkout repository

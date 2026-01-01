@@ -1955,7 +1955,8 @@ S.PENTEST_1 = {
     },
     office_2: {
         id: 137,
-        name: "Cypress Office 2"
+        name: "Cypress Office 2",
+        orgAndOfficeName: "Web Test Automation - Cypress Office 2"
     },
     org2: {
         office_1: {
@@ -2041,8 +2042,8 @@ S.PENTEST_1 = {
         }
     },
     forms: {
-        userFormWithRequiredFields: 3425,
-        userFormWithOptionalFields: 3426,
+        userFormWithRequiredFields: 24500,
+        userFormWithOptionalFields: 24501,
         taskFormWithRequiredFields: 2547,
         taskFormWithOptionalFields: 2548
     },
@@ -2159,6 +2160,7 @@ S.PENTEST_1 = {
     taskTemplates: {
         dispoAuth: {
             templateId: 3747,
+            typeId: 2254,
             type: 'Disposition Authorization',
             subtype: '',
             active: true,
@@ -2170,7 +2172,8 @@ S.PENTEST_1 = {
             message: 'Message-forAutomatedTests'
         },
         other: {
-            templateId: 3381,
+            templateId: 3605,
+            typeId: 3388,
             type: 'Other',
             subtype: '',
             active: true,
@@ -2180,6 +2183,22 @@ S.PENTEST_1 = {
             useDispositionAuthorizationActions: true,
             title: 'Title--forAutomatedTests',
             message: 'Message-forAutomatedTests'
+        },
+        errorCorrection: {
+            templateId: 3731,
+            typeId: 1120,
+            type: 'Error Correction',
+            subtypeId: 557,
+            subtype: 'Packaging and Labeling',
+            active: true,
+            emailUser: true,
+            taskEscalation: true,
+            dueDays: 5,
+            useDispositionAuthorizationActions: false,
+            title: 'Title--forAutomatedTests',
+            message: 'Message-forAutomatedTests',
+            taskAction: 'Must be Rendered Safe',
+            taskActionId: '547',
         },
     },
     orgTag1: {tagModelId: 6548, name: 'sensitive information', color: "#ad2355", tagUsedBy: 1},

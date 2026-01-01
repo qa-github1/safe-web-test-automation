@@ -416,6 +416,7 @@ describe('Add Item', function () {
         it('3.5 --- Splitting item with Currency Form attached', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
+            api.org_settings.set_Item_Split_Configuration([])
             D.getNewCaseData()
             D.getItemDataWithReducedFields(D.newCase)
             api.cases.add_new_case()
