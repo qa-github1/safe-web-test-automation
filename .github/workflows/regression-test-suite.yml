@@ -1,0 +1,79 @@
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Choose the environment'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - pentest
+          - secure
+      api_timeout:
+        description: 'Choose the API timeout'
+        required: true
+        default: '60000'
+        type: choice
+        options:
+          - 60000
+          - 80000
+          - 90000
+      command_timeout:
+        description: 'Choose the command timeout'
+        required: true
+        default: '60000'
+        type: choice
+        options:
+          - 60000
+          - 80000
+          - 90000
+
+permissions: write-all
+
+jobs:
+  cypress-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - spec_group: src/specs/org1/**/*.js
+            org_number: 1
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Cypress tests
+        run: >
+          npx cypress run --headless --browser chrome --record
+          --key a6df584b-4d1e-485f-a673-2c371d167e62
+          --group "org-${{ matrix.org_number }}"
+          --ci-build-id "${{ github.run_id }}"
+          --spec ${{ matrix.spec_group }}
+          --env environment=${{ github.event.inputs.environment }},orgNum=${{ matrix.org_number }},apiTimeout=${{ github.event.inputs.api_timeout }},defaultCommandTimeout=${{ github.event.inputs.command_timeout }}
+
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          CI: true
+
+  slack-notification:
+    runs-on: ubuntu-latest
+    needs: [cypress-tests]
+    if: always()
+    steps:
+      - name: Set date
+        run: echo "NOW=$(date +'%B_%d')" >> $GITHUB_ENV
+
+      - name: Send Slack Notification
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_COLOR: ${{ needs.cypress-tests.result }}
+          SLACK_MESSAGE: |
+            Cypress Dashboard: https://cloud.cypress.io/projects/8ismn2/branches/${{ github.ref_name }}/runs
+            Report URL: https://safe-qa.github.io/report_${{ env.NOW }}
+          SLACK_TITLE: Cypress Test Results
+          SLACK_USERNAME: Cypress_Tests
