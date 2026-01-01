@@ -6,11 +6,12 @@ on:
       environment:
         description: 'Choose the environment'
         required: true
-        default: 'dev'
+        default: 'pentest'
         type: choice
         options:
-          - dev
           - pentest
+          - dev
+          - qa
           - secure
       api_timeout:
         description: 'Choose the API timeout'
@@ -69,9 +70,7 @@ jobs:
           --group "org-${{ matrix.spec_group }}"
           --ci-build-id "${{ github.run_id }}"
           --spec "src/specs/org1/${{ matrix.spec_group }}.js"
-          --env environment=${{ github.event.inputs.environment }},
-          orgNum=${{ github.event.inputs.org_number }},
-          apiTimeout=${{ github.event.inputs.api_timeout }}
+          --env environment=${{ github.event.inputs.environment }},orgNum=${{ github.event.inputs.org_number }},apiTimeout=${{ github.event.inputs.api_timeout }},defaultCommandTimeout=${{ github.event.inputs.command_timeout }}
 
         env:
           CI: true
