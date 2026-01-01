@@ -7,11 +7,11 @@ S.domain = Cypress.env('domain')
 S.base_url = Cypress.env('baseUrl')
 S.api_url = Cypress.env('apiUrl')
 S.orgNum = Cypress.env('orgNum')
+S.enableApiLogs = Cypress.env('enableApiLogs') || false
 S.api_timeout = Cypress.env('apiTimeout') || 60000
 
 // options: LightRegression, FullRegression
 S.testSuite = Cypress.env('testSuite') || 'FullRegression'
-
 
 S.isFullRegression = function () {
     return S.testSuite === 'FullRegression'

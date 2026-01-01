@@ -50,19 +50,20 @@ function request_with_JSON_data(httpMethod, urlSuffix, requestBody, log = '', pr
                         cy.setLocalStorage(propertyName, propertyValue);
                     }
 
+                    if (S.enableApiLogs) {
+                        cy.log('*********************************************    ' + log + propertyName + ' ' + response + '     *********************************************', 'blue');
+                        console.log('*********************************************    ' + log + propertyName + ' ' + JSON.stringify(response) + '     *********************************************');
 
-                    cy.log( '*********************************************    ' + log + propertyName + ' ' + response + '     *********************************************', 'blue');
-                    console.log( '*********************************************    ' + log + propertyName + ' ' + JSON.stringify(response)+ '     *********************************************');
 
+                        // log message and/or ID from the response object if available
+                        if (response.body) {
+                            cy.log('*********************************************    ' + log + propertyName + ' ' + propertyValue + '     *********************************************', 'blue');
+                            console.log('*********************************************    ' + log + propertyName + ' ' + propertyValue + '     *********************************************');
 
-                    // log message and/or ID from the response object if available
-                    if (response.body) {
-                       cy.log( '*********************************************    ' + log + propertyName + ' ' + propertyValue + '     *********************************************', 'blue');
-                       console.log( '*********************************************    ' + log + propertyName + ' ' + propertyValue+ '     *********************************************');
-
-                    } else{
-                       cy.log('*********************************************    ' + log + propertyName + '     *********************************************');
-                       console.log('*********************************************    ' + log + propertyName + '     *********************************************');
+                        } else {
+                            cy.log('*********************************************    ' + log + propertyName + '     *********************************************');
+                            console.log('*********************************************    ' + log + propertyName + '     *********************************************');
+                        }
                     }
                 });
         }
@@ -86,6 +87,6 @@ exports.DELETE = function (urlSuffix, requestBody, log) {
 };
 
 exports.GET = function (urlSuffix, log, propertyToSaveInLocalStorage, specificResponseProperty) {
-   request_with_JSON_data('GET', urlSuffix, null, log, propertyToSaveInLocalStorage, specificResponseProperty);
+    request_with_JSON_data('GET', urlSuffix, null, log, propertyToSaveInLocalStorage, specificResponseProperty);
     return this;
 };
