@@ -1,4 +1,4 @@
-name: Cypress Sequential Tests
+name: Cypress Sequential Tests - Folder 1
 
 on:
   workflow_dispatch:
@@ -66,7 +66,7 @@ jobs:
           --headless
           --browser chrome
           --record
-          --key ${{ secrets.CYPRESS_RECORD_KEY }}
+          --key a6df584b-4d1e-485f-a673-2c371d167e62
           --group "org-${{ matrix.spec_group }}"
           --ci-build-id "${{ github.run_id }}"
           --spec "src/specs/org1/${{ matrix.spec_group }}.js"
