@@ -38,7 +38,7 @@ function get_token_status(selectedUser) {
 exports.get_tokens = function (selectedUser, arrayOfPropertiesToRetain, specificOffice) {
 
  //   ui.app.define_API_request_to_be_awaited('POST', '', 'all_POST_Requests')
-  //  ui.app.define_API_request_to_be_awaited('GET', '', 'all_GET_Requests')
+    ui.app.define_API_request_to_be_awaited('GET', '', 'all_GET_Requests')
    // ui.app.define_all_dashboard_GET_requests();
     // cy.log(`Logging in with  __________________________________________________________
     //             ${selectedUser.email} /  ${selectedUser.password}

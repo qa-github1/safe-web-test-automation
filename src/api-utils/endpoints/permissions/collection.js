@@ -245,6 +245,7 @@ exports.assign_Org_Admin_permissions_to_user = function (userObjectFromLocalStor
             body.generate_POST_request_payload_for_assigning_office_based_permissions(userId, true, office1_ID, group1_ID, office2_ID, group2_ID, office3_ID, group3_ID),
             "Assigning office-based permissions via API")
     })
+    return this
 };
 
 exports.assign_office_based_permissions_to_user = function (userObjectFromLocalStorageOrId, office1_ID, group1_ID, office2_ID = null, group2_ID = null, office3_ID = null, group3_ID = null) {
@@ -257,6 +258,7 @@ exports.assign_office_based_permissions_to_user = function (userObjectFromLocalS
             body.generate_POST_request_payload_for_assigning_office_based_permissions(userId, false, office1_ID, group1_ID, office2_ID, group2_ID, office3_ID, group3_ID),
             "Assigning office-based permissions via API")
     })
+    return this
 };
 
 exports.assign_user_to_User_Group = function (user, group) {
@@ -265,6 +267,7 @@ exports.assign_user_to_User_Group = function (user, group) {
         '/api/usergroups/editUserGroup',
         body.generate_PUT_request_payload_for_assigning_user_to_User_Group(user, group),
         "Assigning user to User Group via API")
+    return this
 };
 
 exports.assign_multiple_users_to_User_Group = function (userIdsArray, group) {
@@ -273,4 +276,5 @@ exports.assign_multiple_users_to_User_Group = function (userIdsArray, group) {
         '/api/usergroups/editUserGroup',
         body.generate_PUT_request_payload_for_assigning_multiple_users_to_User_Group(userIdsArray, group),
         "Assigning user to User Group via API")
+    return this
 };

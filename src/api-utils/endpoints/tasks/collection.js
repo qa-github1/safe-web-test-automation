@@ -76,7 +76,7 @@ exports.edit_task_template = function (taskTemplate) {
 };
 
 
-exports. add_new_task = function (taskObject = D.newTask, numberOfItemsAttached = 1) {
+exports.add_new_task = function (taskObject = D.newTask, numberOfItemsAttached = 1) {
     cy.getLocalStorage("newCase").then(newCase => {
             cy.getLocalStorage("newItem").then(newItem => {
                 cy.getLocalStorage("newPerson").then(newPerson => {

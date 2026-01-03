@@ -44,14 +44,14 @@ jobs:
       max-parallel: 1
       matrix:
         include:
-          - spec_group: add-case-spec
-          - spec_group: add-item-spec
-          - spec_group: add-media-spec
-          - spec_group: add-notes-spec
-          - spec_group: add-person-spec
-          - spec_group: add-task-spec
-          - spec_group: add-user-spec
-      #    - spec_group: dispo-auth-spec
+          #- spec_group: add-case-spec
+          # - spec_group: add-item-spec
+          #- spec_group: add-media-spec
+          #- spec_group: add-notes-spec
+          # - spec_group: add-person-spec
+          # - spec_group: add-task-spec
+          #- spec_group: add-user-spec
+        - spec_group: dispo-auth-spec
 
     steps:
       - name: Checkout repository

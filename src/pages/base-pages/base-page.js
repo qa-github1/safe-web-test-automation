@@ -574,6 +574,7 @@ let basePage = class BasePage {
         optionsDropdownUnderMenuCustomization().click()
         pageSizesUnderMenuCustomization().contains(pageSize).click()
         this.pause(1)
+        this.wait_all_GET_requests()
         this.wait_until_spinner_disappears()
         return this;
     }
@@ -2681,6 +2682,7 @@ let basePage = class BasePage {
         cy.reload();
         this.pause(2)
         this.wait_until_spinner_disappears()
+        this.wait_all_GET_requests()
         return this;
     };
 
@@ -2898,50 +2900,50 @@ let basePage = class BasePage {
         return this;
     };
 
-    // wait_until_spinner_disappears(timeoutInSeconds = 80) {
-    //     bodyContainer().should('not.have.class', 'pace-running', {timeout: timeoutInSeconds * 1000});
-    //     bodyContainer().should('have.class', 'pace-done', {timeout: timeoutInSeconds * 1000});
-    //     return this;
-    // };
+    wait_until_spinner_disappears(timeoutInSeconds = 80) {
+        bodyContainer().should('not.have.class', 'pace-running', {timeout: timeoutInSeconds * 1000});
+        bodyContainer().should('have.class', 'pace-done', {timeout: timeoutInSeconds * 1000});
+        return this;
+    };
 
     // Waits for Pace spinner to finish, but never fails the test.
 // Queues polling in Cypress chain; after timeout it logs and continues.
-    wait_until_spinner_disappears(timeoutInSeconds = 80) {
-        const timeout = timeoutInSeconds * 1000;
-        const interval = 500; // ms
-        const started = Date.now();
-
-        const poll = () => {
-            cy.document({log: false}).then((doc) => {
-                // Pace sometimes toggles classes on <body> or <html>
-                const roots = [doc.body, doc.documentElement].filter(Boolean);
-                const hasSpinner = roots.some(el => el.classList.contains('pace-running'));
-                const isDone = roots.some(el => el.classList.contains('pace-done'));
-
-                if (!hasSpinner && isDone) {
-                    // spinner gone -> stop polling
-                    return;
-                }
-
-                const elapsed = Date.now() - started;
-                if (elapsed >= timeout) {
-                    // eslint-disable-next-line no-console
-                    console.warn(`[wait_until_spinner_disappears] still running after ${timeoutInSeconds}s — continuing test.`);
-                    return;
-                }
-
-                // wait a bit, then check again (stays inside Cypress queue)
-                cy.wait(interval, {log: false}).then(poll);
-            });
-        };
-
-        // enqueue the polling steps before whatever comes next
-        poll();
-
-        // allow page-object style chaining
-        return this;
-    }
-
+//     wait_until_spinner_disappears(timeoutInSeconds = 30) {
+//         const timeout = timeoutInSeconds * 1000;
+//         const interval = 5000; // ms
+//         const started = Date.now();
+//
+//         const poll = () => {
+//             cy.document({log: false}).then((doc) => {
+//                 // Pace sometimes toggles classes on <body> or <html>
+//                 const roots = [doc.body, doc.documentElement].filter(Boolean);
+//                 const hasSpinner = roots.some(el => el.classList.contains('pace-running'));
+//                 const isDone = roots.some(el => el.classList.contains('pace-done'));
+//
+//                 if (!hasSpinner && isDone) {
+//                     // spinner gone -> stop polling
+//                     return;
+//                 }
+//
+//                 const elapsed = Date.now() - started;
+//                 if (elapsed >= timeout) {
+//                     // eslint-disable-next-line no-console
+//                     console.warn(`[wait_until_spinner_disappears] still running after ${timeoutInSeconds}s — continuing test.`);
+//                     return;
+//                 }
+//
+//                 // wait a bit, then check again (stays inside Cypress queue)
+//                 cy.wait(interval, {log: false}).then(poll);
+//             });
+//         };
+//
+//         // enqueue the polling steps before whatever comes next
+//         poll();
+//
+//         // allow page-object style chaining
+//         return this;
+//     }
+//
 
     wait_until_label_appears(text) {
         cy.contains(text).should('be.visible');
