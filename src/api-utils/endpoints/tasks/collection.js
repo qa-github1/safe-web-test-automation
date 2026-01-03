@@ -98,7 +98,7 @@ exports.add_new_task = function (taskObject = D.newTask, numberOfItemsAttached =
                                 taskObject.attachments.push({entityId: JSON.parse(item).id, entityType: 1, taskId: null})
                             })
                         }
-                        ui.app.pause(5)
+                        ui.app.pause(10)
                     }
 
                     generic_request.POST(
