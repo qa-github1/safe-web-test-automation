@@ -15,13 +15,15 @@ for (let i = 0; i < 1; i++) {
 
         before(function () {
             api.auth.get_tokens(user);
-            D.generateNewDataSet();
             api.org_settings.enable_all_Item_fields()
+            startTime = Date.now();
+        });
+
+        beforeEach(function () {
+            api.auth.get_tokens(user);
+            D.generateNewDataSet();
             api.cases.add_new_case()
             api.items.add_new_item(true)
-            startTime = Date.now();
-
-
         });
 
         after(() => {

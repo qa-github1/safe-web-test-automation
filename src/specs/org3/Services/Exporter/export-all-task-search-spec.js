@@ -15,12 +15,14 @@ for (let i = 0; i < 1; i++) {
     describe('Exporter ', function () {
 
         before(function () {
+            startTime = Date.now();
+        });
+
+        beforeEach(function () {
             api.auth.get_tokens(user);
             D.generateNewDataSet();
            api.tasks.add_new_task(D.newTask)
             startTime = Date.now();
-
-
         });
 
         after(() => {

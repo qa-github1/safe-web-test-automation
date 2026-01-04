@@ -14,14 +14,17 @@ const equals = C.searchCriteria.inputFields.equals
 for (let i = 0; i < 1; i++) {
     describe('Exporter ', function () {
 
-        before(function () {
+        beforeEach(function () {
             api.auth.get_tokens(user);
             D.generateNewDataSet();
             api.cases.add_new_case()
             startTime = Date.now();
-
-
         });
+
+        before(function () {
+            startTime = Date.now();
+        });
+
 
         after(() => {
             const endTime = Date.now();
@@ -51,7 +54,7 @@ for (let i = 0; i < 1; i++) {
                 .click_option_on_expanded_menu('All - CSV')
             ui.app.verify_url_contains_some_value('export-jobs')
                 .sort_by_descending_order('Start Date')
-            cy.reload()
+            //cy.reload()
             ui.app.verify_content_of_specific_cell_in_first_table_row('Download Link', 'Download')
 
         });

@@ -13,14 +13,17 @@ let startTime;
 for (let i = 0; i < 1; i++) {
     describe('Exporter ', function () {
 
-        before(function () {
+        beforeEach(function () {
             api.auth.get_tokens(user);
             D.generateNewDataSet();
-            api.org_settings.enable_all_Item_fields()
             api.cases.add_new_case()
             api.items.add_new_item(true)
-            startTime = Date.now();
+        });
 
+        before(function () {
+            api.auth.get_tokens(user);
+            api.org_settings.enable_all_Item_fields()
+            startTime = Date.now();
 
         });
 
@@ -52,7 +55,7 @@ for (let i = 0; i < 1; i++) {
                 .click_option_on_expanded_menu('All - CSV')
             ui.app.verify_url_contains_some_value('export-jobs')
                 .sort_by_descending_order('Start Date')
-            cy.reload()
+            //cy.reload()
             ui.app.verify_content_of_specific_cell_in_first_table_row('Download Link', 'Download')
 
         });

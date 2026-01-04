@@ -15,6 +15,10 @@ for (let i = 0; i < 1; i++) {
     describe('Exporter ', function () {
 
         before(function () {
+            startTime = Date.now();
+        });
+
+        beforeEach(function () {
             api.auth.get_tokens(user);
             D.generateNewDataSet();
             api.cases.add_new_case()
@@ -24,8 +28,6 @@ for (let i = 0; i < 1; i++) {
                 .verify_element_is_visible('Drag And Drop your files here')
                 .upload_file_and_verify_toast_msg('image.png')
             startTime = Date.now();
-
-
         });
 
         after(() => {

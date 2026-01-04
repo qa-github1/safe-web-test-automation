@@ -16,6 +16,10 @@ for (let i = 0; i < 1; i++) {
     describe('Exporter ', function () {
 
         before(function () {
+            startTime = Date.now();
+        });
+
+        beforeEach(function () {
             api.auth.get_tokens(user);
             D.generateNewDataSet();
             api.cases.add_new_case()
@@ -24,8 +28,6 @@ for (let i = 0; i < 1; i++) {
                 .enter_note_and_category(note, C.noteCategories.sensitive)
                 .verify_toast_message(C.toastMsgs.saved)
             startTime = Date.now();
-
-
         });
 
         after(() => {
