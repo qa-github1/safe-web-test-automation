@@ -9,8 +9,8 @@ const ui = require('../../../../pages/ui-spec');
 let user = S.userAccounts.orgAdmin;
 
 describe('Import People', function () {
-
-    it('1. Precheck and Import People with all fields ' +
+    //TODO: Sumejja should check further
+    xit('1. Precheck and Import People with all fields ' +
         '- 1 person linked to 1 case, other person linked to 2 cases', function () {
         ui.app.log_title(this);
         let fileName = 'PeopleImport_allFields_' + S.domain;

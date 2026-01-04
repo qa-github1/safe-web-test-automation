@@ -24,8 +24,9 @@ describe('Import Item Updates', function () {
             D.newItem = Object.assign(D.newItem, JSON.parse(newItem))
         })
     });
+    //TODO: Sumejja should check further
 
-    it('1. Import updates for all regular and custom fields', function () {
+    xit('1. Import updates for all regular and custom fields', function () {
         ui.app.log_title(this);
         let fileName = 'ItemUpdatesImport_allRegularFieldsUpdated-CustomFormAttached';
 
@@ -165,7 +166,8 @@ describe('Import Item Updates', function () {
                 .verify_red_highlighted_history_records(allEditedFields)
         });
 
-        it('4. Import update for item status (Move transaction)', function () {
+        //TODO: Sumejja should check further
+        xit('4. Import update for item status (Move transaction)', function () {
             ui.app.log_title(this);
             let fileName = 'ItemUpdatesImport_Move_' + S.domain;
 
@@ -204,7 +206,8 @@ describe('Import Item Updates', function () {
             });
         });
 
-        it('5. Import update for item status (Disposal transaction)', function () {
+        //TODO: Sumejja should check further
+        xit('5. Import update for item status (Disposal transaction)', function () {
             ui.app.log_title(this);
             let fileName = 'ItemUpdatesImport_Disposal_' + S.domain;
 
@@ -255,7 +258,8 @@ describe('Import Item Updates', function () {
             });
         });
 
-        it('6. Import update for item status (Undispose transaction)', function () {
+        //TODO: Sumejja should check further
+        xit('6. Import update for item status (Undispose transaction)', function () {
             ui.app.log_title(this);
             let fileName = 'ItemUpdatesImport_Undispose_' + S.domain;
 

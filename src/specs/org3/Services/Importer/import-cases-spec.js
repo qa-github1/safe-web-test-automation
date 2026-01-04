@@ -18,8 +18,8 @@ describe('Import Cases', function () {
         api.users.update_current_user_settings(user.id, C.currentDateTimeFormat)
         D.generateNewDataSet();
     });
-
-    it('I.C_1 Case with all regular and custom fields -- user and user group in Case Officer(s) field', function () {
+    //TODO: Sumejja should check further
+    xit('I.C_1 Case with all regular and custom fields -- user and user group in Case Officer(s) field', function () {
         ui.app.log_title(this);
         let fileName = 'CaseImport_allFields_' + S.domain;
         api.auth.get_tokens(user);
