@@ -15,7 +15,7 @@ before(function () {
     api.auth.get_tokens(orgAdmin);
     api.org_settings.enable_all_Case_fields()
         .enable_all_Person_fields()
-        .disable_Item_fields([C.itemFields.description, C.itemFields.dispositionStatus, C.itemFields.releasedTo])
+        .enable_all_Item_fields()
         .update_org_settings(false, true)
         .update_dispo_config_for_item_catagories()
         .update_org_settings_by_specifying_property_and_value('containerAutoDeactivate', true)
