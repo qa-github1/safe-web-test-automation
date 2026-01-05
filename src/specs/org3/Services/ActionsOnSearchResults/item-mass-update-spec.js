@@ -96,8 +96,7 @@ describe('Mass Update Items through Actions on Search Results', function () {
 
         });
 
-        //TODO: Sumejja should check further
-        xit('1.2 All fields turned on but value is edited on required fields only', function () {
+        it('1.2 All fields turned on but value is edited on required fields only', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(user);
             D.generateNewDataSet();
