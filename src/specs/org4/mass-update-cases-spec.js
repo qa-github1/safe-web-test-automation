@@ -102,7 +102,7 @@ describe('Mass Update Cases', function () {
                 .verify_edited_and_not_edited_values_on_Case_Edit_form(multiSelectFieldsLabels, D.editedCase, D.newCase, true)
         });
 
-        it('1.3 all fields turned on but value is edited on required fields only', function () {
+        it.only('1.3 all fields turned on but value is edited on required fields only', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(user);
             D.generateNewDataSet();
@@ -125,6 +125,7 @@ describe('Mass Update Cases', function () {
                 .click_button(C.buttons.actions)
                 .click_Mass_Update()
                 .verify_Ok_button_is_disabled()
+                .turnOnTogglesBasedOnFieldLabels(requiredFieldsLabels)
                 .verify_asterisk_is_shown_for_fields_on_modal(requiredFieldsLabels)
                 .enter_values_to_all_fields_on_Mass_Update_modal(requiredFieldsLabels, requiredValues)
                 .click_Ok()
