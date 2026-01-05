@@ -24,7 +24,7 @@ exports.setDisposalReleaseOverride = function (userIds = [], userGroupIds = []) 
     return this
 };
 
-exports.update_dispo_config_for_item_catagories = function (thirdTierApproverGroup) {
+exports.update_dispo_config_for_item_catagories = function (thirdTierApproverGroup = S.selectedEnvironment.admin_userGroup) {
     generic_request.PUT(
         '/api/categories/DispositionApprovalConfig',
         body.generate_request_payload_for_setting_dispo_config_for_item_categories(thirdTierApproverGroup),

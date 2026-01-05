@@ -904,95 +904,72 @@ exports.generate_request_payload_for_setting_dispo_config_for_item_categories = 
 };
 
 exports.generate_request_payload_for_setting_dispo_config_for_offense_types = function (isAutoDispositionOn = true, skipFutureCaseReviewUpdates = true, daysToFollowUp = 100) {
-   // let body = {
-   //      "isAutoDispositionOn": isAutoDispositionOn,
-   //      "skipFutureCaseReviewUpdates": skipFutureCaseReviewUpdates,
-   //      "officeAutoDispositionReviewers": [{
-   //          "officeId": S.selectedEnvironment.office_1.id,
-   //          "officeName": "Cypress Office 1",
-   //          "generalTaskFromUserId": 63324,
-   //          "generalTaskFromUserGroupId": null,
-   //          "isDefault": true,
-   //          "isGeneralTaskFromUser": true
-   //      }, {
-   //          "officeId": S.selectedEnvironment.office_2.id,
-   //          "officeName": "Cypress Office 2",
-   //          "generalTaskFromUserId": null,
-   //          "generalTaskFromUserGroupId": null,
-   //          "isDefault": false,
-   //          "isGeneralTaskFromUser": false
-   //      }],
-   //      "generalTaskFromUserGroupId": null,
-   //      "offenseTypes": [{
-   //          "offenseTypeId": 2,
-   //          "offenseTypeName": "Arson",
-   //          "daysToFollowUp": 100,
-   //          "daysToFollowUpApplytoAll": false,
-   //          "route": "offenseTypes",
-   //          "reqParams": null,
-   //          "restangularized": true,
-   //          "fromServer": true,
-   //          "parentResource": {"route": "autoDisposition", "parentResource": null},
-   //          "restangularCollection": false
-   //      }, {
-   //          "offenseTypeId": 3,
-   //          "offenseTypeName": "Assault",
-   //          "daysToFollowUp": daysToFollowUp,
-   //          "daysToFollowUpApplytoAll": true,
-   //          "route": "offenseTypes",
-   //          "reqParams": null,
-   //          "restangularized": true,
-   //          "fromServer": true,
-   //          "parentResource": {"route": "autoDisposition", "parentResource": null},
-   //          "restangularCollection": false
-   //      }, {
-   //          "offenseTypeId": 4,
-   //          "offenseTypeName": "Burglary",
-   //          "daysToFollowUp": daysToFollowUp,
-   //          "daysToFollowUpApplytoAll": true,
-   //          "route": "offenseTypes",
-   //          "reqParams": null,
-   //          "restangularized": true,
-   //          "fromServer": true,
-   //          "parentResource": {"route": "autoDisposition", "parentResource": null},
-   //          "restangularCollection": false
-   //      }, {
-   //          "offenseTypeId": 11,
-   //          "offenseTypeName": "Drug Offense",
-   //          "daysToFollowUp": 100,
-   //          "daysToFollowUpApplytoAll": false,
-   //          "route": "offenseTypes",
-   //          "reqParams": null,
-   //          "restangularized": true,
-   //          "fromServer": true,
-   //          "parentResource": {"route": "autoDisposition", "parentResource": null},
-   //          "restangularCollection": false
-   //      }, {
-   //          "offenseTypeId": 28,
-   //          "offenseTypeName": "Vandalism",
-   //          "daysToFollowUp": 100,
-   //          "daysToFollowUpApplytoAll": false,
-   //          "route": "offenseTypes",
-   //          "reqParams": null,
-   //          "restangularized": true,
-   //          "fromServer": true,
-   //          "parentResource": {"route": "autoDisposition", "parentResource": null},
-   //          "restangularCollection": false
-   //      },  {
-   //          "offenseTypeId": 158,
-   //          "offenseTypeName": "Accident",
-   //          "daysToFollowUp": 100,
-   //          "daysToFollowUpApplytoAll": false,
-   //          "route": "offenseTypes",
-   //          "reqParams": null,
-   //          "restangularized": true,
-   //          "fromServer": true,
-   //          "parentResource": {"route": "autoDisposition", "parentResource": null},
-   //          "restangularCollection": false
-   //      }]
-   //  }
-
-    let body = {"isAutoDispositionOn":isAutoDispositionOn,"skipFutureCaseReviewUpdates":true,"officeAutoDispositionReviewers":[{"officeId":11082,"officeName":"Cypress Office 1","generalTaskFromUserId":63328,"generalTaskFromUserGroupId":null,"isDefault":true,"isGeneralTaskFromUser":true},{"officeId":11091,"officeName":"Cypress Office 2","generalTaskFromUserId":63328,"generalTaskFromUserGroupId":null,"isDefault":false,"isGeneralTaskFromUser":true},{"officeId":11100,"officeName":"Office 3","generalTaskFromUserId":null,"generalTaskFromUserGroupId":null,"isDefault":false,"isGeneralTaskFromUser":false}],"generalTaskFromUserGroupId":null,"offenseTypes":[{"offenseTypeId":2,"offenseTypeName":"Arson","daysToFollowUp":100,"daysToFollowUpApplytoAll":false,"route":"offenseTypes","reqParams":null,"restangularized":true,"fromServer":true,"parentResource":{"route":"autoDisposition","parentResource":null},"restangularCollection":false},{"offenseTypeId":4,"offenseTypeName":"Burglary","daysToFollowUp":33,"daysToFollowUpApplytoAll":false,"route":"offenseTypes","reqParams":null,"restangularized":true,"fromServer":true,"parentResource":{"route":"autoDisposition","parentResource":null},"restangularCollection":false},{"offenseTypeId":28,"offenseTypeName":"Vandalism","daysToFollowUp":100,"daysToFollowUpApplytoAll":false,"route":"offenseTypes","reqParams":null,"restangularized":true,"fromServer":true,"parentResource":{"route":"autoDisposition","parentResource":null},"restangularCollection":false},{"offenseTypeId":158,"offenseTypeName":"Accident","daysToFollowUp":100,"daysToFollowUpApplytoAll":false,"route":"offenseTypes","reqParams":null,"restangularized":true,"fromServer":true,"parentResource":{"route":"autoDisposition","parentResource":null},"restangularCollection":false}]}
+    let body = {
+        "isAutoDispositionOn": isAutoDispositionOn,
+        "skipFutureCaseReviewUpdates": true,
+        "officeAutoDispositionReviewers":
+            [{
+                "officeId": S.selectedEnvironment.office_1.id,
+                "officeName": "Cypress Office 1",
+                "generalTaskFromUserId": 63328,
+                "generalTaskFromUserGroupId": null,
+                "isDefault": true,
+                "isGeneralTaskFromUser": true
+            }, {
+                "officeId": S.selectedEnvironment.office_2.id,
+                "officeName": "Cypress Office 2",
+                "generalTaskFromUserId": 63328,
+                "generalTaskFromUserGroupId": null,
+                "isDefault": false,
+                "isGeneralTaskFromUser": true
+            }],
+        "generalTaskFromUserGroupId": null,
+        "offenseTypes": [{
+            "offenseTypeId": 2,
+            "offenseTypeName": "Arson",
+            "daysToFollowUp": 100,
+            "daysToFollowUpApplytoAll": false,
+            "route": "offenseTypes",
+            "reqParams": null,
+            "restangularized": true,
+            "fromServer": true,
+            "parentResource": {"route": "autoDisposition", "parentResource": null},
+            "restangularCollection": false
+        }, {
+            "offenseTypeId": 4,
+            "offenseTypeName": "Burglary",
+            "daysToFollowUp": 33,
+            "daysToFollowUpApplytoAll": false,
+            "route": "offenseTypes",
+            "reqParams": null,
+            "restangularized": true,
+            "fromServer": true,
+            "parentResource": {"route": "autoDisposition", "parentResource": null},
+            "restangularCollection": false
+        }, {
+            "offenseTypeId": 28,
+            "offenseTypeName": "Vandalism",
+            "daysToFollowUp": 100,
+            "daysToFollowUpApplytoAll": false,
+            "route": "offenseTypes",
+            "reqParams": null,
+            "restangularized": true,
+            "fromServer": true,
+            "parentResource": {"route": "autoDisposition", "parentResource": null},
+            "restangularCollection": false
+        }, {
+            "offenseTypeId": 158,
+            "offenseTypeName": "Accident",
+            "daysToFollowUp": 100,
+            "daysToFollowUpApplytoAll": false,
+            "route": "offenseTypes",
+            "reqParams": null,
+            "restangularized": true,
+            "fromServer": true,
+            "parentResource": {"route": "autoDisposition", "parentResource": null},
+            "restangularCollection": false
+        }]
+    }
 
     return body
 };
