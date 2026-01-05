@@ -24,7 +24,7 @@ before(function () {
 
 describe('Dispo Auth', function () {
 
-    it.only('All Dispo Actions for 8 items -- no service involved', function () {
+    it('All Dispo Actions for 8 items -- no service involved', function () {
 
         ui.app.log_title(this);
         api.auth.get_tokens(orgAdmin);
@@ -211,7 +211,7 @@ describe('Services', function () {
         ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.caseCreated, D.newCase, null, 1, false)
     })
 
-    it.only('5. Dispo Auth Service', function () {
+    it('5. Dispo Auth Service', function () {
 
         ui.app.log_title(this);
         api.auth.get_tokens(orgAdmin);
@@ -251,7 +251,7 @@ describe('Services', function () {
             .verify_text_is_present_on_main_container('Task was closed')
     });
 
-    it.only('6. Auto Reports - Release Letters', function () {
+    it('6. Auto Reports - Release Letters', function () {
 
         ui.app.log_title(this);
         api.auth.get_tokens(orgAdmin);
