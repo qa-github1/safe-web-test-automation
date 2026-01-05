@@ -59,7 +59,7 @@ exports.generate_PUT_request_payload_for_editing_existing_item = function (itemO
             "${S.selectedEnvironment.itemCustomForm.user}":"user-${itemObject.custom_userId}",
             "${S.selectedEnvironment.itemCustomForm.person}":${itemObject.custom_personId},
             "${S.selectedEnvironment.itemCustomForm.dropdownTypeahead}":${itemObject.custom_dropdownTypeaheadOption_apiFormat},
-            "${S.selectedEnvironment.itemCustomForm.checkbox}":"${itemObject.custom_checkbox}",
+            "${S.selectedEnvironment.itemCustomForm.checkbox}":${itemObject.custom_checkbox},
             "${S.selectedEnvironment.itemCustomForm.date}":"${itemObject.custom_dateISOFormat}"}`,
             dateFields: [S.selectedEnvironment.itemCustomForm.date],
             entityId: itemObject.id.toString(),

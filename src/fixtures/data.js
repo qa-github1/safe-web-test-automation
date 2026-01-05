@@ -915,7 +915,7 @@ D.editedCustomFormData = {
     custom_number: "333",
     custom_password: "Test12345",
     custom_textarea: "edited custom Textarea",
-    custom_checkbox: true,
+    custom_checkbox: false,
     custom_checkboxListOption: 'Option 2',
     custom_checkboxListOption_apiFormat: {"2": true},
     custom_radiobuttonListOption: 'Option 3',

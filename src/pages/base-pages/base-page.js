@@ -3424,7 +3424,7 @@ let basePage = class BasePage {
 
     turn_on_and_enter_values_to_all_fields_on_custom_form_modal(labelsArray, valuesArray) {
 
-        this.turnOnAllTogglesOnModal()
+        this.turnOnAllTogglesOnItemsUpdateModal(null, false)
 
         for (let i = 0; i < labelsArray.length; i++) {
             const label = labelsArray[i];
@@ -3455,7 +3455,14 @@ let basePage = class BasePage {
                     .find('input[type="checkbox"]:visible')
                     .first()
                     .then($cb => {
-                        if (value) cy.wrap($cb).check(); else cy.wrap($cb).uncheck();
+                        if (value === true) {
+                            cy.wrap($cb).check()
+                        }
+                        else{
+                            cy.wrap($cb).check()
+                            cy.wrap($cb).uncheck()
+                        }
+
                     });
 
             } else if (label === 'Checkbox List') {
@@ -3548,7 +3555,7 @@ let basePage = class BasePage {
                     .clear({force: true})
                     .invoke('val', value).trigger('input')
                     .type('{enter}')
-                    .blur();
+                //    .blur();
             } else {
                 cy.get('.modal-content')
                     .contains('.fg-field-inner label, .fg-field-inner .control-label', new RegExp(`^\\s*${label}\\s*$`))
@@ -3567,7 +3574,6 @@ let basePage = class BasePage {
 
     choose_custom_form_from_mass_update_cf_modal(itemObject) {
         customDataType().select(`number:${itemObject.id}`, {force: true}).trigger('change');
-
         return this;
     }
 
