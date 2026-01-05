@@ -72,7 +72,7 @@ for (let i = 0; i < 1; i++) {
                     .click_Search()
                     .select_checkbox_on_first_table_row()
                     .click_Actions_on_Search_Page()
-                    .click_option_on_expanded_menu(C.dropdowns.itemActions.massUpdate)
+                    .click_Mass_Update()
                     .turn_on_and_enter_values_to_all_fields_on_Mass_Update_Items_modal(allFieldsLabels, allValues)
                     .verify_text_above_modal_footer('Mass updating 1 item')
                     .click_Ok()
