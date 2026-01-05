@@ -15,7 +15,6 @@ describe('Mass Update Items through Actions on Search Results', function () {
 
     before(function () {
         startTime = Date.now();
-
     });
 
     after(() => {
@@ -43,9 +42,7 @@ describe('Mass Update Items through Actions on Search Results', function () {
 
 
     context('1. All fields enabled in Org Settings', function () {
-        //TODO: Sumejja should check further
-
-        xit('1.1 All fields turned on and edited', function () {
+        it.only('1.1 All fields turned on and edited', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(user);
             D.generateNewDataSet();
@@ -74,8 +71,8 @@ describe('Mass Update Items through Actions on Search Results', function () {
                 .click_Search()
                 .click_Actions_On_Search_Results()
                 .click_Mass_Update()
-                .turn_on_and_enter_values_to_all_fields_on_modal(allFieldsLabels, allValues)
-                .verify_text_above_modal_footer('Warning! This action will mass update all items found by the current search, except items shared among Organizations')
+                .turn_on_and_enter_values_to_all_fields_on_Mass_Update_Items_modal(allFieldsLabels, allValues)
+                .verify_text_above_modal_footer('Warning This action will mass update all items found by the current search, except: - Items shared among Organizations')
                 .click_Ok()
                 .verify_text_is_present_on_main_container('Actions on Search Results Jobs')
                 .sort_by_descending_order('Start Date')
@@ -98,8 +95,8 @@ describe('Mass Update Items through Actions on Search Results', function () {
             api.auth.log_out(user)
 
         });
-        //TODO: Sumejja should check further
 
+        //TODO: Sumejja should check further
         xit('1.2 All fields turned on but value is edited on required fields only', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(user);
@@ -127,11 +124,11 @@ describe('Mass Update Items through Actions on Search Results', function () {
                 .click_Actions_On_Search_Results()
                 .click_Mass_Update()
                 .verify_Ok_button_is_disabled()
-                .turn_on_all_toggles_on_modal(allFieldsLabels)
+                .turnOnTogglesBasedOnFieldLabels(allFieldsLabels)
                 .verify_asterisk_is_shown_for_fields_on_modal(requiredFieldsLabels)
-                .turn_off_all_toggles_on_modal(optionalFieldsLabels) // #19466 ⁃ Items - Uncategorized Issues (issue #4)
+                .turnOffTogglesBasedOnFieldLabels(optionalFieldsLabels) // #19466 ⁃ Items - Uncategorized Issues (issue #4)
                 .enter_values_to_all_fields_on_modal(requiredFieldsLabels, requiredValues)
-                 .verify_text_above_modal_footer('Warning! This action will mass update all items found by the current search, except items shared among Organizations')
+                 .verify_text_above_modal_footer('Warning This action will mass update all items found by the current search, except: - Items shared among Organizations')
                  .click_Ok()
                  .verify_text_is_present_on_main_container('Actions on Search Results Jobs')
                  .sort_by_descending_order('Start Date')
