@@ -2239,6 +2239,12 @@ let basePage = class BasePage {
         return this;
     };
 
+    click_Mass_Update() {
+        this.pause(2) // needed because of random issue where 'No Permissions' toast appears
+        this.click_option_on_expanded_menu(C.dropdowns.itemActions.massUpdate)
+        return this;
+    };
+
     click_option_on_typeahead(option) {
         optionOnTypeahead(option).should('be.visible');
         optionOnTypeahead(option).click();
@@ -2994,12 +3000,16 @@ let basePage = class BasePage {
             .find('[ng-click="onSwitch($event)"]').first().click()
     }
 
+    turnOffToggle(label) {
+        return parentContainerFoundByInnerLabelOnModal(label, 'tp-modal-field')
+            .find('[ng-click="onSwitch($event)"]').first().should('not.have.class', 'off').click().should('have.class', 'off')
+    }
+
     turnOnToggleAndReturnParentElement(label) {
         return parentContainerFoundByInnerLabelOnModal(label, 'tp-modal-field')
             .find('[ng-click="onSwitch($event)"]').first().click()
             .parents('.form-group').first()
     }
-
 
     turnOnOnlySpecificTogglesOnModal(toggleNumbers) {
         cy.get('.modal-content .toggle-off')
@@ -3029,15 +3039,42 @@ let basePage = class BasePage {
         return this;
     }
 
-    turnOnAllTogglesOnModal(skip) {
+    turnOnAllTogglesOnItemsUpdateModal(skip = [], isItemCategoryEnabled) {
+        const skipIndexes = Array.isArray(skip)
+            ? skip.map(n => n - 1)
+            : Number.isInteger(skip)
+                ? [skip - 1]
+                : [];
+
+        cy.get('.modal-content .toggle-off')
+            .filter(':contains("Off")')
+            .each(($el, index) => {
+                if (skipIndexes.includes(index)) return;
+                cy.wrap($el).click();
+
+                if (index === 4) {
+                    if (S.isDispoStatusEnabled() && isItemCategoryEnabled) this.click('Confirm')
+                }
+            });
+
+        return this;
+    }
+
+    turnOnAllTogglesOnModal(skip = []) {
         const clicked = new Set();
 
-        const shouldSkip = (el, index, lastIndex) => {
-            if (clicked.has(el)) return true;          // already clicked
-            if (skip === 'first' && index === 0) return true;
-            if (skip === 'last' && index === lastIndex) return true;
-            if (Number.isInteger(skip) && index === skip - 1) return true;
-            if (Array.isArray(skip) && skip.map(n => n - 1).includes(index)) return true;
+        // normalize skip → zero-based indexes
+        const skipIndexes = (() => {
+            if (skip === 'first') return [0];
+            if (skip === 'last') return ['last'];
+            if (Number.isInteger(skip)) return [skip - 1];
+            if (Array.isArray(skip)) return skip.map(n => n - 1);
+            return [];
+        })();
+
+        const shouldSkipByIndex = (index, lastIndex) => {
+            if (skipIndexes.includes(index)) return true;
+            if (skipIndexes.includes('last') && index === lastIndex) return true;
             return false;
         };
 
@@ -3050,24 +3087,46 @@ let basePage = class BasePage {
 
                     const lastIndex = $toggles.length - 1;
 
-                    // find first toggle that should be clicked
-                    let found = false;
-                    for (let i = 0; i < $toggles.length; i++) {
+                    // walk backwards → last available toggle
+                    for (let i = lastIndex; i >= 0; i--) {
                         const el = $toggles[i];
-                        if (!shouldSkip(el, i, lastIndex)) {
-                            clicked.add(el);
-                            cy.wrap(el)
-                                .click()
-                                .then(clickNext); // recurse
-                            found = true;
-                            break;
-                        }
-                    }
 
-                    if (!found) return; // nothing left to click
+                        if (clicked.has(el)) continue;
+                        if (shouldSkipByIndex(i, lastIndex)) continue;
+
+                        clicked.add(el);
+
+                        return cy.wrap(el)
+                            .click()
+                            .then(() => {
+                                clickNext(); // recurse with fresh DOM
+                            });
+                    }
                 });
         };
         clickNext();
+        return this;
+    }
+
+    turnOnTogglesBasedOnFieldLabels(labelsArray) {
+        this.pause(0.5)
+        for (let i = 0; i < labelsArray.length; i++) {
+            const label = labelsArray[i];
+            this.turnOnToggle(label);
+
+            if (label === 'Category' && S.isDispoStatusEnabled()) {
+                this.click('Confirm');
+            }
+        }
+        return this;
+    }
+
+    turnOffTogglesBasedOnFieldLabels(labelsArray) {
+        this.pause(0.5)
+        for (let i = 0; i < labelsArray.length; i++) {
+            const label = labelsArray[i];
+            this.turnOffToggle(label);
+        }
         return this;
     }
 
@@ -3256,26 +3315,6 @@ let basePage = class BasePage {
         return this
     }
 
-    turn_on_all_toggles_on_modal(labelsArray) {
-        this.pause(0.5)
-        for (let i = 0; i < labelsArray.length; i++) {
-            const label = labelsArray[i];
-            this.turnOnToggle(label);
-
-            if (label === 'Category' && S.isDispoStatusEnabled()) {
-                this.click('Confirm');
-            }
-        }
-
-        return this;
-    }
-
-    turn_off_all_toggles_on_Case_Mass_Updates_modal() {
-        this.pause(0.5)
-        this.turnOnAllTogglesOnModal()
-        return this;
-    }
-
     enter_values_to_all_fields_on_Mass_Update_modal(labelsArray, valuesArray, itemsOrCases) {
 
         for (let i = 0; i < labelsArray.length; i++) {
@@ -3287,8 +3326,6 @@ let basePage = class BasePage {
                     .find('select').first()
                     .select(value)
             } else if (['Category'].some(v => label === v)) {
-                this.turnOnToggle(label)
-                if (S.isDispoStatusEnabled()) this.click('Confirm')
                 cy.get('[category-name="item.categoryName"]').click()
                 cy.get('[repeat="category in data.categories | filter: { name: $select.search }"]').contains(value).click();
 
@@ -3375,12 +3412,11 @@ let basePage = class BasePage {
         return this
     }
 
-    turn_on_and_enter_values_to_all_fields_on_modal(labelsArray, valuesArray, itemsOrCases = 'items') {
-        if (itemsOrCases === 'items') {
-            this.turnOnAllTogglesOnModal(5)
+    turn_on_and_enter_values_to_all_fields_on_Mass_Update_Items_modal(labelsArray, valuesArray, isCategoryEnabled = true) {
+        if (isCategoryEnabled) {
+            this.turnOnAllTogglesOnItemsUpdateModal(null, true)
         } else {
-            this.turnOnAllTogglesOnModal(
-                [3, 8]) // Open/Closed toggles and Status toggle
+            this.turnOnAllTogglesOnItemsUpdateModal(null, false)
         }
         this.enter_values_to_all_fields_on_Mass_Update_modal(labelsArray, valuesArray)
         return this
@@ -3534,7 +3570,6 @@ let basePage = class BasePage {
 
         return this;
     }
-
 
     enter_values_to_all_fields_on_modal(labelsArray, valuesArray) {
 

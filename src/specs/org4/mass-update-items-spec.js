@@ -38,12 +38,14 @@ for (let i = 0; i < 1; i++) {
         ]
 
         let optionalFieldsLabels = [
-            'Tags',
+            'Make',
+            'Model',
+            'Tags'
         ]
 
         context('1. All fields enabled in Org Settings', function () {
-            //TODO: Sumejja should check further
-            xit('1.1 All fields turned on and edited', function () {
+
+            it('1.1 All fields turned on and edited', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(user);
                 D.generateNewDataSet();
@@ -71,7 +73,7 @@ for (let i = 0; i < 1; i++) {
                     .select_checkbox_on_first_table_row()
                     .click_Actions_on_Search_Page()
                     .click_option_on_expanded_menu(C.dropdowns.itemActions.massUpdate)
-                    .turn_on_and_enter_values_to_all_fields_on_modal(allFieldsLabels, allValues)
+                    .turn_on_and_enter_values_to_all_fields_on_Mass_Update_Items_modal(allFieldsLabels, allValues)
                     .verify_text_above_modal_footer('Mass updating 1 item')
                     .click_Ok()
                     .verify_toast_message(C.toastMsgs.saved)
@@ -94,8 +96,7 @@ for (let i = 0; i < 1; i++) {
 
             });
 
-            //TODO: Sumejja should check further
-            xit('1.2 All fields turned on but value is edited on required fields only', function () {
+            it('1.2 All fields turned on but value is edited on required fields only', function () {
                 ui.app.log_title(this);
                 api.auth.get_tokens(user);
                 D.generateNewDataSet();
@@ -119,11 +120,11 @@ for (let i = 0; i < 1; i++) {
                     .click_Search()
                     .select_checkbox_on_first_table_row()
                     .click_Actions_on_Search_Page()
-                    .click_option_on_expanded_menu(C.dropdowns.itemActionsOnSearchResults.massUpdate)
+                    .click_Mass_Update()
                     .verify_Ok_button_is_disabled()
-                    .turn_on_all_toggles_on_modal(allFieldsLabels)
+                    .turnOnTogglesBasedOnFieldLabels(allFieldsLabels)
                     .verify_asterisk_is_shown_for_fields_on_modal(requiredFieldsLabels)
-                    .turn_off_all_toggles_on_modal(optionalFieldsLabels) // #19466 ⁃ Items - Uncategorized Issues (issue #4)
+                    .turnOffTogglesBasedOnFieldLabels(optionalFieldsLabels) // #19466 ⁃ Items - Uncategorized Issues (issue #4)
                     .enter_values_to_all_fields_on_modal(requiredFieldsLabels, requiredValues)
                     .verify_text_above_modal_footer('Mass updating 1 item')
                     .click_Ok()
@@ -141,7 +142,7 @@ for (let i = 0; i < 1; i++) {
                 ui.itemView.click_Edit()
                 ui.itemView.verify_edited_and_not_edited_values_on_Item_Edit_form(C.itemFields.massUpdateModalWhenAllTogglesAreOn, D.editedItem)
                     .open_last_history_record(0)
-                    .verify_red_highlighted_history_records(C.itemFields.massUpdateModalWhenAllTogglesAreOn)
+                    .verify_red_highlighted_history_records(requiredFieldsLabels)
                 //TODO: failing od this method below - we need to see what is the problem if we want to include this method also
                 // .verify_all_values_on_history(D.editedItem, D.newItem)
 

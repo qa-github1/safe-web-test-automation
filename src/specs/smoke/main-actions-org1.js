@@ -232,6 +232,7 @@ describe('Item', function () {
             D.newItem2 = Object.assign({}, D.newItem)
             D.newItem2.description = '2__ ' + D.newItem.description
             D.editedItem.additionalBarcodes = []
+            D.newItem1.barcodes = D.newItem2.barcodes = D.newItem1.additionalBarcodes = D.newItem2.additionalBarcodes = []
 
             api.items.add_new_item(true, null, 'item_1', D.newItem1)
             api.items.add_new_item(true, null, 'item_2', D.newItem2)
@@ -245,8 +246,7 @@ describe('Item', function () {
                 .select_checkbox_on_specific_table_row(2)
                 .click_Actions()
                 .click_option_on_expanded_menu(C.dropdowns.caseActions.massUpdate)
-                .turn_on_and_enter_values_to_all_fields_on_modal(C.itemFields.massUpdateModal, allValues)
-                // .verify_text_above_modal_footer('\n        Mass updating\n         2 \n        \n        cases\n    ')
+                .turn_on_and_enter_values_to_all_fields_on_Mass_Update_Items_modal(C.itemFields.massUpdateModal, allValues)
                 .click_Ok()
                 .verify_toast_message(C.toastMsgs.saved)
 
