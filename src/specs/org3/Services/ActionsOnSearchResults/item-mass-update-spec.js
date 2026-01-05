@@ -11,145 +11,143 @@ let startTime;
 
 
 for (let i = 0; i < 1; i++) {
-describe('Mass Update Items through Actions on Search Results', function () {
+    describe('Mass Update Items through Actions on Search Results', function () {
 
-    before(function () {
-        startTime = Date.now();
-    });
+        before(function () {
+            startTime = Date.now();
+        });
 
-    after(() => {
-        const endTime = Date.now();
-        const totalSeconds = ((endTime - startTime) / 1000).toFixed(2);
-        cy.log(`⏱ Total time for suite: ${totalSeconds} seconds`);
-    });
+        after(() => {
+            const endTime = Date.now();
+            const totalSeconds = ((endTime - startTime) / 1000).toFixed(2);
+            cy.log(`⏱ Total time for suite: ${totalSeconds} seconds`);
+        });
 
-    let allFieldsLabels = C.itemFields.massUpdateModal
+        let allFieldsLabels = C.itemFields.massUpdateModal
 
-    let requiredFieldsLabels = [
-        'Recovered At',
-        'Description',
-        'Recovery Date',
-        'Item Belongs to',
-        'Recovered By',
-        'Submitted By',
-        'Category',
-        'Custody Reason'
-    ]
+        let requiredFieldsLabels = [
+            'Recovered At',
+            'Description',
+            'Recovery Date',
+            'Item Belongs to',
+            'Recovered By',
+            'Submitted By',
+            'Category',
+            'Custody Reason'
+        ]
 
-    let optionalFieldsLabels = [
-        'Tags',
-    ]
+        let optionalFieldsLabels = [
+            'Tags',
+        ]
 
+        context('1. All fields enabled in Org Settings', function () {
+            it('1.1 All fields turned on and edited', function () {
+                ui.app.log_title(this);
+                api.auth.get_tokens(user);
+                D.generateNewDataSet();
 
-    context('1. All fields enabled in Org Settings', function () {
-        it('1.1 All fields turned on and edited', function () {
-            ui.app.log_title(this);
-            api.auth.get_tokens(user);
-            D.generateNewDataSet();
+                let allValues = [
+                    D.editedItem.description,
+                    D.editedItem.recoveryLocation,
+                    D.editedItem.recoveredBy,
+                    D.editedItem.submittedBy = 'Power User',
+                    D.editedItem.category,
+                    D.editedItem.custodyReason,
+                    D.editedItem.recoveryDate,
+                    D.editedItem.make,
+                    D.editedItem.model,
+                    D.editedItem.itemBelongsTo,
+                    D.editedItem.tags[0]
+                ]
 
-            let allValues = [
-                D.editedItem.description,
-                D.editedItem.recoveryLocation,
-                D.editedItem.recoveredBy,
-                D.editedItem.submittedBy = 'Power User',
-                D.editedItem.category,
-                D.editedItem.custodyReason,
-                D.editedItem.recoveryDate,
-                D.editedItem.make,
-                D.editedItem.model,
-                D.editedItem.itemBelongsTo,
-                D.editedItem.tags[0]
-            ]
+                api.org_settings.enable_all_Item_fields()
+                api.items.add_new_item(true, null, 'newItem1')
+                ui.menu.click_Search__Item()
+                ui.searchItem
+                    .select_Status('Checked In')
+                    .select_Office(S.selectedEnvironment.office_1.name)
+                    .enter_Description('contains', D.newItem.description)
+                    .click_Search()
+                    .click_Actions_On_Search_Results()
+                    .click_Mass_Update()
+                    .turn_on_and_enter_values_to_all_fields_on_Mass_Update_Items_modal(allFieldsLabels, allValues)
+                    .verify_text_above_modal_footer('Warning This action will mass update all items found by the current search, except: - Items shared among Organizations')
+                    .click_Ok()
+                    .verify_text_is_present_on_main_container('Actions on Search Results Jobs')
+                    .sort_by_descending_order('Start Date')
+                    .verify_content_of_first_row_in_results_table('Completed')
 
-            api.org_settings.enable_all_Item_fields()
-            api.items.add_new_item(true, null, 'newItem1')
-            ui.menu.click_Search__Item()
-            ui.searchItem
-                .select_Status('Checked In')
-                .select_Office(S.selectedEnvironment.office_1.name)
-                .enter_Description('contains', D.newItem.description)
-                .click_Search()
-                .click_Actions_On_Search_Results()
-                .click_Mass_Update()
-                .turn_on_and_enter_values_to_all_fields_on_Mass_Update_Items_modal(allFieldsLabels, allValues)
-                .verify_text_above_modal_footer('Warning This action will mass update all items found by the current search, except: - Items shared among Organizations')
-                .click_Ok()
-                .verify_text_is_present_on_main_container('Actions on Search Results Jobs')
-                .sort_by_descending_order('Start Date')
-                .verify_content_of_first_row_in_results_table('Completed')
-
-            cy.getLocalStorage('newItem1').then(item => {
-                ui.app.open_item_url(JSON.parse(item).id)
-                ui.itemView.select_tab(C.tabs.basicInfo)
-            })
-            D.editedItem.submittedBy = 'Power User'
+                cy.getLocalStorage('newItem1').then(item => {
+                    ui.app.open_item_url(JSON.parse(item).id)
+                    ui.itemView.select_tab(C.tabs.basicInfo)
+                })
+                D.editedItem.submittedBy = 'Power User'
                 // TODO: Please review if this is enough to verify only fields that are modified
-            ui.itemView.verify_edited_and_not_edited_values_on_Item_View_form(C.itemFields.massUpdateModal, D.editedItem)
-                .click_Edit()
-                .verify_edited_and_not_edited_values_on_Item_Edit_form(C.itemFields.massUpdateModal, D.editedItem)
-            .open_last_history_record(0)
-            .verify_red_highlighted_history_records(C.itemFields.massUpdateModal)
-            //TODO: Please review this method below if we want to  include an extra verification
-            // .verify_all_values_on_history(D.editedItem, D.newItem)
+                ui.itemView.verify_edited_and_not_edited_values_on_Item_View_form(C.itemFields.massUpdateModal, D.editedItem)
+                    .click_Edit()
+                    .verify_edited_and_not_edited_values_on_Item_Edit_form(C.itemFields.massUpdateModal, D.editedItem)
+                    .open_last_history_record(0)
+                    .verify_red_highlighted_history_records(C.itemFields.massUpdateModal)
+                //TODO: Please review this method below if we want to  include an extra verification
+                // .verify_all_values_on_history(D.editedItem, D.newItem)
 
-            api.auth.log_out(user)
+                api.auth.log_out(user)
 
-        });
+            });
 
-        it('1.2 All fields turned on but value is edited on required fields only', function () {
-            ui.app.log_title(this);
-            api.auth.get_tokens(user);
-            D.generateNewDataSet();
+            it('1.2 All fields turned on but value is edited on required fields only', function () {
+                ui.app.log_title(this);
+                api.auth.get_tokens(user);
+                D.generateNewDataSet();
 
-            let requiredValues = [
-                D.editedItem.recoveryLocation,
-                D.editedItem.description,
-                D.editedItem.recoveryDate,
-                D.editedItem.itemBelongsTo,
-                D.editedItem.recoveredBy,
-                D.editedItem.submittedBy = 'Power User',
-                D.editedItem.category,
-                D.editedItem.custodyReason,
-            ]
+                let requiredValues = [
+                    D.editedItem.recoveryLocation,
+                    D.editedItem.description,
+                    D.editedItem.recoveryDate,
+                    D.editedItem.itemBelongsTo,
+                    D.editedItem.recoveredBy,
+                    D.editedItem.submittedBy = 'Power User',
+                    D.editedItem.category,
+                    D.editedItem.custodyReason,
+                ]
 
-            api.org_settings.enable_all_Item_fields()
-            api.items.add_new_item(true, null, 'newItem1')
-            ui.menu.click_Search__Item()
-            ui.searchItem
-                .select_Status('Checked In')
-                .select_Office(S.selectedEnvironment.office_1.name)
-                .enter_Description('contains', D.newItem.description)
-                .click_Search()
-                .click_Actions_On_Search_Results()
-                .click_Mass_Update()
-                .verify_Ok_button_is_disabled()
-                .turnOnTogglesBasedOnFieldLabels(allFieldsLabels)
-                .verify_asterisk_is_shown_for_fields_on_modal(requiredFieldsLabels)
-                .turnOffTogglesBasedOnFieldLabels(optionalFieldsLabels) // #19466 ⁃ Items - Uncategorized Issues (issue #4)
-                .enter_values_to_all_fields_on_modal(requiredFieldsLabels, requiredValues)
-                 .verify_text_above_modal_footer('Warning This action will mass update all items found by the current search, except: - Items shared among Organizations')
-                 .click_Ok()
-                 .verify_text_is_present_on_main_container('Actions on Search Results Jobs')
-                 .sort_by_descending_order('Start Date')
-                 .verify_content_of_first_row_in_results_table('Completed')
+                api.org_settings.enable_all_Item_fields()
+                api.items.add_new_item(true, null, 'newItem1')
+                ui.menu.click_Search__Item()
+                ui.searchItem
+                    .select_Status('Checked In')
+                    .select_Office(S.selectedEnvironment.office_1.name)
+                    .enter_Description('contains', D.newItem.description)
+                    .click_Search()
+                    .click_Actions_On_Search_Results()
+                    .click_Mass_Update()
+                    .verify_Ok_button_is_disabled()
+                    .turnOnTogglesBasedOnFieldLabels(allFieldsLabels)
+                    .verify_asterisk_is_shown_for_fields_on_modal(requiredFieldsLabels)
+                    .turnOffTogglesBasedOnFieldLabels(optionalFieldsLabels) // #19466 ⁃ Items - Uncategorized Issues (issue #4)
+                    .enter_values_to_all_fields_on_modal(requiredFieldsLabels, requiredValues)
+                    .verify_text_above_modal_footer('Warning This action will mass update all items found by the current search, except: - Items shared among Organizations')
+                    .click_Ok()
+                    .verify_text_is_present_on_main_container('Actions on Search Results Jobs')
+                    .sort_by_descending_order('Start Date')
+                    .verify_content_of_first_row_in_results_table('Completed')
 
-            cy.getLocalStorage('newItem1').then(item => {
-                ui.app.open_item_url(JSON.parse(item).id)
-                ui.itemView.select_tab(C.tabs.basicInfo)
-            })
-            D.editedItem.make = ''
-            D.editedItem.model = ''
-            D.editedItem.submittedBy = 'Power User'
-            // TODO: Please review this part below - I verified only values that are changed through the mass update modal
-             ui.itemView.verify_edited_and_not_edited_values_on_Item_View_form(C.itemFields.massUpdateModalWhenAllTogglesAreOn, D.editedItem)
-                 ui.itemView.click_Edit()
-            ui.itemView.verify_edited_and_not_edited_values_on_Item_Edit_form(C.itemFields.massUpdateModalWhenAllTogglesAreOn, D.editedItem)
-             .open_last_history_record(0)
-             .verify_red_highlighted_history_records(C.itemFields.massUpdateModalWhenAllTogglesAreOn)
+                cy.getLocalStorage('newItem1').then(item => {
+                    ui.app.open_item_url(JSON.parse(item).id)
+                    ui.itemView.select_tab(C.tabs.basicInfo)
+                })
+                D.editedItem.make = ''
+                D.editedItem.model = ''
+                D.editedItem.submittedBy = 'Power User'
+                // TODO: Please review this part below - I verified only values that are changed through the mass update modal
+                ui.itemView.verify_edited_and_not_edited_values_on_Item_View_form(C.itemFields.massUpdateModalWhenAllTogglesAreOn, D.editedItem)
+                ui.itemView.click_Edit()
+                ui.itemView.verify_edited_and_not_edited_values_on_Item_Edit_form(C.itemFields.massUpdateModalWhenAllTogglesAreOn, D.editedItem)
+                    .open_last_history_record(0)
+                    .verify_red_highlighted_history_records(C.itemFields.massUpdateModalWhenAllTogglesAreOn)
                 //TODO: failing od this method below - we need to see what is the problem if we want to include this method also
-               // .verify_all_values_on_history(D.editedItem, D.newItem)
-
+                // .verify_all_values_on_history(D.editedItem, D.newItem)
+            });
         });
     });
-});
 }
