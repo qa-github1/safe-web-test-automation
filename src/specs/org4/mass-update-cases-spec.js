@@ -16,11 +16,6 @@ describe('Mass Update Cases', function () {
     });
 
     let allFieldsLabels = C.caseFields.massUpdateModal
-    let requiredFieldsLabels = [
-        'Offense Type',
-        'Case Officer(s)',
-        'Offense Location',
-    ]
     let multiSelectFieldsLabels = [
         'Case Officer(s)',
         'Tags',
@@ -102,15 +97,23 @@ describe('Mass Update Cases', function () {
                 .verify_edited_and_not_edited_values_on_Case_Edit_form(multiSelectFieldsLabels, D.editedCase, D.newCase, true)
         });
 
-        it.only('1.3 all fields turned on but value is edited on required fields only', function () {
+        it('1.3 all fields turned on but value is edited on required fields only', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(user);
             D.generateNewDataSet();
+
+            let requiredFieldsLabels = [
+                'Offense Type',
+                'Case Officer(s)',
+                'Offense Location',
+                'Offense Date',
+            ]
 
             let requiredValues = [
                 D.editedCase.offenseType,
                 D.editedCase.caseOfficerName,
                 D.editedCase.offenseLocation,
+                D.editedCase.offenseDate,
             ]
 
             api.org_settings.enable_all_Case_fields();
@@ -126,7 +129,10 @@ describe('Mass Update Cases', function () {
                 .click_Mass_Update()
                 .verify_Ok_button_is_disabled()
                 .turnOnTogglesBasedOnFieldLabels(requiredFieldsLabels)
-                .verify_asterisk_is_shown_for_fields_on_modal(requiredFieldsLabels)
+                .verify_asterisk_is_shown_for_fields_on_modal([
+                    'Offense Type',
+                    'Case Officer(s)',
+                    'Offense Location',])
                 .enter_values_to_all_fields_on_Mass_Update_modal(requiredFieldsLabels, requiredValues)
                 .click_Ok()
                 .verify_toast_message(C.toastMsgs.saved)
@@ -135,7 +141,6 @@ describe('Mass Update Cases', function () {
             D.newCase.offenseDescription = ''
             D.newCase.reviewDateNotes = ''
             D.newCase.offenseDate = helper.setDate(C.currentDateTimeFormat.dateOnly.editMode)
-            D.newCase.reviewDate = helper.setDate(C.currentDateTimeFormat.dateOnly.editMode)
             ui.caseView.verify_edited_and_not_edited_values_on_Case_Edit_form(requiredFieldsLabels, D.editedCase, D.newCase)
                 .quick_search_for_case(D.newCase.caseNumber + ' _2')
                 .click_Edit()
