@@ -3366,7 +3366,7 @@ let basePage = class BasePage {
                     this.pause(0.5)
                     this.wait_response_from_API_call("getUserInTypeahead", 200, null, 1500)
                     this.wait_response_from_API_call("getUserGroupInTypeahead", 200, null, 1500)
-                    cy.get('.ui-select-choices-row').contains(v).click();
+                    cy.get('.ui-select-choices-group').contains(v).click();
                 });
 
             } else if (['Recovered By', 'Submitted By'].some(v => label === v)) {
