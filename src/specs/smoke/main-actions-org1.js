@@ -14,6 +14,7 @@ before(function () {
     api.org_settings.enable_all_Item_fields();
     api.org_settings.enable_all_Person_fields();
     api.org_settings.update_org_settings(false, true);
+    api.org_settings.set_Org_Level_Case_Number_formatting(false, false, false, null)
     api.users.update_current_user_settings(orgAdmin.id, DF.dateTimeFormats.short, DF.dateFormats.shortDate)
 });
 
