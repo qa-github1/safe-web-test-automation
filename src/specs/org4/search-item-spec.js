@@ -38,8 +38,7 @@ describe('Search Item', function () {
     });
 
     context('S.I_2. Search by Item Description AND', function () {
-        //TODO: Sumejja should check further
-        xit('S.I_2.1 Created By', function () {
+        it('S.I_2.1 Created By', function () {
             ui.app.log_title(this);
             let itemDescription = D.newItem.description;
 

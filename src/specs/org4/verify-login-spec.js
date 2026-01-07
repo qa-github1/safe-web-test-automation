@@ -5,7 +5,7 @@ const ui = require('../../pages/ui-spec');
 const D = require("../../fixtures/data");
 
 describe('Login page', function () {
-    //TODO: Sumejja should check further
+    //TODO: Sumejja should check further to see should we use this blocked user or not
     xit('1.2 Validation messages', function () {
         ui.app.log_title(this);
 

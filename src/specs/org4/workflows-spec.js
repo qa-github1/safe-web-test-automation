@@ -60,7 +60,7 @@ describe('Workflows', function () {
            // ui.addTask.verify_email_content_(powerUser.email, C.tasks.emailTemplates.taskCreated, D.newTask, powerUser.name, 1, false)
         });
 
-        //TODO: Sumejja should check further
+        //TODO: Sumejja should check further - email doesn't arrive only in org#2
         xit('1.2 Email & Task  - when Case edited - matching records with "Offense Location equals ..." - 1 user group as email recipient', function () {
             ui.menu.click_Settings__Workflows();
             ui.workflows.click_(C.buttons.add)
@@ -84,7 +84,7 @@ describe('Workflows', function () {
             editedCase.caseNumber = D.editedCase.caseNumber
             api.org_settings.enable_all_Case_fields();
             api.cases.add_new_case()
-                .edit_newly_added_case();
+                .edit_newly_added_case(false);
             // ui.app.open_newly_created_case_via_direct_link()
             //     .select_tab('Tasks')
             //     .get_text_from_grid_and_save_in_local_storage('Task #', 'taskNumber', 'td')
@@ -120,7 +120,7 @@ describe('Workflows', function () {
             ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.caseCreated, D.newCase, null, 1, false)
           //  ui.addTask.verify_email_content_(powerUser.email, C.tasks.emailTemplates.taskCreated, D.newTask, powerUser.name, 1, false)
 
-            api.cases.edit_newly_added_case();
+            api.cases.edit_newly_added_case(false);
             // ui.app.reload_page()
             //     .select_tab('Tasks')
             //     .get_text_from_grid_and_save_in_local_storage('Task #', 'taskNumber', 'td')
@@ -129,7 +129,7 @@ describe('Workflows', function () {
         });
 
         //TODO: Sumejja should check further
-        xit('1.4 Email & Task - when Case field edited - matching records with "Cypress Case Form Number equals ..."', function () {
+        it.only('1.4 Email & Task - when Case field edited - matching records with "Cypress Case Form Number equals ..."', function () {
             ui.menu.click_Settings__Workflows();
             ui.workflows.click_(C.buttons.add)
                 .set_up_workflow(
@@ -242,8 +242,7 @@ describe('Workflows', function () {
             ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.itemEdited, D.editedItem)
         });
 
-        //TODO: Sumejja should check further
-        xit('2.3 Email notification - when Item created or edited - matching records with "Category not equals ..."', function () {
+        it('2.3 Email notification - when Item created or edited - matching records with "Category not equals ..."', function () {
 
             ui.menu.click_Settings__Workflows();
             ui.workflows.click_(C.buttons.add)
