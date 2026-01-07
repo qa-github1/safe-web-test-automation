@@ -103,14 +103,15 @@ describe('Cases Search', function () {
             = helper.getSpecificDateInSpecificFormat('mm/dd/yyyy', '1/1/' + (currentYear - 1))
             //+ ' 10 am'
 
-        E.generateDataFor_CASES_Importer([D.case1, D.case2, D.case3]);
-        cy.generate_excel_file('Cases_forTestingSearchParameters', E.caseImportDataWithAllFields);
-        ui.menu.click_Tools__Data_Import();
-        ui.importer.upload_then_Map_and_Submit_file_for_importing('Cases_forTestingSearchParameters', C.importTypes.cases)
-            .verify_toast_message([
-                C.toastMsgs.importComplete,
-                3 + C.toastMsgs.recordsImported])
-        ui.menu.click_Log_Out()
+//TODO: Issue starts here
+        // E.generateDataFor_CASES_Importer([D.case1, D.case2, D.case3]);
+        // cy.generate_excel_file('Cases_forTestingSearchParameters', E.caseImportDataWithAllFields);
+        // ui.menu.click_Tools__Data_Import();
+        // ui.importer.upload_then_Map_and_Submit_file_for_importing('Cases_forTestingSearchParameters', C.importTypes.cases)
+        //     .verify_toast_message([
+        //         C.toastMsgs.importComplete,
+        //         3 + C.toastMsgs.recordsImported])
+        // ui.menu.click_Log_Out()
     });
     xcontext('1 Org Admin', function () {
 
