@@ -22,7 +22,7 @@ describe('Dispo Auth', function () {
         cy.log(`⏱ Total time for suite: ${checkTestDuration(startTime, endTime)}`);
     });
 
-    it.only('Add Dispo Task with 11 1DA items and assign to Org Admin, ' +
+    it('Add Dispo Task with 11 1DA items and assign to Org Admin, ' +
         '--set different actions for item using all variations' +
         '--using Actions menu and grid, ' +
         '--check statuses and notes upon submission', function () {
@@ -352,7 +352,7 @@ xdescribe('Generating large number of release letters ', function () {
     }
 });
 
-describe.only('Add Dispo Task with 11 1DA items and assign to Org Admin, ' +
+describe('Add Dispo Task with 11 1DA items and assign to Org Admin, ' +
     '--set different actions for item using all variations' +
     '--using Actions menu and grid, ' +
     '--check statuses and notes upon submission', function () {
@@ -505,7 +505,7 @@ describe.only('Add Dispo Task with 11 1DA items and assign to Org Admin, ' +
 })
 
 
-describe.only('Add Dispo Task with 100 items and assign to Power User, ' +
+describe('Add Dispo Task with 100 items and assign to Power User, ' +
     '--initiate and complete 2nd and 3rd tier approval' +
     '--use Approve and Reject buttons from grid and Actions menu' +
     '--with and without Dispo Auth Service' +
@@ -607,7 +607,6 @@ describe.only('Add Dispo Task with 100 items and assign to Power User, ' +
         })
     });
 
-
     it('3.', function () {
         ui.taskView
             .open_newly_created_task_via_direct_link()
@@ -620,7 +619,6 @@ describe.only('Add Dispo Task with 100 items and assign to Power User, ' +
             .set_Action___Approve_for_Disposal([1, 52])
             .verify_Dispo_Auth_Job_Status('Complete')
     });
-
 
     it('4.', function () {
         ui.taskView
@@ -719,7 +717,7 @@ describe.only('Add Dispo Task with 100 items and assign to Power User, ' +
     it('10.', function () {
         api.auth.get_tokens_without_page_load(thirdTierApprover)
         ui.taskView
-            .open_task_url(taskId)
+            .open_newly_created_task_via_direct_link()
             .select_tab('Items')
             .set___Approve__from_Actions_menu([49, 58])
             .set___Approve__from_Actions_menu([60])
@@ -728,3 +726,11 @@ describe.only('Add Dispo Task with 100 items and assign to Power User, ' +
             .verify_text_is_present_on_main_container('Task was closed')
     });
 });
+
+// TODO: Sumejja will add more tests here
+describe('Resetting Dispo fields when item is added to a new Dispo task', function () {
+    it('', function () {
+
+    })
+
+})
