@@ -122,7 +122,7 @@ describe('Workflows', function () {
             ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.caseEdited, D.editedCase, null, 3, false)
         });
 
-        it('1.4 Email & Task - when Case field edited - matching records with "Cypress Case Form Number equals ..."', function () {
+        it.only('1.4 Email & Task - when Case field edited - matching records with "Cypress Case Form Number equals ..."', function () {
             ui.menu.click_Settings__Workflows();
             ui.workflows.click_(C.buttons.add)
                 .set_up_workflow(
@@ -191,7 +191,6 @@ describe('Workflows', function () {
         });
 
         it('2.1 Email notification - when Item created - all records ', function () {
-
             ui.menu.click_Settings__Workflows();
             ui.workflows.click_(C.buttons.add)
                 .set_up_workflow(
@@ -209,8 +208,7 @@ describe('Workflows', function () {
         });
 
         it('2.2 Email notification - when Item edited - matching records with "Description equals ..."', function () {
-          D.editedItem = D.getEditedItemData(D.newCase, null, null, D.randomNo);
-
+            D.editedItem = D.getEditedItemData(D.newCase, null, null, D.randomNo);
             ui.menu.click_Settings__Workflows();
             ui.workflows.click_(C.buttons.add)
                 .set_up_workflow(
@@ -234,7 +232,6 @@ describe('Workflows', function () {
         });
 
         it('2.3 Email notification - when Item created or edited - matching records with "Category not equals ..."', function () {
-
             ui.menu.click_Settings__Workflows();
             ui.workflows.click_(C.buttons.add)
                 .set_up_workflow(
@@ -263,7 +260,6 @@ describe('Workflows', function () {
         });
 
         it('2.4 Email notification - when Item field edited - matching records with "Cypress Item Form Number equals ..."', function () {
-
             ui.menu.click_Settings__Workflows();
             ui.workflows.click_(C.buttons.add)
                 .set_up_workflow(
@@ -289,9 +285,7 @@ describe('Workflows', function () {
         });
 
         it('2.5 Email notification - when Custom Item field edited - matching all records, filtered by Office', function () {
-
             D.editedItem = D.getEditedItemData(D.newCase)
-
             api.org_settings.enable_all_Item_fields();
             api.cases.add_new_case()
             api.items.add_new_item()

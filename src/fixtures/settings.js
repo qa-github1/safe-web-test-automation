@@ -4293,26 +4293,26 @@ S.customForms = {
 S.optionalCaseFormAndFieldName = {
     textbox: S.customForms.caseFormWithOptionalFields + " > Textbox",
     email: S.customForms.caseFormWithOptionalFields + " > Email",
-    number: S.customForms.caseFormWithOptionalFields + " > Number",
+    number: S.customForms.caseFormWithOptionalFields + " > Custom Number",
     password: S.customForms.caseFormWithOptionalFields + " > Password",
     textarea: S.customForms.caseFormWithOptionalFields + " > Textarea",
     checkbox: S.customForms.caseFormWithOptionalFields + " > Checkbox",
     radiobuttonList: S.customForms.caseFormWithOptionalFields + " > Radiobutton List",
     checkboxList: S.customForms.caseFormWithOptionalFields + " > Checkbox List",
     selectList: S.customForms.caseFormWithOptionalFields + " > Select List",
-    date: S.customForms.caseFormWithOptionalFields + " > Date",
+    date: S.customForms.caseFormWithOptionalFields + " > Custom Date",
 }
 S.optionalItemFormAndFieldName = {
     textbox: S.customForms.itemFormWithOptionalFields + " > Textbox",
     email: S.customForms.itemFormWithOptionalFields + " > Email",
-    number: S.customForms.itemFormWithOptionalFields + " > Number",
+    number: S.customForms.itemFormWithOptionalFields + " > Custom Number",
     password: S.customForms.itemFormWithOptionalFields + " > Password",
     textarea: S.customForms.itemFormWithOptionalFields + " > Textarea",
     checkbox: S.customForms.itemFormWithOptionalFields + " > Checkbox",
     radiobuttonList: S.customForms.itemFormWithOptionalFields + " > Radiobutton List",
     checkboxList: S.customForms.itemFormWithOptionalFields + " > Checkbox List",
     selectList: S.customForms.itemFormWithOptionalFields + " > Select List",
-    date: S.customForms.itemFormWithOptionalFields + " > Date",
+    date: S.customForms.itemFormWithOptionalFields + " > Custom Date",
 }
 S.colors = {
     redBorder: "rgb(231,24,45)"

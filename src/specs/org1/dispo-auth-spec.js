@@ -702,92 +702,91 @@ for (let i = 0; i < 1; i++) {
     });
 
 
-    describe('Resetting Dispo fields when item is added to a new Dispo task', function () {
+    describe.only('Resetting Dispo fields when item is added to a new Dispo task', function () {
         it('', function () {
 
+            api.auth.get_tokens(orgAdmin)
+            api.org_settings.update_dispo_config_for_item_catagories()
+            D.generateNewDataSet()
+            let selectedTemplate = S.selectedEnvironment.taskTemplates.dispoAuth;
+            D.newItem.category = 'Accessory' // 1DA item
+            D.newItem.categoryId = 138 // 1DA item
+            D.newTask = Object.assign(D.newTask, selectedTemplate);
+            D.newTask.assignedUserIds = [orgAdmin.id];
+            api.cases.add_new_case()
+            api.items.add_new_item(true)
+            api.tasks.add_new_task(D.newTask, 1)
+
+
+            // Rule 1.1 ---> item just added to Active Dispo task - NO Dispo Action selected for the item  --> adding item to new Dispo Task
+            ui.menu.click_Search__Item()
+            ui.searchItem.run_search_by_Item_Description(D.newItem.description)
+                .select_checkbox_on_first_table_row()
+                .click_Actions()
+                .click_option_on_expanded_menu('Add To Task')
+                .click_button('Create')
+            ui.addTask.select_template('Disposition Authorization')
+                .verify_text_is_present_on_main_container('Items described below cannot be added to the Disposition Authorization task so the system will auto-exclude them upon saving:\n' + '----> Items that are currently linked to another active Disposition Authorization task')
+                .click_Save_()
+                .verify_toast_message(C.toastMsgs.saved)
+                .verify_content_of_first_row_in_results_table('There aren\'t any linked objects')
+
+            // check Item Dispose action is NOT available for the user
+            api.org_settings.set_override_disposal_release_authorization([], [])
+            ui.app.open_newly_created_task_via_direct_link()
+            ui.taskView.select_tab('Items')
+                .select_checkbox_on_first_table_row_on_active_tab()
+                .click_Actions()
+                .verify_enabled_and_disabled_options_under_Actions_dropdown(['Disposition Authorization Action'], ['Dispose Item'])
+
+            // check Item Dispose action IS available for the user
+            api.org_settings.set_override_disposal_release_authorization([orgAdmin.id], [S.selectedEnvironment.admin_userGroup.id])
+            ui.taskView.reload_page()
+                .select_tab('Items')
+                .select_checkbox_on_first_table_row_on_active_tab()
+                .click_Actions()
+                .perform_Item_Disposal_transaction(orgAdmin, C.disposalMethods.auctioned, 'test', false, false, false, false)
+                .select_tab('Basic Info')
+                .click_button('Close task')
+                .click_button_on_sweet_alert('Yes') //TODO This should be reported as bug, since we don't need this alert here
+                .click_button_on_sweet_alert('Yes') // this is second alert that we should have as confirmation for closing the task
+                .verify_text_is_present_on_main_container('Filter Tasks By:')
+                .select_filter_by_Closed_status()
+                .verify_content_of_first_row_in_results_table(D.newItem.description)
+
+            //Rule 1.2 ----> item added to Active Dispo task and DISPOSED- NO Dispo Action selected for the item  --> adding item to new Dispo Task
+            ui.app.open_newly_created_case_via_direct_link()
+                .select_tab('Items')
+                .select_checkbox_on_first_table_row()
+                .click_Actions()
+                .click_option_on_expanded_menu('Add To Task')
+                .click_button('Create')
+            ui.addTask.select_template('Disposition Authorization')
+                .verify_text_is_present_on_main_container('Items described below cannot be added to the Disposition Authorization task so the system will auto-exclude them upon saving:----> Items in \'Disposed\' Status')
+                .click_Save_()
+                .verify_toast_message(C.toastMsgs.saved)
+                .verify_content_of_first_row_in_results_table('There aren\'t any linked objects')
+
+
+            // item just added to Active Dispo task - Dispo Action selected for the item  --> adding item to new Dispo Task
+            // ui.app.open_newly_created_task_via_direct_link()
+            // ui.taskView.select_tab('Items')
+            //     .set_Action___Approve_for_Disposal_from_grid(1)
+            //     .open_newly_created_case_via_direct_link()
+            //     .select_tab('Items')
+            //     .select_checkbox_on_first_table_row()
+            //     .click_Actions()
+            //     .click_option_on_expanded_menu('Add To Task')
+            //     .click_button('Create')
+            // ui.addTask.select_template('Disposition Authorization')
+            //     .verify_text_is_present_on_main_container('Items described below cannot be added to the Disposition Authorization task so the system will auto-exclude them upon saving:\n' +
+            //         '----> Items that are currently linked to another active Disposition Authorization task')
+            //     .click_Save_()
+            //     .click_button_on_sweet_alert('Yes') //TODO This should be reported as bug, since we don't need this alert here
+            //     .verify_toast_message(C.toastMsgs.saved)
+
+
+            // item already added to Active Dispo task without 'Dispo Action' selected --> adding that to new Dispo Task
         })
-
-        api.auth.get_tokens(orgAdmin)
-        api.org_settings.update_dispo_config_for_item_catagories()
-        D.generateNewDataSet()
-        let selectedTemplate = S.selectedEnvironment.taskTemplates.dispoAuth;
-        D.newItem.category = 'Accessory' // 1DA item
-        D.newItem.categoryId = 138 // 1DA item
-        D.newTask = Object.assign(D.newTask, selectedTemplate);
-        D.newTask.assignedUserIds = [orgAdmin.id];
-        api.cases.add_new_case()
-        api.items.add_new_item(true)
-        api.tasks.add_new_task(D.newTask, 1)
-
-
-        // Rule 1.1 ---> item just added to Active Dispo task - NO Dispo Action selected for the item  --> adding item to new Dispo Task
-        ui.menu.click_Search__Item()
-        ui.searchItem.run_search_by_Item_Description(D.newItem.description)
-            .select_checkbox_on_first_table_row()
-            .click_Actions()
-            .click_option_on_expanded_menu('Add To Task')
-            .click_button('Create')
-        ui.addTask.select_template('Disposition Authorization')
-            .verify_text_is_present_on_main_container('Items described below cannot be added to the Disposition Authorization task so the system will auto-exclude them upon saving:\n' + '----> Items that are currently linked to another active Disposition Authorization task')
-            .click_Save_()
-            .verify_toast_message(C.toastMsgs.saved)
-            .verify_content_of_first_row_in_results_table('There aren\'t any linked objects')
-
-        // check Item Dispose action is NOT available for the user
-        api.org_settings.set_override_disposal_release_authorization([], [])
-        ui.app.open_newly_created_task_via_direct_link()
-        ui.taskView.select_tab('Items')
-            .select_checkbox_on_first_table_row_on_active_tab()
-            .click_Actions()
-            .verify_enabled_and_disabled_options_under_Actions_dropdown(['Disposition Authorization Action'], ['Dispose Item'])
-
-        // check Item Dispose action IS available for the user
-        api.org_settings.set_override_disposal_release_authorization([orgAdmin.id], [S.selectedEnvironment.admin_userGroup.id])
-        ui.taskView.reload_page()
-            .select_tab('Items')
-            .select_checkbox_on_first_table_row_on_active_tab()
-            .click_Actions()
-            .perform_Item_Disposal_transaction(orgAdmin, C.disposalMethods.auctioned, 'test', false, false, false, false)
-            .select_tab('Basic Info')
-            .click_button('Close task')
-            .click_button_on_sweet_alert('Yes') //TODO This should be reported as bug, since we don't need this alert here
-            .click_button_on_sweet_alert('Yes') // this is second alert that we should have as confirmation for closing the task
-            .verify_text_is_present_on_main_container('Filter Tasks By:')
-            .select_filter_by_Closed_status()
-            .verify_content_of_first_row_in_results_table(D.newItem.description)
-
-        //Rule 1.2 ----> item added to Active Dispo task and DISPOSED- NO Dispo Action selected for the item  --> adding item to new Dispo Task
-        ui.app.open_newly_created_case_via_direct_link()
-            .select_tab('Items')
-            .select_checkbox_on_first_table_row()
-            .click_Actions()
-            .click_option_on_expanded_menu('Add To Task')
-            .click_button('Create')
-        ui.addTask.select_template('Disposition Authorization')
-            .verify_text_is_present_on_main_container('Items described below cannot be added to the Disposition Authorization task so the system will auto-exclude them upon saving:----> Items in \'Disposed\' Status')
-            .click_Save_()
-            .verify_toast_message(C.toastMsgs.saved)
-            .verify_content_of_first_row_in_results_table('There aren\'t any linked objects')
-
-
-        // item just added to Active Dispo task - Dispo Action selected for the item  --> adding item to new Dispo Task
-        // ui.app.open_newly_created_task_via_direct_link()
-        // ui.taskView.select_tab('Items')
-        //     .set_Action___Approve_for_Disposal_from_grid(1)
-        //     .open_newly_created_case_via_direct_link()
-        //     .select_tab('Items')
-        //     .select_checkbox_on_first_table_row()
-        //     .click_Actions()
-        //     .click_option_on_expanded_menu('Add To Task')
-        //     .click_button('Create')
-        // ui.addTask.select_template('Disposition Authorization')
-        //     .verify_text_is_present_on_main_container('Items described below cannot be added to the Disposition Authorization task so the system will auto-exclude them upon saving:\n' +
-        //         '----> Items that are currently linked to another active Disposition Authorization task')
-        //     .click_Save_()
-        //     .click_button_on_sweet_alert('Yes') //TODO This should be reported as bug, since we don't need this alert here
-        //     .verify_toast_message(C.toastMsgs.saved)
-
-
-        // item already added to Active Dispo task without 'Dispo Action' selected --> adding that to new Dispo Task
     })
 }
