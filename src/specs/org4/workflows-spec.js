@@ -57,7 +57,6 @@ describe('Workflows', function () {
             ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.caseCreated, D.newCase, null, 1, false)
         });
 
-
         it('1.2 Email & Task  - when Case edited - matching records with "Offense Location equals ..." - 1 user group as email recipient', function () {
             ui.menu.click_Settings__Workflows();
             ui.workflows.click_(C.buttons.add)
@@ -152,7 +151,6 @@ describe('Workflows', function () {
             ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.caseFieldEdited, D.editedCase, C.caseFields.caseOfficers, 1, false)
         });
 
-
         it('1.5 Email & Task - when Custom Case field edited - matching all records, filtered by Office', function () {
             ui.menu.click_Settings__Workflows();
             ui.workflows.click_(C.buttons.add)
@@ -160,15 +158,13 @@ describe('Workflows', function () {
                     'workflow' + D.randomNo,
                     C.workflows.types.cases,
                     powerUser.name,
-                    ['Email',
-                        'Create new Task'
-                    ],
+                    ['Email', 'Create new Task'],
                     C.workflows.executeWhen.customFieldEdited,
-                    undefined,
                     C.workflows.whichRecords.matchingCriteriaCustomField,
-                    S.selectedEnvironment.office_1.name)
+                    S.optionalCaseFormAndFieldName.number,
+                    S.selectedEnvironment.office_1.orgAndOfficeName)
                 .set_matching_criteria_custom_field(
-                    S.customForms.caseFormWithOptionalFields + ` > Textbox`,
+                    S.optionalCaseFormAndFieldName.textbox,
                     C.workflows.operators.equals,
                     D.editedCustomFormData.custom_textbox)
                 .click_Save();
@@ -186,7 +182,6 @@ describe('Workflows', function () {
             ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.caseCustomFieldEdited, D.editedCase, S.optionalCaseFormAndFieldName.number);
         });
     });
-
 
     context('2. Item Workflows - all item fields enabled in Org Settings', function () {
 
@@ -214,8 +209,7 @@ describe('Workflows', function () {
         });
 
         it('2.2 Email notification - when Item edited - matching records with "Description equals ..."', function () {
-            let randomNo = getRandomNo();
-            D.editedItem = D.getEditedItemData(D.newCase, null, null, randomNo);
+          D.editedItem = D.getEditedItemData(D.newCase, null, null, D.randomNo);
 
             ui.menu.click_Settings__Workflows();
             ui.workflows.click_(C.buttons.add)
@@ -229,14 +223,12 @@ describe('Workflows', function () {
             ui.workflows.set_matching_criteria(
                 C.itemFields.description,
                 C.workflows.operators.equals,
-                'desc_edited' + randomNo)
+                'desc_edited' + D.randomNo)
                 .click_Save();
-
-            //D.editedItem = D.getEditedItemData(D.newCase);
             api.org_settings.enable_all_Item_fields();
             api.cases.add_new_case()
             api.items.add_new_item()
-            api.items.edit_newly_added_item(false, randomNo);
+            api.items.edit_newly_added_item(false, D.randomNo);
 
             ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.itemEdited, D.editedItem)
         });
@@ -270,8 +262,7 @@ describe('Workflows', function () {
             ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.itemEdited, D.editedItem)
         });
 
-        //TODO: Sumejja should check further
-        xit('2.4 Email notification - when Item field edited - matching records with "Cypress Item Form Number equals ..."', function () {
+        it('2.4 Email notification - when Item field edited - matching records with "Cypress Item Form Number equals ..."', function () {
 
             ui.menu.click_Settings__Workflows();
             ui.workflows.click_(C.buttons.add)
@@ -284,7 +275,7 @@ describe('Workflows', function () {
                     C.workflows.whichRecords.matchingCriteriaCustomField,
                     C.itemFields.serialNumber)
                 .set_matching_criteria_custom_field(
-                    C.itemCustomFields.cypressItemForm_Textbox,
+                    S.optionalItemFormAndFieldName.textbox,
                     C.workflows.operators.equals,
                     D.editedItem.custom_textbox)
                 .click_Save();
@@ -297,8 +288,7 @@ describe('Workflows', function () {
             ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.itemFieldEdited, D.editedItem, C.itemFields.serialNumber);
         });
 
-        //TODO: Sumejja should check further
-        xit('2.5 Email notification - when Custom Item field edited - matching all records, filtered by Office', function () {
+        it('2.5 Email notification - when Custom Item field edited - matching all records, filtered by Office', function () {
 
             D.editedItem = D.getEditedItemData(D.newCase)
 
@@ -316,12 +306,12 @@ describe('Workflows', function () {
                     ['Email'],
                     C.workflows.executeWhen.customFieldEdited,
                     undefined,
-                    C.itemCustomFields.cypressItemForm_Textbox,
+                    S.optionalItemFormAndFieldName.textbox,
                     S.selectedEnvironment.office_1.name)
                 .click_Save();
 
             api.items.edit_newly_added_item(true);
-            ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.itemCustomFieldEdited, D.editedItem, C.itemCustomFields.cypressItemForm_Textbox);
+            ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.itemCustomFieldEdited, D.editedItem, S.optionalItemFormAndFieldName.textbox);
         });
     });
 });

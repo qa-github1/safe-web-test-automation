@@ -4278,7 +4278,6 @@ S.chainOfCustody = {
 S.newCaseId = null;
 S.oldClosedCase = S.selectedEnvironment.oldClosedCase;
 S.recentCase = S.selectedEnvironment.recentCase;
-
 S.customForms = {
     casesFormWithRequiredFields: 'Required fields - Cypress CASE Form - Org#' + S.orgNum,
     caseFormWithOptionalFields: 'Optional fields - Cypress CASE Form - Org#' + S.orgNum,
@@ -4291,36 +4290,33 @@ S.customForms = {
     // tasksFormWithRequiredFields: 'Cypress Task Form -- required fields',
     // tasksFormWithOptionalFields: 'Cypress Task Form -- optional fields'
 }
-
 S.optionalCaseFormAndFieldName = {
-    textbox: "Optional fields - Cypress Case Form > Textbox",
-    email: "Optional fields - Cypress Case Form > Email",
-    number: "Optional fields - Cypress Case Form > Number",
-    password: "Optional fields - Cypress Case Form > Password",
-    textarea: "Optional fields - Cypress Case Form > Textarea",
-    checkbox: "Optional fields - Cypress Case Form > Checkbox",
-    radiobuttonList: "Optional fields - Cypress Case Form > Radiobutton List",
-    checkboxList: "Optional fields - Cypress Case Form > Checkbox List",
-    selectList: "Optional fields - Cypress Case Form > Select List",
-    date: "Optional fields - Cypress Case Form > Date",
+    textbox: S.customForms.caseFormWithOptionalFields + " > Textbox",
+    email: S.customForms.caseFormWithOptionalFields + " > Email",
+    number: S.customForms.caseFormWithOptionalFields + " > Number",
+    password: S.customForms.caseFormWithOptionalFields + " > Password",
+    textarea: S.customForms.caseFormWithOptionalFields + " > Textarea",
+    checkbox: S.customForms.caseFormWithOptionalFields + " > Checkbox",
+    radiobuttonList: S.customForms.caseFormWithOptionalFields + " > Radiobutton List",
+    checkboxList: S.customForms.caseFormWithOptionalFields + " > Checkbox List",
+    selectList: S.customForms.caseFormWithOptionalFields + " > Select List",
+    date: S.customForms.caseFormWithOptionalFields + " > Date",
 }
-
 S.optionalItemFormAndFieldName = {
-    textbox: "Optional fields - Cypress Items Form - Org#2 > Textbox",
-    email: "Cypress Item Form > Email",
-    number: "Cypress Item Form > Number",
-    password: "Cypress Item Form > Password",
-    textarea: "Cypress Item Form > Textarea",
-    checkbox: "Cypress Item Form > Checkbox",
-    radiobuttonList: "Cypress Item Form > Radiobutton List",
-    checkboxList: "Cypress Item Form > Checkbox List",
-    selectList: "Cypress Item Form > Select List",
-    date: "Cypress Item Form > Date",
-},
-
-    S.colors = {
-        redBorder: "rgb(231,24,45)"
-    };
+    textbox: S.customForms.itemFormWithOptionalFields + " > Textbox",
+    email: S.customForms.itemFormWithOptionalFields + " > Email",
+    number: S.customForms.itemFormWithOptionalFields + " > Number",
+    password: S.customForms.itemFormWithOptionalFields + " > Password",
+    textarea: S.customForms.itemFormWithOptionalFields + " > Textarea",
+    checkbox: S.customForms.itemFormWithOptionalFields + " > Checkbox",
+    radiobuttonList: S.customForms.itemFormWithOptionalFields + " > Radiobutton List",
+    checkboxList: S.customForms.itemFormWithOptionalFields + " > Checkbox List",
+    selectList: S.customForms.itemFormWithOptionalFields + " > Select List",
+    date: S.customForms.itemFormWithOptionalFields + " > Date",
+}
+S.colors = {
+    redBorder: "rgb(231,24,45)"
+};
 
 S.gmailAccount = {
     email: 'qa@trackerproducts.com',
