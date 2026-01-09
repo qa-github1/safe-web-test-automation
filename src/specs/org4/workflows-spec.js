@@ -3,10 +3,6 @@ const D = require('../../fixtures/data');
 const C = require('../../fixtures/constants');
 const api = require('../../api-utils/api-spec');
 const ui = require('../../pages/ui-spec');
-const {randomNo, getRandomNo} = require('/src/support/e2e-helper');
-
-
-let orgAdmin = S.userAccounts.orgAdmin
 let powerUser = S.userAccounts.powerUser
 
 describe('Workflows', function () {
@@ -16,7 +12,7 @@ describe('Workflows', function () {
         api.org_settings.update_org_settings_by_specifying_property_and_value(
             'tasksSettingsConfiguration',
             {
-                moreDetailsInEmails : true,
+                moreDetailsInEmails: true,
                 sendEmailNotifications: true
             }
         )
@@ -40,6 +36,8 @@ describe('Workflows', function () {
         });
 
         it('1.1 Email & Task - when Case created - all records - 1 user as email recipient', function () {
+            api.org_settings.update_org_settings_by_specifying_property_and_value('tasksSettingsConfiguration',
+                {id: S.selectedEnvironment.orgSettings.id, moreDetailsInEmails: false, sendEmailNotifications: false})
             ui.menu.click_Settings__Workflows();
             ui.workflows.click_(C.buttons.add)
                 .set_up_workflow(
@@ -47,21 +45,20 @@ describe('Workflows', function () {
                     C.workflows.types.cases,
                     powerUser.name,
                     ['Email',
-                        //'Create new Task'
-                    ],
+                        'Create new Task'],
                     C.workflows.executeWhen.created)
                 .click_Save()
 
             api.cases.add_new_case();
-            // ui.app.open_newly_created_case_via_direct_link()
-            //     .select_tab('Tasks')
-            //     .get_text_from_grid_and_save_in_local_storage('Task #', 'taskNumber', 'td')
+            ui.app.open_newly_created_case_via_direct_link()
+                .select_tab('Tasks')
+                .click_button('Details')
+                .verify_text_is_present_on_main_container("Task created by workflow " + 'workflow' + D.randomNo)
             ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.caseCreated, D.newCase, null, 1, false)
-           // ui.addTask.verify_email_content_(powerUser.email, C.tasks.emailTemplates.taskCreated, D.newTask, powerUser.name, 1, false)
         });
 
-        //TODO: Sumejja should check further - email doesn't arrive only in org#2
-        xit('1.2 Email & Task  - when Case edited - matching records with "Offense Location equals ..." - 1 user group as email recipient', function () {
+
+        it('1.2 Email & Task  - when Case edited - matching records with "Offense Location equals ..." - 1 user group as email recipient', function () {
             ui.menu.click_Settings__Workflows();
             ui.workflows.click_(C.buttons.add)
                 .set_up_workflow(
@@ -69,8 +66,7 @@ describe('Workflows', function () {
                     C.workflows.types.cases,
                     powerUser.name,
                     ['Email',
-                        //'Create new Task'
-                    ],
+                        'Create new Task'],
                     C.workflows.executeWhen.edited,
                     C.workflows.whichRecords.matchingCriteria)
                 .set_matching_criteria(
@@ -85,15 +81,14 @@ describe('Workflows', function () {
             api.org_settings.enable_all_Case_fields();
             api.cases.add_new_case()
                 .edit_newly_added_case(false);
-            // ui.app.open_newly_created_case_via_direct_link()
-            //     .select_tab('Tasks')
-            //     .get_text_from_grid_and_save_in_local_storage('Task #', 'taskNumber', 'td')
+            ui.app.open_newly_created_case_via_direct_link()
+                .select_tab('Tasks')
+                .click_button('Details')
+                .verify_text_is_present_on_main_container("Task created by workflow " + 'workflow' + D.randomNo)
             ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.caseEdited, D.editedCase, null, 1, false)
-           // ui.addTask.verify_email_content_(powerUser.email, C.tasks.emailTemplates.taskCreated, D.newTask, powerUser.name, 1, false)
         });
 
-        //TODO: Sumejja should check further
-        xit('1.3 Email & Task - when Case created or edited - matching records with "Offense Type not equals ..."', function () {
+        it('1.3 Email & Task - when Case created or edited - matching records with "Offense Type not equals ..."', function () {
             ui.menu.click_Settings__Workflows();
             ui.workflows.click_(C.buttons.add)
                 .set_up_workflow(
@@ -101,8 +96,7 @@ describe('Workflows', function () {
                     C.workflows.types.cases,
                     powerUser.name,
                     ['Email',
-                      //  'Create new Task'
-                    ],
+                        'Create new Task'],
                     C.workflows.executeWhen.createdOrEdited,
                     C.workflows.whichRecords.matchingCriteria)
                 .set_matching_criteria(
@@ -114,22 +108,22 @@ describe('Workflows', function () {
 
             api.org_settings.enable_all_Case_fields();
             api.cases.add_new_case();
-            // ui.app.open_newly_created_case_via_direct_link()
-            //     .select_tab('Tasks')
-            //     .get_text_from_grid_and_save_in_local_storage('Task #', 'taskNumber', 'td')
+            ui.app.open_newly_created_case_via_direct_link()
+                .select_tab('Tasks')
+                .click_button('Details')
+                .verify_text_is_present_on_main_container("Task created by workflow " + 'workflow' + D.randomNo)
             ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.caseCreated, D.newCase, null, 1, false)
-          //  ui.addTask.verify_email_content_(powerUser.email, C.tasks.emailTemplates.taskCreated, D.newTask, powerUser.name, 1, false)
 
             api.cases.edit_newly_added_case(false);
-            // ui.app.reload_page()
-            //     .select_tab('Tasks')
-            //     .get_text_from_grid_and_save_in_local_storage('Task #', 'taskNumber', 'td')
+            ui.app.open_newly_created_case_via_direct_link()
+                .select_tab('Tasks')
+                .sort_by_descending_order('Creation Date')
+                .click_button('Details')
+                .verify_text_is_present_on_main_container("Task created by workflow " + 'workflow' + D.randomNo,)
             ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.caseEdited, D.editedCase, null, 3, false)
-         //   ui.addTask.verify_email_content_(powerUser.email, C.tasks.emailTemplates.taskCreated, D.newTask, powerUser.name, 3, false)
         });
 
-        //TODO: Sumejja should check further
-        it.only('1.4 Email & Task - when Case field edited - matching records with "Cypress Case Form Number equals ..."', function () {
+        it('1.4 Email & Task - when Case field edited - matching records with "Cypress Case Form Number equals ..."', function () {
             ui.menu.click_Settings__Workflows();
             ui.workflows.click_(C.buttons.add)
                 .set_up_workflow(
@@ -137,32 +131,28 @@ describe('Workflows', function () {
                     C.workflows.types.cases,
                     powerUser.name,
                     ['Email',
-                      //  'Create new Task'
-                    ],
+                        'Create new Task'],
                     C.workflows.executeWhen.fieldEdited,
                     C.workflows.whichRecords.matchingCriteriaCustomField,
                     C.caseFields.caseOfficers)
                 .set_matching_criteria_custom_field(
-                    C.caseCustomFields.cypressCaseForm_Textbox,
+                    S.optionalCaseFormAndFieldName.textbox,
                     C.workflows.operators.equals,
-                    D.editedCase.custom_textbox)
+                    D.editedCustomFormData.custom_textbox)
                 .click_Save();
 
             D.editedCase = D.getEditedCaseData(D.newCase.caseNumber)
             api.org_settings.enable_all_Case_fields();
             api.cases.add_new_case()
                 .edit_newly_added_case(true);
-            // ui.app.open_newly_created_case_via_direct_link()
-            // ui.app.open_newly_created_case_via_direct_link()
-            //     .reload_page()
-            //     .select_tab('Tasks')
-            //     .get_text_from_grid_and_save_in_local_storage('Task #', 'taskNumber', 'td')
+            ui.app.open_newly_created_case_via_direct_link()
+                .select_tab('Tasks')
+                .click_button('Details')
+                .verify_text_is_present_on_main_container("Task created by workflow " + 'workflow' + D.randomNo)
             ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.caseFieldEdited, D.editedCase, C.caseFields.caseOfficers, 1, false)
+        });
 
-      });
-
-        //TODO: Sumejja should check further
-        xit('1.5 Email & Task - when Custom Case field edited - matching all records, filtered by Office', function () {
+        it('1.5 Email & Task - when Custom Case field edited - matching all records, filtered by Office', function () {
             ui.menu.click_Settings__Workflows();
             ui.workflows.click_(C.buttons.add)
                 .set_up_workflow(
@@ -170,22 +160,28 @@ describe('Workflows', function () {
                     C.workflows.types.cases,
                     powerUser.name,
                     ['Email',
-                        //  'Create new Task'
+                          'Create new Task'
                     ],
                     C.workflows.executeWhen.customFieldEdited,
                     undefined,
-                    C.caseCustomFields.cypressCaseForm_Number,
+                    C.workflows.whichRecords.matchingCriteriaCustomField,
                     S.selectedEnvironment.office_1.name)
+                .set_matching_criteria_custom_field(
+                    S.customForms.caseFormWithOptionalFields + ` > Textbox`,
+                    C.workflows.operators.equals,
+                    D.editedCustomFormData.custom_textbox)
                 .click_Save();
 
             D.editedCase = D.getEditedCaseData(D.newCase.caseNumber)
             api.org_settings.enable_all_Case_fields();
             api.cases.add_new_case()
                 .edit_newly_added_case(true);
-            ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.caseCustomFieldEdited, D.editedCase, C.caseCustomFields.cypressCaseForm_Number);
-         //   ui.addTask.verify_email_content_(powerUser.email, C.tasks.emailTemplates.taskCreated, D.newTask, powerUser.name, 3, false)
+            ui.app.open_newly_created_case_via_direct_link()
+                .select_tab('Tasks')
+                .click_button('Details')
+                .verify_text_is_present_on_main_container("Task created by workflow " + 'workflow' + D.randomNo,)
+            ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.caseCustomFieldEdited, D.editedCase, S.optionalCaseFormAndFieldName.number);
         });
-
     });
 
 
@@ -227,10 +223,10 @@ describe('Workflows', function () {
                     ['Email'],
                     C.workflows.executeWhen.edited,
                     C.workflows.whichRecords.matchingCriteria)
-                ui.workflows.set_matching_criteria(
-                    C.itemFields.description,
-                    C.workflows.operators.equals,
-                    'desc_edited' + randomNo)
+            ui.workflows.set_matching_criteria(
+                C.itemFields.description,
+                C.workflows.operators.equals,
+                'desc_edited' + randomNo)
                 .click_Save();
 
             //D.editedItem = D.getEditedItemData(D.newCase);
@@ -321,7 +317,7 @@ describe('Workflows', function () {
                     S.selectedEnvironment.office_1.name)
                 .click_Save();
 
-             api.items.edit_newly_added_item(true);
+            api.items.edit_newly_added_item(true);
             ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.itemCustomFieldEdited, D.editedItem, C.itemCustomFields.cypressItemForm_Textbox);
         });
     });

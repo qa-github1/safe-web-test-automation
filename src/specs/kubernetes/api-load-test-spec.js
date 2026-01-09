@@ -1134,13 +1134,13 @@ describe('Services', function () {
                 api.locations.get_and_save_any_location_data_to_local_storage(newParentLocNameOrId)
             }
 
-            numberOfRequests = 4
-            let numberOfItemsInBigLocs = 300
+            numberOfRequests = 26
+            let numberOfItemsInBigLocs = 80
 
          //   add X number of items to specific locations on root level
             currentParentLocName = null
-              for (let i = 0; i < (numberOfRequests+1); i++) {
-                  currentLocName = '____SMJ_BIG_CONT_' + i
+              for (let i = 1; i < (numberOfRequests+1); i++) {
+                  currentLocName = '____CONT_' + i
                   fetch_location_IDs(currentLocName, currentParentLocName, newParentLocNameOrId)
                   for (let j = 0; j < numberOfItemsInBigLocs; j++) {
                       api.items.add_new_item(true, currentLocName)

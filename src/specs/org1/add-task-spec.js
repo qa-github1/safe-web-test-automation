@@ -106,9 +106,7 @@ describe('Add Task', function () {
                 ui.addTask.verify_email_content_(powerUser.email, C.tasks.emailTemplates.taskCreated, D.newTask, powerUser.name + ', ' + admin_userGroup.name, 2, false)
                 ui.addTask.verify_email_content_(powerUser2.email, C.tasks.emailTemplates.taskCreated, D.newTask, powerUser.name + ', ' + admin_userGroup.name)
             })
-
         });
-
 
         it('1.1.3.' +
              'Add task - assigned to 1 User Group' +

@@ -71,7 +71,6 @@ S.headers = {
     refreshtoken: null,
 };
 
-
 S.ALL_ENVS = {
     fieldIds: {
         case: {
@@ -684,8 +683,8 @@ S.DEV_2 = {
         return S.DEV_2.person.id
     },
     caseCustomForm: {
-        name: "Optional fields - Cypress Case Form",
-        id: 22145,
+        name: "Optional fields - Cypress Case Form", // TODO: IDs below should be updated
+        id: null,
         checkboxListId: "field2946",
         radioButtonListId: "field2948",
         selectListId: "field2950",
@@ -717,8 +716,6 @@ S.DEV_2 = {
         person: "field8029",
         dropdownTypeahead: "field8025"
     },
-
-
     clp_permissionGroup: {
         name: 'CLP Group',
         id: 2145,
@@ -1263,6 +1260,7 @@ S.DEV_2 = {...S.ALL_ENVS, ...S.DEV_2};
 S.DEV_3 = {...S.ALL_ENVS, ...S.DEV_3};
 
 S.DEV_4 = {...S.ALL_ENVS, ...S.DEV_4};
+
 
 S.QA_1 = {
     orgSettings: {
@@ -2066,6 +2064,23 @@ S.PENTEST_1 = {
         user: "field4818",
         person: "field4820",
     },
+    caseCustomForm: {
+        name: "Optional fields - Cypress Case Form",
+        id: 22145,
+        checkboxListId: "field2946",
+        radioButtonListId: "field2948",
+        selectListId: "field2950",
+        number: "field2938",
+        password: "field2940",
+        textbox: "field2934",
+        email: "field2936",
+        textarea: "field2942",
+        checkbox: "field2944",
+        date: "Date",
+        user: "field2954",
+        person: "field2956",
+        dropdownTypeahead: "field2952"
+    },
     locations: [
         {
             id: 476096,
@@ -2346,6 +2361,23 @@ S.PENTEST_2 = {
         user: "field9702",
         person: "field9704",
     },
+    caseCustomForm: {
+        name: "Optional fields - Cypress Case Form", // TODO: IDs below should be updated
+        id: null,
+        checkboxListId: "field2946",
+        radioButtonListId: "field2948",
+        selectListId: "field2950",
+        number: "field2938",
+        password: "field2940",
+        textbox: "field2934",
+        email: "field2936",
+        textarea: "field2942",
+        checkbox: "field2944",
+        date: "Date",
+        user: "field2954",
+        person: "field2956",
+        dropdownTypeahead: "field2952"
+    },
     locations: [
         {
             id: 477682,
@@ -2620,6 +2652,23 @@ S.PENTEST_3 = {
         date: "field1856",
         user: "field1852",
         person: "field1854",
+    },
+    caseCustomForm: {
+        name: "Optional fields - Cypress Case Form", // IDs updated - January 2026
+        id: 24313,
+        checkboxListId: "field8441",
+        radioButtonListId: "field8443",
+        selectListId: "field8445",
+        number: "field8433",
+        password: "field8435",
+        textbox: "field8429",
+        email: "field8431",
+        textarea: "field8437",
+        checkbox: "field8439",
+        date: "field8453",
+        user: "field8449",
+        person: "field8451",
+        dropdownTypeahead: "field8447"
     },
     locations: [
         {
@@ -2896,6 +2945,23 @@ S.PENTEST_4 = {
         date: "field7155",
         user: "field7151",
         person: "field7153",
+    },
+    caseCustomForm: {
+        name: "Optional fields - Cypress Case Form", // TODO: IDs below should be updated
+        id: null,
+        checkboxListId: "field2946",
+        radioButtonListId: "field2948",
+        selectListId: "field2950",
+        number: "field2938",
+        password: "field2940",
+        textbox: "field2934",
+        email: "field2936",
+        textarea: "field2942",
+        checkbox: "field2944",
+        date: "Date",
+        user: "field2954",
+        person: "field2956",
+        dropdownTypeahead: "field2952"
     },
     locations: [
         {
@@ -3195,7 +3261,6 @@ S.SECURE_1 = {
         offenseDate: '05/15/2009',
         reviewDate: '01/18/2023'
     },
-
     taskTemplate: {
         taskTypeId: {
             errorCorrection: 6438,
@@ -4161,9 +4226,35 @@ S.customForms = {
     // tasksFormWithOptionalFields: 'Cypress Task Form -- optional fields'
 }
 
-S.colors = {
-  redBorder: "rgb(231,24,45)"
-};
+S.optionalCaseFormAndFieldName = {
+    textbox: "Optional fields - Cypress Case Form > Textbox",
+    email: "Optional fields - Cypress Case Form > Email",
+    number: "Optional fields - Cypress Case Form > Number",
+    password: "Optional fields - Cypress Case Form > Password",
+    textarea: "Optional fields - Cypress Case Form > Textarea",
+    checkbox: "Optional fields - Cypress Case Form > Checkbox",
+    radiobuttonList: "Optional fields - Cypress Case Form > Radiobutton List",
+    checkboxList: "Optional fields - Cypress Case Form > Checkbox List",
+    selectList: "Optional fields - Cypress Case Form > Select List",
+    date: "Optional fields - Cypress Case Form > Date",
+}
+
+S.optionalItemFormAndFieldName = {
+    textbox: "Optional fields - Cypress Items Form - Org#2 > Textbox",
+    email: "Cypress Item Form > Email",
+    number: "Cypress Item Form > Number",
+    password: "Cypress Item Form > Password",
+    textarea: "Cypress Item Form > Textarea",
+    checkbox: "Cypress Item Form > Checkbox",
+    radiobuttonList: "Cypress Item Form > Radiobutton List",
+    checkboxList: "Cypress Item Form > Checkbox List",
+    selectList: "Cypress Item Form > Select List",
+    date: "Cypress Item Form > Date",
+},
+
+    S.colors = {
+        redBorder: "rgb(231,24,45)"
+    };
 
 S.gmailAccount = {
     email: 'qa@trackerproducts.com',

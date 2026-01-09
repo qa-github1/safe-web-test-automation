@@ -21,7 +21,7 @@ let
     filterByOfficeCheckbox = e => cy.get('[ng-model="workflow.filterByOffice"]'),
     officeTextbox = e => cy.get('input[placeholder="Select an office..."]'),
     customFieldEditedTypeaheadInput = e => cy.get('[ng-model="workflowFieldTypeahead"]'),
-    customFieldTypeaheadDropdown = e => cy.get('[ng-repeat="match in matches track by $index"]')
+    boldOptionOnCustomFieldTypeaheadDropdown = e => cy.get('.dropdown-menu').not('.ng-hide').find('strong')
 
 export default class WorkflowsPage extends BasePage {
     constructor() {
@@ -60,6 +60,9 @@ export default class WorkflowsPage extends BasePage {
         this.select_user_or_group(userOrGroup);
         actions.forEach(action =>{
             cy.findByText(action).prev().click();
+            if (action === 'Create new Task'){
+                cy.get('#taskTemplate').select('Other')
+            }
         })
         cy.findByText(trigger).prev().click();
 
@@ -68,7 +71,7 @@ export default class WorkflowsPage extends BasePage {
                 fieldEditedDropdown().select(fieldEdited);
             } else if (trigger === C.workflows.executeWhen.customFieldEdited) {
                 customFieldEditedTypeaheadInput().type(fieldEdited);
-                customFieldTypeaheadDropdown().click();
+                boldOptionOnCustomFieldTypeaheadDropdown().click();
             }
         }
 
@@ -125,12 +128,9 @@ export default class WorkflowsPage extends BasePage {
 
 
 
-
-
-
     set_matching_criteria_custom_field(field, operator, value, isInputField = true) {
         matchingCriteriaCustomField().type(field);
-        customFieldTypeaheadDropdown().click();
+        boldOptionOnCustomFieldTypeaheadDropdown().click()
         matchingCriteriaOperator().select(operator);
 
         if (isInputField) {
@@ -138,7 +138,6 @@ export default class WorkflowsPage extends BasePage {
         } else {
             matchingCriteriaDropdownValue().select(value);
         }
-
         return this;
     }
 

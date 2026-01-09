@@ -59,7 +59,6 @@ exports.generate_PUT_request_payload_for_editing_existing_case = function (caseO
     caseObject.formData = formData;
 
     let body = {};
-   // cy.log('FORM DATA IS ' + JSON.stringify(formData))
     caseObject.createdDate = caseObject.createdDateIsoFormat || undefined
     caseObject.offenseDate = caseObject.offenseDateIsoFormat
     caseObject.followUpDate = caseObject.reviewDateIsoFormat

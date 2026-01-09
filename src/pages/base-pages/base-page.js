@@ -65,7 +65,7 @@ let bodyContainer = e => cy.get('body'), tableBody = e => cy.get('.table-striped
     linkByTextOnFirstTableRow = linkText => cy.get('tr').first().contains(linkText),
     linkWrappedInElement = (linkText, parentElementTag) => cy.contains(linkText).parent(parentElementTag),
     parentLinkByInnerText = innerText => cy.get('link').contains(innerText).parent('a'),
-    buttonByTitle = buttonTitle => cy.contains('button', buttonTitle),
+    buttonByTitle = buttonTitle => cy.contains('button', buttonTitle).first(),
     elementByTitle = elementTitle => cy.contains(elementTitle),
     inputFieldFoundByLabel = label => cy.contains(label).parent('div').find('input').first(),
     checkboxFieldFoundByLabel = label => cy.contains(label).parent('div').find('[type="checkbox"]').first(),
@@ -2022,7 +2022,11 @@ let basePage = class BasePage {
         if (tabTitle === C.tabs.history) {
             historyTab(tabTitle).should('be.visible').click()
             historyTab(tabTitle).should('have.class', 'active')
-        } else {
+        }
+        else if (tabTitle === C.tabs.tasks) {
+            cy.get('[active="activeTabs[\'tasks\']"]').click()
+        }
+        else {
             specificTab(tabTitle).should('be.visible').click()
             specificTab(tabTitle).should('have.class', 'active')
         }
@@ -2629,6 +2633,7 @@ let basePage = class BasePage {
     };
 
     select_checkbox_on_first_table_row_on_active_tab(tableIndex = 0) {
+        this.pause(1)
         checkboxOnFirstRowInResultsTableOnActiveTab(tableIndex).click();
         return this;
     };
@@ -4001,7 +4006,7 @@ let basePage = class BasePage {
         return this;
     }
 
-    perform_Item_Disposal_transaction(witness_userObject, method, notes, isItemInContainer, isActionOnSearchResults, multipleItems) {
+    perform_Item_Disposal_transaction(witness_userObject, method, notes, isItemInContainer, isActionOnSearchResults, multipleItems, withMedia = true) {
         const label = multipleItems ? C.dropdowns.itemActions.disposeItems : C.dropdowns.itemActions.disposeItem
         this.click_option_on_expanded_menu(label)
         if (isItemInContainer) {
@@ -4015,7 +4020,10 @@ let basePage = class BasePage {
             this.verify_modal_content(' Warning! This action will dispose all items found by the current search')
             this.verify_modal_content('Items shared among Organizations are not included in the transaction')
         }
-        this.upload_file_and_verify_toast_msg('image.png', null)
+
+        if (withMedia){
+            this.upload_file_and_verify_toast_msg('image.png', null)
+        }
         this.click_button_on_modal(C.buttons.ok)
             .verify_toast_message('Saved')
             .wait_until_spinner_disappears()

@@ -32,6 +32,15 @@ exports.update_dispo_config_for_item_catagories = function (thirdTierApproverGro
     return this
 };
 
+exports.set_override_disposal_release_authorization = function (userIds= [], userGroupIds = [] ) {
+    generic_request.POST(
+        '/api/disposalReleaseOverrides',
+        {"userIds":userIds,"userGroupIds":userGroupIds},
+        "Dispo Override updated via API");
+    return this
+};
+
+
 exports.update_dispo_config_for_offense_types = function (isAutoDispositionOn = true, skipFutureCaseReviewUpdates = true, daysToFollowUp = 100) {
     generic_request.PUT(
         '/api/autoDisposition/settingsV2',

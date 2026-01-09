@@ -9,8 +9,11 @@ import BaseViewPage from "../base-pages/base-view-page";
 
 let
     submitForDisposition = e => cy.get('[ng-click="submitForDisposition()"]'),
+    actionsContainer = e => cy.get('.dropdown-menu').not('ng-hide'),
     noteInput = e => cy.get('[ng-model="vm.newTaskNote"]'),
-    actionsButton = e => cy.get('[title="Select an item or items for which you would like to perform Action."]'),
+    active_tab = e => cy.get('[class="tab-pane ng-scope active"]'),
+    actionsButtonOnActiveTab = e => active_tab().find('.grid-buttons').find('button[title="Select an item or items for which you would like to perform Action."]'),
+    gridButtons = e => cy.get('.grid-buttons'),
     dispositionAuthorizationActionOnModal = e => cy.get('[ng-model="itemsActions.actionId"]'),
     isIndefiniteRetentionCheckbox = e => cy.get('[name="isIndefiniteRetention"]'),
     holdDays = e => cy.get('#holdDays'),
@@ -31,6 +34,7 @@ let
     resultsTable = (tableIndex = 0) => cy.get('.table-striped').eq(tableIndex).find('tbody'),
     approveButtonInSpecificRow = (rowNumber) => cy.get('tbody').find('tr').eq(rowNumber - 1).find('[translate="DISPO.AUTH_ACTION_APPROVE"]'),
     rejectButtonInSpecificRow = (rowNumber) => cy.get('tbody').find('tr').eq(rowNumber - 1).find('[translate="DISPO.AUTH_ACTION_REJECT"]'),
+    dispoActionDropdownOnSpecificRow = (rowNumber) => cy.get('tbody').find('tr').eq(rowNumber - 1).find('#select-dispo-auth-action'),
     rejectionNote = e => cy.get('[placeholder="Add notes for case officer"]'),
     checkboxOnFirstTableRow = e => resultsTable().find('.bg-grid-checkbox').first()
 
@@ -99,17 +103,28 @@ export default class TaskViewPage extends BaseViewPage {
     };
 
     click_Actions() {
-        this.pause(1)
-        this.wait_until_modal_disappears()
-        this.wait_until_spinner_disappears()
-        actionsButton().click()
+        actionsButtonOnActiveTab().click()
         return this;
     };
+
+    verify_enabled_and_disabled_options_under_Actions_dropdown(enabledOptions, disabledOptions) {
+        gridButtons().should('have.class', 'open')
+        this.wait_until_spinner_disappears()
+
+        actionsContainer().within(($list) => {
+            for (let option of enabledOptions) {
+                cy.contains('li', option).should('not.have.class', 'disabled')
+            }
+            for (let option of disabledOptions) {
+                cy.contains('li', option).should('have.class', 'disabled')
+            }
+        })
+        return this;
+    }
 
     click__Approve__from_grid_for_specific_item(rowNumber) {
         this.pause(2)
         this.wait_until_spinner_disappears()
-
         approveButtonInSpecificRow(rowNumber).click()
         return this;
     };
@@ -196,6 +211,14 @@ export default class TaskViewPage extends BaseViewPage {
         if (numberOfItemsProcessed > 50) {
             this.verify_text(dispoAuthJobStatus, 'Complete')
         } this.wait_until_spinner_disappears(80)
+        return this;
+    };
+
+    set_Action___Approve_for_Disposal_from_grid(rowNumber) {
+
+        dispoActionDropdownOnSpecificRow(rowNumber).select('Approve for Disposal')
+        this.verify_single_toast_message_if_multiple_shown('Saved')
+        this.wait_until_spinner_disappears(80)
         return this;
     };
 
@@ -323,6 +346,11 @@ export default class TaskViewPage extends BaseViewPage {
     verify_Dispo_Auth_Job_Status(status) {
         this.verify_text(dispoAuthJobStatus, status, 120)
         this.pause(1)
+        return this;
+    };
+
+    select_filter_by_Closed_status(status) {
+        cy.get('[ng-model="showClosedTasks"]').click()
         return this;
     };
 
