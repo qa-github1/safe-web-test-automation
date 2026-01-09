@@ -2,6 +2,9 @@ const helper = require('../support/e2e-helper')
 const DF = require('../support/date-time-formatting')
 
 let C = exports;
+const S = exports;
+S.orgNum = Cypress.env('orgNum')
+
 
 C = {
     buttons: {

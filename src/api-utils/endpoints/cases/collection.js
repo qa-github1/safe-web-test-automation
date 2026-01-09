@@ -18,18 +18,18 @@ exports.add_new_case = function (caseNumber, caseObject, stringToStoreInLocalSto
 
 
 
-// exports.add_custom_form_data_to_existing_case = function (caseObject) {
-//     cy.getLocalStorage("newCase").then(newCase => {
-//         let existingCase = Object.assign(JSON.parse(newCase), caseObject);
-//
-//         generic_request.PUT(
-//             '/api/cases/' + existingCase.id,
-//             body.generate_PUT_request_payload_for_editing_existing_case(existingCase, true),
-//             'Adding custom form to the existing case via API with ID_______' + existingCase.id
-//         );
-//     });
-//     return this;
-// };
+exports.add_custom_form_data_to_existing_case = function (caseObject) {
+    cy.getLocalStorage("newCase").then(newCase => {
+        let existingCase = Object.assign(JSON.parse(newCase), caseObject);
+
+        generic_request.PUT(
+            '/api/cases/' + existingCase.id,
+            body.generate_PUT_request_payload_for_editing_existing_case(existingCase, true),
+            'Adding custom form to the existing case via API with ID_______' + existingCase.id
+        );
+    });
+    return this;
+};
 
 exports.edit_newly_added_case = function (withCustomFormData = true ) {
     cy.getLocalStorage("newCase").then(newCase => {

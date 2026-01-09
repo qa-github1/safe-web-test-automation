@@ -32,7 +32,7 @@ describe('Workflows', function () {
 
         before(function () {
             api.auth.get_tokens(S.userAccounts.orgAdmin);
-            api.org_settings.enable_all_Case_fields()
+            //  api.org_settings.enable_all_Case_fields()
         });
 
         it('1.1 Email & Task - when Case created - all records - 1 user as email recipient', function () {
@@ -152,6 +152,7 @@ describe('Workflows', function () {
             ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.caseFieldEdited, D.editedCase, C.caseFields.caseOfficers, 1, false)
         });
 
+
         it('1.5 Email & Task - when Custom Case field edited - matching all records, filtered by Office', function () {
             ui.menu.click_Settings__Workflows();
             ui.workflows.click_(C.buttons.add)
@@ -160,7 +161,7 @@ describe('Workflows', function () {
                     C.workflows.types.cases,
                     powerUser.name,
                     ['Email',
-                          'Create new Task'
+                        'Create new Task'
                     ],
                     C.workflows.executeWhen.customFieldEdited,
                     undefined,
@@ -173,8 +174,10 @@ describe('Workflows', function () {
                 .click_Save();
 
             D.editedCase = D.getEditedCaseData(D.newCase.caseNumber)
-            api.org_settings.enable_all_Case_fields();
+            api.org_settings.enable_all_Case_fields([], [C.caseFields.offenseLocation, C.caseFields.offenseDate]);
             api.cases.add_new_case()
+                .add_custom_form_data_to_existing_case(D.newCustomFormData)
+                // ui.caseView.open_newly_created_case_via_direct_link()
                 .edit_newly_added_case(true);
             ui.app.open_newly_created_case_via_direct_link()
                 .select_tab('Tasks')
