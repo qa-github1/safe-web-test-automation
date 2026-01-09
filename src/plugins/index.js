@@ -214,7 +214,8 @@ module.exports = (on, config) => {
                     host: 'imap.gmail.com',
                     port: 993,
                     tls: true,
-                    authTimeout: 10000
+                    authTimeout: 10000,
+                    tlsOptions: { rejectUnauthorized: false }, // <-- allow self-signed
                 }
             };
 

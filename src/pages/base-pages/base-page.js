@@ -2771,7 +2771,6 @@ let basePage = class BasePage {
             newCase = JSON.parse(newCase);
 
             cy.log('Opening Case URL: ' + S.base_url + '/#/cases/' + newCase.id.toString() + '/view')
-            cy.server();
             cy.intercept(S.api_url + '/api/organizations/useCaseLevelPermissions').as('getSettingsOfCLP');
 
             cy.visit(S.base_url + '/#/cases/' + newCase.id.toString() + '/view')
