@@ -22,31 +22,31 @@
     "CYPRESS_VERIFY_TIMEOUT": 60000
   },
   "defaultEnvironment": {
-    "apiUrl": "https://pentestapi.trackerproducts.com",
+    "apiUrl": "https://pentestapi.xxx.com",
     "domain": "PENTEST"
   },
   "environments": {
     "qa": {
-      "baseUrl": "https://qa.trackerproducts.com",
-      "apiUrl": "https://qaapi.trackerproducts.com",
+      "baseUrl": "https://qa.xxx.com",
+      "apiUrl": "https://qaapi.xxx.com",
       "domain": "QA",
       "runPreconditionForSpecificEnv": true
     },
     "pentest": {
-      "baseUrl": "https://pentest.trackerproducts.com",
-      "apiUrl": "https://pentestapi.trackerproducts.com",
+      "baseUrl": "https://pentest.xxx.com",
+      "apiUrl": "https://pentestapi.xxx.com",
       "domain": "PENTEST",
       "runPreconditionForSpecificEnv": true
     },
     "dev": {
-      "baseUrl": "https://dev.trackerproducts.com",
-      "apiUrl": "https://devapi.trackerproducts.com",
+      "baseUrl": "https://dev.xxx.com",
+      "apiUrl": "https://devapi.xxx.com",
       "domain": "DEV",
       "runPreconditionForSpecificEnv": true
     },
     "secure": {
-      "baseUrl": "https://secure.trackerproducts.com",
-      "apiUrl": "https://securelb.trackerproducts.com",
+      "baseUrl": "https://secure.xxx.com",
+      "apiUrl": "https://securelb.xxx.com",
       "domain": "SECURE",
       "runPreconditionForSpecificEnv": true
     }

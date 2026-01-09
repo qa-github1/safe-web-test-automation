@@ -3,10 +3,10 @@ const C = require('./constants');
 const accounts = require('./user-accounts');
 const helper = require('../support/e2e-helper');
 
-S.domain = Cypress.env('domain')
-S.base_url = Cypress.env('baseUrl')
-S.api_url = Cypress.env('apiUrl')
-S.orgNum = Cypress.env('orgNum')
+S.domain = Cypress.env('domain') || 'PENTEST'
+S.base_url = Cypress.env('baseUrl') || 'https://pentest.trackerproducts.com'
+S.api_url = Cypress.env('apiUrl') || 'https://pentestapi.trackerproducts.com'
+S.orgNum = Cypress.env('orgNum') || 1
 S.enableApiLogs = Cypress.env('enableApiLogs') || false
 S.api_timeout = Cypress.env('apiTimeout') || 60000
 

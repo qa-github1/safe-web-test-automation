@@ -35,7 +35,7 @@ describe('Add Case', function () {
             api.users.update_current_user_settings(powerUser.id, C.currentDateTimeFormat)
         });
 
-        it('1.1 Org Admin-- All fields enabled -- redirect to View Added Case', function () {
+        it.only('1.1 Org Admin-- All fields enabled -- redirect to View Added Case', function () {
             ui.app.log_title(this);
 
             api.auth.get_tokens(orgAdmin);
