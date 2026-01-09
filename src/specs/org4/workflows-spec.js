@@ -122,7 +122,7 @@ describe('Workflows', function () {
             ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.caseEdited, D.editedCase, null, 3, false)
         });
 
-        it.only('1.4 Email & Task - when Case field edited - matching records with "Cypress Case Form Number equals ..."', function () {
+        it('1.4 Email & Task - when Case field edited - matching records with "Cypress Case Form Number equals ..."', function () {
             ui.menu.click_Settings__Workflows();
             ui.workflows.click_(C.buttons.add)
                 .set_up_workflow(

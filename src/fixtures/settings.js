@@ -2394,23 +2394,6 @@ S.PENTEST_2 = {
         user: "field9702",
         person: "field9704",
     },
-    caseCustomForm: {
-        name: "Optional fields - Cypress Case Form", // TODO: IDs below should be updated
-        id: null,
-        checkboxListId: "field2946",
-        radioButtonListId: "field2948",
-        selectListId: "field2950",
-        number: "field2938",
-        password: "field2940",
-        textbox: "field2934",
-        email: "field2936",
-        textarea: "field2942",
-        checkbox: "field2944",
-        date: "Date",
-        user: "field2954",
-        person: "field2956",
-        dropdownTypeahead: "field2952"
-    },
     locations: [
         {
             id: 477682,
@@ -3011,23 +2994,6 @@ S.PENTEST_4 = {
         date: "field7155",
         user: "field7151",
         person: "field7153",
-    },
-    caseCustomForm: {
-        name: "Optional fields - Cypress Case Form", // TODO: IDs below should be updated
-        id: null,
-        checkboxListId: "field2946",
-        radioButtonListId: "field2948",
-        selectListId: "field2950",
-        number: "field2938",
-        password: "field2940",
-        textbox: "field2934",
-        email: "field2936",
-        textarea: "field2942",
-        checkbox: "field2944",
-        date: "Date",
-        user: "field2954",
-        person: "field2956",
-        dropdownTypeahead: "field2952"
     },
     locations: [
         {
