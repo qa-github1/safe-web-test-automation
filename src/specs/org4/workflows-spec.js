@@ -36,7 +36,7 @@ describe('Workflows', function () {
 
         before(function () {
             api.auth.get_tokens(S.userAccounts.orgAdmin);
-            api.org_settings.enable_all_Case_fields()
+          //  api.org_settings.enable_all_Case_fields()
         });
 
         it('1.1 Email & Task - when Case created - all records - 1 user as email recipient', function () {
@@ -128,8 +128,8 @@ describe('Workflows', function () {
          //   ui.addTask.verify_email_content_(powerUser.email, C.tasks.emailTemplates.taskCreated, D.newTask, powerUser.name, 3, false)
         });
 
-        //TODO: Sumejja should check further
-        it.only('1.4 Email & Task - when Case field edited - matching records with "Cypress Case Form Number equals ..."', function () {
+        //TODO: Sumejja should check further - email doesn't arrive in Org2
+        it('1.4 Email & Task - when Case field edited - matching records with "Cypress Case Form Number equals ..."', function () {
             ui.menu.click_Settings__Workflows();
             ui.workflows.click_(C.buttons.add)
                 .set_up_workflow(
@@ -162,7 +162,7 @@ describe('Workflows', function () {
       });
 
         //TODO: Sumejja should check further
-        xit('1.5 Email & Task - when Custom Case field edited - matching all records, filtered by Office', function () {
+        it.only('1.5 Email & Task - when Custom Case field edited - matching all records, filtered by Office', function () {
             ui.menu.click_Settings__Workflows();
             ui.workflows.click_(C.buttons.add)
                 .set_up_workflow(
@@ -179,8 +179,10 @@ describe('Workflows', function () {
                 .click_Save();
 
             D.editedCase = D.getEditedCaseData(D.newCase.caseNumber)
-            api.org_settings.enable_all_Case_fields();
+            api.org_settings.enable_all_Case_fields([], [C.caseFields.offenseLocation, C.caseFields.offenseDate]);
             api.cases.add_new_case()
+                .add_custom_form_data_to_existing_case(D.newCustomFormData)
+           // ui.caseView.open_newly_created_case_via_direct_link()
                 .edit_newly_added_case(true);
             ui.workflows.verify_email_content_(powerUser.email, C.workflows.emailTemplates.caseCustomFieldEdited, D.editedCase, C.caseCustomFields.cypressCaseForm_Number);
          //   ui.addTask.verify_email_content_(powerUser.email, C.tasks.emailTemplates.taskCreated, D.newTask, powerUser.name, 3, false)

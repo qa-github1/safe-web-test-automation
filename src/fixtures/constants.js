@@ -2,6 +2,9 @@ const helper = require('../support/e2e-helper')
 const DF = require('../support/date-time-formatting')
 
 let C = exports;
+const S = exports;
+S.orgNum = Cypress.env('orgNum')
+
 
 C = {
     buttons: {
@@ -298,16 +301,16 @@ C = {
         office: "Office",
     },
     caseCustomFields: {
-        cypressCaseForm_Textbox: "Optional fields - Cypress Case Form > Textbox",
-        cypressCaseForm_Email: "Optional fields - Cypress Case Form > Email",
-        cypressCaseForm_Number: "Optional fields - Cypress Case Form > Number",
-        cypressCaseForm_Password: "Optional fields - Cypress Case Form > Password",
-        cypressCaseForm_Textarea: "Optional fields - Cypress Case Form > Textarea",
-        cypressCaseForm_Checkbox: "Optional fields - Cypress Case Form > Checkbox",
-        cypressCaseForm_RadiobuttonList: "Optional fields - Cypress Case Form > Radiobutton List",
-        cypressCaseForm_CheckboxList: "Optional fields - Cypress Case Form > Checkbox List",
-        cypressCaseForm_SelectList: "Optional fields - Cypress Case Form > Select List",
-        cypressCaseForm_Date: "Optional fields - Cypress Case Form > Date",
+        cypressCaseForm_Textbox: 'Optional fields - Cypress CASE Form - Org#' + S.orgNum + ' > Textbox',
+        cypressCaseForm_Email: 'Optional fields - Cypress CASE Form - Org#' + S.orgNum + ' > Email',
+        cypressCaseForm_Number: 'Optional fields - Cypress CASE Form - Org#' + S.orgNum + ' > Custom Number',
+        cypressCaseForm_Password: 'Optional fields - Cypress CASE Form - Org#' + S.orgNum + ' > Password',
+        cypressCaseForm_Textarea: 'Optional fields - Cypress CASE Form - Org#' + S.orgNum + ' > Textarea',
+        cypressCaseForm_Checkbox: 'Optional fields - Cypress CASE Form - Org#' + S.orgNum + ' > Checkbox',
+        cypressCaseForm_RadiobuttonList: 'Optional fields - Cypress CASE Form - Org#' + S.orgNum + ' > Radiobutton List',
+        cypressCaseForm_CheckboxList: 'Optional fields - Cypress CASE Form - Org#' + S.orgNum + ' > Checkbox List',
+        cypressCaseForm_SelectList: 'Optional fields - Cypress CASE Form - Org#' + S.orgNum + ' > Select List',
+        cypressCaseForm_Date: 'Optional fields - Cypress CASE Form - Org#' + S.orgNum + ' > Date',
     },
     itemCustomFields: {
         cypressItemForm_Textbox: "Optional fields - Cypress Items Form - Org#2 > Textbox",

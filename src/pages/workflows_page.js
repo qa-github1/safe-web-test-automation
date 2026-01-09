@@ -68,7 +68,7 @@ export default class WorkflowsPage extends BasePage {
                 fieldEditedDropdown().select(fieldEdited);
             } else if (trigger === C.workflows.executeWhen.customFieldEdited) {
                 customFieldEditedTypeaheadInput().type(fieldEdited);
-                customFieldTypeaheadDropdown().click();
+                customFieldTypeaheadDropdown().filter(':has(strong)').first().click();
             }
         }
 
@@ -130,7 +130,7 @@ export default class WorkflowsPage extends BasePage {
 
     set_matching_criteria_custom_field(field, operator, value, isInputField = true) {
         matchingCriteriaCustomField().type(field);
-        customFieldTypeaheadDropdown().click();
+        customFieldTypeaheadDropdown().filter(':has(strong)').first().click();
         matchingCriteriaOperator().select(operator);
 
         if (isInputField) {
