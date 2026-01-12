@@ -186,7 +186,7 @@ describe('Auto-Disposition', function () {
 
         // enable test just during the full regression as it takes longer to redistribute review dates
         //for all cases with upcoming review date in Org
-        //TODO: Sumejja should check further
+
         xit('A.D.4.2 Verify "Re-Distribute" for "Upcoming" cases', function () {
             api.auth.get_tokens(user);
             D.generateNewDataSet()
@@ -208,7 +208,7 @@ describe('Auto-Disposition', function () {
                 .wait_until_label_disappears(C.labels.autoDisposition.pleaseWait, 360)
             D.newCase.reviewDate = helper.getSpecificDateInSpecificFormat(
                 DF.dateTimeFormats.long.mask,
-                'November 15, 2025 12:00 AM'
+                'November 15, 2027 12:00 AM'
             );
             ui.app.open_newly_created_case_via_direct_link()
                 .click_button(C.buttons.edit);
@@ -226,7 +226,7 @@ describe('Auto-Disposition', function () {
                 .click_element_containing_link(C.labels.organization.tabs.autoDisposition);
             ui.autoDispo.click_disposition_Configuration_For_Case_Offense_Types();
             ui.autoDispo.click_Recalculate_Cases_to_Dispose()
-                .get_number_of_cases_without_items()
+               .get_number_of_cases_without_items()
                 .click_Close_X_Cases_button()
                 //.verify_modal_content(C.labels.autoDisposition.casesToBeClosed(D.newCase.caseNumber))
                 .enter_Closed_date(S.currentDate)

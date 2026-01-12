@@ -2976,7 +2976,7 @@ let basePage = class BasePage {
     };
 
     wait_until_label_disappears(text, timeoutInSeconds) {
-        this.pause(3)
+       // this.pause(3)
         cy.contains(text, {timeout: (timeoutInSeconds * 1000)}).should('not.exist');
         return this;
     };
