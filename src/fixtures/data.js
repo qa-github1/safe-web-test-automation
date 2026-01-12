@@ -23,11 +23,11 @@ D.getCurrentDateAndRandomNumber = function (randomNumberLenght) {
     return helper.mediumDate + '_' + helper.getRandomNo(randomNumberLenght);
 }
 
-D.getStorageLocationData = function (locationName, parentId = 0, canStore = true, isActive = true, isContainer = false) {
-    let randomNo =  helper.mediumDate + '_' + helper.getRandomNo(3);
-
+D.getStorageLocationData = function (locationName, parentId = 0, canStore = true, isActive = true, isContainer = false, specificRandomNo) {
+    let randomNo =  specificRandomNo || helper.mediumDate + '_' + helper.getRandomNo(3)
     D[locationName] = {
         "name": randomNo + '_' + locationName,
+        "randomNo": randomNo,
         "active": isActive,
         "parentId": parentId,
         "canStoreHere": canStore,

@@ -66,7 +66,8 @@ describe('Services', function () {
                             .click_button_on_modal('Save')
                             .verify_toast_message('Processing')
                             .verify_text_is_present_on_main_container('Container Move Jobs')
-                            .verify_content_of_first_row_in_results_table([D.container1.name, D.rootLoc2.name, 'Complete'])
+                            .verify_text_is_NOT_present_on_main_container('Showing 0 to 0')
+                            .verify_content_of_first_row_in_results_table([D.container1.name, D.rootLoc2.name, 'Complete'], true)
                         ui.menu.click_Scan()
                         ui.scan.close_Item_In_Scan_List_alert(false)
                             .scan_barcode(item1.barcode)
@@ -95,13 +96,13 @@ describe('Services', function () {
     it('8. Container Auto Deactivate', function () {
 
         api.auth.get_tokens(orgAdmin);
-        D.generateNewDataSet();
-        api.org_settings.enable_all_Item_fields(C.itemFields.dispositionStatus)
+        D.getNewCaseData()
+        D.getNewItemData()
+        api.org_settings.enable_all_Item_fields()
         api.cases.add_new_case(D.newCase.caseNumber);
-        api.people.add_new_person();
 
         D.box1 = D.getStorageLocationData('BOX_1')
-        D.containerA = D.getStorageLocationData('Container_A')
+        D.containerA = D.getStorageLocationData('Container_A', null, true, true, true,  D.box1.randomNo)
 
         api.locations.add_storage_location(D.box1)
         api.locations.add_storage_location(D.containerA, D.box1.name)
@@ -113,10 +114,10 @@ describe('Services', function () {
             .perform_Item_Disposal_transaction(orgAdmin, C.disposalMethods.auctioned, 'testContainerAutoDeactivate' + D.randomNo, true)
 
         ui.menu.click_Search__Container_AutoDeactivate_Jobs()
+            .verify_text_is_NOT_present_on_main_container('Showing 0 to 0')
         ui.app.verify_content_of_first_row_in_results_table([
-            D.currentDateAndRandomNumber + '_BOX_1' + '/' + D.currentDateAndRandomNumber + '_Container_A',
-            'Complete'])
-
+            D.containerA.randomNo + '_BOX_1' + '/' + D.containerA.randomNo + '_Container_A',
+            'Complete'], true)
     });
 
     it('9. Task/Case Reassignment', function () {
@@ -133,6 +134,7 @@ describe('Services', function () {
 
             ui.menu.click_Settings__User_Admin()
             ui.userAdmin.search_for_user(newUser.email)
+                .verify_text_is_present_on_main_container('Showing 1 to 1 of 1 items')
                 .select_checkbox_on_first_table_row()
                 .click_Actions()
                 .click_option_on_expanded_menu('Deactivate Users')
@@ -140,7 +142,8 @@ describe('Services', function () {
                 .click_Ok()
                 .verify_toast_message('Processing...')
                 .verify_text_is_present_on_main_container('Reassign Tasks and Cases After Deactivating the User(s)')
-                .verify_content_of_first_row_in_results_table([newUser.email, 'Complete'])
+                .verify_text_is_NOT_present_on_main_container('Showing 0 to 0')
+                .verify_content_of_first_row_in_results_table([newUser.email, 'Complete'], true)
                 .open_newly_created_case_via_direct_link()
                 .click_Edit()
             D.newCase.caseOfficers = [D.newUser.firstLastName, orgAdmin.name]
@@ -182,8 +185,9 @@ describe('Services', function () {
                         person1.firstName])
                     .click_button_on_sweet_alert('OK')
                     .verify_text_is_present_on_main_container('People Merge Jobs')
+                    .verify_text_is_NOT_present_on_main_container('Showing 0 to 0')
                     .sort_by_descending_order('Start Date')
-                    .verify_content_of_first_row_in_results_table(['Complete', person2.firstName])
+                    .verify_content_of_first_row_in_results_table(['Complete', person2.firstName], true)
                     .pause(1)
                     .click_link(person2.firstName)
                     .select_tab('Merge History')
@@ -207,9 +211,9 @@ describe('Services', function () {
         ui.autoDispo.click_disposition_Configuration_For_Case_Offense_Types();
         ui.autoDispo.verify_Redistribute_Case_Review_Date_labels(true)
 
-         D.generateNewDataSet()
-         D.getDataForMultipleCases(3)
-         let fileName = 'Case_pastDueReview';
+        D.generateNewDataSet()
+        D.getDataForMultipleCases(3)
+        let fileName = 'Case_pastDueReview';
         D.case1.reviewDate = '';
         D.case2.reviewDate = helper.getSpecificDateInSpecificFormat(DF.dateTimeFormats.long.mask, '01/08/2019');
         D.case3.reviewDate = helper.getSpecificDateInSpecificFormat(DF.dateTimeFormats.long.mask, '01/08/2030');
@@ -295,8 +299,9 @@ describe('Services', function () {
             .click_Actions_On_Search_Results()
             .perform_Item_Check_Out_transaction(powerUser, C.checkoutReasons.lab, 'Check Out from Actions on Search Results', null, true, true)
             .verify_text_is_present_on_main_container('Actions on Search Results Jobs')
+            .verify_text_is_NOT_present_on_main_container('Showing 0 to 0')
             .sort_by_descending_order('Start Date')
-            .verify_content_of_first_row_in_results_table('Completed')
+            .verify_content_of_first_row_in_results_table('Completed', true)
 
         cy.getLocalStorage('newItem1').then(item => {
             ui.app.open_item_url(JSON.parse(item).id)
