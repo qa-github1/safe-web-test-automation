@@ -16,7 +16,7 @@
 
 const imaps = require('imap-simple');
 //const puppeteer = require('puppeteer');
-const allureWriter = require('@shelex/cypress-allure-plugin/writer');
+//const allureWriter = require('@shelex/cypress-allure-plugin/writer');
 const Xvfb = require('xvfb');
 const pdfjsLib = require("pdfjs-dist");
 
@@ -42,7 +42,7 @@ function getEnvironmentConfig(config) {
     config.env = {
         ...config.env,
         ...environmentData,
-        allure: true,
+        allure: false,
         allureResultsPath: `report/allure-results-${config.env.orgNum || 'default'}`,
     }
 
@@ -263,8 +263,6 @@ module.exports = (on, config) => {
             });
         }
     });
-
-    allureWriter(on, config);
 
     return getEnvironmentConfig(config);
 };

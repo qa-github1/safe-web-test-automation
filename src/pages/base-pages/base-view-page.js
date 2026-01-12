@@ -501,10 +501,11 @@ export default class BaseViewPage extends BasePage {
             for (let field of allFieldsOnHistory) {
                 if (redFields.includes(field)) {
                     cy.contains(field)
-                        .should('have.color', 'rgb(255, 0, 0)')
+                      //  .should('have.color', 'rgb(255, 0, 0)')
+                        .should('have.css', 'color', 'rgb(255, 0, 0)')
                 } else {
                     cy.contains(field)
-                        .should('have.color', 'rgb(103, 106, 108)')
+                        .should('have.css', 'color', 'rgb(103, 106, 108)')
                 }
             }
         })

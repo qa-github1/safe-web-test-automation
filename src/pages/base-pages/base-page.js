@@ -2816,6 +2816,21 @@ let basePage = class BasePage {
         return this;
     };
 
+    store_last_url() {
+        cy.url().then(url => { D.lastUrl = url });
+        return this;
+    }
+
+    visit_last_url() {
+        cy.visit(D.lastUrl);
+        return this;
+    }
+
+    visit_base_url() {
+        cy.visit(S.base_url);
+        return this;
+    }
+
     generate_excel_file(fileName, dataObject) {
         cy.generate_excel_file(fileName, dataObject);
         return this;
@@ -3330,6 +3345,7 @@ let basePage = class BasePage {
                     .find('select').first()
                     .select(value)
             } else if (['Category'].some(v => label === v)) {
+                this.pause(1)
                 cy.get('[category-name="item.categoryName"]').click()
                 cy.get('[repeat="category in data.categories | filter: { name: $select.search }"]').contains(value).click();
 
@@ -3986,11 +4002,11 @@ let basePage = class BasePage {
         return this;
     }
 
-    perform_Item_Move_transaction(fullLocationPath, notes, isActionOnSearchResults, multipleItems) {
+    perform_Item_Move_transaction(fullOrPartialLocationPath, notes, isActionOnSearchResults, multipleItems) {
         const label = multipleItems ? C.dropdowns.itemActions.moveItems : C.dropdowns.itemActions.moveItem
         this.click_option_on_expanded_menu(label)
         cy.wait(1000)
-        this.populate_Move_form(fullLocationPath, notes)
+        this.populate_Move_form(fullOrPartialLocationPath, notes)
 
         if (isActionOnSearchResults) {
             this.verify_modal_content(' Warning! This action will move all items found by the current search')
@@ -4001,7 +4017,7 @@ let basePage = class BasePage {
             .verify_toast_message('Saved')
             .wait_until_spinner_disappears()
         D.editedItem.status = 'Checked In'
-        D.editedItem.location = fullLocationPath
+        D.editedItem.location = fullOrPartialLocationPath
         return this;
     }
 

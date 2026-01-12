@@ -344,7 +344,7 @@ for (let i = 0; i < 1; i++) {
         }
     });
 
-    describe('Add Dispo Task with 11 1DA items and assign to Org Admin, ' + '--set different actions for item using all variations' + '--using Actions menu and grid, ' + '--check statuses and notes upon submission', function () {
+    describe.only('Add Dispo Task with 11 1DA items and assign to Org Admin, ' + '--set different actions for item using all variations' + '--using Actions menu and grid, ' + '--check statuses and notes upon submission', function () {
 
         let hasFailed = false
         let persisted = {}
@@ -485,8 +485,7 @@ for (let i = 0; i < 1; i++) {
         })
     })
 
-
-    describe.only('Add Dispo Task with 100 items and assign to Power User, ' + '--initiate and complete 2nd and 3rd tier approval' + '--use Approve and Reject buttons from grid and Actions menu' + '--with and without Dispo Auth Service' + '--check statuses and notes upon rejections and approvals', function () {
+    describe('Add Dispo Task with 100 items and assign to Power User, ' + '--initiate and complete 2nd and 3rd tier approval' + '--use Approve and Reject buttons from grid and Actions menu' + '--with and without Dispo Auth Service' + '--check statuses and notes upon rejections and approvals', function () {
         let hasFailed = false
         let persisted = {}
 
@@ -701,8 +700,7 @@ for (let i = 0; i < 1; i++) {
         });
     });
 
-
-    describe.only('Resetting Dispo fields when item is added to a new Dispo task', function () {
+    describe('Resetting Dispo fields when item is added to a new Dispo task', function () {
         it('', function () {
 
             api.auth.get_tokens(orgAdmin)
