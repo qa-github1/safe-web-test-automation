@@ -241,8 +241,7 @@ describe('Auto-Disposition', function () {
                 .verify_text_is_present_on_main_container(S.currentDate)
         });
 
-        //TODO: Sumejja should check further
-        xit('2.3 Verify "Recalculate Cases to Dispose" functionality', function () {
+        it('2.3 Verify "Recalculate Cases to Dispose" functionality', function () {
             api.auth.get_tokens(user);
             D.getNewCaseData();
             api.auto_disposition.edit(true);
