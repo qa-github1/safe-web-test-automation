@@ -15,7 +15,7 @@ let approvedForReleaseItem4 = {}
 
 for (let i = 0; i < 1; i++) {
 
-    xdescribe('Dispo Auth - without session restore', function () {
+    describe('Dispo Auth - without session restore', function () {
 
         before(function () {
             startTime = Date.now();
@@ -286,7 +286,7 @@ for (let i = 0; i < 1; i++) {
     });
 
 // enable this block if you want to generate 3k Release letters
-    xdescribe('Generating large number of release letters ', function () {
+    describe('Generating large number of release letters ', function () {
         for (let i = 0; i < 1; i++) {
             let caseData
             let itemData
@@ -486,7 +486,7 @@ for (let i = 0; i < 1; i++) {
     })
 
 
-    describe.only('Add Dispo Task with 100 items and assign to Power User, ' + '--initiate and complete 2nd and 3rd tier approval' + '--use Approve and Reject buttons from grid and Actions menu' + '--with and without Dispo Auth Service' + '--check statuses and notes upon rejections and approvals', function () {
+    describe('Add Dispo Task with 100 items and assign to Power User, ' + '--initiate and complete 2nd and 3rd tier approval' + '--use Approve and Reject buttons from grid and Actions menu' + '--with and without Dispo Auth Service' + '--check statuses and notes upon rejections and approvals', function () {
         let hasFailed = false
         let persisted = {}
 
@@ -702,7 +702,7 @@ for (let i = 0; i < 1; i++) {
     });
 
 
-    describe.only('Resetting Dispo fields when item is added to a new Dispo task', function () {
+    describe('Resetting Dispo fields when item is added to a new Dispo task', function () {
         it('', function () {
 
             api.auth.get_tokens(orgAdmin)

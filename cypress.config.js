@@ -26,7 +26,7 @@ module.exports = defineConfig({
     retries: 0,
 
     env: {
-        allure: true,
+        allure: false,
         CYPRESS_VERIFY_TIMEOUT: 60000,
 
         // ✅ This is the key fix: default environment name

@@ -18,7 +18,7 @@
   "watchForFileChanges": false,
   "video": true,
   "env" : {
-    "allure": true,
+    "allure": false,
     "CYPRESS_VERIFY_TIMEOUT": 60000
   },
   "defaultEnvironment": {

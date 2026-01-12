@@ -42,7 +42,7 @@ function getEnvironmentConfig(config) {
     config.env = {
         ...config.env,
         ...environmentData,
-        allure: true,
+        allure: false,
         allureResultsPath: `report/allure-results-${config.env.orgNum || 'default'}`,
     }
 
