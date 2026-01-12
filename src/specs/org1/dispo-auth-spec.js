@@ -15,7 +15,7 @@ let approvedForReleaseItem4 = {}
 
 for (let i = 0; i < 1; i++) {
 
-    xdescribe('Dispo Auth - without session restore', function () {
+    describe('Dispo Auth - without session restore', function () {
 
         before(function () {
             startTime = Date.now();
@@ -286,7 +286,7 @@ for (let i = 0; i < 1; i++) {
     });
 
 // enable this block if you want to generate 3k Release letters
-    xdescribe('Generating large number of release letters ', function () {
+    describe('Generating large number of release letters ', function () {
         for (let i = 0; i < 1; i++) {
             let caseData
             let itemData
@@ -344,7 +344,7 @@ for (let i = 0; i < 1; i++) {
         }
     });
 
-    describe.only('Add Dispo Task with 11 1DA items and assign to Org Admin, ' + '--set different actions for item using all variations' + '--using Actions menu and grid, ' + '--check statuses and notes upon submission', function () {
+    describe('Add Dispo Task with 11 1DA items and assign to Org Admin, ' + '--set different actions for item using all variations' + '--using Actions menu and grid, ' + '--check statuses and notes upon submission', function () {
 
         let hasFailed = false
         let persisted = {}
