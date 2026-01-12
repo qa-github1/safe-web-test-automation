@@ -56,3 +56,10 @@ Cypress.on('window:before:load', (win) => {
         originalConsoleError.apply(win.console, args)
     }
 })
+
+Cypress.Commands.add('generate_excel_file', (fileName, dataObject) => {
+    return cy.task('generate_excel_file', {
+        filename: fileName,
+        arrayOfArraysWithExcelHeadersAndData: dataObject,
+    });
+});
