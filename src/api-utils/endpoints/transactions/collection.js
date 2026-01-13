@@ -10,25 +10,13 @@ exports.check_out_item = function (itemId) {
             newPerson = (newPerson !== 'undefined') ? JSON.parse(newPerson) : null
 
             generic_request.POST(
-                '/api/CheckOuts',
+                '/api/CheckOuts/V2',
                 body.generate_POST_request_payload_for_CheckOut(newItem, newPerson),
                 'Checking out item via API '
             )
         });
     });
 };
-//
-// exports.dispose_item = function (itemFromLocalStorage = "newItem") {
-//     cy.getLocalStorage(itemFromLocalStorage).then(newItem => {
-//         newItem = JSON.parse(newItem);
-//
-//         generic_request.POST(
-//             '/api/disposals/V2',
-//             body.generate_POST_request_payload_for_Disposal(newItem),
-//             'Disposing item via API '
-//         )
-//     });
-// };
 
 exports.dispose_item = function (itemFromLocalStorage = "newItem") {
     cy.getLocalStorage(itemFromLocalStorage).then(newItem => {
@@ -47,7 +35,7 @@ exports.undispose_item = function () {
         newItem = JSON.parse(newItem);
 
         generic_request.POST(
-            '/api/Disposals/Undispose',
+            '/api/Disposals/UndisposeV2',
             body.generate_POST_request_payload_for_Undisposal(newItem),
             'Undisposing item via API '
         )
@@ -61,7 +49,7 @@ exports.move_item = function (newLocationObjectFromLocalStorage) {
             newLoc = JSON.parse(newLoc);
 
             generic_request.POST(
-                '/api/Moves',
+                '/api/Moves/V2',
                 body.generate_POST_request_payload_for_Move(newItem, newLoc),
                 'Moving item via API '
             )
