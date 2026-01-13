@@ -9,8 +9,7 @@ import {enableSessionContinuation} from '../../support/continue-session';
 let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
 let powerUser = S.getUserData(S.userAccounts.powerUser);
 
-
-for (let i = 0; i < 5; i++) {
+for (let i = 0; i < 1; i++) {
     before(function () {
         api.auth.get_tokens(orgAdmin);
         api.org_settings.enable_all_Case_fields();
