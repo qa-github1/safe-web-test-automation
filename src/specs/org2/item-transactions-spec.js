@@ -192,7 +192,7 @@ describe('Item Transactions & Actions', function () {
     });
 
     //TODO: Sumejja should check
-    xit('5. Verify Undispose transaction and enabled/disabled actions for Checked In item', function () {
+    it('5. Verify Undispose transaction and enabled/disabled actions for Checked In item', function () {
         ui.app.log_title(this);
         const enabledActions = [
             'Check Item Out',
