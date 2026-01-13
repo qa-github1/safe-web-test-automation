@@ -127,7 +127,7 @@ describe('Services', function () {
 
     });
 
-    it('EXPORT Service', function () {
+    it.only('EXPORT Service', function () {
         api.auth.get_tokens_without_page_load(orgAdmin);
 
         function checkStatusOfJobs(secondsToWait = 15) {
@@ -153,7 +153,6 @@ describe('Services', function () {
                 printStatuses(apiResponse);
             })
         }
-
 
         // Requests below are for Dev -- Org #2
         // //  Export from Case View -- Items tab
@@ -278,7 +277,6 @@ describe('Services', function () {
         //     },
         //     "EXPORT Service",
         // )
-
 
         //  Export from Search Items page (88k items)
         // generic_request.POST(
@@ -775,7 +773,6 @@ describe('Services', function () {
         //     "EXPORT Service",
         // )
 
-
         //  Export from Search People page
         generic_request.POST(
             '/api/exports/people?exportTime=2025-12-12T15:44:45.491Z&fileType=1&iANAZone=Europe%2FBerlin&timeZoneOffset=6',
@@ -1090,7 +1087,7 @@ describe('Services', function () {
         checkStatusOfJobs()
     });
 
-    it.only('LOCATIONS MOVE Service', function () {
+    it('LOCATIONS MOVE Service', function () {
         api.auth.get_tokens_without_page_load(orgAdmin);
 
         let currentLocName, currentParentLocName, newParentLocNameOrId
