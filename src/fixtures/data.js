@@ -641,7 +641,7 @@ D.getNewUserData = function (officeId, organizationId) {
         division: 'Patrol',
         divisionId: S.selectedEnvironment.divisions.div1.id,
         unit: 'UnitA',
-//        unitId: S.selectedEnvironment.units.div1_unit1.id,
+        unitId: S.selectedEnvironment.units.div1_unit1.id,
         external: 'Internal',
         mfaEnabled: 'No',
         emailDisable: false,
