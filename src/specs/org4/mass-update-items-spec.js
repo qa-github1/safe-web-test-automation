@@ -9,7 +9,6 @@ const helper = require("../../support/e2e-helper");
 let user = S.getUserData(S.userAccounts.orgAdmin);
 let startTime;
 
-
 for (let i = 0; i < 1; i++) {
     describe('Mass Update Items', function () {
 
