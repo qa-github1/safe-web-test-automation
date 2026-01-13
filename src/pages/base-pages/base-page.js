@@ -3433,6 +3433,7 @@ let basePage = class BasePage {
     }
 
     turn_on_and_enter_values_to_all_fields_on_Mass_Update_Items_modal(labelsArray, valuesArray, isCategoryEnabled = true) {
+       this.pause(2) // needed because of random issue where first toggle is not enabled properly
         if (isCategoryEnabled) {
             this.turnOnAllTogglesOnItemsUpdateModal(null, true)
         } else {
