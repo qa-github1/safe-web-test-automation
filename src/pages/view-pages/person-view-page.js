@@ -279,16 +279,7 @@ export default class PersonViewPage extends BaseViewPage {
                 [personCourtOrderNumber, data.courtOrder],
                 [personJudge, data.judge]
             ]);
-        //personCourtDate().contains(data.courtDate)
-        personCourtDate()
-            .invoke('text')
-            .then(uiDate => {
-                expect(
-                    helper.normalizeDateToMMDDYY(uiDate)
-                ).to.eq(
-                    helper.normalizeDateToMMDDYY(data.courtDate)
-                );
-            });
+        personCourtDate().contains(data.courtDate)
         return this;
     }
 }
