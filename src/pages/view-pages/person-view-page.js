@@ -1,6 +1,8 @@
 const C = require('../../fixtures/constants');
 const S = require('../../fixtures/settings');
 import BaseViewPage from "../base-pages/base-view-page";
+const helper = require('../../support/e2e-helper');
+
 
 //************************************ ELEMENTS ***************************************//
 
@@ -277,7 +279,16 @@ export default class PersonViewPage extends BaseViewPage {
                 [personCourtOrderNumber, data.courtOrder],
                 [personJudge, data.judge]
             ]);
-        personCourtDate().contains(data.courtDate)
+        //personCourtDate().contains(data.courtDate)
+        personCourtDate()
+            .invoke('text')
+            .then(uiDate => {
+                expect(
+                    helper.normalizeDateToMMDDYY(uiDate)
+                ).to.eq(
+                    helper.normalizeDateToMMDDYY(data.courtDate)
+                );
+            });
         return this;
     }
 }

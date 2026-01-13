@@ -44,9 +44,9 @@ export default class AutoDispoPage extends BasePage {
         this.scroll_to_button(C.buttons.redestributeCaseReviewDates);
         this.click_button(C.buttons.recalculateCasesToDispose);
         this.wait_response_from_API_call('requestCountingCasesToClose', 200);
-        cy.wait(1000)
-        this.wait_until_label_disappears(C.labels.autoDisposition.calculatingCasesToDispose);
-        cy.wait(500)
+        //cy.wait(1000)
+        this.wait_until_label_disappears(C.labels.autoDisposition.calculatingCasesToDispose, 3);
+       // cy.wait(500)
         return this;
     };
 
