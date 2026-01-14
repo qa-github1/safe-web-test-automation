@@ -146,6 +146,7 @@ export default class AddItemPage extends BaseAddPage {
         // this.wait_until_spinner_disappears()
         this.pause(3)
         category().click();
+        cy.get('[repeat="category in data.categories | filter: { name: $select.search }"]').should('be.visible')
         //this.pause(3)
         cy.contains(option).click();
         return this;
