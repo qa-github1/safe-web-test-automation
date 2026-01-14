@@ -1,5 +1,6 @@
 import Menu from "../menu";
 import BaseSearchPage from "../base-pages/base-search-page";
+import S from "../../fixtures/settings";
 
 const C = require('../../fixtures/constants');
 const menu = new Menu();
@@ -20,6 +21,11 @@ export default class SearchPeoplePage extends BaseSearchPage {
     }
 
 //************************************ ACTIONS ***************************************//
+
+    open_direct_url_for_page() {
+        this.open_url_and_wait_all_GET_requests_to_finish(S.base_url + '/#/' + C.pages.peopleSearch.url)
+        return this
+    }
 
     enter_Business_Name(businessName, searchCriteria = C.searchCriteria.inputFields.equals) {
         if (searchCriteria !== C.searchCriteria.inputFields.equals) {

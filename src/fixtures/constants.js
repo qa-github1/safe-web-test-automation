@@ -1019,6 +1019,7 @@ C.pages = {
         numberOfStandardColumnsReduced: null,
     },
     peopleSearch: {
+        url: 'people/search/',
         numberOfStandardColumns: 19,
         numberOfStandardColumnsReduced: 6,
     },

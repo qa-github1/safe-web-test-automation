@@ -66,8 +66,7 @@ for (let i = 0; i < 1; i++) {
                 .verify_toast_message(C.toastMsgs.saved)
 
             //SEARCH FOR NOTE
-            ui.searchNotes.visit_base_url()
-                .run_search_by_Text(note)
+            ui.searchNotes.run_search_by_Text(note)
                 .verify_records_count_on_grid(1)
         });
 

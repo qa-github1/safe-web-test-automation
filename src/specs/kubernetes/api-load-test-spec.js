@@ -21,7 +21,7 @@ describe('Services', function () {
         api.items.add_new_item()
     });
 
-    it.only('REPORT Service', function () {
+    it('REPORT Service', function () {
         api.auth.get_tokens_without_page_load(orgAdmin);
 
         function checkStatusOfJobs(nameOfReportsInCache, secondsToWait = 30) {
@@ -1200,7 +1200,7 @@ describe('Services', function () {
         checkStatusOfJobs()
     });
 
-    it('LOCATIONS MOVE Service', function () {
+    it.only('LOCATIONS MOVE Service', function () {
         api.auth.get_tokens_without_page_load(orgAdmin);
 
         let currentLocName, currentParentLocName, newParentLocNameOrId
@@ -1245,11 +1245,12 @@ describe('Services', function () {
             }
 
             numberOfRequests = 26
-            let numberOfItemsInBigLocs = 80
+            let numberOfItemsInBigLocs = 100
 
          //   add X number of items to specific locations on root level
             currentParentLocName = null
               for (let i = 1; i < (numberOfRequests+1); i++) {
+                  currentParentLocName = '__AAA_Loc1'
                   currentLocName = '____CONT_' + i
                   fetch_location_IDs(currentLocName, currentParentLocName, newParentLocNameOrId)
                   for (let j = 0; j < numberOfItemsInBigLocs; j++) {
