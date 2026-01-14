@@ -9,17 +9,17 @@ E.generateCustomFormHeaders = function (formName) {
     return [
         formName + " - Textbox",
         formName + " - Email",
-        formName + " - Number",
+        formName + " - Custom Number",
         formName + " - Password",
         formName + " - Textarea",
         formName + " - Checkbox",
         formName + " - Checkbox List",
         formName + " - Radiobutton List",
         formName + " - Select List",
-        formName + " - Date",
+        formName + " - Custom Date",
         formName + " - Dropdown Typeahead",
         formName + " - User/User Group",
-        formName + " - Person",
+        formName + " - Custom Person",
     ]
 };
 
