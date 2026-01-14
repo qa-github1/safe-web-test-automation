@@ -26,7 +26,7 @@ describe('Import Item Updates', function () {
     });
     //TODO: Sumejja should check further
 
-    xit('1. Import updates for all regular and custom fields', function () {
+    it('1. Import updates for all regular and custom fields', function () {
         ui.app.log_title(this);
         let fileName = 'ItemUpdatesImport_allRegularFieldsUpdated-CustomFormAttached';
 
@@ -168,7 +168,7 @@ describe('Import Item Updates', function () {
         });
 
         //TODO: Sumejja should check further
-        it.only('4. Import update for item status (Move transaction)', function () {
+        it('4. Import update for item status (Move transaction)', function () {
             ui.app.log_title(this);
             let fileName = 'ItemUpdatesImport_Move_' + S.domain;
 
@@ -208,7 +208,7 @@ describe('Import Item Updates', function () {
         });
 
         //TODO: Sumejja should check further
-        xit('5. Import update for item status (Disposal transaction)', function () {
+        it('5. Import update for item status (Disposal transaction)', function () {
             ui.app.log_title(this);
             let fileName = 'ItemUpdatesImport_Disposal_' + S.domain;
 
@@ -253,14 +253,14 @@ describe('Import Item Updates', function () {
                          [['Type', 'In'], ['Issued From', orgAdmin.name], ['Issued To', 'New Item Entry'], ['Storage Location', D.newItem.location], ['Notes', `Item entered into system.`]],
                      ])
                     .open_last_history_record()
-                    .verify_all_values_on_history(D.editedItem, originalItem)
+                    ui.itemView.verify_all_values_on_history(D.editedItem, originalItem)
                     .verify_red_highlighted_history_records(allEditedFieldsWithoutDisposition, allEditedFieldsWithoutReleasedTo, allEditedFields)
                     .click_button_on_modal(C.buttons.cancel);
             });
         });
 
         //TODO: Sumejja should check further
-        xit('6. Import update for item status (Undispose transaction)', function () {
+        it('6. Import update for item status (Undispose transaction)', function () {
             ui.app.log_title(this);
             let fileName = 'ItemUpdatesImport_Undispose_' + S.domain;
 
