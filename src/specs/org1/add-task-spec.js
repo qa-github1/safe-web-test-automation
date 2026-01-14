@@ -52,7 +52,7 @@ for (let i = 0; i < 1; i++) {
                     .verify_task_data_on_grid(D.newTask, orgAdmin)
             });
 
-            it.only('1.1.2.' +
+            it('1.1.2.' +
                 'Add task with all fields' +
                 '-- assign to 1 user and 1 user group' +
                 '-- attach 1 case, 1 item and 1 person' +
