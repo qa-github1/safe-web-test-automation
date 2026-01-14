@@ -159,3 +159,14 @@ Cypress.Commands.add('clickAndRetryUntilText', (
 
 // Prevent Cypress from failing on uncaught exceptions (optional)
 Cypress.on('uncaught:exception', (err, runnable) => false);
+
+Cypress.Commands.add('signOnCanvas', () => {
+    cy.get('canvas')
+        .should('have.length.at.least', 1)
+        .first()
+        .trigger('mousedown', { which: 1, clientX: 100, clientY: 100 })
+        .trigger('mousemove', { clientX: 120, clientY: 120 })
+        .trigger('mousemove', { clientX: 140, clientY: 140 })
+        .trigger('mouseup');
+});
+

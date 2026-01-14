@@ -26,7 +26,7 @@
     "dev-smoke-test": "cypress run --headless --browser chrome --spec 'src/specs/smoke/main-actions.js' --env environment=dev,orgNum=2 ",
     "dev-smoke-test-parallel": "cypress run --headless --browser chrome --record",
     "all-tests-dev-headless": "cypress run --headless --browser chrome --spec 'src/specs/org3/*spec.js' --env environment=dev,orgNum=2",
-    "tests-org1": "cypress run --headless --browser chrome --spec 'src/specs/org2/locations-containers-spec.js' --env environment=pentest,orgNum=2",
+    "tests-org1": "cypress run --headless --browser chrome --spec 'src/specs/org3/Services/Importer/import-case-updates-spec.js' --env environment=pentest,orgNum=2",
     "tests-org2": "cypress run --headless --browser chrome --spec 'src/specs/org1/*spec.js' --env environment=pentest,orgNum=2",
     "tests-org3": "cypress run --headless --browser chrome --spec 'src/specs/org2/*spec.js' --env environment=dev,orgNum=3",
     "tests-org4": "cypress run --headless --browser chrome --spec 'src/specs/org4/*spec.js' --env environment=pentest,orgNum=4",
