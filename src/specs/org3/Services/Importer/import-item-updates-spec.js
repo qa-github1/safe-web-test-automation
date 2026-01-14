@@ -41,13 +41,13 @@ describe('Import Item Updates', function () {
             E.generateDataFor_ITEMS_Importer([D.editedItem], S.customForms.itemFormWithOptionalFields, true);
             cy.generate_excel_file(fileName, E.itemImportDataWithAllFields);
 
-            // verify item data precheck
+            cy.log(" 🟢🟢🟢  Verify Item Data Precheck 🟢🟢🟢  ")
             ui.importer.precheck_import_data(fileName, C.importTypes.items, true)
             ui.app.open_newly_created_item_via_direct_link()
             ui.itemView.select_tab(C.tabs.history)
                 .verify_title_on_active_tab(1)
 
-            // verify item updates import -- with custom form attached and initially populated by importer
+            cy.log(" 🟢🟢🟢  Verify Item Updates Import -- With Custom Form Attached And Initially Populated By Importer 🟢🟢🟢  ")
             ui.importer.open_direct_url_for_page()
                 .click_Play_icon_on_first_row()
                 .check_import_status_on_grid('1 records imported')
@@ -58,16 +58,17 @@ describe('Import Item Updates', function () {
                 .verify_edited_and_not_edited_values_on_Item_Edit_form(allEditedFields, D.editedItem, D.newItem, true, true)
                 .verify_custom_data_on_Edit_form(D.newCustomFormData)
                 .open_last_history_record()
-                .verify_all_values_on_history(D.editedItem, D.newItem, S.customForms.itemFormWithOptionalFields, true)
+                .verify_all_values_on_history(D.editedItem, D.newItem, S.customForms.itemFormWithOptionalFields, true, D.newCustomFormData)
                 .verify_red_highlighted_history_records(allEditedFields)
 
             fileName = 'ItemUpdatesImport_CustomFieldsUpdated';
-            // verify item updates import -- with custom data updated by importer
+            cy.log(" 🟢🟢🟢  Verify Item Updates Import -- With Custom Data Updated By Importer 🟢🟢🟢  ")
             E.editedCustomFieldsValues = E.generateEditedCustomValues()
             D.editedItem = Object.assign(D.editedItem, D.editedCustomFormData)
             E.generateDataFor_ITEMS_Importer([D.editedItem], S.customForms.itemFormWithOptionalFields, true);
             cy.generate_excel_file(fileName, E.itemImportDataWithAllFields);
-            // verify item updates import
+
+            cy.log(" 🟢🟢🟢  Verify Item Updates Import 🟢🟢🟢  ")
             ui.importer.import_data(fileName, C.importTypes.items, true)
             ui.itemView.open_newly_created_item_via_direct_link()
                 .click_Edit()
@@ -167,7 +168,7 @@ describe('Import Item Updates', function () {
         });
 
         //TODO: Sumejja should check further
-        xit('4. Import update for item status (Move transaction)', function () {
+        it.only('4. Import update for item status (Move transaction)', function () {
             ui.app.log_title(this);
             let fileName = 'ItemUpdatesImport_Move_' + S.domain;
 
