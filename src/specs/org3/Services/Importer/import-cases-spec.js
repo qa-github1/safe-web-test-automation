@@ -19,7 +19,7 @@ describe('Import Cases', function () {
         D.generateNewDataSet();
     });
     //TODO: Sumejja should check further
-    xit('I.C_1 Case with all regular and custom fields -- user and user group in Case Officer(s) field', function () {
+    it.only('I.C_1 Case with all regular and custom fields -- user and user group in Case Officer(s) field', function () {
         ui.app.log_title(this);
         let fileName = 'CaseImport_allFields_' + S.domain;
         api.auth.get_tokens(user);
@@ -38,11 +38,11 @@ describe('Import Cases', function () {
         api.org_settings.enable_all_Item_fields();
         api.org_settings.update_org_settings(true, true);
 
-        // verify case data precheck
+        cy.log(" 🟢🟢🟢  Verify Case Data Precheck 🟢🟢🟢  ")
         ui.importer.precheck_import_data(fileName, C.importTypes.cases)
             .quick_search_for_case(D.newCase.caseNumber, false);
 
-        // verify case import
+        cy.log(" 🟢🟢🟢  Verify Case Import 🟢🟢🟢  ")
         ui.importer.reload_page()
             .click_Play_icon_on_first_row()
             // .verify_toast_message([C.toastMsgs.importComplete, 1 + C.toastMsgs.recordsImported])
@@ -58,17 +58,17 @@ describe('Import Cases', function () {
             .click_button_on_modal(C.buttons.cancel)
             .verify_title_on_active_tab(1)
 
-        // verify new item can be added to the imported case
+        cy.log(" 🟢🟢🟢  Verify New Item Can Be Added To The Imported Case 🟢🟢🟢  ")
         D.getItemDataWithReducedFields(D.editedCase)
         D.newItem.caseNumber = D.newCase.caseNumber
         api.org_settings.disable_Item_fields()
         ui.menu.click_Add__Item();
-        ui.addItem.enter_Case_Number_and_select_on_typeahead(D.editedCase.caseNumber)
-            .populate_all_fields_on_both_forms(D.newItem, false, false)
+        ui.addItem.enter_Case_Number_and_select_on_typeahead(D.newCase.caseNumber)
+            .populate_all_fields_on_both_forms(D.newItem, false, true)
             .select_post_save_action(C.postSaveActions.viewAddedItem)
             .click_Save()
             .verify_Error_toast_message_is_NOT_visible();
-        ui.itemView.verify_Item_View_page_is_open(D.editedCase.caseNumber)
+        ui.itemView.verify_Item_View_page_is_open(D.newCase.caseNumber)
     });
 
     if (S.isFullRegression()) {
