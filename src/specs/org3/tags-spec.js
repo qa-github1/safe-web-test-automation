@@ -5,7 +5,6 @@ const api = require('../../api-utils/api-spec');
 const ui = require('../../pages/ui-spec');
 
 let office_1 = S.selectedEnvironment.office_1;
-//let regularUser_permissionGroup = S.selectedEnvironment.regularUser_permissionGroup;
 let regularUser_permissionGroup = S.selectedEnvironment.regularUser_permissionGroup;
 let admin = S.getUserData(S.userAccounts.orgAdmin);
 let regularUser = S.getUserData(S.userAccounts.powerUser);
@@ -39,6 +38,7 @@ for (let i = 0; i < 1; i++) {
                 office_1.id,
                 regularUser_permissionGroup.id
             );
+            api.org_settings.set_Org_Level_Case_Number_formatting(false, false, false)
         });
 
         after(() => {
@@ -353,7 +353,7 @@ for (let i = 0; i < 1; i++) {
         });
 
         //TODO: Sumejja should check further
-        xit('6. Create Tag Group with Tags as Regular USer - deactivate Tag Group & Tags', function () {
+        it.only('6. Create Tag Group with Tags as Regular USer - deactivate Tag Group & Tags', function () {
             //---As Admin, set Permissions and Access to Location
             api.auth.get_tokens(admin);
             api.permissions

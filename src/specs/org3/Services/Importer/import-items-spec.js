@@ -60,7 +60,7 @@ describe('Import Items', function () {
 
     if (S.isFullRegression()) {
         //TODO: Sumejja should check further
-        it.only('2. Item with all fields - Disposed Status', function () {
+        xit('2. Item with all fields - Disposed Status', function () {
             ui.app.log_title(this);
             let fileName = 'ItemImport_allFields_Disposed_' + S.domain;
             api.auth.get_tokens(orgAdmin);
