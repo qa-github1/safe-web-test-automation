@@ -21,7 +21,7 @@ describe('Services', function () {
         api.items.add_new_item()
     });
 
-    it('REPORT Service', function () {
+    it.only('REPORT Service', function () {
         api.auth.get_tokens_without_page_load(orgAdmin);
 
         function checkStatusOfJobs(nameOfReportsInCache, secondsToWait = 30) {
@@ -45,6 +45,14 @@ describe('Services', function () {
                 })
             });
         }
+
+       // start report for case with cca 1k items
+         generic_request.POST(
+             '/api/reports/buildreport',
+             requestPayloads.reporterPayloadFromCaseView([S.selectedEnvironment.oldActiveCase.id]),
+             "REPORT Service",
+             'Big_Case_Report'
+         )
 
        // start report for case with cca 1k items
          generic_request.POST(
@@ -886,43 +894,6 @@ describe('Services', function () {
             },
             "EXPORT Service",
         )
-        //  Export from Search People page--> cca 2,5k records (Dev - Org#2)
-        generic_request.POST(
-            '/api/exports/people?exportTime=2025-12-12T15:44:45.491Z&fileType=1&iANAZone=Europe%2FBerlin&timeZoneOffset=6',
-            {
-                "caseOfficers": [],
-                "tags": [],
-                "IsSearchingInSublocations": false,
-                "DynamicFields": [],
-                "StaticFields": [],
-                "officeIds": [],
-                "custodyOrgIds": [],
-                "fromOrgIds": [],
-                "orderBy": "Active",
-                "orderByAsc": false,
-                "thenOrderBy": "",
-                "thenOrderByAsc": false,
-                "PageSize": 25,
-                "peopleIds": [],
-                "PageNumber": 1,
-                "clientDate": "2025-12-12T18:53:12.583Z",
-                "clientTz": "Europe/Berlin",
-                "timezoneOffset": -60,
-                "SavedSearchEntities": [{
-                    "name": "SEARCH.SAVED_SEARCH.CASES",
-                    "typeId": 3,
-                    "fieldName": "SavedSearchId_cases",
-                    "searchCriteriasType": 5,
-                    "dropdownEntities": {"entity": "SavedSearches", "options": {"model": "cases"}},
-                    "isV2": false,
-                    "searchCriterias": [{"id": 0, "name": "TP_SEARCH.SEARCH_CRITERIA.EQUALS"}],
-                    "dropdownValues": [{"id": null, "name": "Select all"}],
-                    "searchCriteria": 0
-                }],
-                "version": 1
-            },
-            "EXPORT Service",
-        )
 
         // //  Export from Search Tasks page
         // generic_request.POST(
@@ -1200,7 +1171,7 @@ describe('Services', function () {
         checkStatusOfJobs()
     });
 
-    it.only('LOCATIONS MOVE Service', function () {
+    it('LOCATIONS MOVE Service', function () {
         api.auth.get_tokens_without_page_load(orgAdmin);
 
         let currentLocName, currentParentLocName, newParentLocNameOrId

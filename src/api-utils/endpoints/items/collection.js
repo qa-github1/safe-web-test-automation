@@ -150,6 +150,7 @@ exports.get_item_data = function (itemId) {
 
 exports.get_items_from_specific_case = function (caseNumber, numberOfPagesWith1000Items = 1, storeAllItemsToLocalStorage = false, timeout = 60000) {
     let barcodes = []
+    let itemIds = []
 
     cy.getLocalStorage("newCase").then(caseData => {
         if (caseNumber === 'newCase') {
@@ -181,12 +182,14 @@ exports.get_items_from_specific_case = function (caseNumber, numberOfPagesWith10
 
                         for (let i = 0; i < caseItemsObjects.length; i++) {
                             barcodes.push(caseItemsObjects[i].barcode)
+                            itemIds.push(caseItemsObjects[i].id)
                             if (storeAllItemsToLocalStorage) cy.setLocalStorage("item" + (i + 1), JSON.stringify(caseItemsObjects[i]));
                         }
                     });
                 });
             }
             cy.setLocalStorage('barcodes', barcodes)
+            cy.setLocalStorage('itemIds', itemIds)
         })
     })
 };

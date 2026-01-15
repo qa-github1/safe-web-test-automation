@@ -8,7 +8,7 @@ S.base_url = Cypress.env('baseUrl') || 'https://pentest.trackerproducts.com'
 S.api_url = Cypress.env('apiUrl') || 'https://pentestapi.trackerproducts.com'
 S.orgNum = Cypress.env('orgNum') || 1
 S.enableApiLogs = Cypress.env('enableApiLogs') || false
-S.api_timeout = Cypress.env('apiTimeout') || 60000
+S.api_timeout = Cypress.env('apiTimeout') || 95000
 
 // options: LightRegression, FullRegression
 S.testSuite = Cypress.env('testSuite') || 'FullRegression'

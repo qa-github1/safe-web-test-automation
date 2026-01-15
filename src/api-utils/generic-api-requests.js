@@ -1,6 +1,6 @@
 var S = require('../fixtures/settings');
 
-function request_with_JSON_data(httpMethod, urlSuffix, requestBody, log = '', propertyToSaveInLocalStorage, specificResponseProperty = null) {
+function request_with_JSON_data(httpMethod, urlSuffix, requestBody, log = '', propertyToSaveInLocalStorage, specificResponseProperty = null, timeout) {
 
     function isObject(variable) {
         return Object.prototype.toString.call(variable) === '[object Object]'
@@ -8,13 +8,14 @@ function request_with_JSON_data(httpMethod, urlSuffix, requestBody, log = '', pr
 
     cy.getLocalStorage("headers").then(headers => {
 
+        timeout = timeout || S.api_timeout
             cy.request({
                 url: S.api_url + urlSuffix,
                 method: httpMethod,
                 json: true,
                 body: requestBody,
                 headers: JSON.parse(headers),
-                timeout: S.api_timeout
+                timeout: timeout
             })
                 .then(response => {
                     let propertyName;
@@ -71,8 +72,8 @@ function request_with_JSON_data(httpMethod, urlSuffix, requestBody, log = '', pr
     return this;
 }
 
-exports.POST = function (urlSuffix, requestBody, log, propertyToSaveInLocalStorage) {
-    request_with_JSON_data('POST', urlSuffix, requestBody, log, propertyToSaveInLocalStorage);
+exports.POST = function (urlSuffix, requestBody, log, propertyToSaveInLocalStorage, timeout) {
+    request_with_JSON_data('POST', urlSuffix, requestBody, log, propertyToSaveInLocalStorage, null, timeout);
     return this;
 };
 

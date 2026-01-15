@@ -24,6 +24,14 @@ exports.setDisposalReleaseOverride = function (userIds = [], userGroupIds = []) 
     return this
 };
 
+exports.set_visible_item_catagories = function () {
+    generic_request.PUT(
+        '/api/categories',
+        body.generate_request_payload_for_setting_visible_item_categories(),
+        "Visible Item Categories updated via API");
+    return this
+};
+
 exports.update_dispo_config_for_item_catagories = function (thirdTierApproverGroup = S.selectedEnvironment.admin_userGroup) {
     generic_request.PUT(
         '/api/categories/DispositionApprovalConfig',
