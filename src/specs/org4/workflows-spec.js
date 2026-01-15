@@ -144,7 +144,7 @@ describe('Workflows', function () {
             api.org_settings.enable_all_Case_fields();
             api.cases.add_new_case()
                 .edit_newly_added_case(true);
-            ui.app.open_newly_created_case_via_direct_link()
+             ui.app.open_newly_created_case_via_direct_link()
                 .select_tab('Tasks')
                 .click_button('Details')
                 .verify_text_is_present_on_main_container("Task created by workflow " + 'workflow' + D.randomNo)

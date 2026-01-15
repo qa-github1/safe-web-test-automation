@@ -48,23 +48,23 @@ exports.generate_PUT_request_payload_for_editing_existing_item = function (itemO
     let formData = addCustomFormData ?
         [{
             data: `{
-            "${S.selectedEnvironment.itemCustomForm.checkboxListId}":${JSON.stringify(itemObject.custom_checkboxListOption_apiFormat)},
-            "${S.selectedEnvironment.itemCustomForm.radioButtonListId}":"${itemObject.custom_radiobuttonListOption_apiFormat}",
-            "${S.selectedEnvironment.itemCustomForm.selectListId}":"${itemObject.custom_selectListOption_apiFormat}",
-            "${S.selectedEnvironment.itemCustomForm.number}":${itemObject.custom_number},
-            "${S.selectedEnvironment.itemCustomForm.password}":"${itemObject.custom_password}",
-            "${S.selectedEnvironment.itemCustomForm.textbox}":"${itemObject.custom_textbox}",
-            "${S.selectedEnvironment.itemCustomForm.email}":"${itemObject.custom_email}",
-            "${S.selectedEnvironment.itemCustomForm.textarea}":"${itemObject.custom_textarea}",
-            "${S.selectedEnvironment.itemCustomForm.user}":"user-${itemObject.custom_userId}",
-            "${S.selectedEnvironment.itemCustomForm.person}":${itemObject.custom_personId},
-            "${S.selectedEnvironment.itemCustomForm.dropdownTypeahead}":${itemObject.custom_dropdownTypeaheadOption_apiFormat},
-            "${S.selectedEnvironment.itemCustomForm.checkbox}":${itemObject.custom_checkbox},
-            "${S.selectedEnvironment.itemCustomForm.date}":"${itemObject.custom_dateISOFormat}"}`,
-            dateFields: [S.selectedEnvironment.itemCustomForm.date],
+            "${S.selectedEnvironment.itemOptionalCustomForm.checkboxListId}":${JSON.stringify(itemObject.custom_checkboxListOption_apiFormat)},
+            "${S.selectedEnvironment.itemOptionalCustomForm.radioButtonListId}":"${itemObject.custom_radiobuttonListOption_apiFormat}",
+            "${S.selectedEnvironment.itemOptionalCustomForm.selectListId}":"${itemObject.custom_selectListOption_apiFormat}",
+            "${S.selectedEnvironment.itemOptionalCustomForm.number}":${itemObject.custom_number},
+            "${S.selectedEnvironment.itemOptionalCustomForm.password}":"${itemObject.custom_password}",
+            "${S.selectedEnvironment.itemOptionalCustomForm.textbox}":"${itemObject.custom_textbox}",
+            "${S.selectedEnvironment.itemOptionalCustomForm.email}":"${itemObject.custom_email}",
+            "${S.selectedEnvironment.itemOptionalCustomForm.textarea}":"${itemObject.custom_textarea}",
+            "${S.selectedEnvironment.itemOptionalCustomForm.user}":"user-${itemObject.custom_userId}",
+            "${S.selectedEnvironment.itemOptionalCustomForm.person}":${itemObject.custom_personId},
+            "${S.selectedEnvironment.itemOptionalCustomForm.dropdownTypeahead}":${itemObject.custom_dropdownTypeaheadOption_apiFormat},
+            "${S.selectedEnvironment.itemOptionalCustomForm.checkbox}":${itemObject.custom_checkbox},
+            "${S.selectedEnvironment.itemOptionalCustomForm.date}":"${itemObject.custom_dateISOFormat}"}`,
+            dateFields: [S.selectedEnvironment.itemOptionalCustomForm.date],
             entityId: itemObject.id.toString(),
-            formId: S.selectedEnvironment.itemCustomForm.id,
-            formName: S.selectedEnvironment.itemCustomForm.name
+            formId: S.selectedEnvironment.itemOptionalCustomForm.id,
+            formName: S.selectedEnvironment.itemOptionalCustomForm.name
         }] : [];
 
     itemObject.formData = formData;
