@@ -319,7 +319,7 @@ export default class ItemViewPage extends BaseViewPage {
                 ['Custody Reason', dataObject.custodyReason],
                 ['Serial Number', dataObject.serialNumber],
                 ['Model', dataObject.model],
-                ['Additional Barcodes', dataObject.additionalBarcodes],
+              //  ['Additional Barcodes', dataObject.additionalBarcodes],
                 ['Make', dataObject.make],
                 ['Item Belongs to', dataObject.itemBelongsToOnHistory],
                 ['Custodian', dataObject.custodian],

@@ -9,8 +9,8 @@ const ui = require('../../../../pages/ui-spec');
 let user = S.userAccounts.orgAdmin;
 
 describe('Import People', function () {
-    //TODO: Sumejja should check further
-    xit('1. Precheck and Import People with all fields ' +
+
+    it('1. Precheck and Import People with all fields ' +
         '- 1 person linked to 1 case, other person linked to 2 cases', function () {
         ui.app.log_title(this);
         let fileName = 'PeopleImport_allFields_' + S.domain;
@@ -79,7 +79,7 @@ describe('Import People', function () {
             .verify_content_of_first_row_in_results_table_on_active_tab(case2)
     });
 
-    it('2. Import and verify Person with minimum fields', function () {
+    it.only('2. Import and verify Person with minimum fields', function () {
         ui.app.log_title(this);
         let fileName = 'PeopleImport_minimumFields_' + S.domain;
         api.auth.get_tokens(user);
