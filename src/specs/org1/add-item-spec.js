@@ -27,7 +27,7 @@ before(function () {
 describe('Add Item', function () {
 
     context('1. Org Admin', function () {
-        it('1.1 All fields enabled ' +
+        it.only('1.1 All fields enabled ' +
             '-- "Item Belongs To Shows All People" turned ON in Org Settings -- multiple people not linked to Primary Case are selected in "Item Belongs to" field ', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);

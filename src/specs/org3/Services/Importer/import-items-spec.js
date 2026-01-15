@@ -25,7 +25,6 @@ describe('Import Items', function () {
         api.auth.get_tokens(orgAdmin);
 
         D.getNewItemData(D.newCase);
-
         E.generateDataFor_ITEMS_Importer([D.newItem], S.customForms.itemFormWithOptionalFields);
         cy.generate_excel_file(fileName, E.itemImportDataWithAllFields);
 
@@ -59,8 +58,7 @@ describe('Import Items', function () {
     });
 
     if (S.isFullRegression()) {
-        //TODO: Sumejja should check further
-        it.only('2. Item with all fields - Disposed Status', function () {
+        it('2. Item with all fields - Disposed Status', function () {
             ui.app.log_title(this);
             let fileName = 'ItemImport_allFields_Disposed_' + S.domain;
             api.auth.get_tokens(orgAdmin);
