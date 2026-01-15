@@ -89,7 +89,7 @@ export default class ItemViewPage extends BaseViewPage {
                 [makeInput, itemObject.make],
                 [modelInput, itemObject.model],
                 [descriptionInput, itemObject.description],
-                [additionalBarcodeInput, itemObject.additionalBarcodes]
+                [additionalBarcodeInput, itemObject.barcodes]
             ]);
 
         this.verify_text_on_multiple_elements(

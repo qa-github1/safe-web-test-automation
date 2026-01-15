@@ -233,6 +233,7 @@ export default class SearchItemPage extends BaseSearchPage {
             ['Disposed By', dataObject.disposedByName],
             ['Disposal Notes', dataObject.disposalNotes],
             ['Additional Barcodes', dataObject.additionalBarcodes],
+           // ['Additional Barcodes', dataObject.barcodes],
             ['Tags', dataObject.tags],
             ['Recovered At', dataObject.recoveryLocation],
             ['Recovered By', dataObject.recoveredByName],

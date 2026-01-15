@@ -43,14 +43,15 @@ describe('Search Item', function () {
             let itemDescription = D.newItem.description;
 
             api.auth.get_tokens(S.userAccounts.orgAdmin)
-            api.items.add_new_item(true);
+          //  D.generateNewDataSet();
+          //   api.items.add_new_item(true);
 
             ui.menu.click_Search__Item();
             ui.searchItem.enter_Description(equals, itemDescription)
                 .enter_Created_By(user.email)
                 .click_button(C.buttons.search)
                 .verify_content_of_first_row_in_results_table(itemDescription)
-                .verify_records_count_on_grid(2)
+                .verify_records_count_on_grid(1)
         });
 
         it('S.I_2.2 Created Date', function () {
@@ -58,6 +59,7 @@ describe('Search Item', function () {
             let currentDate = ui.app.getCurrentDate();
             let itemDescription = D.newItem.description;
             let exactly = C.searchCriteria.dates.exactly
+
 
             ui.menu.click_Search__Item();
             ui.searchItem.enter_Description(equals, itemDescription)

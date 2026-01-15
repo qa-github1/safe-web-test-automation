@@ -14,7 +14,7 @@ describe('Edit Item', function () {
         api.org_settings.update_org_settings(true, true);
     });
 
-    it.only('1. Edit and verify all values on Item View page -- replace the current values in multiselect fields - Tags & Item Belongs To', function () {
+    it('1. Edit and verify all values on Item View page -- replace the current values in multiselect fields - Tags & Item Belongs To', function () {
         ui.app.log_title(this);
 
         api.auth.get_tokens(user);
