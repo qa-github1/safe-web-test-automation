@@ -773,6 +773,11 @@ exports.generate_request_payload_for_disabling_Case_Number_Formatting_for_Office
     return body
 };
 
+exports.generate_request_payload_for_setting_visible_item_categories = function () {
+    return
+    [521,138,411,31,2,143,44,209,424,3,467,456,446,81,242,290,192,464,145,474,549,28,441,26,574,575,32,220,576,585,9,297,91,438,458,262,240,457,189,83,1,142,78,168,169,92,271,427,463,128,461,208,215,27,490,430,246,237,435,459,245,29,460,127,267,198,421,216,157,126,255,93,22,172,409,219,443,23,450,111,462,94,203,250]
+}
+
 exports.generate_request_payload_for_setting_dispo_config_for_item_categories = function (thirdTierApproverGroup) {
     let groupId = thirdTierApproverGroup.id
 

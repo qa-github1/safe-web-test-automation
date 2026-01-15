@@ -9,7 +9,7 @@ import BaseViewPage from "../base-pages/base-view-page";
 
 let
     submitForDisposition = e => cy.get('[ng-click="submitForDisposition()"]'),
-    actionsContainer = e => cy.get('.dropdown-menu').not('ng-hide'),
+    actionsContainer = e => cy.get('[class="grid-buttons inline open"]').find('.dropdown-menu'),
     noteInput = e => cy.get('[ng-model="vm.newTaskNote"]'),
     active_tab = e => cy.get('[class="tab-pane ng-scope active"]'),
     actionsButtonOnActiveTab = e => active_tab().find('.grid-buttons').find('button[title="Select an item or items for which you would like to perform Action."]'),
