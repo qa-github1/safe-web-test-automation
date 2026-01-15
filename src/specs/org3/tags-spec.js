@@ -352,8 +352,7 @@ for (let i = 0; i < 1; i++) {
                 .verify_content_of_last_row_in_results_table(D.newTagGroup.name)
         });
 
-        //TODO: Sumejja should check further
-        xit('6. Create Tag Group with Tags as Regular USer - deactivate Tag Group & Tags', function () {
+        it('6. Create Tag Group with Tags as Regular USer - deactivate Tag Group & Tags', function () {
             //---As Admin, set Permissions and Access to Location
             api.auth.get_tokens(admin);
             api.permissions
