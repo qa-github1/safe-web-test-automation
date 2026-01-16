@@ -9,7 +9,7 @@ import BaseViewPage from "../base-pages/base-view-page";
 
 let
     submitForDisposition = e => cy.get('[ng-click="submitForDisposition()"]'),
-    actionsContainer = e => cy.get('.dropdown-menu').not('ng-hide'),
+    actionsContainer = e => cy.get('[class="grid-buttons inline open"]').find('.dropdown-menu'),
     noteInput = e => cy.get('[ng-model="vm.newTaskNote"]'),
     active_tab = e => cy.get('[class="tab-pane ng-scope active"]'),
     actionsButtonOnActiveTab = e => active_tab().find('.grid-buttons').find('button[title="Select an item or items for which you would like to perform Action."]'),
@@ -72,36 +72,6 @@ export default class TaskViewPage extends BaseViewPage {
         return this;
     }
 
-    set_Action___Hold(rowNumberRange, holdReason, isIndefinite = false, days) {
-        this.uncheck_all_rows()
-            .click_checkbox_to_select_specific_row(rowNumberRange[0])
-            .press_shift_and_click_row(rowNumberRange[1])
-            .click_Actions()
-            .click_option_on_expanded_menu('Disposition Authorization Action')
-            .select_Action_on_modal('Hold')
-
-        if (isIndefinite) {
-            isIndefiniteRetentionCheckbox().click()
-        } else {
-            this.enterValue(holdDays, days)
-        }
-        holdReasonDropdown().select(holdReason)
-        this.click_button_on_modal('Ok')
-
-        const numberOfItemsProcessed = rowNumberRange[1] - rowNumberRange[0] + 1
-        const expectedMessage = numberOfItemsProcessed > 50
-            ? 'Processing...'
-            : 'Saved';
-
-        this.verify_single_toast_message_if_multiple_shown(expectedMessage)
-        if (numberOfItemsProcessed > 50) {
-            this.verify_text(dispoAuthJobStatus, 'Complete', 120)
-        }
-        this.wait_until_spinner_disappears(80)
-
-        return this;
-    };
-
     click_Actions() {
         actionsButtonOnActiveTab().click()
         return this;
@@ -144,7 +114,7 @@ export default class TaskViewPage extends BaseViewPage {
     };
 
     set___Approve__from_Actions_menu(rowNumberRange) {
-        let numberOfItemsProcessed =  (rowNumberRange[1])? (rowNumberRange[1] - rowNumberRange[0] + 1) : 1
+        let numberOfItemsProcessed = (rowNumberRange[1]) ? (rowNumberRange[1] - rowNumberRange[0] + 1) : 1
         const alertMessage = 'You are going to approve Disposition Action for ' + numberOfItemsProcessed + ' items'
         const toastMessage = numberOfItemsProcessed > 50
             ? 'Processing...'
@@ -192,8 +162,96 @@ export default class TaskViewPage extends BaseViewPage {
         return this;
     };
 
+    set_Action___Approve_for_Disposal_from_grid(rowNumber) {
+        dispoActionDropdownOnSpecificRow(rowNumber).select('Approve for Disposal')
+        this.verify_single_toast_message_if_multiple_shown('Saved')
+        this.wait_until_spinner_disappears(80)
+        return this;
+    };
+
+    set_Action___Timed_Disposal_from_grid(rowNumber, timeShortcut) {
+        dispoActionDropdownOnSpecificRow(rowNumber).select('Timed Disposal')
+        this.enterValue(disposeAfterDate, timeShortcut)
+        this.click_button_on_modal('Ok')
+            .verify_single_toast_message_if_multiple_shown('Saved')
+            .wait_until_spinner_disappears(80)
+        return this;
+    };
+
+    set_Action___Hold_from_grid(rowNumber, days, holdReason, isIndefinite) {
+        dispoActionDropdownOnSpecificRow(rowNumber).select('Hold')
+        if (isIndefinite) {
+            isIndefiniteRetentionCheckbox().click()
+        } else {
+            this.enterValue(holdDays, days)
+        }
+        holdReasonDropdown().select(holdReason)
+        this.click_button_on_modal('Ok')
+            .verify_single_toast_message_if_multiple_shown('Saved')
+            .wait_until_spinner_disappears(80)
+        return this;
+    };
+
+    set_Action___Approve_for_Release_from_grid(rowNumber, personObject, addressObject, isExistingPerson, isPersonLinkedToCase, personHasAddress, isDelayedRelease, duplicateDetected, useDuplicatePerson) {
+        dispoActionDropdownOnSpecificRow(rowNumber).select('Approve for Release')
+        let personName = personObject.firstName
+
+        if (isDelayedRelease) {
+            delayedReleaseCheckbox().click({force: true})
+            this.pause(0.5)
+            releaseAfterDate().should('be.enabled').type('3m')
+            this.press_ENTER(releaseAfterDate)
+        }
+
+        if (isExistingPerson) {
+            this.pause(1.5)
+            claimantFieldOnApproveForReleaseModal().click()
+            this.pause(0.7)
+
+            if (isPersonLinkedToCase) {
+                specificClaimantOnTypeahead(personName).click()
+            } else {
+                claimantInputFieldOnApproveForReleaseModal().clear()
+                claimantInputFieldOnApproveForReleaseModal().type(personName)
+                this.pause(0.7)
+                claimantInputFieldOnApproveForReleaseModal().should('have.class', 'ng-not-empty')
+                this.wait_until_spinner_disappears()
+                cy.contains(personName).click()
+                personTypeOnModal().select(personObject.personType)
+            }
+        } else {
+            existingNewPersonToggle().click()
+            addPersonPage.populate_all_fields(personObject)
+
+            if (duplicateDetected) {
+                addPersonPage
+                    //     .verify_number_of_warnings_for_potential_duplicates
+                    // (4, true, true, true, true)
+                    .potentialDuplicatePersonLink().first().click()
+
+                if (useDuplicatePerson) {
+                    addThisPersonAsClaimantButton().click()
+                } else {
+                    addPersonPage.proceedAnywayButton().click()
+                }
+            }
+        }
+
+        if ((!personHasAddress || !isExistingPerson) && (addressObject && addressObject.addressType)) {
+            addressTypeOnModal().select(addressObject.addressType)
+            this.enterValue(address1OnModal, addressObject.line1)
+        } else if (personHasAddress) {
+            this.verify_text_is_NOT_present_on_main_container('Address 1')
+        }
+
+        this.click_button_on_modal('Ok')
+            .verify_single_toast_message_if_multiple_shown('Saved')
+            .wait_until_spinner_disappears(80)
+        return this;
+    };
+
     set_Action___Approve_for_Disposal(rowNumberRange) {
-       // this.wait_response_from_API_call('getTaskItems')
+        // this.wait_response_from_API_call('getTaskItems')
         this.uncheck_all_rows()
             .click_checkbox_to_select_specific_row(rowNumberRange[0])
             .press_shift_and_click_row(rowNumberRange[1])
@@ -210,14 +268,7 @@ export default class TaskViewPage extends BaseViewPage {
         this.verify_single_toast_message_if_multiple_shown(expectedMessage)
         if (numberOfItemsProcessed > 50) {
             this.verify_text(dispoAuthJobStatus, 'Complete')
-        } this.wait_until_spinner_disappears(80)
-        return this;
-    };
-
-    set_Action___Approve_for_Disposal_from_grid(rowNumber) {
-
-        dispoActionDropdownOnSpecificRow(rowNumber).select('Approve for Disposal')
-        this.verify_single_toast_message_if_multiple_shown('Saved')
+        }
         this.wait_until_spinner_disappears(80)
         return this;
     };
@@ -231,6 +282,36 @@ export default class TaskViewPage extends BaseViewPage {
             .select_Action_on_modal('Timed Disposal')
             .enterValue(disposeAfterDate, timeShortcut)
             .click_button_on_modal('Ok')
+
+        const numberOfItemsProcessed = rowNumberRange[1] - rowNumberRange[0] + 1
+        const expectedMessage = numberOfItemsProcessed > 50
+            ? 'Processing...'
+            : 'Saved';
+
+        this.verify_single_toast_message_if_multiple_shown(expectedMessage)
+        if (numberOfItemsProcessed > 50) {
+            this.verify_text(dispoAuthJobStatus, 'Complete', 120)
+        }
+        this.wait_until_spinner_disappears(80)
+
+        return this;
+    };
+
+    set_Action___Hold(rowNumberRange, holdReason, isIndefinite = false, days) {
+        this.uncheck_all_rows()
+            .click_checkbox_to_select_specific_row(rowNumberRange[0])
+            .press_shift_and_click_row(rowNumberRange[1])
+            .click_Actions()
+            .click_option_on_expanded_menu('Disposition Authorization Action')
+            .select_Action_on_modal('Hold')
+
+        if (isIndefinite) {
+            isIndefiniteRetentionCheckbox().click()
+        } else {
+            this.enterValue(holdDays, days)
+        }
+        holdReasonDropdown().select(holdReason)
+        this.click_button_on_modal('Ok')
 
         const numberOfItemsProcessed = rowNumberRange[1] - rowNumberRange[0] + 1
         const expectedMessage = numberOfItemsProcessed > 50

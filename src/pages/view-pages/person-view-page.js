@@ -1,6 +1,8 @@
 const C = require('../../fixtures/constants');
 const S = require('../../fixtures/settings');
 import BaseViewPage from "../base-pages/base-view-page";
+const helper = require('../../support/e2e-helper');
+
 
 //************************************ ELEMENTS ***************************************//
 

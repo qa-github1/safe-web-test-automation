@@ -58,8 +58,7 @@ for (let i = 0; i < 1; i++) {
            })
         });
 
-        //TODO: Sumejja should check further
-        xit('2. Verify Transfer transaction with Uploaded Media and Signature Optional', function () {
+        it('2. Verify Transfer transaction with Uploaded Media and Signature Optional', function () {
 
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
@@ -91,8 +90,7 @@ for (let i = 0; i < 1; i++) {
             });
         });
 
-        //TODO: Sumejja should check further
-        xit('3. Verify Check In transaction with Uploaded Media and Signature Required', function () {
+        it('3. Verify Check In transaction with Uploaded Media and Signature Required', function () {
 
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
@@ -125,7 +123,7 @@ for (let i = 0; i < 1; i++) {
         });
 
         //TODO: Sumejja should check further
-        xit('4. Verify Dispose transaction with Uploaded Media and No Signature', function () {
+        it('4. Verify Dispose transaction with Uploaded Media and No Signature', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
             api.org_settings.update_org_settings(false, true, false, "~person.firstName~ ~person.lastName~")
@@ -156,7 +154,7 @@ for (let i = 0; i < 1; i++) {
         });
 
         //TODO: Sumejja should check further
-        xit('5. Verify Undispose transaction with Uploaded Media and No Signature', function () {
+        it.only('5. Verify Undispose transaction with Uploaded Media and No Signature', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
             api.org_settings.update_org_settings(false, true, false, "~person.firstName~ ~person.lastName~")
@@ -188,7 +186,7 @@ for (let i = 0; i < 1; i++) {
         });
 
         //TODO: Sumejja should check further
-        xit('6. Verify Move transaction with Uploaded Media and No Signature', function () {
+        it('6. Verify Move transaction with Uploaded Media and No Signature', function () {
 
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
@@ -217,4 +215,6 @@ for (let i = 0; i < 1; i++) {
             });
         });
     });
+
+    //TODO: we need to add verification on modal when item sharing/clp is ON and OFF
 }

@@ -3,12 +3,12 @@ const C = require('./constants');
 const accounts = require('./user-accounts');
 const helper = require('../support/e2e-helper');
 
-S.domain = Cypress.env('domain')
-S.base_url = Cypress.env('baseUrl')
-S.api_url = Cypress.env('apiUrl')
-S.orgNum = Cypress.env('orgNum')
+S.domain = Cypress.env('domain') || 'PENTEST'
+S.base_url = Cypress.env('baseUrl') || 'https://pentest.trackerproducts.com'
+S.api_url = Cypress.env('apiUrl') || 'https://pentestapi.trackerproducts.com'
+S.orgNum = Cypress.env('orgNum') || 1
 S.enableApiLogs = Cypress.env('enableApiLogs') || false
-S.api_timeout = Cypress.env('apiTimeout') || 60000
+S.api_timeout = Cypress.env('apiTimeout') || 95000
 
 // options: LightRegression, FullRegression
 S.testSuite = Cypress.env('testSuite') || 'FullRegression'
@@ -682,7 +682,7 @@ S.DEV_2 = {
     get recoveredById() {
         return S.DEV_2.person.id
     },
-    caseCustomForm: {
+    caseOptionalCustomForm: {
         name: "Optional fields - Cypress Case Form", // TODO: IDs below should be updated
         id: null,
         checkboxListId: "field2946",
@@ -699,7 +699,7 @@ S.DEV_2 = {
         person: "field2956",
         dropdownTypeahead: "field2952"
     },
-    itemCustomForm: {
+    itemOptionalCustomForm: {
         name: "Optional fields - Cypress Items Form",
         id: 22148,
         checkboxListId: "field8019",
@@ -1450,7 +1450,7 @@ S.QA_1 = {
         name: C.races.hispanic,
         id: 7
     },
-    caseCustomForm: {
+    caseOptionalCustomForm: {
         name: "Cypress Case Form",
         id: 32,
         checkboxListId: "field3231",
@@ -1466,7 +1466,7 @@ S.QA_1 = {
         user: "field3237",
         person: "field3239",
     },
-    itemCustomForm: {
+    itemOptionalCustomForm: {
         name: "Cypress Item Form",
         id: 33,
         checkboxListId: "field3291",
@@ -2047,23 +2047,7 @@ S.PENTEST_1 = {
         taskFormWithRequiredFields: 2547,
         taskFormWithOptionalFields: 2548
     },
-    caseCustomForm: {
-        name: "Cypress Case Form",
-        id: 32,
-        checkboxListId: "field3231",
-        radioButtonListId: "field3233",
-        selectListId: "field3235",
-        number: "field3223",
-        password: "field3225",
-        textbox: "field3219",
-        email: "field3221",
-        textarea: "field3227",
-        checkbox: "field3229",
-        date: "field3241",
-        user: "field3237",
-        person: "field3239",
-    },
-    itemCustomForm: {
+    itemOptionalCustomForm: {
         name: "Optional fields - Cypress Item Form - Org #1",
         id: 3424,
         checkboxListId: "field4810",
@@ -2080,7 +2064,7 @@ S.PENTEST_1 = {
         user: "field4818",
         person: "field4820",
     },
-    caseCustomForm: {
+    caseOptionalCustomForm: {
         name: "Optional fields - Cypress Case Form",
         id: 22145,
         checkboxListId: "field2946",
@@ -2219,9 +2203,9 @@ S.PENTEST_1 = {
         },
         errorCorrection: {
             templateId: 3731,
-            typeId: 1120,
+            typeId: 1106,
             type: 'Error Correction',
-            subtypeId: 557,
+            subtypeId: 2902,
             subtype: 'Packaging and Labeling',
             active: true,
             emailUser: true,
@@ -2231,7 +2215,7 @@ S.PENTEST_1 = {
             title: 'Title--forAutomatedTests',
             message: 'Message-forAutomatedTests',
             taskAction: 'Must be Rendered Safe',
-            taskActionId: '547',
+            taskActionId: '533',
         },
     },
     orgTag1: {tagModelId: 6548, name: 'sensitive information', color: "#ad2355", tagUsedBy: 1},
@@ -2360,7 +2344,7 @@ S.PENTEST_2 = {
         taskFormWithRequiredFields: 2547,
         taskFormWithOptionalFields: 2548
     },
-    caseCustomForm: {
+    caseRequiredCustomForm: {
         name: "Required Fields - Cypress CASE Form",
         id: 24187,
         checkboxListId: "field9733",
@@ -2377,7 +2361,24 @@ S.PENTEST_2 = {
         user: "field9741",
         person: "field9743",
     },
-    itemCustomForm: {
+    caseOptionalCustomForm: {
+        name: "Optional fields - Cypress CASE Form - Org#2",
+        id: 24188,
+        checkboxListId: "field9772",
+        radioButtonListId: "field9774",
+        selectListId: "field9776",
+        dropdownTypeahead: "field9778",
+        number: "field9764",
+        password: "field9766",
+        textbox: "field9760",
+        email:"field9762",
+        textarea: "field9768",
+        checkbox: "field9770",
+        date:"field9784",
+        user: "field9780",
+        person: "field9782",
+    },
+    itemOptionalCustomForm: {
         name: "Optional fields - Cypress Item Form - Org #2",
         id: 24186,
         checkboxListId: "field9694",
@@ -2652,23 +2653,7 @@ S.PENTEST_3 = {
         taskFormWithRequiredFields: 2547,
         taskFormWithOptionalFields: 2548
     },
-    caseCustomForm: {
-        name: "Cypress Case Form",
-        id: 32,
-        checkboxListId: "field3231",
-        radioButtonListId: "field3233",
-        selectListId: "field3235",
-        number: "field3223",
-        password: "field3225",
-        textbox: "field3219",
-        email: "field3221",
-        textarea: "field3227",
-        checkbox: "field3229",
-        date: "field3241",
-        user: "field3237",
-        person: "field3239",
-    },
-    itemCustomForm: {
+    itemOptionalCustomForm: {
         name: "Optional fields - Cypress ITEM Form - Org#3",
         id: 24311,
         checkboxListId: "field1844",
@@ -2685,7 +2670,7 @@ S.PENTEST_3 = {
         user: "field1852",
         person: "field1854",
     },
-    caseCustomForm: {
+    caseOptionalCustomForm: {
         name: "Optional fields - Cypress Case Form", // IDs updated - January 2026
         id: 24313,
         checkboxListId: "field8441",
@@ -2961,7 +2946,7 @@ S.PENTEST_4 = {
         taskFormWithRequiredFields: 2547,
         taskFormWithOptionalFields: 2548
     },
-    caseCustomForm: {
+    caseOptionalCustomForm: {
         name: "Cypress CASE Form",
         id: 24209,
         checkboxListId: "field1098",
@@ -2978,7 +2963,7 @@ S.PENTEST_4 = {
         dropdownTypeahead: "field1104",
         person: "field1108",
     },
-    itemCustomForm: {
+    itemOptionalCustomForm: {
         name: "Optional fields - Cypress Item Form - Org#4",
         id: 24211,
         checkboxListId: "field7143",
@@ -3668,7 +3653,6 @@ S.SECURE_3 = {
         officeName: "Cypress Office 1",
         orgAndOfficeName: "Web Test Automation #1 - Cypress Office 1"
     },
-
     users: {
         //systemAdminId: 40357, //we don't have sys adm on Secure
         orgAdminId: 118065,
@@ -3845,7 +3829,6 @@ S.SECURE_3 = {
     tagA: {tagModelId: 17574, name: 'Tag_A__', color: "#4b9b62", tagUsedBy: 1},
     tagB: {tagModelId: 17575, name: 'Tag_B__', color: "#4b9b62", tagUsedBy: 1},
     tagC: {tagModelId: 17576, name: 'Tag_C__', color: "#4b9b62", tagUsedBy: 1},
-
     taskTemplates: {
         dispoAuth: {
             templateId: 8151,
@@ -4012,16 +3995,6 @@ S.SECURE_4 = {
             name: "CypressLocation2"
         }
     ],
-//     // // caseForReport: {
-//     // //     id: 120799,
-//     // // },
-//     // // itemForReport: {
-//     // //     id: 1726599,
-//     // //     description: 'Item for Automated Tests - DON\'T CHANGE ANYTHING'
-//     // // },
-//     // // personForReport: {
-//     // //     id: 105156,
-//     // // },
     oldClosedCase: {
         id: 110935562,
         caseNumber: 'AutomatedTest-Closed Case',
@@ -4041,7 +4014,6 @@ S.SECURE_4 = {
         id: 110935579,
         caseNumber: 'AutomatedTest-Active Case'
     },
-//     //  existingItems_1kBarcodes: [],
     person: {
         name: 'Person_1',
         fullName: 'Cypress Person_1',

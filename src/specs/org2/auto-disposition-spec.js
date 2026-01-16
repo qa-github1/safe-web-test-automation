@@ -16,15 +16,14 @@ before(function () {
 });
 
 describe('Auto-Disposition', function () {
-    //TODO: Sumejja should check further
-    xit('1 Verify enabling/disabling and validation for Follow Up Days', function () {
+    it('1 Verify enabling/disabling and validation for Follow Up Days', function () {
         api.auth.get_tokens(user);
         api.auto_disposition.edit(false);
 
         ui.menu.click_Settings__Organization()
             .click_element_containing_link(C.labels.organization.tabs.autoDisposition)
 
-       // Verify auto-dispo can be enabled and disabled in Org Settings
+        // Verify auto-dispo can be enabled and disabled in Org Settings
         ui.autoDispo.click_disposition_Configuration_For_Case_Offense_Types()
         ui.autoDispo.click_Edit()
             .turn_On_the_toggle()
@@ -38,10 +37,11 @@ describe('Auto-Disposition', function () {
 
         //Verify Save button is disabled when missing value in any "Follow Up Days" field
         api.auto_disposition.edit(true);
-        ui.menu.click_Settings__Organization()
-            .click_element_containing_link(C.labels.organization.tabs.autoDisposition);
-        ui.autoDispo.click_disposition_Configuration_For_Case_Offense_Types();
+        // ui.menu.click_Settings__Organization()
+        //    ui.app.click_element_containing_link(C.labels.organization.tabs.autoDisposition);
+        //  ui.autoDispo.click_disposition_Configuration_For_Case_Offense_Types();
         ui.autoDispo.click_Edit()
+        ui.autoDispo.turn_On_the_toggle()
             .clear_and_enter_value_for_Days_to_follow_up(C.offenseTypes.arson, '')
             .verify_save_auto_dispo_button_is_disabled()
     });
@@ -97,8 +97,8 @@ describe('Auto-Disposition', function () {
             ui.importer.import_data(fileName, C.importTypes.cases)
             api.auto_disposition.edit(true)
 
-            D.case3.reviewDateNotes =  D.case1000.reviewDateNotes = redistributeNote;
-            D.case3.reviewDate =  D.case1000.reviewDate = helper.getSpecificDateInSpecificFormat(
+            D.case3.reviewDateNotes = D.case1000.reviewDateNotes = redistributeNote;
+            D.case3.reviewDate = D.case1000.reviewDate = helper.getSpecificDateInSpecificFormat(
                 DF.dateTimeFormats.long.mask,
                 '11/15/2027 12:00 AM'
             );
@@ -186,6 +186,7 @@ describe('Auto-Disposition', function () {
 
         // enable test just during the full regression as it takes longer to redistribute review dates
         //for all cases with upcoming review date in Org
+
         xit('A.D.4.2 Verify "Re-Distribute" for "Upcoming" cases', function () {
             api.auth.get_tokens(user);
             D.generateNewDataSet()
@@ -207,88 +208,88 @@ describe('Auto-Disposition', function () {
                 .wait_until_label_disappears(C.labels.autoDisposition.pleaseWait, 360)
             D.newCase.reviewDate = helper.getSpecificDateInSpecificFormat(
                 DF.dateTimeFormats.long.mask,
-                'November 15, 2025 12:00 AM'
+                'November 15, 2027 12:00 AM'
             );
-                ui.app.open_newly_created_case_via_direct_link()
+            ui.app.open_newly_created_case_via_direct_link()
                 .click_button(C.buttons.edit);
             D.newCase.offenseDate = 'April 15, 2020 02:18 PM'
             ui.caseView.verify_values_on_Edit_form(D.newCase);
         });
 
         //TODO: Sumejja should check further
-    xit('2.2 Verify "Close X Cases" functionality', function () {
-        api.auth.get_tokens(user);
-        api.auto_disposition.edit(true);
-        api.cases.add_new_case();
+        xit('2.2 Verify "Close X Cases" functionality', function () {
+            api.auth.get_tokens(user);
+            api.auto_disposition.edit(true);
+            api.cases.add_new_case();
 
-        ui.menu.click_Settings__Organization()
-            .click_element_containing_link(C.labels.organization.tabs.autoDisposition);
-        ui.autoDispo.click_disposition_Configuration_For_Case_Offense_Types();
-        ui.autoDispo.click_Recalculate_Cases_to_Dispose()
-            .get_number_of_cases_without_items()
-            .click_Close_X_Cases_button()
-            //.verify_modal_content(C.labels.autoDisposition.casesToBeClosed(D.newCase.caseNumber))
-            .enter_Closed_date(S.currentDate)
-            .click_button(C.buttons.closeCases)
-            .verify_toast_message(C.toastMsgs.saved);
+            ui.menu.click_Settings__Organization()
+                .click_element_containing_link(C.labels.organization.tabs.autoDisposition);
+            ui.autoDispo.click_disposition_Configuration_For_Case_Offense_Types();
+            ui.autoDispo.click_Recalculate_Cases_to_Dispose()
+               .get_number_of_cases_without_items()
+                .click_Close_X_Cases_button()
+                //.verify_modal_content(C.labels.autoDisposition.casesToBeClosed(D.newCase.caseNumber))
+                .enter_Closed_date(S.currentDate)
+                .click_button(C.buttons.closeCases)
+                .verify_toast_message(C.toastMsgs.saved);
 
-        ui.app.pause(3)
-            .open_base_url()
-            .open_newly_created_case_via_direct_link()
-            .click_button(C.buttons.edit)
-            .verify_text_is_present_on_main_container('Closed')
-            .verify_text_is_present_on_main_container(S.currentDate)
-    });
+            ui.app.pause(3)
+                .open_base_url()
+                .open_newly_created_case_via_direct_link()
+                .click_button(C.buttons.edit)
+                .verify_text_is_present_on_main_container('Closed')
+                .verify_text_is_present_on_main_container(S.currentDate)
+        });
 
-    it('2.3 Verify "Recalculate Cases to Dispose" functionality', function () {
-        api.auth.get_tokens(user);
-        D.getNewCaseData();
-        api.auto_disposition.edit(true);
+        it('2.3 Verify "Recalculate Cases to Dispose" functionality', function () {
+            api.auth.get_tokens(user);
+            D.getNewCaseData();
+            api.auto_disposition.edit(true);
 
-        ui.menu.click_Settings__Organization()
-            .click_element_containing_link(C.labels.organization.tabs.autoDisposition);
-        ui.autoDispo.click_disposition_Configuration_For_Case_Offense_Types();
-        ui.autoDispo.click_Recalculate_Cases_to_Dispose()
-            .get_number_of_cases_without_items();
-        api.cases.add_new_case();
-        ui.autoDispo.click_Recalculate_Cases_to_Dispose()
-            .verify_labels_for_cases_to_dispose(1)
-    });
+            ui.menu.click_Settings__Organization()
+                .click_element_containing_link(C.labels.organization.tabs.autoDisposition);
+            ui.autoDispo.click_disposition_Configuration_For_Case_Offense_Types();
+            ui.autoDispo.click_Recalculate_Cases_to_Dispose()
+                .get_number_of_cases_without_items();
+            api.cases.add_new_case();
+            ui.autoDispo.click_Recalculate_Cases_to_Dispose()
+                .verify_labels_for_cases_to_dispose(1)
+        });
 
-    it('2.4 Verify "View X Cases" functionality', function () {
-        api.auth.get_tokens(user);
-        api.org_settings.enable_all_Case_fields();
-        api.auto_disposition.edit(true);
+        it('2.4 Verify "View X Cases" functionality', function () {
+            api.auth.get_tokens(user);
+            api.org_settings.enable_all_Case_fields();
+            api.auto_disposition.edit(true);
 
-        let fileName = 'Case_allFields-AutoDispo7';
-        D.getNewCaseData();
-        D.newCase.offenseDate = 'Jan 8, 2019';
-        D.newCase.reviewDate = 'May 8, 2019';
-        E.generateDataFor_CASES_Importer([D.newCase]);
-        ui.app.generate_excel_file(fileName, E.caseImportDataWithAllFields);
+            let fileName = 'Case_allFields-AutoDispo7';
+            D.getNewCaseData();
+            D.newCase.offenseDate = 'Jan 8, 2019';
+            D.newCase.reviewDate = 'May 8, 2019';
+            E.generateDataFor_CASES_Importer([D.newCase]);
+            ui.app.generate_excel_file(fileName, E.caseImportDataWithAllFields);
 
-        ui.menu.click_Settings__Organization()
-            .click_element_containing_link(C.labels.organization.tabs.autoDisposition);
-        ui.autoDispo.click_disposition_Configuration_For_Case_Offense_Types();
-        ui.autoDispo.get_number_of_cases_without_task();
+            ui.menu.click_Settings__Organization()
+                .click_element_containing_link(C.labels.organization.tabs.autoDisposition);
+            ui.autoDispo.click_disposition_Configuration_For_Case_Offense_Types();
+            ui.autoDispo.get_number_of_cases_without_task();
 
-        // import case with Review Date in past and open tab again to fetch a new data
-        ui.menu.click_Tools__Data_Import();
-        ui.importer.open_direct_url_for_page()
-            .import_data(fileName, C.importTypes.cases)
-            .check_import_status_on_grid('1 records imported')
+            // import case with Review Date in past and open tab again to fetch a new data
+            ui.menu.click_Tools__Data_Import();
+            ui.importer.open_direct_url_for_page()
+                .import_data(fileName, C.importTypes.cases)
+                .check_import_status_on_grid('1 records imported')
 
-        ui.menu.click_Settings__Organization()
+            ui.menu.click_Settings__Organization()
             ui.app.click_element_containing_link(C.labels.organization.tabs.orgSettings)
-            .click_element_containing_link(C.labels.organization.tabs.autoDisposition);
-        ui.autoDispo.click_disposition_Configuration_For_Case_Offense_Types();
+                .click_element_containing_link(C.labels.organization.tabs.autoDisposition);
+            ui.autoDispo.click_disposition_Configuration_For_Case_Offense_Types();
 
-        ui.autoDispo.verify_label_for_cases_without_open_tasks(1)
-            .get_number_of_cases_without_task()
-            .click_View_X_Cases_button()
-            .verify_modal_content(C.labels.autoDisposition.viewCases)
-            .verify_modal_content(D.newCase.caseNumber)
-    });
+            ui.autoDispo.verify_label_for_cases_without_open_tasks(1)
+                .get_number_of_cases_without_task()
+                .click_View_X_Cases_button()
+                .verify_modal_content(C.labels.autoDisposition.viewCases)
+                .verify_modal_content(D.newCase.caseNumber)
+        });
 
     });
 });

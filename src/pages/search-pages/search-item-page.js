@@ -136,7 +136,6 @@ export default class SearchItemPage extends BaseSearchPage {
     };
 
 
-
     search_with_minimum_required_fields_and_click_Actions_on_Search_Results(status, office, description) {
         this.select_Status(status)
             .select_Office(office)
@@ -233,6 +232,7 @@ export default class SearchItemPage extends BaseSearchPage {
             ['Disposed By', dataObject.disposedByName],
             ['Disposal Notes', dataObject.disposalNotes],
             ['Additional Barcodes', dataObject.additionalBarcodes],
+           // ['Additional Barcodes', dataObject.barcodes],
             ['Tags', dataObject.tags],
             ['Recovered At', dataObject.recoveryLocation],
             ['Recovered By', dataObject.recoveredByName],

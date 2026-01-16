@@ -18,14 +18,13 @@ describe('Import Items', function () {
         D.generateNewDataSet();
         api.cases.add_new_case(D.newCase.caseNumber);
     });
-    //TODO: Sumejja should check further
-    xit('1. Item with all regular and custom fields - Checked In status', function () {
+
+    it('1. Item with all regular and custom fields - Checked In status', function () {
         ui.app.log_title(this);
         let fileName = 'ItemImport_allFields_' + S.domain;
         api.auth.get_tokens(orgAdmin);
 
         D.getNewItemData(D.newCase);
-
         E.generateDataFor_ITEMS_Importer([D.newItem], S.customForms.itemFormWithOptionalFields);
         cy.generate_excel_file(fileName, E.itemImportDataWithAllFields);
 
@@ -53,14 +52,13 @@ describe('Import Items', function () {
             //     CoC_disposal_ItemEntry
             // ])
             .open_last_history_record()
-            .verify_all_values_on_history(D.newItem, null, S.customForms.itemFormWithOptionalFields)
+            .verify_all_values_on_history(D.newItem, null, S.customForms.itemFormWithOptionalFields, true, D.newCustomFormData)
             .click_button_on_modal(C.buttons.cancel)
             .verify_title_on_active_tab(1)
     });
 
     if (S.isFullRegression()) {
-        //TODO: Sumejja should check further
-        xit('2. Item with all fields - Disposed Status', function () {
+        it('2. Item with all fields - Disposed Status', function () {
             ui.app.log_title(this);
             let fileName = 'ItemImport_allFields_Disposed_' + S.domain;
             api.auth.get_tokens(orgAdmin);

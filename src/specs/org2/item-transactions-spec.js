@@ -19,6 +19,8 @@ describe('Item Transactions & Actions', function () {
         api.org_settings.update_org_settings(false, true, false, "~person.firstName~ ~person.lastName~")
         D.box2 = D.getStorageLocationData('BOX_2')
         api.locations.add_storage_location(D.box2)
+        D.box1 = D.getStorageLocationData('BOX_1')
+        api.locations.add_storage_location(D.box1)
 
     });
 
@@ -189,6 +191,7 @@ describe('Item Transactions & Actions', function () {
             .verify_enabled_and_disabled_options_under_Actions_dropdown_on_Search_Page(enabledActions, disabledActions)
     });
 
+    //TODO: Sumejja should check
     it('5. Verify Undispose transaction and enabled/disabled actions for Checked In item', function () {
         ui.app.log_title(this);
         const enabledActions = [
@@ -235,6 +238,54 @@ describe('Item Transactions & Actions', function () {
 
         //api.locations.get_and_save_any_location_data_to_local_storage('root')
        // api.locations.move_location('Box_2', 'root')
+
+    });
+
+    it('5. Verify Move transaction and enabled/disabled actions for Moved item', function () {
+        ui.app.log_title(this);
+        const enabledActions = [
+            'Check Item Out',
+            'Move Item',
+            'Dispose Item',
+            'Duplicate',
+            'Split',
+            'Manage Cases']
+
+        const disabledActions = [
+            'Check Item In',
+            'Transfer Item',
+            'Undispose Item'
+        ]
+
+        api.auth.get_tokens(orgAdmin);
+        D.box1 = D.getStorageLocationData('BOX_1')
+        D.box2 = D.getStorageLocationData('BOX_2')
+        api.locations.add_storage_location(D.box1)
+        api.locations.add_storage_location(D.box2)
+        D.generateNewDataSet()
+        api.items.add_new_item(false);
+        ui.app.open_newly_created_item_via_direct_link();
+        let initialItem = Object.assign({}, D.newItem)
+
+        ui.app.click_Actions()
+            .perform_Item_Move_transaction(D.box1.name, 'move_' + S.currentDate)
+            ui.itemView.verify_edited_and_not_edited_values('view', ["Status", "Storage Location"], D.editedItem, D.newItem)
+            .verify_Items_Status('Checked In')
+            .select_tab(C.tabs.chainOfCustody)
+            .verify_data_on_Chain_of_Custody([
+                [['Type', 'Move'], ['Issued From', orgAdmin.name], ['Issued To', orgAdmin.name], ['Storage Location', D.box1.name], ['Check out Reason', ``], ['Note', 'move_' + S.currentDate]],
+                [['Type', 'In'], ['Issued From', orgAdmin.name], ['Issued To', 'New Item Entry'], ['Storage Location', initialItem.location], ['Notes', `Item entered into system.`]],
+            ])
+            .select_tab(C.tabs.basicInfo)
+            .click_Actions()
+            .verify_enabled_and_disabled_options_under_Actions_dropdown(enabledActions, disabledActions)
+        ui.searchItem.run_search_by_Item_Description(D.newItem.description)
+            .select_row_on_the_grid_that_contains_specific_value(D.newItem.description)
+            .click_Actions()
+            .verify_enabled_and_disabled_options_under_Actions_dropdown_on_Search_Page(enabledActions, disabledActions)
+
+      //  api.locations.get_and_save_any_location_data_to_local_storage('root')
+      //  api.locations.move_location(D.box2.name, 'root')
 
     });
 });

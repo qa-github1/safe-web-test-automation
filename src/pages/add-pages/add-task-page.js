@@ -110,10 +110,10 @@ export default class AddTaskPage extends BasePage {
         return this;
     }
 
-    // store_Task_Number_from_API_response_to_local_storage() {
-    //     this.wait_response_from_API_call('getMyTasks', 200, 'myTasks')
-    //     return this;
-    // };
+    store_Task_Number_from_API_response_to_local_storage() {
+        this.wait_response_from_API_call('getMyTasks', 200, 'myTasks')
+        return this;
+    };
 
     click_Save_() {
         this.click_Save()

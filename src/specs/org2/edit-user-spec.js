@@ -7,8 +7,8 @@ const ui = require('../../pages/ui-spec');
 let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
 
 describe('Edit User', function () {
-//TODO: Sumejja should check further
-    xit('1 Edit newly added user, change all values, verify on the grid, and check all/active/inactive filters', function () {
+
+    it('1 Edit newly added user, change all values, verify on the grid, and check all/active/inactive filters', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
             D.getUserData();
@@ -34,9 +34,8 @@ describe('Edit User', function () {
                 .select_Inactive_Users()
                 .verify_content_of_first_row_in_results_table(D.editedUser.email)
         });
-//TODO: Sumejja should check further
 
-        xit('2.1 Add User to a Group, then add to another Group --> Verify that previous User Group is not overwritten', function () {
+        it('2.1 Add User to a Group, then add to another Group --> Verify that previous User Group is not overwritten', function () {
             ui.app.log_title(this);
             api.auth.get_tokens(orgAdmin);
             D.getNewUserData();

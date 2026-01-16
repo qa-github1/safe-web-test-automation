@@ -75,37 +75,42 @@ exports.edit_task_template = function (taskTemplate) {
     return this;
 };
 
-
-exports.add_new_task = function (taskObject = D.newTask, numberOfItemsAttached = 1) {
+exports.add_new_task = function (taskObject = D.newTask, numberOfItemsAttached = 1, timeout) {
     cy.getLocalStorage("newCase").then(newCase => {
-            cy.getLocalStorage("newItem").then(newItem => {
-                cy.getLocalStorage("newPerson").then(newPerson => {
+        cy.getLocalStorage("newItem").then(newItem => {
+            cy.getLocalStorage("newPerson").then(newPerson => {
 
-                    taskObject.attachments = []
-                    if (newCase !== 'undefined') {
-                        taskObject.attachments.push( {entityId: JSON.parse(newCase).id, entityType: 0, taskId: null})
-                    }
-                    if (newItem !== 'undefined' && numberOfItemsAttached === 1 ) {
-                        taskObject.attachments.push(  {entityId: JSON.parse(newItem).id, entityType: 1, taskId: null})
-                    }
-                    if (newPerson !== 'undefined') {
-                        taskObject.attachments.push(  {entityId: JSON.parse(newPerson).id, entityType: 2, taskId: null})
-                    }
+                taskObject.attachments = []
+                ui.app.pause(5)
+                if (newCase !== 'undefined') {
+                    taskObject.attachments.push({entityId: JSON.parse(newCase).id, entityType: 0, taskId: null})
+                }
+                if (newItem !== 'undefined' && numberOfItemsAttached === 1) {
+                    taskObject.attachments.push({entityId: JSON.parse(newItem).id, entityType: 1, taskId: null})
+                }
+                if (newPerson !== 'undefined') {
+                    taskObject.attachments.push({entityId: JSON.parse(newPerson).id, entityType: 2, taskId: null})
+                }
 
-                    if (numberOfItemsAttached > 1) {
-                        for (let i = 1; i < (numberOfItemsAttached+1); i++) {
-                            cy.getLocalStorage('item' + i).then(item => {
-                                taskObject.attachments.push({entityId: JSON.parse(item).id, entityType: 1, taskId: null})
-                            })
-                        }
-                        ui.app.pause(10)
+                if (numberOfItemsAttached > 1) {
+                    for (let i = 0; i < numberOfItemsAttached; i++) {
+                        // cy.getLocalStorage('item' + i).then(item => {
+                        //     taskObject.attachments.push({entityId: JSON.parse(item).id, entityType: 1, taskId: null})
+                        // })
+                        cy.getLocalStorage("itemIds").then(ids => {
+                            let idsArray = ids.split(",")
+                            taskObject.attachments.push({entityId: idsArray[i], entityType: 1, taskId: null})
+                        })
                     }
+                    ui.app.pause(5)
+                }
 
-                    generic_request.POST(
-                        '/api/tasks/saveNewTask',
-                        body.generate_POST_request_payload_for_creating_new_task(taskObject),
-                        'Creating new task via API and saving to local storage __ ',
-                        'newTaskId');
+                generic_request.POST(
+                    '/api/tasks/saveNewTask',
+                    body.generate_POST_request_payload_for_creating_new_task(taskObject),
+                    'Creating new task via API and saving to local storage __ ',
+                    'newTaskId',
+                    timeout);
             });
         });
     });
@@ -132,4 +137,18 @@ exports.get_my_tasks = function () {
         'myTasks',
     );
     return this;
+};
+
+exports.fetch_new_task_data = function (propertyToStoreToLocalStorage = 'newTask') {
+    cy.getLocalStorage("newTaskId").then(id => {
+        generic_request.GET(
+            '/api/tasks/task/' + id + '/',
+            'Fetching newly created task data via API and saving to data object',
+            propertyToStoreToLocalStorage)
+    })
+
+     cy.getLocalStorage("newTask").then(newTask => {
+        Object.assign(D.newTask, JSON.parse(newTask))
+    })
+    return this
 };

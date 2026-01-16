@@ -68,6 +68,11 @@ export default class SearchCasePage extends BaseSearchPage {
 
 //************************************ ACTIONS ***************************************//
 
+    open_direct_url_for_page() {
+        this.open_url_and_wait_all_GET_requests_to_finish(S.base_url + '/#/' + C.pages.caseSearch.url)
+        return this
+    }
+
     enter_Case_Number(searchCriteria, caseNo) {
         caseNumberSearchCriteria().select(searchCriteria);
         this.clearAndEnterValue(caseNumberInput, caseNo)

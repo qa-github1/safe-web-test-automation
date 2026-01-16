@@ -23,11 +23,11 @@ D.getCurrentDateAndRandomNumber = function (randomNumberLenght) {
     return helper.mediumDate + '_' + helper.getRandomNo(randomNumberLenght);
 }
 
-D.getStorageLocationData = function (locationName, parentId = 0, canStore = true, isActive = true, isContainer = false) {
-    let randomNo =  helper.mediumDate + '_' + helper.getRandomNo(3);
-
+D.getStorageLocationData = function (locationName, parentId = 0, canStore = true, isActive = true, isContainer = false, specificRandomNo) {
+    let randomNo =  specificRandomNo || helper.mediumDate + '_' + helper.getRandomNo(3)
     D[locationName] = {
         "name": randomNo + '_' + locationName,
+        "randomNo": randomNo,
         "active": isActive,
         "parentId": parentId,
         "canStoreHere": canStore,
@@ -263,7 +263,7 @@ D.getNewItemData = function (specificCaseObject, locationObject, newPerson) {
         itemBelongsToOnHistory: [person.name],
         itemBelongsToGuid: [person.guid],
         //itemBelongsToEmail: [person.email],
-        barcodes: [{id: 0, value: + helper.setNewRandomString()}],
+        barcodes: [{id: 0, value: helper.setNewRandomString()}],
         additionalBarcodes: [helper.setNewRandomString()],
         actualDisposedDate: '',
         disposedDate: '',
@@ -641,7 +641,7 @@ D.getNewUserData = function (officeId, organizationId) {
         division: 'Patrol',
         divisionId: S.selectedEnvironment.divisions.div1.id,
         unit: 'UnitA',
-//        unitId: S.selectedEnvironment.units.div1_unit1.id,
+        unitId: S.selectedEnvironment.units.div1_unit1.id,
         external: 'Internal',
         mfaEnabled: 'No',
         emailDisable: false,

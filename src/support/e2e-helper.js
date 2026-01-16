@@ -340,7 +340,16 @@ exports.print_out_value_from_local_storage = function (property) {
     cy.getLocalStorage(property).then(value => {
         cy.log('Value in local storage is ' + value);
     })
-}
+};
+
+exports.normalizeDateToMMDDYY = function (dateString) {
+    if (!dateString) return dateString;
+
+    const [m, d, y] = dateString.trim().split('/');
+    return `${m.padStart(2, '0')}/${d.padStart(2, '0')}/${y.padStart(2, '0')}`;
+};
+
+
 
 
 

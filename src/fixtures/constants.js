@@ -1002,6 +1002,7 @@ C.labels = {
 
 C.pages = {
     caseSearch: {
+        url: 'cases/search/',
         numberOfStandardColumns: 17,
         numberOfStandardColumnsReduced: 10,
     },
@@ -1018,6 +1019,7 @@ C.pages = {
         numberOfStandardColumnsReduced: null,
     },
     peopleSearch: {
+        url: 'people/search/',
         numberOfStandardColumns: 19,
         numberOfStandardColumnsReduced: 6,
     },

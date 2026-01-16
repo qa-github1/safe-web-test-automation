@@ -37,23 +37,23 @@ exports.generate_PUT_request_payload_for_editing_existing_case = function (caseO
     let formData = addCustomFormData ?
         [{
             data: `{
-            "${S.selectedEnvironment.caseCustomForm.checkboxListId}":${JSON.stringify(caseObject.custom_checkboxListOption_apiFormat)},
-            "${S.selectedEnvironment.caseCustomForm.radioButtonListId}":"${caseObject.custom_radiobuttonListOption_apiFormat}",
-            "${S.selectedEnvironment.caseCustomForm.selectListId}":"${caseObject.custom_selectListOption_apiFormat}",
-            "${S.selectedEnvironment.caseCustomForm.number}":${caseObject.custom_number},
-            "${S.selectedEnvironment.caseCustomForm.password}":"${caseObject.custom_password}",
-            "${S.selectedEnvironment.caseCustomForm.textbox}":"${caseObject.custom_textbox}",
-            "${S.selectedEnvironment.caseCustomForm.email}":"${caseObject.custom_email}",
-            "${S.selectedEnvironment.caseCustomForm.textarea}":"${caseObject.custom_textarea}",
-            "${S.selectedEnvironment.caseCustomForm.user}":"user-${caseObject.custom_userId}",
-            "${S.selectedEnvironment.caseCustomForm.person}":${caseObject.custom_personId},
-            "${S.selectedEnvironment.caseCustomForm.dropdownTypeahead}":${caseObject.custom_dropdownTypeaheadOption_apiFormat},
-            "${S.selectedEnvironment.caseCustomForm.checkbox}":"${caseObject.custom_checkbox}",
-            "${S.selectedEnvironment.caseCustomForm.date}":"${caseObject.custom_dateISOFormat}"}`,
-            dateFields: [S.selectedEnvironment.caseCustomForm.date],
+            "${S.selectedEnvironment.caseOptionalCustomForm.checkboxListId}":${JSON.stringify(caseObject.custom_checkboxListOption_apiFormat)},
+            "${S.selectedEnvironment.caseOptionalCustomForm.radioButtonListId}":"${caseObject.custom_radiobuttonListOption_apiFormat}",
+            "${S.selectedEnvironment.caseOptionalCustomForm.selectListId}":"${caseObject.custom_selectListOption_apiFormat}",
+            "${S.selectedEnvironment.caseOptionalCustomForm.number}":${caseObject.custom_number},
+            "${S.selectedEnvironment.caseOptionalCustomForm.password}":"${caseObject.custom_password}",
+            "${S.selectedEnvironment.caseOptionalCustomForm.textbox}":"${caseObject.custom_textbox}",
+            "${S.selectedEnvironment.caseOptionalCustomForm.email}":"${caseObject.custom_email}",
+            "${S.selectedEnvironment.caseOptionalCustomForm.textarea}":"${caseObject.custom_textarea}",
+            "${S.selectedEnvironment.caseOptionalCustomForm.user}":"user-${caseObject.custom_userId}",
+            "${S.selectedEnvironment.caseOptionalCustomForm.person}":${caseObject.custom_personId},
+            "${S.selectedEnvironment.caseOptionalCustomForm.dropdownTypeahead}":${caseObject.custom_dropdownTypeaheadOption_apiFormat},
+            "${S.selectedEnvironment.caseOptionalCustomForm.checkbox}":"${caseObject.custom_checkbox}",
+            "${S.selectedEnvironment.caseOptionalCustomForm.date}":"${caseObject.custom_dateISOFormat}"}`,
+            dateFields: [S.selectedEnvironment.caseOptionalCustomForm.date],
             entityId: caseObject.id.toString(),
-            formId: S.selectedEnvironment.caseCustomForm.id,
-            formName: S.selectedEnvironment.caseCustomForm.name
+            formId: S.selectedEnvironment.caseOptionalCustomForm.id,
+            formName: S.selectedEnvironment.caseOptionalCustomForm.name
         }] : [];
 
     caseObject.formData = formData;

@@ -70,6 +70,7 @@ let bodyContainer = e => cy.get('body'), tableBody = e => cy.get('.table-striped
     inputFieldFoundByLabel = label => cy.contains(label).parent('div').find('input').first(),
     checkboxFieldFoundByLabel = label => cy.contains(label).parent('div').find('[type="checkbox"]').first(),
     buttonOnModal = buttonTitle => modal().children().contains(buttonTitle),
+    textOnModal = text => modal().children().contains(text),
     buttonOnSweetAlert = buttonTitle => sweetAlert().children().contains('button', buttonTitle),
     buttonOnActiveTab = buttonTitle => active_tab().find('button').contains(buttonTitle),
     elementOnActiveTab = elementTitle => active_tab().contains(elementTitle),
@@ -394,7 +395,12 @@ let basePage = class BasePage {
 
     verify_text_is_present_on_main_container(text) {
         this.toastMessage().should('not.exist');
-        cy.verifyTextAndRetry(() => mainContainer().invoke('text'), text);
+
+        if (Array.isArray(text)) {
+            text.forEach(txt => cy.verifyTextAndRetry(() => mainContainer().invoke('text'), txt))
+        } else {
+            cy.verifyTextAndRetry(() => mainContainer().invoke('text'), text);
+        }
         return this;
     };
 
@@ -439,6 +445,12 @@ let basePage = class BasePage {
     verify_text_is_NOT_present_on_main_container(text) {
         this.toastMessage().should('not.exist');
         mainContainer().find(':visible').should('not.contain', text);
+        return this;
+    };
+
+    verify_text_is_NOT_present_on_main_container2(text) {
+        this.toastMessage().should('not.exist');
+        mainContainer().should('not.contain', text);
         return this;
     };
 
@@ -675,6 +687,13 @@ let basePage = class BasePage {
         return this;
     };
 
+    click_text_on_modal(text) {
+        textOnModal(text).scrollIntoView();
+        textOnModal(text).should('be.visible');
+        textOnModal(text).click();
+        return this;
+    };
+
     click_button_on_sweet_alert(buttonTitle) {
         this.pause(1)
         buttonOnSweetAlert(buttonTitle).should('be.visible');
@@ -687,6 +706,15 @@ let basePage = class BasePage {
         buttonByTitle(buttonTitle).should('be.visible');
         buttonByTitle(buttonTitle).should('be.enabled');
         buttonByTitle(buttonTitle).click('bottom');
+        return this;
+    };
+
+    populate_Add_item_to_Existing_task(taskTitleOrNumber) {
+        this.click_text_on_modal('New')
+        modal().children().find('[aria-label="Select box activate"]').click()
+        modal().children().find('[ng-model="$select.search"]').invoke('val', taskTitleOrNumber).trigger('input')
+        cy.get('[ng-bind-html="task.text | highlight: $select.selected.text"]').first().click()
+        cy.get('[name="goToTaskCheckbox"]').click()
         return this;
     };
 
@@ -753,7 +781,7 @@ let basePage = class BasePage {
                     .trigger('input');
             }
 
-            cy.wait(500).then(() => {
+            cy.wait(800).then(() => {
                 cy.document().then(doc => {
                     const typeaheadExists = !!doc.querySelector(typeaheadSelector);
 
@@ -2509,6 +2537,197 @@ let basePage = class BasePage {
         return this;
     }
 
+    verify_specific_column_has_specific_value_in_all_rows(
+        columnTitle,
+        expectedValue,
+        headerCellTag = 'th',
+        isCoCTable = false
+    ) {
+        let resultsTableHeader;
+        let tableStriped;
+
+        if (isCoCTable) {
+            resultsTableHeader = () => cy.get('.cocTable thead');
+            tableStriped = () => cy.get('.cocTable tbody');
+        } else {
+            resultsTableHeader = () => cy.get('thead');
+            tableStriped = () => cy.get('tbody');
+        }
+
+        resultsTableHeader()
+            .find(headerCellTag)
+            .filter((i, el) => Cypress.$(el).text().trim() === columnTitle)
+            .not('.ng-hide')
+            .invoke('index')
+            .then((colIndex) => {
+
+                tableStriped()
+                    .find('tr')
+                    .each(($row, rowIndex) => {
+
+                        cy.wrap($row)
+                            .find('td')
+                            .eq(colIndex)
+                            .invoke('text')
+                            .then((text) => {
+                                expect(
+                                    text.trim(),
+                                    `Expected column "${columnTitle}" to have value "${expectedValue}" in row ${rowIndex + 1}`
+                                ).to.contain(expectedValue.toString().trim());
+                            });
+
+                    });
+
+            });
+
+        return this;
+    }
+
+    verify_specific_column_has_specific_value_in_specific_rows(
+        columnTitle,
+        expectedValue,
+        rowNumbers = [1],            // 1-based row numbers
+        headerCellTag = 'th',
+        isCoCTable = false
+    ) {
+        let resultsTableHeader;
+        let tableStriped;
+
+        if (isCoCTable) {
+            resultsTableHeader = () => cy.get('.cocTable thead');
+            tableStriped = () => cy.get('.cocTable tbody');
+        } else {
+            resultsTableHeader = () => cy.get('thead');
+            tableStriped = () => cy.get('tbody');
+        }
+
+        const rows = Array.isArray(rowNumbers) ? rowNumbers : [rowNumbers];
+
+        resultsTableHeader()
+            .find(headerCellTag)
+            .filter((i, el) => Cypress.$(el).text().trim() === columnTitle)
+            .not('.ng-hide')
+            .invoke('index')
+            .then((colIndex) => {
+                rows.forEach((rowNumber) => {
+                    const rowIndex = rowNumber - 1; // convert to 0-based
+                    tableStriped()
+                        .find('tr')
+                        .eq(rowIndex)
+                        .find('td')
+                        .eq(colIndex)
+                        .invoke('text')
+                        .then((text) => {
+                            expect(
+                                text.trim(),
+                                `Expected column "${columnTitle}" to have value "${expectedValue}" in row ${rowNumber}`
+                            ).to.contain(expectedValue.toString().trim());
+                        });
+                });
+            });
+        return this;
+    }
+
+    verify_specific_columns_are_blank_in_all_rows(
+        columnTitles,
+        headerCellTag = 'th',
+        isCoCTable = false
+    ) {
+        let resultsTableHeader;
+        let tableStriped;
+
+        if (isCoCTable) {
+            resultsTableHeader = () => cy.get('.cocTable thead');
+            tableStriped = () => cy.get('.cocTable tbody');
+        } else {
+            resultsTableHeader = () => cy.get('thead');
+            tableStriped = () => cy.get('tbody');
+        }
+
+        const columns = Array.isArray(columnTitles) ? columnTitles : [columnTitles];
+
+        columns.forEach((columnTitle) => {
+            resultsTableHeader()
+                .find(headerCellTag)
+                .filter((i, el) => Cypress.$(el).text().trim() === columnTitle)
+                .not('.ng-hide')
+                .invoke('index')
+                .then((colIndex) => {
+
+                    tableStriped()
+                        .find('tr')
+                        .each(($row, rowIndex) => {
+
+                            cy.wrap($row)
+                                .find('td')
+                                .eq(colIndex)
+                                .invoke('text')
+                                .then((text) => {
+                                    expect(
+                                        text.trim(),
+                                        `Expected column "${columnTitle}" to be blank in row ${rowIndex + 1}`
+                                    ).to.eq('');
+                                });
+
+                        });
+
+                });
+        });
+
+        return this;
+    }
+
+    verify_specific_columns_are_blank_in_specific_rows(
+        columnTitles,
+        rowNumbers = [1],           // 1-based row numbers
+        headerCellTag = 'th',
+        isCoCTable = false
+    ) {
+        let resultsTableHeader;
+        let tableStriped;
+
+        if (isCoCTable) {
+            resultsTableHeader = () => cy.get('.cocTable thead');
+            tableStriped = () => cy.get('.cocTable tbody');
+        } else {
+            resultsTableHeader = () => cy.get('thead');
+            tableStriped = () => cy.get('tbody');
+        }
+
+        const columns = Array.isArray(columnTitles) ? columnTitles : [columnTitles];
+        const rows = Array.isArray(rowNumbers) ? rowNumbers : [rowNumbers];
+
+        columns.forEach((columnTitle) => {
+            resultsTableHeader()
+                .find(headerCellTag)
+                .filter((i, el) => Cypress.$(el).text().trim() === columnTitle)
+                .not('.ng-hide')
+                .invoke('index')
+                .then((colIndex) => {
+
+                    rows.forEach((rowNumber) => {
+                        const rowIndex = rowNumber - 1; // convert to 0-based
+
+                        tableStriped()
+                            .find('tr')
+                            .eq(rowIndex)
+                            .find('td')
+                            .eq(colIndex)
+                            .invoke('text')
+                            .then((text) => {
+                                expect(
+                                    text.trim(),
+                                    `Expected column "${columnTitle}" to be blank in row ${rowNumber}`
+                                ).to.eq('');
+                            });
+                    });
+
+                });
+        });
+
+        return this;
+    }
+
     verify_content_of_first_table_row_by_provided_column_title_and_value(columnTitle, cellContent, headerCellTag = 'th', isCoCTable = false) {
         let self = this;
         let currentEnvironment = Cypress.env('environment');
@@ -2771,7 +2990,6 @@ let basePage = class BasePage {
             newCase = JSON.parse(newCase);
 
             cy.log('Opening Case URL: ' + S.base_url + '/#/cases/' + newCase.id.toString() + '/view')
-            cy.server();
             cy.intercept(S.api_url + '/api/organizations/useCaseLevelPermissions').as('getSettingsOfCLP');
 
             cy.visit(S.base_url + '/#/cases/' + newCase.id.toString() + '/view')
@@ -2816,6 +3034,21 @@ let basePage = class BasePage {
         this.define_get_task_items_endpoint_alias()
         return this;
     };
+
+    store_last_url() {
+        cy.url().then(url => { D.lastUrl = url });
+        return this;
+    }
+
+    visit_last_url() {
+        cy.visit(D.lastUrl);
+        return this;
+    }
+
+    visit_base_url() {
+        cy.visit(S.base_url);
+        return this;
+    }
 
     generate_excel_file(fileName, dataObject) {
         cy.generate_excel_file(fileName, dataObject);
@@ -2962,7 +3195,7 @@ let basePage = class BasePage {
     };
 
     wait_until_label_disappears(text, timeoutInSeconds) {
-        this.pause(3)
+       // this.pause(3)
         cy.contains(text, {timeout: (timeoutInSeconds * 1000)}).should('not.exist');
         return this;
     };
@@ -3331,6 +3564,7 @@ let basePage = class BasePage {
                     .find('select').first()
                     .select(value)
             } else if (['Category'].some(v => label === v)) {
+                this.pause(1)
                 cy.get('[category-name="item.categoryName"]').click()
                 cy.get('[repeat="category in data.categories | filter: { name: $select.search }"]').contains(value).click();
 
@@ -3418,6 +3652,7 @@ let basePage = class BasePage {
     }
 
     turn_on_and_enter_values_to_all_fields_on_Mass_Update_Items_modal(labelsArray, valuesArray, isCategoryEnabled = true) {
+       this.pause(2) // needed because of random issue where first toggle is not enabled properly
         if (isCategoryEnabled) {
             this.turnOnAllTogglesOnItemsUpdateModal(null, true)
         } else {
@@ -3911,8 +4146,7 @@ let basePage = class BasePage {
             .populate_CheckIn_form(returnedBy_userObject, usePreviousLocation, fullLocationPath, note)
 
         if (isActionOnSearchResults) {
-            this.verify_modal_content(' Warning! This action will check in all items found by the current search')
-            this.verify_modal_content('Items shared among Organizations are not included in the transaction')
+            this.verify_text(() => modal().find('.text-danger.ng-scope'), 'Warning This action will check in all items found by the current search, except: - Items shared among Organizations')
             cy.signOnCanvas()
         }
         this.upload_file_and_verify_toast_msg('image.png', null)
@@ -3930,8 +4164,7 @@ let basePage = class BasePage {
             .populate_CheckIn_form(returnedBy_userObject, usePreviousLocation, fullLocationPath, note)
 
         if (isActionOnSearchResults) {
-            this.verify_modal_content(' Warning! This action will check in all items found by the current search')
-            this.verify_modal_content('Items shared among Organizations are not included in the transaction')
+            this.verify_text(() => modal().find('.text-danger.ng-scope'), 'Warning This action will check in all items found by the current search, except: - Items shared among Organizations')
         }
         this.upload_file_and_verify_toast_msg('image.png', null)
         this.click_button_on_modal(C.buttons.ok)
@@ -3948,7 +4181,7 @@ let basePage = class BasePage {
             .populate_CheckOut_form(takenBy_personOrUserObject, checkOutReason, notes, expectedReturnDate)
 
         if (isActionOnSearchResults) {
-            this.verify_modal_content('This action will check out all items found by the current search')
+            this.verify_text(() => modal().find('.text-danger.ng-scope'), 'Warning This action will check out all items found by the current search, except: - Items shared among Organizations')
             // ToDo: we need to ensure that Item Sharing/CLP is ON/OFF in Org before verifying the full warning.
             //  For now, I’ve excluded the part related to shared/CLP items. It can be added later once we define the precondition for displaying this part of the warning in the test
             //this.verify_modal_content('- Items shared among Organizations')
@@ -3972,8 +4205,7 @@ let basePage = class BasePage {
             .populate_Transfer_form(transferTo_userObject, transferFrom_userObject, notes)
 
         if (isActionOnSearchResults) {
-            this.verify_modal_content(' Warning! This action will transfer all items found by the current search')
-            this.verify_modal_content('Items shared among Organizations are not included in the transaction')
+            this.verify_text(() => modal().find('.text-danger.ng-scope'), 'Warning This action will transfer all items found by the current search, except: - Items shared among Organizations')
             cy.signOnCanvas()
         }
         this.upload_file_and_verify_toast_msg('image.png', null)
@@ -3987,22 +4219,21 @@ let basePage = class BasePage {
         return this;
     }
 
-    perform_Item_Move_transaction(fullLocationPath, notes, isActionOnSearchResults, multipleItems) {
+    perform_Item_Move_transaction(fullOrPartialLocationPath, notes, isActionOnSearchResults, multipleItems) {
         const label = multipleItems ? C.dropdowns.itemActions.moveItems : C.dropdowns.itemActions.moveItem
         this.click_option_on_expanded_menu(label)
         cy.wait(1000)
-        this.populate_Move_form(fullLocationPath, notes)
+        this.populate_Move_form(fullOrPartialLocationPath, notes)
 
         if (isActionOnSearchResults) {
-            this.verify_modal_content(' Warning! This action will move all items found by the current search')
-            this.verify_modal_content('Items shared among Organizations are not included in the transaction')
+            this.verify_text(() => modal().find('.text-danger.ng-scope'), 'Warning This action will move all items found by the current search, except: - Items shared among Organizations')
         }
         this.upload_file_and_verify_toast_msg('image.png', null)
         this.click_button_on_modal(C.buttons.ok)
             .verify_toast_message('Saved')
             .wait_until_spinner_disappears()
         D.editedItem.status = 'Checked In'
-        D.editedItem.location = fullLocationPath
+        D.editedItem.location = fullOrPartialLocationPath
         return this;
     }
 
@@ -4017,8 +4248,9 @@ let basePage = class BasePage {
         this.populate_disposal_form(witness_userObject, method, notes, isItemInContainer)
 
         if (isActionOnSearchResults) {
-            this.verify_modal_content(' Warning! This action will dispose all items found by the current search')
-            this.verify_modal_content('Items shared among Organizations are not included in the transaction')
+            this.verify_text(() => modal().find('.text-danger.ng-scope'), 'Warning This action will dispose all items found by the current search, except: - Items shared among Organizations')
+            // this.verify_modal_content(' Warning! This action will dispose all items found by the current search')
+           // this.verify_modal_content('Items shared among Organizations are not included in the transaction')
         }
 
         if (withMedia){

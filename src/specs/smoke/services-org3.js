@@ -4,8 +4,6 @@ const D = require('../../fixtures/data');
 const api = require('../../api-utils/api-spec');
 const ui = require('../../pages/ui-spec');
 const E = require("../../fixtures/files/excel-data");
-const helper = require("../../support/e2e-helper");
-const DF = require("../../support/date-time-formatting");
 
 let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
 let powerUser = S.getUserData(S.userAccounts.powerUser)
@@ -140,8 +138,8 @@ describe('Services', function () {
             .click_element_on_active_tab(C.buttons.export)
             .click_option_on_expanded_menu('All - Excel')
         ui.app.verify_url_contains_some_value('export-jobs')
-        // .verify_content_of_first_row_in_results_table('Download')
-        ui.app.verify_content_of_specific_cell_in_first_table_row('Download Link', 'Download')
+            .verify_text_is_NOT_present_on_main_container('Showing 0 to 0')
+            .verify_content_of_specific_cell_in_first_table_row('Download Link', 'Download')
 
     });
 

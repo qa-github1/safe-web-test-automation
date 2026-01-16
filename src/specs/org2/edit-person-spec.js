@@ -13,7 +13,7 @@ for (let i = 0; i < 1; i++) {
 
         before(function () {
             api.auth.get_tokens(orgAdmin);
-            api.users.update_current_user_settings(orgAdmin.id)
+            api.users.update_current_user_settings(orgAdmin.id, 'long', 'longDate')
             startTime = Date.now();
         });
 
@@ -183,6 +183,7 @@ for (let i = 0; i < 1; i++) {
 
         it('5. Expunge Person from the Case', function () {
             api.auth.get_tokens(orgAdmin);
+         //   api.users.update_current_user_settings(orgAdmin.id, 'long', 'longDate')
             D.generateNewDataSet(true)
             api.org_settings.disable_Case_fields()
                 .enable_all_Person_fields()

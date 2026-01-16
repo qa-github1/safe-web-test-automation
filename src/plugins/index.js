@@ -16,7 +16,7 @@
 
 const imaps = require('imap-simple');
 //const puppeteer = require('puppeteer');
-const allureWriter = require('@shelex/cypress-allure-plugin/writer');
+//const allureWriter = require('@shelex/cypress-allure-plugin/writer');
 const Xvfb = require('xvfb');
 const pdfjsLib = require("pdfjs-dist");
 
@@ -30,22 +30,25 @@ const pdfjsLib = require("pdfjs-dist");
 let debuggingPort;
 
 function getEnvironmentConfig(config) {
-    const configJson = require(config.configFile);
-    const environmentName = config["env"]["environment"] || configJson["defaultEnvironment"];
-    if (!environmentName) {
-        throw new Error(`Field "environment" or "defaultEnvironment" not found in config file.`);
+    // Use environment passed via CLI / env
+    const environmentName = config.env.environment || config.env.defaultEnvironment || 'pentest';
+
+    // All environments should be defined in config.env.environments
+    const environments = config.env.environments || {}
+    const environmentData = environments[environmentName] || {}
+
+    // Merge environment data into Cypress config
+    config.baseUrl = environmentData.baseUrl || config.baseUrl
+    config.env = {
+        ...config.env,
+        ...environmentData,
+        allure: false,
+        allureResultsPath: `report/allure-results-${config.env.orgNum || 'default'}`,
     }
 
-    let environmentData = configJson["environments"][environmentName] || configJson["defaultEnvironment"];
-    configJson["env"] = environmentData;
-    configJson["baseUrl"] = environmentData["baseUrl"];
-    configJson["orgNum"] = config["env"]["orgNum"];
-    configJson["env"]["allureResultsPath"] = "report/allure-results-" + + config["env"]["orgNum"] ;
-    configJson["env"]["allure"] = true;
+    console.log('Resolved Environment Config:', environmentName, config.env)
 
-    console.log('CONFIG PARAMETERS: ' + JSON.stringify(configJson))
-
-    return Object.assign({}, configJson);
+    return config
 }
 
 const Log = {
@@ -211,7 +214,8 @@ module.exports = (on, config) => {
                     host: 'imap.gmail.com',
                     port: 993,
                     tls: true,
-                    authTimeout: 10000
+                    authTimeout: 10000,
+                    tlsOptions: { rejectUnauthorized: false }, // <-- allow self-signed
                 }
             };
 
@@ -259,8 +263,6 @@ module.exports = (on, config) => {
             });
         }
     });
-
-    allureWriter(on, config);
 
     return getEnvironmentConfig(config);
 };
