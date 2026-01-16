@@ -33,7 +33,7 @@ permissions: write-all
 
 jobs:
   cypress-tests:
-    runs-on: [self-hosted]
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
