@@ -167,7 +167,6 @@ describe('Import Item Updates', function () {
                 .verify_red_highlighted_history_records(allEditedFields)
         });
 
-        //TODO: Sumejja should check further
         it('4. Import update for item status (Move transaction)', function () {
             ui.app.log_title(this);
             let fileName = 'ItemUpdatesImport_Move_' + S.domain;

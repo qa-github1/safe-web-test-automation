@@ -89,6 +89,7 @@ export default class ItemViewPage extends BaseViewPage {
                 [makeInput, itemObject.make],
                 [modelInput, itemObject.model],
                 [descriptionInput, itemObject.description],
+                //[additionalBarcodeInput, itemObject.barcodes]
                 [additionalBarcodeInput, itemObject.additionalBarcodes]
             ]);
 
