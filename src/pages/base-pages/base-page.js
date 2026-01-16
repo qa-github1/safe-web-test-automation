@@ -70,6 +70,7 @@ let bodyContainer = e => cy.get('body'), tableBody = e => cy.get('.table-striped
     inputFieldFoundByLabel = label => cy.contains(label).parent('div').find('input').first(),
     checkboxFieldFoundByLabel = label => cy.contains(label).parent('div').find('[type="checkbox"]').first(),
     buttonOnModal = buttonTitle => modal().children().contains(buttonTitle),
+    textOnModal = text => modal().children().contains(text),
     buttonOnSweetAlert = buttonTitle => sweetAlert().children().contains('button', buttonTitle),
     buttonOnActiveTab = buttonTitle => active_tab().find('button').contains(buttonTitle),
     elementOnActiveTab = elementTitle => active_tab().contains(elementTitle),
@@ -394,7 +395,12 @@ let basePage = class BasePage {
 
     verify_text_is_present_on_main_container(text) {
         this.toastMessage().should('not.exist');
-        cy.verifyTextAndRetry(() => mainContainer().invoke('text'), text);
+
+        if (Array.isArray(text)) {
+            text.forEach(txt => cy.verifyTextAndRetry(() => mainContainer().invoke('text'), txt))
+        } else {
+            cy.verifyTextAndRetry(() => mainContainer().invoke('text'), text);
+        }
         return this;
     };
 
@@ -439,6 +445,12 @@ let basePage = class BasePage {
     verify_text_is_NOT_present_on_main_container(text) {
         this.toastMessage().should('not.exist');
         mainContainer().find(':visible').should('not.contain', text);
+        return this;
+    };
+
+    verify_text_is_NOT_present_on_main_container2(text) {
+        this.toastMessage().should('not.exist');
+        mainContainer().should('not.contain', text);
         return this;
     };
 
@@ -675,6 +687,13 @@ let basePage = class BasePage {
         return this;
     };
 
+    click_text_on_modal(text) {
+        textOnModal(text).scrollIntoView();
+        textOnModal(text).should('be.visible');
+        textOnModal(text).click();
+        return this;
+    };
+
     click_button_on_sweet_alert(buttonTitle) {
         this.pause(1)
         buttonOnSweetAlert(buttonTitle).should('be.visible');
@@ -687,6 +706,15 @@ let basePage = class BasePage {
         buttonByTitle(buttonTitle).should('be.visible');
         buttonByTitle(buttonTitle).should('be.enabled');
         buttonByTitle(buttonTitle).click('bottom');
+        return this;
+    };
+
+    populate_Add_item_to_Existing_task(taskTitleOrNumber) {
+        this.click_text_on_modal('New')
+        modal().children().find('[aria-label="Select box activate"]').click()
+        modal().children().find('[ng-model="$select.search"]').invoke('val', taskTitleOrNumber).trigger('input')
+        cy.get('[ng-bind-html="task.text | highlight: $select.selected.text"]').first().click()
+        cy.get('[name="goToTaskCheckbox"]').click()
         return this;
     };
 
@@ -753,7 +781,7 @@ let basePage = class BasePage {
                     .trigger('input');
             }
 
-            cy.wait(500).then(() => {
+            cy.wait(800).then(() => {
                 cy.document().then(doc => {
                     const typeaheadExists = !!doc.querySelector(typeaheadSelector);
 
@@ -2506,6 +2534,197 @@ let basePage = class BasePage {
         Object.entries(object).forEach(([column, value]) => {
             this.verify_content_of_first_table_row_by_provided_column_title_and_value(column, value);
         });
+        return this;
+    }
+
+    verify_specific_column_has_specific_value_in_all_rows(
+        columnTitle,
+        expectedValue,
+        headerCellTag = 'th',
+        isCoCTable = false
+    ) {
+        let resultsTableHeader;
+        let tableStriped;
+
+        if (isCoCTable) {
+            resultsTableHeader = () => cy.get('.cocTable thead');
+            tableStriped = () => cy.get('.cocTable tbody');
+        } else {
+            resultsTableHeader = () => cy.get('thead');
+            tableStriped = () => cy.get('tbody');
+        }
+
+        resultsTableHeader()
+            .find(headerCellTag)
+            .filter((i, el) => Cypress.$(el).text().trim() === columnTitle)
+            .not('.ng-hide')
+            .invoke('index')
+            .then((colIndex) => {
+
+                tableStriped()
+                    .find('tr')
+                    .each(($row, rowIndex) => {
+
+                        cy.wrap($row)
+                            .find('td')
+                            .eq(colIndex)
+                            .invoke('text')
+                            .then((text) => {
+                                expect(
+                                    text.trim(),
+                                    `Expected column "${columnTitle}" to have value "${expectedValue}" in row ${rowIndex + 1}`
+                                ).to.contain(expectedValue.toString().trim());
+                            });
+
+                    });
+
+            });
+
+        return this;
+    }
+
+    verify_specific_column_has_specific_value_in_specific_rows(
+        columnTitle,
+        expectedValue,
+        rowNumbers = [1],            // 1-based row numbers
+        headerCellTag = 'th',
+        isCoCTable = false
+    ) {
+        let resultsTableHeader;
+        let tableStriped;
+
+        if (isCoCTable) {
+            resultsTableHeader = () => cy.get('.cocTable thead');
+            tableStriped = () => cy.get('.cocTable tbody');
+        } else {
+            resultsTableHeader = () => cy.get('thead');
+            tableStriped = () => cy.get('tbody');
+        }
+
+        const rows = Array.isArray(rowNumbers) ? rowNumbers : [rowNumbers];
+
+        resultsTableHeader()
+            .find(headerCellTag)
+            .filter((i, el) => Cypress.$(el).text().trim() === columnTitle)
+            .not('.ng-hide')
+            .invoke('index')
+            .then((colIndex) => {
+                rows.forEach((rowNumber) => {
+                    const rowIndex = rowNumber - 1; // convert to 0-based
+                    tableStriped()
+                        .find('tr')
+                        .eq(rowIndex)
+                        .find('td')
+                        .eq(colIndex)
+                        .invoke('text')
+                        .then((text) => {
+                            expect(
+                                text.trim(),
+                                `Expected column "${columnTitle}" to have value "${expectedValue}" in row ${rowNumber}`
+                            ).to.contain(expectedValue.toString().trim());
+                        });
+                });
+            });
+        return this;
+    }
+
+    verify_specific_columns_are_blank_in_all_rows(
+        columnTitles,
+        headerCellTag = 'th',
+        isCoCTable = false
+    ) {
+        let resultsTableHeader;
+        let tableStriped;
+
+        if (isCoCTable) {
+            resultsTableHeader = () => cy.get('.cocTable thead');
+            tableStriped = () => cy.get('.cocTable tbody');
+        } else {
+            resultsTableHeader = () => cy.get('thead');
+            tableStriped = () => cy.get('tbody');
+        }
+
+        const columns = Array.isArray(columnTitles) ? columnTitles : [columnTitles];
+
+        columns.forEach((columnTitle) => {
+            resultsTableHeader()
+                .find(headerCellTag)
+                .filter((i, el) => Cypress.$(el).text().trim() === columnTitle)
+                .not('.ng-hide')
+                .invoke('index')
+                .then((colIndex) => {
+
+                    tableStriped()
+                        .find('tr')
+                        .each(($row, rowIndex) => {
+
+                            cy.wrap($row)
+                                .find('td')
+                                .eq(colIndex)
+                                .invoke('text')
+                                .then((text) => {
+                                    expect(
+                                        text.trim(),
+                                        `Expected column "${columnTitle}" to be blank in row ${rowIndex + 1}`
+                                    ).to.eq('');
+                                });
+
+                        });
+
+                });
+        });
+
+        return this;
+    }
+
+    verify_specific_columns_are_blank_in_specific_rows(
+        columnTitles,
+        rowNumbers = [1],           // 1-based row numbers
+        headerCellTag = 'th',
+        isCoCTable = false
+    ) {
+        let resultsTableHeader;
+        let tableStriped;
+
+        if (isCoCTable) {
+            resultsTableHeader = () => cy.get('.cocTable thead');
+            tableStriped = () => cy.get('.cocTable tbody');
+        } else {
+            resultsTableHeader = () => cy.get('thead');
+            tableStriped = () => cy.get('tbody');
+        }
+
+        const columns = Array.isArray(columnTitles) ? columnTitles : [columnTitles];
+        const rows = Array.isArray(rowNumbers) ? rowNumbers : [rowNumbers];
+
+        columns.forEach((columnTitle) => {
+            resultsTableHeader()
+                .find(headerCellTag)
+                .filter((i, el) => Cypress.$(el).text().trim() === columnTitle)
+                .not('.ng-hide')
+                .invoke('index')
+                .then((colIndex) => {
+
+                    rows.forEach((rowNumber) => {
+                        const rowIndex = rowNumber - 1; // convert to 0-based
+
+                        tableStriped()
+                            .find('tr')
+                            .eq(rowIndex)
+                            .find('td')
+                            .eq(colIndex)
+                            .invoke('text')
+                            .then((text) => {
+                                expect(
+                                    text.trim(),
+                                    `Expected column "${columnTitle}" to be blank in row ${rowNumber}`
+                                ).to.eq('');
+                            });
+                    });
+
+                });
+        });
+
         return this;
     }
 

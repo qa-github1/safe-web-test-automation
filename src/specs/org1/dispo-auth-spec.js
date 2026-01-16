@@ -4,10 +4,6 @@ const D = require('../../fixtures/data');
 const api = require('../../api-utils/api-spec');
 const ui = require('../../pages/ui-spec');
 const E = require("../../fixtures/files/excel-data");
-const taskView = require("../../pages/ui-spec");
-const {checkTestDuration} = require("../../fixtures/settings");
-const {assign_office_based_permissions_to_user} = require("../../api-utils/endpoints/permissions/collection");
-let startTime
 
 let orgAdmin = S.getUserData(S.userAccounts.orgAdmin);
 let approvedForReleaseItem3 = {}
@@ -15,7 +11,7 @@ let approvedForReleaseItem4 = {}
 
 for (let i = 0; i < 1; i++) {
     // enable this block if you want to generate large number of Release letters. This is not needed for regression as we have that covered in tests below
-    describe('Generating X number of release letters ', function () {
+    xdescribe('Generating X number of release letters ', function () {
         for (let i = 0; i < 1; i++) {
             let caseData
             let itemData
@@ -55,12 +51,12 @@ for (let i = 0; i < 1; i++) {
                     .select_tab('Items')
                     .set_large_view()
                     .set_Action___Approve_for_Release([1, 200], person1, address1, true, true, false, false)
-                  //  .set_Action___Approve_for_Release([1, 100], person2, null, false, false)
+                    //  .set_Action___Approve_for_Release([1, 100], person2, null, false, false)
                     .click_Submit_for_Disposition()
                     .verify_toast_message('Processing...')
-                    // .verify_Dispo_Auth_Job_Status('Complete')
-                    // .select_tab('Basic Info')
-                    // .verify_text_is_present_on_main_container('Closed');
+                // .verify_Dispo_Auth_Job_Status('Complete')
+                // .select_tab('Basic Info')
+                // .verify_text_is_present_on_main_container('Closed');
             });
         }
     });
@@ -205,7 +201,7 @@ for (let i = 0; i < 1; i++) {
         })
     })
 
-    describe.only('Add Dispo Task with 100 items and assign to Power User, ' + '--initiate and complete 2nd and 3rd tier approval' + '--use Approve and Reject buttons from grid and Actions menu' + '--with and without Dispo Auth Service' + '--check statuses and notes upon rejections and approvals', function () {
+    describe('Add Dispo Task with 100 items and assign to Power User, ' + '--initiate and complete 2nd and 3rd tier approval' + '--use Approve and Reject buttons from grid and Actions menu' + '--with and without Dispo Auth Service' + '--check statuses and notes upon rejections and approvals', function () {
         let hasFailed = false
         let persisted = {}
 
@@ -420,115 +416,7 @@ for (let i = 0; i < 1; i++) {
         });
     });
 
-    xdescribe('Resetting Dispo fields when item is added to a new Dispo task', function () {
-        it('', function () {
-
-            api.auth.get_tokens(orgAdmin)
-            api.org_settings.update_dispo_config_for_item_catagories()
-            D.generateNewDataSet()
-            let selectedTemplate = S.selectedEnvironment.taskTemplates.dispoAuth;
-            D.newItem.category = 'Accessory' // 1DA item
-            D.newItem.categoryId = 138 // 1DA item
-            D.newTask = Object.assign(D.newTask, selectedTemplate);
-            D.newTask.assignedUserIds = [orgAdmin.id];
-            api.cases.add_new_case()
-            api.items.add_new_item(true)
-            api.tasks.add_new_task(D.newTask, 1)
-
-           // RULE 1 ---> auto-excluding items when user tries to attach to a task
-            // Rule 1.1 -----> Show RED MESSAGE that Items WITH ACTIVE DIPSO TASK are AUTO-EXCLUDED when user tries to add them to a new Dispo task
-            //---> item just added to Active Dispo task - NO Dispo Action selected for the item  --> adding item to new Dispo Task
-
-            ui.menu.click_Search__Item()
-            ui.searchItem.run_search_by_Item_Description(D.newItem.description)
-                .select_checkbox_on_first_table_row()
-                .click_Actions()
-                .click_option_on_expanded_menu('Add To Task')
-                .click_button('Create')
-            ui.addTask.select_template('Disposition Authorization')
-                .verify_text_is_present_on_main_container('Items described below cannot be added to the Disposition Authorization task so the system will auto-exclude them upon saving:\n' + '----> Items that are currently linked to another active Disposition Authorization task')
-                .click_Save_()
-                .verify_toast_message(C.toastMsgs.saved)
-                .verify_content_of_first_row_in_results_table('There aren\'t any linked objects')
-
-            // check Item Dispose action is NOT available for the user WITHOUT Override Disposal/Release Authorization
-            api.org_settings.set_override_disposal_release_authorization([], [])
-            ui.app.open_newly_created_task_via_direct_link()
-            ui.taskView.select_tab('Items')
-                .select_checkbox_on_first_table_row_on_active_tab()
-                .click_Actions()
-                .verify_enabled_and_disabled_options_under_Actions_dropdown(['Disposition Authorization Action'], ['Dispose Item'])
-
-            // check Item Dispose action IS available for the user WITH Override Disposal/Release Authorization
-            api.org_settings.set_override_disposal_release_authorization([orgAdmin.id], [S.selectedEnvironment.admin_userGroup.id])
-            ui.taskView.reload_page()
-                .select_tab('Items')
-                .select_checkbox_on_first_table_row_on_active_tab()
-                .click_Actions()
-                .perform_Item_Disposal_transaction(orgAdmin, C.disposalMethods.auctioned, 'test', false, false, false, false)
-                .select_tab('Basic Info')
-                .click_button('Close task')
-                .click_button_on_sweet_alert('Yes') //TODO Alert is not needed here but we have a bug. Remove this when we get a bug fix: #21090 ⁃ Closing Disposition Authorization Task resets disposition fields for non-Under-Review items
-                .click_button_on_sweet_alert('Yes')
-                .verify_text_is_present_on_main_container('Filter Tasks By:')
-                .select_filter_by_Closed_status()
-                .verify_content_of_first_row_in_results_table(D.newItem.description)
-
-            //Rule 1.2  -----> Show RED MESSAGE that DISPOSED Items are AUTO-EXCLUDED when user tries to add them to a new Dispo task
-            // ----> item added to Active Dispo task and DISPOSED- NO Dispo Action selected for the item
-            // --> adding item to another Dispo Task -- NEWLY CREATED ONE
-            ui.app.open_newly_created_case_via_direct_link()
-                .select_tab('Items')
-                .select_checkbox_on_first_table_row()
-                .click_Actions()
-                .click_option_on_expanded_menu('Add To Task')
-                .click_button('Create')
-            ui.addTask.select_template('Disposition Authorization')
-                .verify_text_is_present_on_main_container('Items described below cannot be added to the Disposition Authorization task so the system will auto-exclude them upon saving:----> Items in \'Disposed\' Status')
-                .click_Save_()
-                .verify_toast_message(C.toastMsgs.saved)
-                .verify_content_of_first_row_in_results_table('There aren\'t any linked objects')
-
-            // ----> item added to Active Dispo task and DISPOSED- NO Dispo Action selected for the item
-            // --> adding item to another EXISTiNG Dispo Task
-            ui.app.open_newly_created_case_via_direct_link()
-                .select_tab('Items')
-                .select_checkbox_on_first_table_row()
-                .click_Actions()
-                .click_option_on_expanded_menu('Add To Task')
-                .turnOnToggle('Existing')
-                .click_button('Create')
-            ui.addTask.select_template('Disposition Authorization')
-                .verify_text_is_present_on_main_container('Items described below cannot be added to the Disposition Authorization task so the system will auto-exclude them upon saving:----> Items in \'Disposed\' Status')
-                .click_Save_()
-                .verify_toast_message(C.toastMsgs.saved)
-                .verify_content_of_first_row_in_results_table('There aren\'t any linked objects')
-
-
-            // item just added to Active Dispo task - Dispo Action selected for the item  --> adding item to new Dispo Task
-            // ui.app.open_newly_created_task_via_direct_link()
-            // ui.taskView.select_tab('Items')
-            //     .set_Action___Approve_for_Disposal_from_grid(1)
-            //     .open_newly_created_case_via_direct_link()
-            //     .select_tab('Items')
-            //     .select_checkbox_on_first_table_row()
-            //     .click_Actions()
-            //     .click_option_on_expanded_menu('Add To Task')
-            //     .click_button('Create')
-            // ui.addTask.select_template('Disposition Authorization')
-            //     .verify_text_is_present_on_main_container('Items described below cannot be added to the Disposition Authorization task so the system will auto-exclude them upon saving:\n' +
-            //         '----> Items that are currently linked to another active Disposition Authorization task')
-            //     .click_Save_()
-            //     .click_button_on_sweet_alert('Yes') //TODO This should be reported as bug, since we don't need this alert here
-            //     .verify_toast_message(C.toastMsgs.saved)
-
-
-            // item already added to Active Dispo task without 'Dispo Action' selected --> adding that to new Dispo Task
-        })
-    })
-
-
-    describe('Resetting Dispo fields when item is added to a new Dispo task', function () {
+    describe.only('Resetting Dispo fields when item is added to a new Dispo task', function () {
         let hasFailed = false
         let persisted = {}
 
@@ -558,114 +446,246 @@ for (let i = 0; i < 1; i++) {
             }
         })
 
-        it('', function () {
+        context('RULE 1 ---> auto-excluding items when user tries to attach item to a task', function () {
 
-            api.auth.get_tokens(orgAdmin)
-            api.org_settings.update_dispo_config_for_item_catagories()
-            D.generateNewDataSet()
-            let selectedTemplate = S.selectedEnvironment.taskTemplates.dispoAuth;
-            D.newItem.category = 'Accessory' // 1DA item
-            D.newItem.categoryId = 138 // 1DA item
-            D.newTask = Object.assign(D.newTask, selectedTemplate);
-            D.newTask.assignedUserIds = [orgAdmin.id];
-            api.cases.add_new_case()
-            api.items.add_new_item(true)
-            api.tasks.add_new_task(D.newTask, 1)
+            it('Preconditions', function () {
+                api.auth.get_tokens(orgAdmin)
+                api.org_settings.update_dispo_config_for_item_catagories()
+                D.generateNewDataSet()
+                let selectedTemplate = S.selectedEnvironment.taskTemplates.dispoAuth;
+                D.newItem.category = 'Accessory' // 1DA item
+                D.newItem.categoryId = 138 // 1DA item
+                D.newTask = Object.assign(D.newTask, selectedTemplate);
+                D.newTask.assignedUserIds = [orgAdmin.id];
+                api.cases.add_new_case()
+                api.items.add_new_item(true)
+                api.tasks.add_new_task(D.newTask, 1)
+                    .fetch_new_task_data()
+            })
 
-           // RULE 1 ---> auto-excluding items when user tries to attach to a task
-            // Rule 1.1 -----> Show RED MESSAGE that Items WITH ACTIVE DIPSO TASK are AUTO-EXCLUDED when user tries to add them to a new Dispo task
-            //---> item just added to Active Dispo task - NO Dispo Action selected for the item  --> adding item to new Dispo Task
+            let item1, item2, item3
 
-            ui.menu.click_Search__Item()
-            ui.searchItem.run_search_by_Item_Description(D.newItem.description)
-                .select_checkbox_on_first_table_row()
-                .click_Actions()
-                .click_option_on_expanded_menu('Add To Task')
-                .click_button('Create')
-            ui.addTask.select_template('Disposition Authorization')
-                .verify_text_is_present_on_main_container('Items described below cannot be added to the Disposition Authorization task so the system will auto-exclude them upon saving:\n' + '----> Items that are currently linked to another active Disposition Authorization task')
-                .click_Save_()
-                .verify_toast_message(C.toastMsgs.saved)
-                .verify_content_of_first_row_in_results_table('There aren\'t any linked objects')
+            it('Rule 1.1 -----> Show RED MESSAGE that Items WITH ACTIVE DIPSO TASK are AUTO-EXCLUDED when user tries to add them to a new Dispo task', function () {
+                //---> item just added to Active Dispo task - NO Dispo Action selected for the item
+                // --> adding item to another Dispo Task -- NEWLY CREATED ONE
+                ui.menu.open_base_url()
+                ui.searchItem.run_search_by_Item_Description(D.newItem.description)
+                    .select_checkbox_on_first_table_row()
+                    .click_Actions()
+                    .click_option_on_expanded_menu('Add To Task')
+                    .click_button('Create')
+                ui.addTask.select_template('Disposition Authorization')
+                    .verify_text_is_present_on_main_container("Items described below cannot be added to the Disposition Authorization task so the system will auto-exclude them upon saving: ----> Items that are currently linked to another active Disposition Authorization task")
+                    .click_Save_()
+                    .verify_toast_message(C.toastMsgs.saved)
+                    .verify_content_of_first_row_in_results_table('There aren\'t any linked objects')
 
-            // check Item Dispose action is NOT available for the user WITHOUT Override Disposal/Release Authorization
-            api.org_settings.set_override_disposal_release_authorization([], [])
-            ui.app.open_newly_created_task_via_direct_link()
-            ui.taskView.select_tab('Items')
-                .select_checkbox_on_first_table_row_on_active_tab()
-                .click_Actions()
-                .verify_enabled_and_disabled_options_under_Actions_dropdown(['Disposition Authorization Action'], ['Dispose Item'])
+                // --> adding item to another EXISTING Dispo Task
+                item1 = Object.assign({}, D.newItem)
+                D.getNewItemData()
+                item2 = Object.assign({}, D.newItem)
+                api.items.add_new_item()
+                api.tasks.add_new_task(D.newTask, 0)
+                    .fetch_new_task_data('task2')
+                cy.getLocalStorage("task2").then(task2 => {
+                    ui.caseView.open_newly_created_case_via_direct_link()
+                        .select_tab(C.tabs.items)
+                        .sort_by_descending_order('Created Date')
+                        .select_checkbox_for_all_records()
+                        .click_Actions()
+                        .click_option_on_expanded_menu('Add To Task')
+                        .verify_modal_content('Adding 2 items to task')
+                        .populate_Add_item_to_Existing_task(JSON.parse(task2).taskNumber)
+                        .verify_modal_content([
+                            "Items described below cannot be added to the Disposition Authorization task so the system will auto-exclude them upon saving: ----> Items that are currently linked to another active Disposition Authorization task",
+                            "Adding 1 item to task"])
+                        .click_button_on_modal(C.buttons.ok)
+                        .verify_text_is_present_on_main_container(item2.description)
+                        .verify_text_is_NOT_present_on_main_container2(item1.description)
+                })
+            })
 
-            // check Item Dispose action IS available for the user WITH Override Disposal/Release Authorization
-            api.org_settings.set_override_disposal_release_authorization([orgAdmin.id], [S.selectedEnvironment.admin_userGroup.id])
-            ui.taskView.reload_page()
-                .select_tab('Items')
-                .select_checkbox_on_first_table_row_on_active_tab()
-                .click_Actions()
-                .perform_Item_Disposal_transaction(orgAdmin, C.disposalMethods.auctioned, 'test', false, false, false, false)
-                .select_tab('Basic Info')
-                .click_button('Close task')
-                .click_button_on_sweet_alert('Yes') //TODO Alert is not needed here but we have a bug. Remove this when we get a bug fix: #21090 ⁃ Closing Disposition Authorization Task resets disposition fields for non-Under-Review items
-                .click_button_on_sweet_alert('Yes')
-                .verify_text_is_present_on_main_container('Filter Tasks By:')
-                .select_filter_by_Closed_status()
-                .verify_content_of_first_row_in_results_table(D.newItem.description)
+            it('Check Item Dispose action availability based on Override Disposal/Release Authorization setting', function () {
+                // check Item Dispose action is NOT available for the user WITHOUT Override Disposal/Release Authorization
+                api.org_settings.set_override_disposal_release_authorization([], [])
+                ui.app.open_newly_created_task_via_direct_link()
+                ui.taskView.select_tab('Items')
+                    .select_checkbox_on_first_table_row_on_active_tab()
+                    .click_Actions()
+                    .verify_enabled_and_disabled_options_under_Actions_dropdown(['Disposition Authorization Action'], ['Dispose Item'])
 
-            //Rule 1.2  -----> Show RED MESSAGE that DISPOSED Items are AUTO-EXCLUDED when user tries to add them to a new Dispo task
-            // ----> item added to Active Dispo task and DISPOSED- NO Dispo Action selected for the item
-            // --> adding item to another Dispo Task -- NEWLY CREATED ONE
-            ui.app.open_newly_created_case_via_direct_link()
-                .select_tab('Items')
-                .select_checkbox_on_first_table_row()
-                .click_Actions()
-                .click_option_on_expanded_menu('Add To Task')
-                .click_button('Create')
-            ui.addTask.select_template('Disposition Authorization')
-                .verify_text_is_present_on_main_container('Items described below cannot be added to the Disposition Authorization task so the system will auto-exclude them upon saving:----> Items in \'Disposed\' Status')
-                .click_Save_()
-                .verify_toast_message(C.toastMsgs.saved)
-                .verify_content_of_first_row_in_results_table('There aren\'t any linked objects')
+                // check Item Dispose action IS available for the user WITH Override Disposal/Release Authorization
+                api.org_settings.set_override_disposal_release_authorization([orgAdmin.id], [S.selectedEnvironment.admin_userGroup.id])
+                ui.taskView.reload_page()
+                    .select_tab('Items')
+                    .select_checkbox_on_first_table_row_on_active_tab()
+                    .click_Actions()
+                    .perform_Item_Disposal_transaction(orgAdmin, C.disposalMethods.auctioned, 'test', false, false, false, false)
+                    .select_tab('Basic Info')
+                    .click_button('Close task')
+                    .click_button_on_sweet_alert('Yes') //TODO Alert is not needed here but we have a bug. Remove this when we get a bug fix: #21090 ⁃ Closing Disposition Authorization Task resets disposition fields for non-Under-Review items
+                    .click_button_on_sweet_alert('Yes')
+                    .verify_text_is_present_on_main_container('Filter Tasks By:')
+                    .select_filter_by_Closed_status()
+                    .verify_content_of_first_row_in_results_table(D.newItem.description)
+            })
 
-            // ----> item added to Active Dispo task and DISPOSED- NO Dispo Action selected for the item
-            // --> adding item to another EXISTiNG Dispo Task
-            ui.app.open_newly_created_case_via_direct_link()
-                .select_tab('Items')
-                .select_checkbox_on_first_table_row()
-                .click_Actions()
-                .click_option_on_expanded_menu('Add To Task')
-                .turnOnToggle('Existing')
-                .click_button('Create')
-            ui.addTask.select_template('Disposition Authorization')
-                .verify_text_is_present_on_main_container('Items described below cannot be added to the Disposition Authorization task so the system will auto-exclude them upon saving:----> Items in \'Disposed\' Status')
-                .click_Save_()
-                .verify_toast_message(C.toastMsgs.saved)
-                .verify_content_of_first_row_in_results_table('There aren\'t any linked objects')
+            it('Rule 1.2  -----> Show RED MESSAGE that DISPOSED Items are AUTO-EXCLUDED when user tries to add them to a new Dispo task', function () {
+                // ----> item added to Active Dispo task and DISPOSED- NO Dispo Action selected for the item
+                // --> adding item to another Dispo Task -- NEWLY CREATED ONE
+                ui.app.open_newly_created_case_via_direct_link()
+                    .select_tab('Items')
+                    .select_checkbox_on_first_table_row()
+                    .click_Actions()
+                    .click_option_on_expanded_menu('Add To Task')
+                    .click_button('Create')
+                ui.addTask.select_template('Disposition Authorization')
+                    .verify_text_is_present_on_main_container([
+                        "Items described below cannot be added to the Disposition Authorization task so the system will auto-exclude them upon saving:",
+                        "----> Items in 'Disposed' Status"])
+                    .click_Save_()
+                    .verify_toast_message(C.toastMsgs.saved)
+                    .verify_content_of_first_row_in_results_table('There aren\'t any linked objects')
 
+                // --> adding item to another EXISTING Dispo Task
+                ui.app.open_newly_created_case_via_direct_link()
+                    .select_tab('Items')
+                    .select_checkbox_on_first_table_row()
+                    .click_Actions()
+                    .click_option_on_expanded_menu('Add To Task')
+                    .verify_modal_content('Adding 1 item to task')
+                    .populate_Add_item_to_Existing_task(D.newTask.taskNumber)
+                    .verify_modal_content([
+                        "Items described below cannot be added to the Disposition Authorization task so the system will auto-exclude them upon saving:",
+                        "----> Items in 'Disposed' Status",
+                        "Adding 0 items to task"])
+                    .verify_Ok_button_is_disabled()
+                    .click_button_on_modal(C.buttons.cancel)
 
-            // item just added to Active Dispo task - Dispo Action selected for the item  --> adding item to new Dispo Task
-            // ui.app.open_newly_created_task_via_direct_link()
-            // ui.taskView.select_tab('Items')
-            //     .set_Action___Approve_for_Disposal_from_grid(1)
-            //     .open_newly_created_case_via_direct_link()
-            //     .select_tab('Items')
-            //     .select_checkbox_on_first_table_row()
-            //     .click_Actions()
-            //     .click_option_on_expanded_menu('Add To Task')
-            //     .click_button('Create')
-            // ui.addTask.select_template('Disposition Authorization')
-            //     .verify_text_is_present_on_main_container('Items described below cannot be added to the Disposition Authorization task so the system will auto-exclude them upon saving:\n' +
-            //         '----> Items that are currently linked to another active Disposition Authorization task')
-            //     .click_Save_()
-            //     .click_button_on_sweet_alert('Yes') //TODO This should be reported as bug, since we don't need this alert here
-            //     .verify_toast_message(C.toastMsgs.saved)
-
-
-            // item already added to Active Dispo task without 'Dispo Action' selected --> adding that to new Dispo Task
+                D.getNewItemData()
+                item3 = Object.assign({}, D.newItem)
+                api.items.add_new_item()
+                api.tasks.add_new_task(D.newTask, 0)
+                    .fetch_new_task_data('task2')
+                cy.getLocalStorage("task2").then(task2 => {
+                    ui.caseView.reload_page()
+                        .select_tab(C.tabs.items)
+                        .select_checkbox_for_all_records()
+                        .click_Actions()
+                        .click_option_on_expanded_menu('Add To Task')
+                        .verify_modal_content('Adding 3 items to task')
+                        .populate_Add_item_to_Existing_task(JSON.parse(task2).taskNumber)
+                        .verify_modal_content([
+                            "Items described below cannot be added to the Disposition Authorization task so the system will auto-exclude them upon saving:",
+                            "----> Items in 'Disposed' Status",
+                            "---> Items that are currently linked to another active Disposition Authorization task",
+                            "Adding 1 item to task"])
+                        .click_button_on_modal(C.buttons.ok)
+                        .verify_text_is_present_on_main_container(item2.description)
+                        .verify_text_is_NOT_present_on_main_container2(item1.description)
+                })
+            })
         })
 
+        context('RULE 2 ---> resetting item status and clearing Dispo fields', function () {
 
+            it('Preconditions', function () {
+                api.auth.get_tokens(orgAdmin)
+                api.org_settings.update_dispo_config_for_item_catagories()
+                D.generateNewDataSet()
+                let selectedTemplate = S.selectedEnvironment.taskTemplates.dispoAuth;
+                D.newItem.category = 'Accessory' // 1DA item
+                D.newItem.categoryId = 138 // 1DA item
+                D.newTask = Object.assign(D.newTask, selectedTemplate);
+                D.newTask.assignedUserIds = [orgAdmin.id];
+                api.cases.add_new_case()
+                api.people.add_new_person(true, D.newCase)
+                D.newItem.barcodes = null
+                api.items.add_new_item(true)
+                    .add_new_item(true)
+                    .add_new_item(true)
+                    .add_new_item(true)
+                    .add_new_item(true)
+                api.items.get_items_from_specific_case(D.newCase.caseNumber)
+            })
 
+            it('Rule 2.1 -----> Reset status from "Under Review" to "Unreviewed" and clearing fields when Dispo Task is closed', function () {
+                api.tasks.add_new_task(D.newTask, 5)
+                    .fetch_new_task_data()
+                ui.taskView.open_newly_created_task_via_direct_link()
+                    .select_tab('Items')
+                    .set_Action___Approve_for_Disposal_from_grid(1)
+                    .set_Action___Hold_from_grid(2, 2, 'Other')
+                    .set_Action___Approve_for_Release_from_grid(3, D.newPerson, null, true, true)
+                    .set_Action___Approve_for_Release_from_grid(4, D.newPerson, null, true, true, false, true)
+                    .set_Action___Timed_Disposal_from_grid(5, '4y')
+                    .select_tab('Basic Info')
+                    .click_button('Close task')
+                    .verify_messages_on_sweet_alert(['Please note that all disposition-related fields will be reset for items in \'Under Review\' status after this action, except the Claimant field.'])
+                    .click_button_on_sweet_alert('Yes')
+                    .click_button_on_sweet_alert('Yes')
+                    .reload_page()
+                    .verify_text_is_present_on_main_container('Closed')
+                    .select_tab(C.tabs.items)
+                    .verify_specific_column_has_specific_value_in_all_rows('Disposition Status', 'Unreviewed')
+                    .verify_specific_column_has_specific_value_in_all_rows('Disposition Authorization Action', '-- Please set a disposition action --')
+                    .verify_specific_columns_are_blank_in_specific_rows('Hold Reason', 2)
+                    .verify_specific_columns_are_blank_in_specific_rows('Hold Until Date', 2)
+                    .verify_specific_columns_are_blank_in_specific_rows('Release After Date', 4)
+                    .verify_specific_columns_are_blank_in_specific_rows('Dispose After Date', 4)
+                    .verify_specific_column_has_specific_value_in_specific_rows('Claimant', D.newPerson.firstName, [3, 4])
+
+            })
+
+            it('Submit for Disposition and get final Dispo Status for 5 items (all statuses nad fields populated', function () {
+                api.items.get_items_from_specific_case(D.newCase.caseNumber)
+                api.tasks.add_new_task(D.newTask, 5)
+                    .fetch_new_task_data()
+
+                ui.app.open_newly_created_task_via_direct_link()
+                    .select_tab('Items')
+                ui.taskView.set_Action___Approve_for_Disposal_from_grid(1)
+                    .set_Action___Hold_from_grid(2, 2, 'Other')
+                    .set_Action___Approve_for_Release_from_grid(3, D.newPerson, null, true, true)
+                    .set_Action___Approve_for_Release_from_grid(4, D.newPerson, null, true, true, false, true)
+                    .set_Action___Timed_Disposal_from_grid(5, '4y')
+                    .click_Submit_for_Disposition()
+                    .verify_toast_message('Submitted for Disposition')
+                    .verify_content_of_first_row_in_results_table('Approved for Disposal')
+            })
+
+            it('Rule 2.2 -----> Clear out APPROVED Dispo Status and fields (approved earlier in already closed Dispo task' +
+                ')--> check warning when item is added to a new Dispo Task from Case View -- Items tab', function () {
+
+                D.getNewTaskData(orgAdmin)
+                ui.caseView.open_newly_created_case_via_direct_link()
+                    .select_tab('Items')
+                    .select_checkbox_for_all_records()
+                    .click_Actions()
+                    .click_option_on_expanded_menu('Add To Task')
+                    .click_button('Create')
+                ui.addTask.select_template('Disposition Authorization')
+                    .select_assignees([orgAdmin.name])
+                    .click_Save_()
+                    .verify_messages_on_sweet_alert(['Are you sure you want to link to the new task the item(s) that were already processed through a Disposition task earlier? Please note that all Disposition-related fields will be reset after this action, except the Claimant field.'])
+                    .click_button_on_sweet_alert('Yes')
+                    .verify_toast_message(C.toastMsgs.saved)
+                    .click_button(C.buttons.details)
+                    .select_tab('Items')
+                    .verify_specific_column_has_specific_value_in_all_rows('Disposition Status', 'Under Review')
+                    .verify_specific_column_has_specific_value_in_all_rows('Disposition Authorization Action', '-- Please set a disposition action --')
+                    .verify_specific_columns_are_blank_in_specific_rows('Hold Reason', 2)
+                    .verify_specific_columns_are_blank_in_specific_rows('Hold Until Date', 2)
+                    .verify_specific_columns_are_blank_in_specific_rows('Release After Date', 4)
+                    .verify_specific_columns_are_blank_in_specific_rows('Dispose After Date', 4)
+                    .verify_specific_column_has_specific_value_in_specific_rows('Claimant', D.newPerson.firstName, [3, 4])
+
+            })
+
+//TODO ---> make this test similar as scenario above
+            it('Rule 2.3 -----> Reset status from "Under Review" to "Unreviewed" and clearing fields when task template is changed from "Disposition Auth" to any other ', function () {
+
+            })
+        })
     })
-
-
 }
