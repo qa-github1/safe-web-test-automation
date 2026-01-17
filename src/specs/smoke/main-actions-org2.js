@@ -167,6 +167,7 @@ for (let i = 0; i < 1; i++) {
 
             let powerUser2 = S.userAccounts.basicUser;
             api.permissions.assign_multiple_users_to_User_Group([powerUser.id, powerUser2.id], admin_userGroup)
+            api.auto_disposition.edit(true)
             D.generateNewDataSet()
             api.cases.add_new_case()
             api.items.add_new_item()

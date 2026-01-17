@@ -152,7 +152,7 @@ for (let i = 0; i < 1; i++) {
             })
         });
 
-        it.only('10. People Merge', function () {
+        it('10. People Merge', function () {
 
             api.auth.get_tokens(orgAdmin);
             D.generateNewDataSet();
