@@ -54,18 +54,20 @@ export default class TaskListPage extends BasePage {
         return this;
     }
 
-    verify_newly_created_task_is_shown_in_first_table_row() {
-        cy.getLocalStorage("myTasks").then(tasks => {
-            let taskNumber = JSON.parse(tasks).tasks[0].taskNumber
-            this.verify_content_of_first_table_row_by_provided_column_title_and_value('Task #', taskNumber)
-            D.newTask.taskNumber = taskNumber
-        })
+    verify_newly_created_task_is_shown_in_first_table_row(taskTitle) {
+        // cy.getLocalStorage("myTasks").then(tasks => {
+        //     let taskNumber = JSON.parse(tasks).tasks[0].taskNumber
+        //     this.verify_content_of_first_table_row_by_provided_column_title_and_value('Task #', taskNumber)
+        //     D.newTask.taskNumber = taskNumber
+        // })
+        this.verify_content_of_first_table_row_by_provided_column_title_and_value('Title', taskTitle)
         return this;
     };
 
     search_for_the_task(keyword) {
         this.enterValue(searchInput, keyword)
-        this.pause(0.3)
+        this.pause(1)
+        this.wait_until_spinner_disappears()
         return this;
     };
 

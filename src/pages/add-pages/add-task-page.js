@@ -55,7 +55,6 @@ export default class AddTaskPage extends BasePage {
                 .clearAndEnterValue(messageInput, taskObject.message)
         }
 
-
         if (!keepDefaultDueDate) {
             dueDateInput().clear().type(taskObject.dueDate).then(function (value) {
                 taskObject.dueDate = value
@@ -71,13 +70,16 @@ export default class AddTaskPage extends BasePage {
             linkedObjects.forEach(object => {
                 if (object.type === 'case') {
                     plusIcon().click()
-                    this.findElementByLabelEnterValueAndPressEnter('Case', object.caseNumber)
+                    this.pause(0.5)
+                    cy.get('[control-name="\'attach-case\'"]').find('input').first().type(object.caseNumber);
+                  //  this.findElementByLabelEnterValueAndPressEnter('Case', object.caseNumber)
                     this.caseNumberOnTypeahead().click()
                     this.click_button_on_modal('Add')
                 }
                 if (object.type === 'item') {
                     plusIcon().click()
                     attachmentTypeDropdown().select('Item')
+                    this.pause(0.5)
                     this.findElementByLabelEnterValueAndPressEnter('Case', object.caseNumber)
                     this.caseNumberOnTypeahead().click()
                     this.pause(1)
@@ -91,6 +93,7 @@ export default class AddTaskPage extends BasePage {
                 if (object.type === 'person') {
                     plusIcon().click()
                     attachmentTypeDropdown().select('Person')
+                    this.pause(0.5)
                     personInputField().type(object.personName)
                     this.dropdownTypeaheadOption().click()
                     this.click_button_on_modal('Add')

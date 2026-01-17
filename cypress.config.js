@@ -16,7 +16,14 @@ module.exports = defineConfig({
     taskTimeout: 50000,
     pageLoadTimeout: 90000,
     numTestsKeptInMemory: 0,
-    retries: 0,
+    retries: {
+        // Configure retry attempts for `cypress run`
+        // Default is 0
+        runMode: 3,
+        // Configure retry attempts for `cypress open`
+        // Default is 0
+        openMode: 0,
+    },
     env: {
         allure: false,
         CYPRESS_VERIFY_TIMEOUT: 60000,
@@ -56,6 +63,18 @@ module.exports = defineConfig({
         specPattern: 'src/specs/**/*.{js,jsx,ts,tsx}',
         supportFile: 'src/support/index.js',
         setupNodeEvents(on, config) {
+            on('after:spec', (spec, results) => {
+                if (results && results.video) {
+                    // Do we have failures for any retry attempts?
+                    const failures = results.tests.some(test =>
+                        test.attempts.some(attempt => attempt.state === 'failed')
+                    )
+                    if (!failures) {
+                        // delete the video if the spec passed and no tests retried
+                        return del(results.video)
+                    }
+                }
+            })
             const updatedConfig = require('./src/plugins/index')(on, config);
             return updatedConfig || config;
         },

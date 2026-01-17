@@ -199,10 +199,11 @@ D.getEditedCaseData = function (caseNumber, autoDispoOff = false) {
     return D.editedCase;
 };
 
-D.getNewItemData = function (specificCaseObject, locationObject, newPerson) {
+D.getNewItemData = function (specificCaseObject, locationObject, newPerson, withLegacyBarcodes = false) {
     let person = (newPerson && newPerson.id !== '') ? newPerson : S.selectedEnvironment.person;
     locationObject = locationObject || S.selectedEnvironment.locations[0];
     specificCaseObject = specificCaseObject || S.selectedEnvironment.oldActiveCase;
+    let legacyBarcodes = withLegacyBarcodes? [{id: 0, value: helper.setNewRandomString()}] : null;
     let randomNo = this.setNewRandomNo();
 
     D.newItem = Object.assign({}, D.newCustomFormData, {
@@ -262,8 +263,7 @@ D.getNewItemData = function (specificCaseObject, locationObject, newPerson) {
         itemBelongsToFirstLastName: [person.fullName],
         itemBelongsToOnHistory: [person.name],
         itemBelongsToGuid: [person.guid],
-        //itemBelongsToEmail: [person.email],
-        barcodes: [{id: 0, value: helper.setNewRandomString()}],
+        barcodes: legacyBarcodes,
         additionalBarcodes: [helper.setNewRandomString()],
         actualDisposedDate: '',
         disposedDate: '',
