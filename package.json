@@ -50,6 +50,7 @@
     "cypress-intellij-reporter": "0.0.5",
     "cypress-localstorage-commands": "^2.2.8",
     "cypress-wait-until": "^3.0.2",
+    "del": "^6.1.1",
     "del-cli": "3.0.1",
     "expect": "^26.4.0",
     "imap-simple": "4.3.0",

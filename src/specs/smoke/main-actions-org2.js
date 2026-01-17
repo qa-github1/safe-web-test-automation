@@ -152,7 +152,7 @@ for (let i = 0; i < 1; i++) {
 
     });
 
-    describe.only('Task', function () {
+    describe('Task', function () {
         it('Add task with all fields' +
             '-- assign to 1 user' +
             '-- attach 1 case, 1 item and 1 person' +

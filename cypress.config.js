@@ -1,4 +1,5 @@
 const { defineConfig } = require('cypress');
+const del = require('del')
 
 module.exports = defineConfig({
     projectId: 'c56sx9',
